@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b1c0147b.js";
+            window.path_to_searchindex_js = "searchindex-27e4b5f0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-bcfcafbf.js"></script>
@@ -242,7 +242,9 @@
 <li><strong>Sovrascrittura</strong> del segmento di memoria corrente con i nuovi valori (<code>exec()</code>).</li>
 <li><strong>Allocazione</strong> di nuovi segmenti di memoria (codice, dati, stack, heap, …) e <strong>deallocazione</strong> dei vecchi segmenti (<code>fork()</code> + <code>exec()</code>).</li>
 </ol>
-<p>Durante la <code>exec</code>, vengono aggiornate le strutture di processo (<code>PCB</code> – Process Control Block), ma l’identità del processo (PID, file aperti, risorse kernel) resta invariata.</p>
+<p>Durante la <code>exec</code>, vengono aggiornate le strutture di processo (<code>PCB</code> – Process Control Block), ma l’identità del processo (PID, file aperti e in generale <em>file descriptor</em>, risorse kernel) resta invariata.</p>
+<p>I <em>file descriptor</em> si salvano dalla <code>exec</code> perché sono memorizzati in un struttura contenuta nello spazio <strong>kernel</strong> (non toccato dalla <code>exec</code>).</p>
+<p>→ Vedi implementazione di una shell su <code>GitHub</code>, la redirezione dello stram di input, output o error non vengono modificati dopo l’esecuzione dell’<code>exec</code>.</p>
 <hr>
 <h2 id="esempi-di-utilizzo"><a class="header" href="#esempi-di-utilizzo">Esempi di utilizzo</a></h2>
 <h3 id="esempio-1--execlp-in-un-processo-figlio"><a class="header" href="#esempio-1--execlp-in-un-processo-figlio">Esempio 1 — <code>execlp</code> in un processo figlio</a></h3>
