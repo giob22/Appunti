@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f4889483.js";
+            window.path_to_searchindex_js = "searchindex-1b3333c8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-bcfcafbf.js"></script>
@@ -383,7 +383,7 @@ if (pid &gt; 0) {
 </ul>
 </li>
 <li>riferisce una <strong>nuova text structure</strong>;</li>
-<li>mantiene la <strong>u-area</strong> (ad eccezione del program counter, che puntava al nuovo main, e delle informazioni legate al codice come registri generali, SP, …) e lo <strong>stack del kernel</strong>.</li>
+<li>mantiene la <strong>u-area</strong> (ad eccezione del program counter, che punterà al nuovo main, e delle informazioni legate al codice come registri generali, SP, …) e lo <strong>stack del kernel</strong>.</li>
 </ul>
 <hr>
 <h2 id="varianti-della-exec"><a class="header" href="#varianti-della-exec">Varianti della <code>exec</code></a></h2>
@@ -401,6 +401,8 @@ if (pid &gt; 0) {
 </tbody>
 </table>
 </div>
+<p>Esistono anche ulteriori varianti come: <code>execvpe()</code>, <code>execle()</code>.</p>
+<p>In queste varianti è specificato trami un array il nuovo <strong>enviroment</strong>: <code>envp</code> sarà l’array contenente coppie chiave valore che indicano quali saranno le variabili di ambiente a cui si riferirà il processo.</p>
 <hr>
 <h2 id="fork-e-exec-insieme"><a class="header" href="#fork-e-exec-insieme"><code>fork</code> e <code>exec</code> insieme</a></h2>
 <p>Spesso le due system call vengono utilizzate insieme.<br>Tipico schema:</p>
