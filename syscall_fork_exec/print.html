@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-27e4b5f0.js";
+            window.path_to_searchindex_js = "searchindex-fb02c080.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-bcfcafbf.js"></script>
@@ -470,7 +470,8 @@ int main(void) {
 <li><code>commandname</code> conterrà il nome del comando estratto;</li>
 <li><code>pid</code> conterrà il valore ritornato da <code>fork()</code>.</li>
 </ul>
-<p>Successivamente è presente una <em>sys-call</em> del linguaggio C, <code>write()</code>, che permette di scrivere dati su un <strong>file descriptor</strong>. Un file descriptor è un numero intero che il sistema operativo assegna a ogni file o risorsa aperta da un processo.<br>
+<p>Successivamente è presente una <em>sys-call</em> del linguaggio C, <code>write()</code>, che permette di scrivere dati su un <strong>file descriptor</strong>.</p>
+<p>Un file descriptor è un numero intero che il sistema operativo assegna a ogni file o risorsa aperta da un processo.<br>
 Ogni volta che un processo viene eseguito per la prima volta gli vengono assegnati automaticamente <strong>3 file descriptor</strong>:</p>
 <div class="table-wrapper">
 <table>
@@ -485,7 +486,7 @@ Ogni volta che un processo viene eseguito per la prima volta gli vengono assegna
 </table>
 </div>
 <p>Una volta scritto legge da tastiera mediante una <code>read()</code> il comando scritto dall’utente e sostituisce l’ultimo elemento per terminare la stringa con un <code>\n</code> o <code>\0</code>.</p>
-<p><code>sscanf(buf, "%s", commandname)</code> copia dal buffer il nome del comando nella variabile <code>commandname</code>. Funziona come <code>fscanf()</code> ma invece che lavorare su file, lavora su una stringa salvata in memoria; ovvimente nel momento in cui incontra uno spazio ferma le lettura dalla stringa.</p>
+<p><code>sscanf(buf, "%s", commandname)</code> copia dal buffer il nome del comando nella variabile <code>commandname</code>. Funziona come <code>fscanf()</code> ma invece che lavorare su file, lavora su una stringa salvata in memoria; ovvimente nel momento in cui incontra uno spazio si ferma la lettura dalla stringa.</p>
 <hr>
 <h3 id="esempio-2--copia-di-file-con-exec"><a class="header" href="#esempio-2--copia-di-file-con-exec">Esempio 2 — Copia di file con <code>exec</code></a></h3>
 <pre><code class="language-c">#include &lt;stdio.h&gt;
@@ -579,9 +580,12 @@ signal(SIGINT, handler) // definisce una funzione che gestisce SIGINT
 <ul>
 <li>Il figlio condivide inizialmente la memoria del padre in modalità <strong>read-only</strong>.</li>
 <li>Solo al primo tentativo di modifica, il kernel copia le pagine di memoria.
-<br>
-<img width="910" height="540" alt="image" src="images/exec.png" /></li>
+<br></li>
 </ul>
+<p align="center">
+  <img src="images/exec.png" width="250" alt="Animazione dimostrativa">
+</p>
+
 </li>
 </ul>
 <hr>
