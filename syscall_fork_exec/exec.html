@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1b3333c8.js";
+            window.path_to_searchindex_js = "searchindex-1178c0a7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-bcfcafbf.js"></script>
@@ -239,7 +239,7 @@
 </blockquote>
 <h2 id="possibili-implementazioni"><a class="header" href="#possibili-implementazioni">Possibili implementazioni</a></h2>
 <ol>
-<li><strong>Sovrascrittura</strong> del segmento di memoria corrente con i nuovi valori (<code>fork()</code>).</li>
+<li><strong>Sovrascrittura</strong> del segmento di memoria corrente con i nuovi valori (<code>exec()</code>).</li>
 <li><strong>Allocazione</strong> di nuovi segmenti di memoria (codice, dati, stack) e <strong>deallocazione</strong> dei vecchi segmenti (<code>fork()</code> + <code>exec()</code>).</li>
 </ol>
 <p>Durante la <code>exec</code>, vengono aggiornate le strutture di processo (<code>PCB</code> – Process Control Block), ma l’identità del processo (PID, file aperti, risorse kernel) resta invariata.</p>
