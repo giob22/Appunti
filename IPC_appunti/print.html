@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-de6b5501.js";
+            window.path_to_searchindex_js = "searchindex-b43ab60d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -1751,7 +1751,7 @@ int queue_condition(Monitor*, int);
 <p>Infatti tale funzione restituisce il <strong>descrittore</strong> della coda di messaggi identificata da una chiave <code>key</code> (ottenuta tramite codice cablato, <code>IPC_PRIVATE</code> o <code>ftok()</code>), oppure <code>-1</code> in caso di esito negativo.</p>
 <p>Come per le altre risorse IPC, <code>msgflg</code> può valere vari FLAG come <code>IPC_CREAT</code> in <em>or logico</em> con i permessi, se il processo chiamante deve creare la coda di messaggi, oppure <code>0</code> nel caso in cui si vuole ottenere il descrittore di una coda già istanziata.</p>
 <blockquote>
-<p>NOTA: La dimensione della coda e il numero massimo di messaggi sono decisi automaticamente dal <strong>kernel</strong></p>
+<p>NOTA: la dimensione della coda e il numero massimo di messaggi sono decisi automaticamente dal <strong>kernel</strong></p>
 <p>Per modificare la dimensione o il numero massimo di messaggi è necessatio <strong>ricompilare</strong> il kernel per modificare un parametro apposito.</p>
 </blockquote>
 <p>ESEMPIO:</p>
