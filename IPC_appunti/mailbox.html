@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b43ab60d.js";
+            window.path_to_searchindex_js = "searchindex-3d7f8c81.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -181,7 +181,7 @@
 <blockquote>
 <p>Tali <strong>Message queue</strong> sono anche dette <strong>mailbox</strong>.</p>
 </blockquote>
-<p>Questo tipo di comunicazione che sfrutta le mailbox è quella <strong>più flessibile</strong> possibile per implementare uno scambio di messaggi. Infatti ci permette di implementare una comunicazione:</p>
+<p>Questo tipo di comunicazione che sfrutta le mailbox è quella <strong>più flessibile</strong> possibile per implementare uno scambio di messaggi. Infatti ci permette d’implementare una comunicazione:</p>
 <ul>
 <li>one-to-one</li>
 <li>one-to-many</li>
@@ -191,7 +191,7 @@
 <p align="center"><img src="images/mailbox_flessibilita.png" width="300"></p>
 
 <p>UNIX System V mette a disposizione unicamente le primitive di <strong>send asincrona</strong>, di <strong>receive bloccante</strong> e <strong>receive non bloccante</strong>.</p>
-<p>In ingresso/uscita dalla mailbox avramo un messaggio che non è altro che un vettore di byte.</p>
+<p>In ingresso/uscita dalla mailbox avremo un messaggio che non è altro che un vettore di byte.</p>
 <p>Una mailbox può essere vista come una <em>coda di messaggi</em>.</p>
 <p>Essa è caratterizzata da:</p>
 <ul>
@@ -207,7 +207,7 @@
 #include &lt;sys/msg.h&gt;
 </code></pre>
 <h3 id="creazione-di-una-coda-di-messaggi-msgget"><a class="header" href="#creazione-di-una-coda-di-messaggi-msgget">Creazione di una coda di messaggi: <code>msgget</code></a></h3>
-<p>Per creare una nuova coda di messaggi, o accedere ad una esistente, bisogna invocare la system call <code>msgget()</code>.</p>
+<p>Per creare una nuova coda di messaggi, o accedere a una esistente, bisogna invocare la system call <code>msgget()</code>.</p>
 <pre><code class="language-c">int msgget(key_t key, int msgflg);
 </code></pre>
 <p><code>key</code> e <code>msgflg</code> hanno lo stesso ruolo dei parametri visti per <code>semget()</code> e <code>shmget()</code>.</p>
@@ -215,7 +215,7 @@
 <p>Come per le altre risorse IPC, <code>msgflg</code> può valere vari FLAG come <code>IPC_CREAT</code> in <em>or logico</em> con i permessi, se il processo chiamante deve creare la coda di messaggi, oppure <code>0</code> nel caso in cui si vuole ottenere il descrittore di una coda già istanziata.</p>
 <blockquote>
 <p>NOTA: la dimensione della coda e il numero massimo di messaggi sono decisi automaticamente dal <strong>kernel</strong></p>
-<p>Per modificare la dimensione o il numero massimo di messaggi è necessatio <strong>ricompilare</strong> il kernel per modificare un parametro apposito.</p>
+<p>Per modificare la dimensione o il numero massimo di messaggi è necessario <strong>ricompilare</strong> il kernel per modificare un parametro apposito.</p>
 </blockquote>
 <p>ESEMPIO:</p>
 <pre><code class="language-c">#include &lt;sys/ipc.h&gt;
@@ -251,7 +251,7 @@ int main(){
 <tbody>
 <tr><td><code>IPC_STAT</code></td><td>viene effettuata una copia della <strong>struttura dati del kernel</strong> (che mantiene informazioni sulla <em>Message Queue</em>) associata alla coda di messaggi identificata da <code>msqid</code> alla struttura dati <code>msqid_ds</code> puntata da <code>buf</code>.</td></tr>
 <tr><td><code>IPC_SET</code></td><td>permette di modificare le caratteristiche della coda.</td></tr>
-<tr><td><code>IPC_RMID</code></td><td>permette di rimuovere <strong>immediantamente</strong> la coda di messaggi identificata da <code>msqid</code>.</td></tr>
+<tr><td><code>IPC_RMID</code></td><td>permette di rimuovere <strong>immediatamente</strong> la coda di messaggi identificata da <code>msqid</code>.</td></tr>
 </tbody>
 </table>
 </div>
@@ -276,7 +276,7 @@ struct msqid_ds {
 </code></pre>
 <p>Per operare tramite <code>msgctl()</code>, il processo chiamante deve avere i permessi di lettura/scrittura sulla risorsa IPC.</p>
 <h3 id="invio-di-un-messaggio-msgsnd"><a class="header" href="#invio-di-un-messaggio-msgsnd">Invio di un messaggio: <code>msgsnd</code></a></h3>
-<p>Una volta ottenuto il descrittore di una <em>Message Queue</em> è possibile effettuare un operazione di invio (con accodamento) di un messaggo.</p>
+<p>Una volta ottenuto il descrittore di una <em>Message Queue</em> è possibile effettuare un operazione d’invio (con accodamento) di un messaggio.</p>
 <p>Per inviare un messaggio bisogna utilizzare la system call <code>msgsnd()</code>:</p>
 <pre><code class="language-c">int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
 </code></pre>
@@ -286,7 +286,7 @@ struct msqid_ds {
 </li>
 <li>
 <p><code>const void *msgp</code> è il puntatore alla <strong>struttura messaggio</strong> che contiene il messaggio vero e proprio da inviare.</p>
-<p>Tale struttura può avere un qualsiasi nome e deve seguire un pattern specifico (<strong>convensione</strong>):</p>
+<p>Tale struttura può avere un qualsiasi nome e deve seguire un pattern specifico (<strong>convenzione</strong>):</p>
 <pre><code class="language-c">typedef struct{
   long message_type;
   char message_text[MAX_SIZE];
@@ -303,8 +303,8 @@ struct msqid_ds {
 <p>→ in realtà possiamo inserire qualsiasi campi dopo il primo, il vincolo sul pattern da seguire è rivolto solo a <code>message_type</code>.</p>
 </li>
 </ul>
-<p>il campo <code>message_type</code> diventa molto importante quando viene accoppiato con funzioni di <code>receive</code> <strong>selettive</strong>, che permettono di estrarre un particolare messaggio dalla coda della mailbox.</p>
-<p>Infatti, è possibile estrarre dalla coda di messaggi il messaggio che il cui campo tipo è quello specificato in <code>message_type</code> nonstante non si trovi in cima alla coda.</p>
+<p>Il campo <code>message_type</code> diventa molto importante quando viene accoppiato con funzioni di <code>receive</code> <strong>selettive</strong>, che permettono di estrarre un particolare messaggio dalla coda della mailbox.</p>
+<p>Infatti, è possibile estrarre dalla coda di messaggi il messaggio che il cui campo tipo è quello specificato in <code>message_type</code> nonostante non si trovi in cima alla coda.</p>
 <p>Se <code>message_type</code> assume il valore del PID del processo mittente possiamo implementare una <strong>comunicazione diretta asimmetrica</strong> sfruttando una <strong>comunicazione indiretta</strong> offerta dalle mailbox (nel caso di <strong>una sola coda</strong>).</p>
 <p>In <code>sys/msg.h</code> fornisce una struttura messaggio che possiamo sfruttare (ma non è obbligatorio):</p>
 <pre><code class="language-c">struct msgbuf
@@ -368,7 +368,7 @@ if (result &lt; 0){
 <pre><code class="language-c">ssize_t msgrcv(int msqid, void*msgp, size_t msgsz, long msgtyp, int msgflg);
 </code></pre>
 <p>Tale system call permette di consumare un messaggio dalla mailbox identificata da <code>msqid</code>.</p>
-<p>Il buffer contenente il messaggio sarà puntato da <code>msgp</code>, e il campo messaggio avrà dimensione pari a <code>msgsz</code> (che sarà sempre la dimesione della struttura messaggio tolta la dimensione del campo <code>message_type</code>).</p>
+<p>Il buffer contenente il messaggio sarà puntato da <code>msgp</code>, e il campo messaggio avrà dimensione pari a <code>msgsz</code> (che sarà sempre la dimensione della struttura messaggio tolta la dimensione del campo <code>message_type</code>).</p>
 <p>Il campo <code>msgtyp</code> svolge importanti funzioni, infatti definisce il comportamento della <code>msgrcv()</code>:</p>
 <div class="table-wrapper">
 <table>
@@ -419,7 +419,7 @@ printf(”Messaggio: tipo=%d, text=%s, val=%d\n”,
 <p>Specificare il tipo mi permette di implementare una <strong>receive selettiva</strong> che sia bloccante o non. Tramite l’utilizzo opportuno del tipo ho la possibilità di implementare diversi tipi di comunicazione: one-to-one, one-to-many, etc.</p>
 <p align="center"><img src="images/receive_selettiva.png" width="300"></p>
 
-<p>Questo è un esempio di receive selettiva, dove <code>B</code> è un valore intero positivo e identifica un tipo di messagio</p>
+<p>Questo è un esempio di receive selettiva, dove <code>B</code> è un valore intero positivo e identifica un tipo di messaggio</p>
 <hr>
 <p>Possiamo utilizzare il campo tipo per la <strong>ricezione selettiva dei messaggi di risposta da un server</strong>.</p>
 <ul>
