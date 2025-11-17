@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2b88d43a.js";
+            window.path_to_searchindex_js = "searchindex-de6b5501.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d8baf949.js"></script>
+        <script src="toc-efead60a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1710,6 +1710,269 @@ int queue_condition(Monitor*, int);
 
 <p>Possiamo quindi capire da questa immagine quali sono le informazioni di interesse per una mailbox.</p>
 <p>Il ruolo della mailbox è da <strong>intermediario</strong> nella comunicazione.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="coda-di-messaggi-mailbox"><a class="header" href="#coda-di-messaggi-mailbox">Coda di messaggi: mailbox</a></h1>
+<p>UNIX (System V), come anche Linux, mette a disposizione primitive IPC che supportano la <strong>comunicazione indiretta</strong> tra processi (anche indipendenti) basata su uno <strong>scambio di messaggi</strong>.</p>
+<p>Questa comunicazione è realizzata tramite le <strong>System V Message Queue</strong>, ovvero strutture dati gestite dal kernel che consentono l’invio e la ricezione di messaggi in maniera <strong>indiretta</strong>.</p>
+<p>La comunicazione è indiretta perché lo scambio di messaggi non avviene direttamente tra il mittente e il destinatario, ma avviene tra utente e <strong>mailbox</strong> che ha la funzione di <em>proxy</em>.</p>
+<blockquote>
+<p>Tali <strong>Message queue</strong> sono anche dette <strong>mailbox</strong>.</p>
+</blockquote>
+<p>Questo tipo di comunicazione che sfrutta le mailbox è quella <strong>più flessibile</strong> possibile per implementare uno scambio di messaggi. Infatti ci permette di implementare una comunicazione:</p>
+<ul>
+<li>one-to-one</li>
+<li>one-to-many</li>
+<li>many-to-one</li>
+<li>many-to-many</li>
+</ul>
+<p align="center"><img src="images/mailbox_flessibilita.png" width="300"></p>
+
+<p>UNIX System V mette a disposizione unicamente le primitive di <strong>send asincrona</strong>, di <strong>receive bloccante</strong> e <strong>receive non bloccante</strong>.</p>
+<p>In ingresso/uscita dalla mailbox avramo un messaggio che non è altro che un vettore di byte.</p>
+<p>Una mailbox può essere vista come una <em>coda di messaggi</em>.</p>
+<p>Essa è caratterizzata da:</p>
+<ul>
+<li>Una chiave, come per le altre risorse IPC;</li>
+<li>Un proprietario, ovvero il processo che la istanzia;</li>
+<li>gruppo di appartenenza;</li>
+<li>Un insieme di permessi di accesso, indicati da un numero in ottale (es. <code>0644</code>).</li>
+</ul>
+<h2 id="operazioni-su-code-di-messaggi"><a class="header" href="#operazioni-su-code-di-messaggi">Operazioni su code di messaggi</a></h2>
+<p>Le librerie che ci permettono di lavorare con <em>code di messaggi</em> sono:</p>
+<pre><code class="language-c">#include &lt;sys/ipc.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/msg.h&gt;
+</code></pre>
+<h3 id="creazione-di-una-coda-di-messaggi-msgget"><a class="header" href="#creazione-di-una-coda-di-messaggi-msgget">Creazione di una coda di messaggi: <code>msgget</code></a></h3>
+<p>Per creare una nuova coda di messaggi, o accedere ad una esistente, bisogna invocare la system call <code>msgget()</code>.</p>
+<pre><code class="language-c">int msgget(key_t key, int msgflg);
+</code></pre>
+<p><code>key</code> e <code>msgflg</code> hanno lo stesso ruolo dei parametri visti per <code>semget()</code> e <code>shmget()</code>.</p>
+<p>Infatti tale funzione restituisce il <strong>descrittore</strong> della coda di messaggi identificata da una chiave <code>key</code> (ottenuta tramite codice cablato, <code>IPC_PRIVATE</code> o <code>ftok()</code>), oppure <code>-1</code> in caso di esito negativo.</p>
+<p>Come per le altre risorse IPC, <code>msgflg</code> può valere vari FLAG come <code>IPC_CREAT</code> in <em>or logico</em> con i permessi, se il processo chiamante deve creare la coda di messaggi, oppure <code>0</code> nel caso in cui si vuole ottenere il descrittore di una coda già istanziata.</p>
+<blockquote>
+<p>NOTA: La dimensione della coda e il numero massimo di messaggi sono decisi automaticamente dal <strong>kernel</strong></p>
+<p>Per modificare la dimensione o il numero massimo di messaggi è necessatio <strong>ricompilare</strong> il kernel per modificare un parametro apposito.</p>
+</blockquote>
+<p>ESEMPIO:</p>
+<pre><code class="language-c">#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+#include &lt;sys/types.h&gt;
+
+int main(){
+    key_t chiave = ... // IPC_PRIVATE, codice cablato o 
+                       // risultato di ftok()
+    int qid;
+    qid = msgget(chiave, IPC_CREAT | 0664);
+
+    if (qid &lt; 0){
+        perror("errore msgget");
+        exit(1);
+    }
+    ... // operazioni sulla message queue
+
+    return 0;
+}
+</code></pre>
+<h3 id="operazioni-di-controllo-sulla-coda-di-messaggi-msgctl"><a class="header" href="#operazioni-di-controllo-sulla-coda-di-messaggi-msgctl">Operazioni di controllo sulla coda di messaggi: <code>msgctl</code></a></h3>
+<p>La system call che permette di eseguire comandi per la gestione della risorsa <code>mailbox</code> è la <code>msgctl()</code>:</p>
+<pre><code class="language-c">int msgctl(int msqid, int cmd, struct msqid_ds* buf);
+</code></pre>
+<p>La chiamata <code>msgctl()</code> esegue l’operazione di controllo specificata tramite <code>cmd</code> sulla coda di messaggi identificata da <code>msqid</code> (descrittore).</p>
+<p>In particolare, per <code>cmd</code> possiamo utilizzare:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th><code>cmd</code></th><th>descrizione del comando</th></tr>
+</thead>
+<tbody>
+<tr><td><code>IPC_STAT</code></td><td>viene effettuata una copia della <strong>struttura dati del kernel</strong> (che mantiene informazioni sulla <em>Message Queue</em>) associata alla coda di messaggi identificata da <code>msqid</code> alla struttura dati <code>msqid_ds</code> puntata da <code>buf</code>.</td></tr>
+<tr><td><code>IPC_SET</code></td><td>permette di modificare le caratteristiche della coda.</td></tr>
+<tr><td><code>IPC_RMID</code></td><td>permette di rimuovere <strong>immediantamente</strong> la coda di messaggi identificata da <code>msqid</code>.</td></tr>
+</tbody>
+</table>
+</div>
+<p>L’eliminazione con il FLAG <code>IPC_RMID</code> non avviene come per le altre risorse IPC, ovvero la risorsa <strong>non viene marcata come eliminabile</strong> per il kernel e nel momento in cui si verifica una condizione questa viene eliminata, ma viene eliminata <strong>istantaneamente</strong>.</p>
+<p><code>msqid_ds</code> è una struttura che il kernel mantiene per ogni istanza di <em>Message Queue</em> creata. Tale struttura è definita in <code>linux/msg.h</code> come segue:</p>
+<pre><code class="language-c">/* one msqid structure for each queue on the system */
+struct msqid_ds {
+    struct ipc_perm msg_perm; // contains the access permissions of the msq 
+    struct msg *msg_first;  /* first message on queue */
+    struct msg *msg_last;   /* last message in queue */
+    time_t msg_stime;       /* last msgsnd time */
+    time_t msg_rtime;       /* last msgrcv time */
+    time_t msg_ctime;       /* last change time releted to msgctl op. */
+    struct wait_queue *wwait; // queue of processes waiting to send a msg
+    struct wait_queue *rwait; // queue of processes waiting to receive a msg
+    ushort msg_cbytes;      /* current number of bytes stored */
+    ushort msg_qnum;        /* number of msg in the queue */
+    ushort msg_qbytes;      /* max number of bytes on queue */
+    ushort msg_lspid;       /* pid of last msgsnd */
+    ushort msg_lrpid;       /* last receive pid */
+};
+</code></pre>
+<p>Per operare tramite <code>msgctl()</code>, il processo chiamante deve avere i permessi di lettura/scrittura sulla risorsa IPC.</p>
+<h3 id="invio-di-un-messaggio-msgsnd"><a class="header" href="#invio-di-un-messaggio-msgsnd">Invio di un messaggio: <code>msgsnd</code></a></h3>
+<p>Una volta ottenuto il descrittore di una <em>Message Queue</em> è possibile effettuare un operazione di invio (con accodamento) di un messaggo.</p>
+<p>Per inviare un messaggio bisogna utilizzare la system call <code>msgsnd()</code>:</p>
+<pre><code class="language-c">int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+</code></pre>
+<ul>
+<li>
+<p><code>msqid</code> è il descrittore della coda di messaggi ottenuto da <code>msgget()</code></p>
+</li>
+<li>
+<p><code>const void *msgp</code> è il puntatore alla <strong>struttura messaggio</strong> che contiene il messaggio vero e proprio da inviare.</p>
+<p>Tale struttura può avere un qualsiasi nome e deve seguire un pattern specifico (<strong>convensione</strong>):</p>
+<pre><code class="language-c">typedef struct{
+  long message_type;
+  char message_text[MAX_SIZE];
+} msgp;
+</code></pre>
+<p>dove:</p>
+<ul>
+<li>
+<p><code>message_type</code> identifica il tipo di messaggio che deve essere sempre un intero positivo (maggiore di <code>0</code>) <code>long</code> e deve trovarsi sempre come primo parametro della struttura;</p>
+<p>Non deve assumere come valore <code>0</code> poiché è un valore riservato ad un particolare comportamento della <code>msgrcv()</code>.</p>
+</li>
+<li>
+<p><code>message_text</code> identifica il messaggio vero e proprio da inviare.</p>
+<p>→ in realtà possiamo inserire qualsiasi campi dopo il primo, il vincolo sul pattern da seguire è rivolto solo a <code>message_type</code>.</p>
+</li>
+</ul>
+<p>il campo <code>message_type</code> diventa molto importante quando viene accoppiato con funzioni di <code>receive</code> <strong>selettive</strong>, che permettono di estrarre un particolare messaggio dalla coda della mailbox.</p>
+<p>Infatti, è possibile estrarre dalla coda di messaggi il messaggio che il cui campo tipo è quello specificato in <code>message_type</code> nonstante non si trovi in cima alla coda.</p>
+<p>Se <code>message_type</code> assume il valore del PID del processo mittente possiamo implementare una <strong>comunicazione diretta asimmetrica</strong> sfruttando una <strong>comunicazione indiretta</strong> offerta dalle mailbox (nel caso di <strong>una sola coda</strong>).</p>
+<p>In <code>sys/msg.h</code> fornisce una struttura messaggio che possiamo sfruttare (ma non è obbligatorio):</p>
+<pre><code class="language-c">struct msgbuf
+{
+  __syscall_slong_t mtype;	/* type of received/sent message */
+  char mtext[1];		/* text of the message */
+};
+</code></pre>
+</li>
+<li>
+<p>Il campo <code>msgsz</code> rappresenta la dimensione (in byte) del messaggio, ovvero la dimensione della struttura del messaggio meno la dimensione del campo <code>message_type</code> → (<code>sizeof(msdbuf) - sizeof(long)</code>).</p>
+</li>
+<li>
+<p>Il campo <code>msgflg</code> è un FLAG che ci permette di specificare la semantica dell’operazione di send.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>FLAG</th><th>descrizione</th></tr>
+</thead>
+<tbody>
+<tr><td><code>0</code></td><td>la <code>msgsnd()</code> blocca il processo se la mailbox è piena, e invia il messaggio nel momento in cui si libera una posizione dalla coda.</td></tr>
+<tr><td><code>IPC_NOWAIT</code></td><td>la <code>msgsnd()</code> invia il messaggio, ma se la mailbox è piena allora il processo non si sospende, la system call ritorna <code>-1</code> e il messaggio non viene accodato.</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>0</code>:</p>
+<p align="center"><img src="images/send_bloccata.png" width="350"></p>
+
+<p><code>IPC_NOWAIT</code></p>
+<p align="center"><img src="images/send_IPC_NOWAIT.png" width="350"></p>
+
+<p>Da notare che la <code>msgsnd()</code> è sempre <strong>asincrona</strong> (indipendentemente da <code>IPC_NOWAIT</code>) quindi il processo chiamante non si sospende mai tranne nel caso in cui la cosa è piena.</p>
+<p>Ma questo comportamento non definisce la <strong>send come sincrona</strong> perché vale per una particolare condizione.</p>
+<p>Per ottenere una <strong>send sincrona</strong>, è necessario applicare lo schema di <strong>renderzvous</strong>.</p>
+<p>In generale la funzione restituisce <code>0</code> se non si sono verificati errori.</p>
+</li>
+</ul>
+<p>ESEMPIO DI SEND:</p>
+<pre><code class="language-c">struct message {
+    long type;
+    char text[15];
+    int val;
+} msg;
+
+msg.type = 1; // intero positivo, maggiore di 0
+strcpy(msg.text, "My first msg");
+msg.val = 5;
+
+// send asincrona, si blocca il chiamante solo se la coda è piena
+
+int result = msgsnd(msqid, (void*)&amp;msg, sizeof(struct message) - sizeof(long), 0);
+
+if (result &lt; 0){
+    perror("Errore nell'invio di un messaggio\n");
+}
+</code></pre>
+<p>NOTA: è possibile implementare facilmente il problema produttori/consumatori nel momento in cui un processo produttore si sospende se la coda dei messaggi è piena.</p>
+<p>E un processo consumatore si sospende con la <strong>receive bloccante</strong> fornita da <strong>UNIX System V</strong>.</p>
+<h3 id="ricezione-di-un-messaggio-msgrcv"><a class="header" href="#ricezione-di-un-messaggio-msgrcv">Ricezione di un messaggio: <code>msgrcv</code></a></h3>
+<p>La system call che consente la ricezione di un messaggio da una mailbox è <code>msgrcv()</code>:</p>
+<pre><code class="language-c">ssize_t msgrcv(int msqid, void*msgp, size_t msgsz, long msgtyp, int msgflg);
+</code></pre>
+<p>Tale system call permette di consumare un messaggio dalla mailbox identificata da <code>msqid</code>.</p>
+<p>Il buffer contenente il messaggio sarà puntato da <code>msgp</code>, e il campo messaggio avrà dimensione pari a <code>msgsz</code> (che sarà sempre la dimesione della struttura messaggio tolta la dimensione del campo <code>message_type</code>).</p>
+<p>Il campo <code>msgtyp</code> svolge importanti funzioni, infatti definisce il comportamento della <code>msgrcv()</code>:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>type</th><th>comportamento</th></tr>
+</thead>
+<tbody>
+<tr><td><code>msgtyp == 0</code></td><td>viene prelevato il primo messaggio della coda (ovvero quello inviato da più tempo).</td></tr>
+<tr><td><code>msgtyp &gt; 0</code></td><td>viene prelevato il primo messaggio della coda il cui campo tipo sia pari al valore di <code>msgtyp</code>.</td></tr>
+<tr><td><code>msgtyp &lt; 0</code></td><td>viene prelevato il primo messaggio dalla coda il cui campo tipo abbia un valore minore o uguale a <code>|msgtyp|</code>.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Infine per il campo <code>msgflg</code>:</p>
+<ul>
+<li>
+<p>se impostato a <code>0</code> indica una <strong>ricezione bloccante</strong>: se non ci sono messaggi da consumare nella mailbox aventi il tipo specificato, il processo si <em>sospende</em> sulla system call <code>msgrcv()</code> fino al giungere del messaggio;</p>
+<p align="center"><img src="images/receive_bloccante.png" width="350"></p>
+
+</li>
+<li>
+<p>se impostato a <code>IPC_NOWAIT</code>, si ha il comportamento di una <strong>receive non bloccante</strong>: se non ci sono messaggi del tipo specificato in <code>msgtyp</code> viene restituito <code>-1</code>.</p>
+<p align="center"><img src="images/receive_non_bloccante.png" width="350"></p>
+
+</li>
+</ul>
+<p>In generale la chiamata ritorna <code>0</code> se non si sono verificati errori.</p>
+<p>ESEMPIO DI RECEIVE:</p>
+<pre><code class="language-c">struct message {
+    long type;
+    char text[25];
+    int val;
+} msg;
+
+long msgtyp = 0;
+
+// receive bloccante
+int result = msgrcv(msqid, (void*)&amp;msg, sizeof(struct message) - sizeof(long), msgtyp, 0);
+
+if(result &lt; 0){ 
+	perror(”Errore nella ricezione di un messaggio”); 
+}
+
+printf(”Messaggio: tipo=%d, text=%s, val=%d\n”,
+        msg.type, msg.text, msg.val);
+</code></pre>
+<h4 id="receive-selettiva"><a class="header" href="#receive-selettiva">receive selettiva</a></h4>
+<p>Specificare il tipo mi permette di implementare una <strong>receive selettiva</strong> che sia bloccante o non. Tramite l’utilizzo opportuno del tipo ho la possibilità di implementare diversi tipi di comunicazione: one-to-one, one-to-many, etc.</p>
+<p align="center"><img src="images/receive_selettiva.png" width="300"></p>
+
+<p>Questo è un esempio di receive selettiva, dove <code>B</code> è un valore intero positivo e identifica un tipo di messagio</p>
+<hr>
+<p>Possiamo utilizzare il campo tipo per la <strong>ricezione selettiva dei messaggi di risposta da un server</strong>.</p>
+<ul>
+<li>sfruttando due code di messaggi, una per l’invio l’altra per la ricezione di messaggi dal server;</li>
+<li>ogni client invia una richiesta includendo il suo <strong>PID</strong>;</li>
+<li>il server invia la risposta usando come tipo il <strong>PID</strong> del processo che ha inviato la richiesta;</li>
+<li>ogni client <strong>riceve selettivamente</strong> la risposta con tipo il proprio <strong>PID</strong>.</li>
+</ul>
+<p align="center"><img src="images/comunicazione_client_server.png" width="400"></p>
+
+<p>Inoltre mediante l’ausilio di <strong>due Message Queue</strong> possiamo implementare una <strong>comunicazione diretta simmetrica</strong> utilizzando sempre una comunicazione indiretta.</p>
+<p>Sfruttando il campo tipo di ogni messaggio e il PID dei processi che vogliono comunicare tra loro.</p>
+<p>A mediare la comunicazione è necessario un terzo processo che faccia da <strong>server</strong>, il quale smista i messaggi nella coda di entrata (aventi come tipo il PID del destinatario e nel payload il PID del mittente) nella coda di uscita modificando il tipo con il PID del mittente.</p>
+<h2 id="errori"><a class="header" href="#errori">Errori</a></h2>
+<p>Nel momento in cui si verifica un errore in una delle system call viste (di controllo, invio, ricezione o creazione), il tipo di errore è indicato nella variabile globale <code>errno</code>, definita per ogni processo.</p>
+<p>Questo vale non solo per le <em>Message Queue</em> ma per qualsiasi primitiva che utilizziamo.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="note"><a class="header" href="#note">NOTE</a></h1>
 <h2 id="utilizzo-di-semafori-tra-processi-con-fork--exec"><a class="header" href="#utilizzo-di-semafori-tra-processi-con-fork--exec">Utilizzo di semafori tra processi con fork + exec</a></h2>
