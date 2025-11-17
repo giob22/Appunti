@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ff2786ff.js";
+            window.path_to_searchindex_js = "searchindex-2a5edb96.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -196,7 +196,7 @@
 </li>
 </ol>
 <p>La seconda soluzione, seppur valida e funzionante pone un rischio dal punto di vista della <strong>validità del descrittore</strong> se qualche processo prova a cancellare l’array semaforico. Perché essendo che la rimozione fisica dell’array semaforico legata alla <code>semop()</code>, questo potrebbe essere eliminato definitivamente se nessun processo è in attesa su un semaforo.</p>
-<p>Questo quindi vuol dire che nel momento in cui un’altro processo che ha ottenuto direttamente il costruttore (tramite la <code>shm</code>) prova ad utilizzare il semaforo potrebbe ottenere un comportamento inaspettato.</p>
+<p>Questo quindi vuol dire che nel momento in cui un altro processo che ha ottenuto direttamente il costruttore (tramite la <code>shm</code>) prova a utilizzare il semaforo potrebbe ottenere un comportamento inaspettato.</p>
 <p>Ovviamente questo problema può presentarsi anche nel caso in cui il processo figlio, creato con <code>fork + exec</code>, tenti di utilizzare un semaforo che inizialmente esiste e di cui ottiene il descrittore tramite <code>semget()</code>, usando la stessa chiave del processo padre. Tuttavia, prima che il semaforo non sia più necessario all’esecuzione del figlio, il padre potrebbe marcarlo come <strong>eliminabile</strong>.</p>
 <p>In questa situazione, nonostante il semaforo possa essere necessario al processo figlio che possiede un descrittore valido, esso potrebbe comunque essere eliminato fisicamente, poiché l’eliminazione di un array di semafori dipende da <code>semop()</code>. In particolare, un semaforo marcato come eliminabile non viene rimosso fisicamente finché esiste un processo in attesa su almeno uno dei semafori dell’array.</p>
 <p>Nel mio <strong>git hub</strong> ho simulato questa situazione con due processi che eseguono due codici diversi ma utilizzano la stessa chiave per ottenere il descrittore del semaforo su cui entrambi lavorano.</p>

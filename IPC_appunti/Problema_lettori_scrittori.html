@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ff2786ff.js";
+            window.path_to_searchindex_js = "searchindex-2a5edb96.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -189,7 +189,7 @@
 </ol>
 <p>Non è presente un vincolo di ordinamento (un lettore non deve leggere solo dopo una scrittura) tra i processi lettori e scrittori, ma un vincolo di <strong>mutua esclusione</strong> (tra scrittori) e <strong>cooperazione</strong> (tra lettore e scrittore) sull’utilizzo della <code>shm</code>.</p>
 <p>In realtà si vede che è necessario gestire anche la mutua esclusione tra processi scrittori che però non riguarda la <code>shm</code> ma una variabile necessaria all’implementazione di questo paradigma: variabile che tiene conto del numero corrente di lettori sulla <code>shm</code>.</p>
-<p>I processi lettori inoltre non consumano la risorsa nel momento in cui la leggono/usufruiscono, come accadeva per i consumatori → non notificano allo scrittore l’avvenuta lettura perchè non c’è il concetto di spazio libero (come avveniva per consumatore/produttore).</p>
+<p>I processi lettori inoltre non consumano la risorsa nel momento in cui la leggono/usufruiscono, come accadeva per i consumatori → non notificano allo scrittore l’avvenuta lettura perché non c’è il concetto di spazio libero (come avveniva per consumatore/produttore).</p>
 <p>Un <em>side effect</em> dei lettori/scrittori è la starvation che può mostrarsi in due casi:</p>
 <ol>
 <li><strong>starvation degli scrittori</strong></li>
@@ -310,10 +310,10 @@
 }
 </code></pre>
 <ul>
-<li>Con <code>signal_sem()</code> su <code>MUTEX</code> permetto ad un altro scrittore sospeso sulla <code>shm</code> di accedervi;</li>
+<li>Con <code>signal_sem()</code> su <code>MUTEX</code> permetto a un altro scrittore sospeso sulla <code>shm</code> di accedervi;</li>
 <li>successivamente con un <code>wait_sem()</code> su <code>MUTEXS</code> il processo accede alla variabile <code>Num_Scrittori</code> in mutua esclusione;</li>
-<li>Se tale variabile è pari a <code>0</code> allota il processo è l’ultimo scrittore, quindi effettua una <code>signal_sem()</code> su <code>SYNCH</code> in modo da permettere l’accesso ai lettori;</li>
-<li>infine il processo rilascial la variabile <code>Num_Scrittori</code> attraverso una <code>signal_sem()</code> su <code>MUTEXS</code> affinchè altri scrittori possano accedervi.</li>
+<li>Se tale variabile è pari a <code>0</code> allora il processo è l’ultimo scrittore, quindi effettua una <code>signal_sem()</code> su <code>SYNCH</code> in modo da permettere l’accesso ai lettori;</li>
+<li>infine il processo rilascia la variabile <code>Num_Scrittori</code> attraverso una <code>signal_sem()</code> su <code>MUTEXS</code> affinché altri scrittori possano accedervi.</li>
 </ul>
 <p>Da notare che l’implementazione di queste due funzioni è l’analogo delle funzioni per inizio e fine lettura per i lettori. L’unica differenza sta nel fatto che per gli scrittori è da gestire la loro mutua esclusione sulla <code>shm</code> che non è necessario per i lettori.</p>
 <p>A questo proposito infatti è impiegato il semaforo identificato all’interno del <em>semaphor set</em> dalla costante <code>MUTEX</code>.</p>

@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ff2786ff.js";
+            window.path_to_searchindex_js = "searchindex-2a5edb96.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -179,25 +179,25 @@
 <p>Per implementare la comunicazione e quindi anche la sincronizzazione tra processi, abbiamo bisogno che questi comunichino mediante un mezzo; tale mezzo è definito come <strong>risorse IPC</strong>.</p>
 <p>Utilizzeremo <strong>meccanismi di comunicazione</strong> introdotti originariamente nel sistema operativo <strong>UNIX System V</strong>. In particolare <strong>System V IPC</strong> fornisce tre principali tipi di risorse gestite dal kernel:</p>
 <ul>
-<li><strong>Shared memory (SHM)</strong> → memoria condivisa tra piú processi;</li>
+<li><strong>Shared memory (SHM)</strong> → memoria condivisa tra più processi;</li>
 <li><strong>Semaphores (SEM)</strong> → strutture per la sincronizzazione e mutua esclusione;</li>
 <li><strong>Message queue (MSG)</strong> → code di messaggi per lo scambio asincrono di dati.</li>
 </ul>
 <p>Quindi Linux/UNIX permette la <strong>comunicazione tra processi</strong> mediante primitive e strutture dati fornite dal kernel.</p>
-<p>Alla base dei meccanismi di comunicazione è presente una <em>shared memory</em>; per implementare semafori e code di messaggi, necessari a gestire rispettivamente mutua  escluzione (competizione) e sincronizzazione (cooperazione), sono necessarie delle porzioni di memoria condivise tra i processi.</p>
+<p>Alla base dei meccanismi di comunicazione è presente una <em>shared memory</em>; per implementare semafori e code di messaggi, necessari a gestire rispettivamente mutua escluzione (competizione) e sincronizzazione (cooperazione), sono necessarie delle porzioni di memoria condivise tra i processi.</p>
 <h2 id="primitive-get-e-ctl"><a class="header" href="#primitive-get-e-ctl">Primitive GET e CTL</a></h2>
 <p>Ogni risorsa <strong>IPC</strong> è gestita con l’utilizzo di due primitive <strong>get</strong> e <strong>ctl</strong>.</p>
-<p>La primitiva <strong>get</strong> utilizza una “chiave” (IPC key), ed opportuni parametri, per restituire al processo un <strong>descrittore della risorsa</strong>.</p>
+<p>La primitiva <strong>get</strong> utilizza una “chiave” (IPC key), e opportuni parametri, per restituire al processo un <strong>descrittore della risorsa</strong>.</p>
 <p>La primitiva <strong>ctl</strong> (control) permette, dato un descrittore, di:</p>
 <ul>
 <li>verificare lo stato di una risorsa;</li>
 <li>cambiare lo stato di una risorsa;</li>
 <li>rimuovere una risorsa</li>
 </ul>
-<p>La rimozione però non nel senso stretto, in realtá la risorsa vine <strong>solamente etichettata</strong> come eliminabile al kernel: infatti questa viene eliminata se non sono presenti processi che la stanno utilizzando; ovvero processi <code>attached</code> alla risorsa.</p>
+<p>La rimozione però non nel senso stretto, in realtà la risorsa vine <strong>solamente etichettata</strong> come eliminabile al kernel: infatti questa viene eliminata se non sono presenti processi che la stanno utilizzando; ovvero processi <code>attached</code> alla risorsa.</p>
 <p><img src="images/shared_memory_flow.svg" alt="Diagramma chiave IPC"></p>
 <hr>
-<p>Le risorse IPC sono <strong>permanenti</strong>: se un processo termina o si stacca dalla risorsa questa non si elimina automaticamente. è necessario una chiamata eplicita alla primitiva <code>clt</code>.</p>
+<p>Le risorse IPC sono <strong>permanenti</strong>: se un processo termina o si stacca dalla risorsa questa non si elimina automaticamente. Sarà necessario una chiamata esplicita alla primitiva <code>clt</code>.</p>
 <p><img src="images/persistenza_ipc.svg" alt="Diagramma chiave IPC"></p>
 <h2 id="primitiva-get"><a class="header" href="#primitiva-get">Primitiva <code>get</code></a></h2>
 <p>La primitiva <code>get</code> ha la seguente firma:</p>
@@ -214,11 +214,11 @@
 </ul>
 </li>
 <li>
-<p><strong>flag</strong>: indica la modalitá di acquisizione della risorsa e i permessi di accesso.</p>
-<p>Corrisponde ad una o piú costanti, passate insieme in “or logico” (carattere di pipe <code>|</code> ). Tali costanti sono:</p>
+<p><strong>flag</strong>: indica la modalità di acquisizione della risorsa e i permessi di accesso.</p>
+<p>Corrisponde ad una o più costanti, passate insieme in “or logico” (carattere di pipe <code>|</code>). Tali costanti sono:</p>
 <ul>
-<li>macro <code>IPC_CREAT</code> definita in <code>sys/ipc.h</code>: impone di creare una nuova risorsa se non ne esiste giá una con la stessa chiave indicata. Se la risorsa è giá esistente allora il flag è ininfluente.</li>
-<li>macro <code>IPC_EXCL</code> definita in <code>sys/ipc.h</code>: utilizzabile con <code>IPC_CREAT</code> per imporre di ritornare un errore se la risorsa è giá esistente. Questa modalitá è utile per evitare di inizializzare la risorsa IPC piú volte. Però nel caso la risorsa non esista questa viene creata.</li>
+<li>macro <code>IPC_CREAT</code> definita in <code>sys/ipc.h</code>: impone di creare una nuova risorsa se non ne esiste già una con la stessa chiave indicata. Se la risorsa è già esistente allora il flag è ininfluente.</li>
+<li>macro <code>IPC_EXCL</code> definita in <code>sys/ipc.h</code>: utilizzabile con <code>IPC_CREAT</code> per imporre di ritornare un errore se la risorsa è già esistente. Questa modalità è utile per evitare di inizializzare la risorsa IPC più volte. Però nel caso la risorsa non esista questa viene creata.</li>
 <li><strong>Permessi di accesso</strong>: sono specificati con la notazione ottale. Per esempio, il valore <code>0664</code> indica i permessi di lettura e scrittura per <code>user</code> e <code>group</code>, e di sola lettura per <code>others</code>.</li>
 </ul>
 </li>
@@ -240,15 +240,15 @@
 </ul>
 <p>Il parametro di ritorno di <code>ctl()</code> è pari ad <code>-1</code> nel caso di un errore, <code>0</code> nel caso di operazione riuscita.</p>
 <h2 id="ipc-keys"><a class="header" href="#ipc-keys">IPC keys</a></h2>
-<p>Ogni risorsa <code>IPC</code> è identificata da un <strong>valore univoco nel sistema</strong>, denominato <strong>chiave</strong>(IPC key). Abbiamo diversi modi per assegnare una chiave ad una risorsa IPC:</p>
+<p>Ogni risorsa <code>IPC</code> è identificata da un <strong>valore univoco nel sistema</strong>, denominato <strong>chiave</strong>(IPC key). Abbiamo diversi modi per assegnare una chiave a una risorsa IPC:</p>
 <h3 id="chiave-cablata-nel-codice"><a class="header" href="#chiave-cablata-nel-codice">Chiave cablata nel codice</a></h3>
-<p>Il modo piú semplice di <strong>scegliere una chiave</strong> è <strong>usare un valore a piacere</strong> del programmatore, “cablato” nel programma.</p>
+<p>Il modo più semplice di <strong>scegliere una chiave</strong> è <strong>usare un valore a piacere</strong> del programmatore, “cablato” nel programma.</p>
 <p>ESEMPIO:</p>
 <pre><code class="language-c">key_t mykey = 123;
 int id = ...get(mykey,...);
 </code></pre>
-<p>Tale approccio è molto svantaggioso perché è <strong>statico</strong>, la chiave viene assegnata in modo statico, questo vuol dire che erroneamente un processo potrebbe utilizzare una chiave giá utilizzata per un’altra risorsa IPC destinata ad uno scopo completamente diverso.</p>
-<p>In questo caso potrebbero crearsi delle <strong>interferenzze</strong> e quindi problemi di comunicazione tra processi.</p>
+<p>Tale approccio è molto svantaggioso perché è <strong>statico</strong>, la chiave viene assegnata in modo statico, questo vuol dire che erroneamente un processo potrebbe utilizzare una chiave già utilizzata per un’altra risorsa IPC destinata ad uno scopo completamente diverso.</p>
+<p>In questo caso potrebbero crearsi delle <strong>interferenze</strong> e quindi problemi di comunicazione tra processi.</p>
 <h3 id="chiave-generata-da-ftok"><a class="header" href="#chiave-generata-da-ftok">Chiave generata da <code>ftok()</code></a></h3>
 <p>La chiamata di sistema <code>ftok()</code> genera una chiave univoca per una risorsa partendo da una stringa e un carattere passatogli per parametri.</p>
 <pre><code class="language-c">key_t ftok(char * path, char id);
@@ -256,13 +256,13 @@ int id = ...get(mykey,...);
 <p>ESEMPIO:</p>
 <pre><code class="language-c">key_t mykey = ftok("./percorso", 'a');
 </code></pre>
-<p>Per convesione si utilizza come prima stringa il percorso file dell’eseguibile che intende creare la risorsa. In generale piú esser inserita una qualsiasi stringa di caratteri. Il secondo parametro <code>id</code> invece è un carattere scelto a piacere.</p>
+<p>Per convesione si utilizza come prima stringa il percorso file dell’eseguibile che intende creare la risorsa. In generale più esser inserita una qualsiasi stringa di caratteri. Il secondo parametro <code>id</code> invece è un carattere scelto a piacere.</p>
 <p>La primitiva restituisce una chiave IPC ottenuta da una funzione aritmetica che combina l’<em>inode number</em>, il <em>minor device number</em>, del file indicato dal path, e il carattere indicato come secondo argomento.</p>
 <ul>
-<li><em>inode number</em> è l’identificatore univoco del file nel filesystem;</li>
+<li><em>inode number</em> è l’identificatore univoco del file nel file system;</li>
 <li><em>minor device number</em> è l’identificatore della partizione/dispositivo dove risiede il file.</li>
 </ul>
-<p>Il metodo che utilizza <code>ftok()</code> per la creazione di una chiave associabile ad una risorsa IPC è quello piú versatile; è l’unico modo che abbiamo per permettere la comunicazione tra due processi associati ad eseguibili differenti.</p>
+<p>Il metodo che utilizza <code>ftok()</code> per la creazione di una chiave associabile a una risorsa IPC è quello più versatile; è l’unico modo che abbiamo per permettere la comunicazione tra due processi associati a eseguibili differenti.</p>
 <h2 id="chiave-ipc_private"><a class="header" href="#chiave-ipc_private">Chiave <code>IPC_PRIVATE</code></a></h2>
 <p><code>IPC_PRIVATE</code> (equivale a <code>0</code>), è un valore costante, che può essere usato per creare una risorsa <strong>senza chiave</strong>. In questo caso la risorsa è accessibile unicamente dal processo creatore e degli eventuali figli aventi la stessa immagine (utilizzare <code>exec()</code> significherebbe perdere l’accesso alla risorsa).</p>
 <p>ESEMPIO:</p>
@@ -302,14 +302,14 @@ key        semid      owner      perms      nsems
  -s, --semaphores  semaphores
  -a, --all         all (default)
 </code></pre>
-<p>Tale comando (<code>ipcs</code>) cattura le sue informazione dal <strong>filesystem virtuale</strong> <code>/proc</code> di Linux. In particolar modo in <code>/proc/sysvipc/shm</code> sono contenute tutte le informazioni sulle shared memory.</p>
+<p>Tale comando (<code>ipcs</code>) cattura le sue informazione dal <strong>file system virtuale</strong> <code>/proc</code> di Linux. In particolar modo in <code>/proc/sysvipc/shm</code> sono contenute tutte le informazioni sulle shared memory.</p>
 <p>Sempre nella stessa cartella possiamo trovare informazioni anche per le altre IPC:</p>
 <ul>
 <li><strong>message queue</strong> → <code>/proc/sysvipc/msg</code>;</li>
 <li><strong>semafori</strong> → <code>/proc/sysvipc/sem</code>.</li>
 </ul>
 <p>Il comando <code>ipcrm</code> invece ci permette di marcare come eliminabile al kernel una struttura IPC dato il suo identificativo. Il comando è molto utile quando il programmatore non ha rimosso esplicitamente le strutture allocate.</p>
-<p>ESEMPIO: eliminiamo la shared memory evente pid <code>133215</code></p>
+<p>ESEMPIO: eliminiamo la shared memory avente pid <code>133215</code></p>
 <pre><code class="language-bash">ipcrm -m 133215
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -975,7 +975,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 </ol>
 <p>Non è presente un vincolo di ordinamento (un lettore non deve leggere solo dopo una scrittura) tra i processi lettori e scrittori, ma un vincolo di <strong>mutua esclusione</strong> (tra scrittori) e <strong>cooperazione</strong> (tra lettore e scrittore) sull’utilizzo della <code>shm</code>.</p>
 <p>In realtà si vede che è necessario gestire anche la mutua esclusione tra processi scrittori che però non riguarda la <code>shm</code> ma una variabile necessaria all’implementazione di questo paradigma: variabile che tiene conto del numero corrente di lettori sulla <code>shm</code>.</p>
-<p>I processi lettori inoltre non consumano la risorsa nel momento in cui la leggono/usufruiscono, come accadeva per i consumatori → non notificano allo scrittore l’avvenuta lettura perchè non c’è il concetto di spazio libero (come avveniva per consumatore/produttore).</p>
+<p>I processi lettori inoltre non consumano la risorsa nel momento in cui la leggono/usufruiscono, come accadeva per i consumatori → non notificano allo scrittore l’avvenuta lettura perché non c’è il concetto di spazio libero (come avveniva per consumatore/produttore).</p>
 <p>Un <em>side effect</em> dei lettori/scrittori è la starvation che può mostrarsi in due casi:</p>
 <ol>
 <li><strong>starvation degli scrittori</strong></li>
@@ -1096,10 +1096,10 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 }
 </code></pre>
 <ul>
-<li>Con <code>signal_sem()</code> su <code>MUTEX</code> permetto ad un altro scrittore sospeso sulla <code>shm</code> di accedervi;</li>
+<li>Con <code>signal_sem()</code> su <code>MUTEX</code> permetto a un altro scrittore sospeso sulla <code>shm</code> di accedervi;</li>
 <li>successivamente con un <code>wait_sem()</code> su <code>MUTEXS</code> il processo accede alla variabile <code>Num_Scrittori</code> in mutua esclusione;</li>
-<li>Se tale variabile è pari a <code>0</code> allota il processo è l’ultimo scrittore, quindi effettua una <code>signal_sem()</code> su <code>SYNCH</code> in modo da permettere l’accesso ai lettori;</li>
-<li>infine il processo rilascial la variabile <code>Num_Scrittori</code> attraverso una <code>signal_sem()</code> su <code>MUTEXS</code> affinchè altri scrittori possano accedervi.</li>
+<li>Se tale variabile è pari a <code>0</code> allora il processo è l’ultimo scrittore, quindi effettua una <code>signal_sem()</code> su <code>SYNCH</code> in modo da permettere l’accesso ai lettori;</li>
+<li>infine il processo rilascia la variabile <code>Num_Scrittori</code> attraverso una <code>signal_sem()</code> su <code>MUTEXS</code> affinché altri scrittori possano accedervi.</li>
 </ul>
 <p>Da notare che l’implementazione di queste due funzioni è l’analogo delle funzioni per inizio e fine lettura per i lettori. L’unica differenza sta nel fatto che per gli scrittori è da gestire la loro mutua esclusione sulla <code>shm</code> che non è necessario per i lettori.</p>
 <p>A questo proposito infatti è impiegato il semaforo identificato all’interno del <em>semaphor set</em> dalla costante <code>MUTEX</code>.</p>
@@ -1469,7 +1469,7 @@ int queue_condition(Monitor*, int);
 <p>In entrambi i casi, sia che la verifica sia vero oppure falsa, il processo segnalatore continua la sua esecuzione all’interno del monitor.</p>
 <!--todo aggiungi il codice sorgente per ogni workflow   --><div style="break-before: page; page-break-before: always;"></div>
 <h1 id="sincronizzazione-nel-modello-ad-ambiente-locale"><a class="header" href="#sincronizzazione-nel-modello-ad-ambiente-locale">Sincronizzazione nel modello ad ambiente locale</a></h1>
-<p>Il modello ad ambiente <strong>locale</strong> si riferisce ad una struttura in cui ogni processo opera nel proprio ambiente privato, <strong>senza alcuna memoria condivisa</strong> tra vari processi.</p>
+<p>Il modello ad ambiente <strong>locale</strong> si riferisce a una struttura in cui ogni processo opera nel proprio ambiente privato, <strong>senza alcuna memoria condivisa</strong> tra vari processi.</p>
 <p>In questo modello tutte le risorse sono privare a ciascun processo e non possono essere modificate direttamente da altri processi.</p>
 <p>Questo è un approccio tipico dei <strong>sistemi distribuiti</strong>.</p>
 <p>Quindi ogni processo evolve in un proprio ambiente:</p>
@@ -1530,7 +1530,7 @@ int queue_condition(Monitor*, int);
 <p>L’<strong>intestazione</strong> è usata dal sistema operativo per gestire e instradare la comunicazione.</p>
 <p>Mentre il <strong>corpo</strong> contiene le informazioni scambiate tra i processi.</p>
 <h3 id="send"><a class="header" href="#send">Send</a></h3>
-<p>La primitiva <strong>send</strong> può avere diverse caratteristiche a seconda del sistema operativo. In particolare il comportamento della primitiva piò essere di due tipi:</p>
+<p>La primitiva <strong>send</strong> può avere diverse caratteristiche a seconda del sistema operativo. In particolare il comportamento della primitiva può essere di due tipi:</p>
 <ul>
 <li><strong>sincrono</strong>: il processo che esegue la send <strong>rimane in attesa</strong> fin quando il messaggio non è stato ricevuto dal destinatario. Dopo la conferma di avvenuta ricezione il processo chiamante viene sbloccato;</li>
 <li><strong>asincrono</strong>: il processo che esegue la send continua la sua esecuzione, <strong>senza attendere</strong> l’avvenuta ricezione del messaggio.</li>
@@ -1586,13 +1586,13 @@ int queue_condition(Monitor*, int);
 <p>Send asincrona e receive bloccante sono quelle che si trovano più spesso nei sistemi operativi e linguaggi di programmazione.</p>
 <h2 id="implementazione-di-una-send-sincrona-a-mezzo-di-send-asincrona"><a class="header" href="#implementazione-di-una-send-sincrona-a-mezzo-di-send-asincrona">Implementazione di una send sincrona a mezzo di send asincrona</a></h2>
 <p>Siamo in grado di implementare una <strong>send sincrona</strong> utilizzando send asincrona + receive bloccante (default di <strong>System V linux</strong>).</p>
-<p>La send sincrona è utile quando il mittende deve conoscere se il destinatario ha ricevuto o meno il messaggio.</p>
+<p>La send sincrona è utile quando il mittente deve conoscere se il destinatario ha ricevuto o meno il messaggio.</p>
 <p>→ il sender deve determinare se il messaggio è stato ricevuto e lo fa inviando prima dei messaggi aggiuntivi al messaggio contenente l’informazione da scambiare.</p>
 <p align="center">
   <img src="images/send_sincrona_SVL.png" width="300">
 </p>
 
-<p>Quindi, tra mittente e destinatario, per la cominicazione sincrona è necessario che questi si scambino una serie di messaggi prima di inviare il messaggio contenente l’informazione.</p>
+<p>Quindi, tra mittente e destinatario, per la comunicazione sincrona è necessario che questi si scambino una serie di messaggi prima di inviare il messaggio contenente l’informazione.</p>
 <ul>
 <li>
 <p>Il sender dopo aver inviato una richiesta <em>request-to-send</em> si mette in attesa di una risposta da parte del destinatario.</p>
@@ -1604,7 +1604,7 @@ int queue_condition(Monitor*, int);
 <p>Il sender una volta sbloccato invia la il messaggio effettivo.</p>
 </li>
 </ul>
-<p>Implementado questo scambio di messaggi tra sender e receiver è quindi possibile implementare quella che è una <strong>send sincrona</strong>.</p>
+<p>Implementando questo scambio di messaggi tra sender e receiver è quindi possibile implementare quella che è una <strong>send sincrona</strong>.</p>
 <p>Ovviamente questo procedura è da visualizzare in maniera <strong>atomica</strong>.</p>
 <p>Implementazione tipo:</p>
 <p><strong>send</strong></p>
@@ -1703,7 +1703,7 @@ int queue_condition(Monitor*, int);
 <hr>
 <p>In conclusione possiamo avere diversi modi di <strong>gestire la cooperazione</strong> per modelli ambiente locale che sono determinati dalla combinazione tra le <strong>tipologie di sincronizzazione</strong> che possiamo ottenere e i possibili <strong>indirizzamenti</strong> utilizzabili.</p>
 <p><strong>Esempio di comunicazione di RENDEZVOUS con mailbox</strong></p>
-<p><strong>Rendezvous</strong>: send sincrona, receive  bloccante</p>
+<p><strong>Rendezvous</strong>: send sincrona, receive bloccante</p>
 <p align="center">
   <img src="images/esempio_mailbox.png" width="500">
 </p>
@@ -1996,7 +1996,7 @@ printf(”Messaggio: tipo=%d, text=%s, val=%d\n”,
 </li>
 </ol>
 <p>La seconda soluzione, seppur valida e funzionante pone un rischio dal punto di vista della <strong>validità del descrittore</strong> se qualche processo prova a cancellare l’array semaforico. Perché essendo che la rimozione fisica dell’array semaforico legata alla <code>semop()</code>, questo potrebbe essere eliminato definitivamente se nessun processo è in attesa su un semaforo.</p>
-<p>Questo quindi vuol dire che nel momento in cui un’altro processo che ha ottenuto direttamente il costruttore (tramite la <code>shm</code>) prova ad utilizzare il semaforo potrebbe ottenere un comportamento inaspettato.</p>
+<p>Questo quindi vuol dire che nel momento in cui un altro processo che ha ottenuto direttamente il costruttore (tramite la <code>shm</code>) prova a utilizzare il semaforo potrebbe ottenere un comportamento inaspettato.</p>
 <p>Ovviamente questo problema può presentarsi anche nel caso in cui il processo figlio, creato con <code>fork + exec</code>, tenti di utilizzare un semaforo che inizialmente esiste e di cui ottiene il descrittore tramite <code>semget()</code>, usando la stessa chiave del processo padre. Tuttavia, prima che il semaforo non sia più necessario all’esecuzione del figlio, il padre potrebbe marcarlo come <strong>eliminabile</strong>.</p>
 <p>In questa situazione, nonostante il semaforo possa essere necessario al processo figlio che possiede un descrittore valido, esso potrebbe comunque essere eliminato fisicamente, poiché l’eliminazione di un array di semafori dipende da <code>semop()</code>. In particolare, un semaforo marcato come eliminabile non viene rimosso fisicamente finché esiste un processo in attesa su almeno uno dei semafori dell’array.</p>
 <p>Nel mio <strong>git hub</strong> ho simulato questa situazione con due processi che eseguono due codici diversi ma utilizzano la stessa chiave per ottenere il descrittore del semaforo su cui entrambi lavorano.</p>
