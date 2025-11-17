@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e3603597.js";
+            window.path_to_searchindex_js = "searchindex-2b88d43a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d8baf949.js"></script>
@@ -1062,10 +1062,10 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <p><code>MUTEXS</code> per gestire l’accesso alla variabile <code>NUM_SCRITTORI</code> in mutua esclusione, da parte degli scrittori;</p>
 </li>
 <li>
-<p><code>MUTEX</code> per gestire l’accesso alla <code>shm</code> in mutua esclusione, da parte degli scrittori</p>
+<p><code>MUTEX</code> per gestire l’accesso alla <code>shm</code> in mutua esclusione, da parte degli scrittori;</p>
 </li>
 <li>
-<p><code>SYNCH</code> per garantire la mutua esclusione tra i processi lettori e scrittori</p>
+<p><code>SYNCH</code> per garantire la mutua esclusione, tra i processi lettori e scrittori, sulla <code>shm</code>.</p>
 <p>In questa implementazione tale semaforo non è più utilizzato per gestire sia la mutua esclusione tra scrittori e lettori che la mutua esclusione tra gli scrittori,</p>
 <p>ma gestisce unicamente la <strong>mutua esclusione</strong> tra <strong>lettori</strong> e <strong>scrittori</strong>.</p>
 </li>
