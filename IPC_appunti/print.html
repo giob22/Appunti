@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3d7f8c81.js";
+            window.path_to_searchindex_js = "searchindex-ff2786ff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -411,7 +411,7 @@ struct shmid_ds {
 <p>La shared memory viene creata dal primo <code>get</code> solamente se non ne esiste giá una con la stessa chiave, altrimenti restituisce <code>-1</code>.</p>
 <p>In quest’ultimo caso otteniamo il descrittore con una chiamata <code>get</code> senza flag poichè sappiamo esistere la risorse IPC.</p>
 <hr>
-<p>ESEMPIO: utilizzo <code>ftok()</code> per creare una key adatta ad una risorsa IPC</p>
+<p>ESEMPIO: utilizzo <code>ftok()</code> per creare una key adatta a una risorsa IPC</p>
 <pre><code class="language-c">	key_t chiave = ftok("./eseguibile", 'k');
   	int ds_shm;
   	ds_shm = shmget(chiave, 1024, IPC_CREAT | 0664);
@@ -436,11 +436,11 @@ struct shmid_ds {
   	}
   	... Utilizza la shared memory ...
 </code></pre>
-<p>In questo esempio si crea una shared memory senza assegnare una chiave, dal momento che IPC_PRIVATE equivale ad una chiave IPC pari a <code>0</code>.</p>
+<p>In questo esempio si crea una shared memory senza assegnare una chiave, dal momento che IPC_PRIVATE equivale a una chiave IPC pari a <code>0</code>.</p>
 <p>Infatti, utilizzando il comando ipcs, la chiave apparirà con il valore pari a <code>0</code>.</p>
 <p>In questo caso, la shared memory è utilizzabile solo dal padre e i suoi figli, ovvero non è una soluzione corretta nel caso in cui avessimo più programmi eseguibili.</p>
 <h2 id="collegamento"><a class="header" href="#collegamento">Collegamento</a></h2>
-<p>Per poter utilizzare una shared memory e necessario effettuare il cosidetto <em>attach</em> tramite la system call <code>shmat()</code>,</p>
+<p>Per poter utilizzare una shared memory e necessario effettuare il così detto <em>attach</em> tramite la system call <code>shmat()</code>,</p>
 <pre><code class="language-c">void *shmat(int shmid, const void *shmaddr, int shmflg);
 </code></pre>
 <p>dove:</p>
@@ -470,7 +470,7 @@ struct shmid_ds {
 <p>Ha come valore di ritorno:</p>
 <ul>
 <li><code>0</code> se l’operazione è andata a buon fine;</li>
-<li><code>1</code> in caso di errore, impostando <code>errno</code> (variabile globale delle funzioni in C) ad un valore corrispondente al tipo di errore riscontrato.</li>
+<li><code>1</code> in caso di errore, impostando <code>errno</code> (variabile globale delle funzioni in C) a un valore corrispondente al tipo di errore riscontrato.</li>
 </ul>
 <h2 id="controllo"><a class="header" href="#controllo">Controllo</a></h2>
 <p>La chiamata di sistema <code>shmctl()</code> permette di invocare un comando di controllo su una <em>shared memory</em> esistente.</p>
@@ -552,7 +552,7 @@ indirizzo della shm dopo l'attach: 0x7948fda27000
 </code></pre>
 <hr>
 <h3 id="shared-memory-tra-processo-padre-e-figlio"><a class="header" href="#shared-memory-tra-processo-padre-e-figlio">Shared memory tra processo padre e figlio</a></h3>
-<p>Proviamo adesso ad utilizzare la shared memory tra processo padre e processo figio.</p>
+<p>Proviamo adesso a utilizzare la shared memory tra processo padre e processo figlio.</p>
 <p>Prima utilizzando <code>IPC_PRIVATE</code> come chiave e successivamente utilizzarne una ricavata dalla chiamata di sistema <code>ftok()</code>.</p>
 <pre><code class="language-c">#include &lt;sys/shm.h&gt;
 #include &lt;sys/ipc.h&gt;
@@ -654,7 +654,7 @@ indirizzo della shm dopo l`attach: 0x7ed908c19000
 ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0  [vsyscall]
 
 </code></pre>
-<p>Dove ritroviamo il segmento a noi di interesse:</p>
+<p>Dove ritroviamo il segmento a noi d’interesse:</p>
 <pre><code class="language-bash">7ed908c19000-7ed908c1a000 rw-s 00000000 00:01 98333   /SYSV00000000 (deleted)
 </code></pre>
 <p>Notiamo che il primo indirizzo coincide con l’indirizzo del puntatore alla shared memory.</p>
@@ -734,7 +734,7 @@ indirizzo della shm dopo l`attach: 0x78f6872c7000
 [FIGLIO 73759] il contenuto della shm: 0
 [PADRE 73758] contenuto della shm: 123
 </code></pre>
-<p>Da notare che l’indirizzo per la shared memory è cambiato. Appunto perché il processo figlio non è piú una copia <strong>dell’immagine</strong> del processo padre una volta utilizzato la chiamata <code>exec()</code>.</p>
+<p>Da notare che l’indirizzo per la shared memory è cambiato. Appunto perché il processo figlio non è più una copia <strong>dell’immagine</strong> del processo padre una volta utilizzato la chiamata <code>exec()</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="semaphore"><a class="header" href="#semaphore">Semaphore</a></h1>
 <p>I semafori sono delle risorse IPC, ma il loro valore interno si comporta come una variabile condivisa gestita dal kernel.</p>
@@ -839,7 +839,7 @@ struct semid_ds {
 <pre><code class="language-c">#define SEMMSL  250
 </code></pre>
 <p>Questo valore dipende dalla propria architettura, per ottenere tali informazioni è necessario utilizzare il comando <code>ipcs -l</code> che restituisce diverse informazioni anche per le altre IPC.</p>
-<p>Per creare un array semaforico di 2 semafori <strong>con chiave</strong> nulla (quindi i semafori saranno accessibili unicamente al processo padre e agli eventualli figli):</p>
+<p>Per creare un array semaforico di 2 semafori <strong>con chiave</strong> nulla (quindi i semafori saranno accessibili unicamente al processo padre e agli eventuali figli):</p>
 <pre><code class="language-c">key_t sem_key = IPC_PRIVATE;
 int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 </code></pre>
@@ -848,7 +848,7 @@ int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 <p>Per poter inizializzare e rimuovere un semafor si utilizza la system call <code>semctl()</code>.</p>
 <pre><code class="language-c">int semctl(int semid, int semnum, int cmd, ...);
 </code></pre>
-<p>La system call esegue l’operazione specificata in <code>cmd</code> sul <em>semaphore set</em> indentificato da <code>semid</code> e sull’<code>semnum</code>-esimo semaforo dell’array.</p>
+<p>La system call esegue l’operazione specificata in <code>cmd</code> sul <em>semaphore set</em> identificato da <code>semid</code> e sull’<code>semnum</code>-esimo semaforo dell’array.</p>
 <p>Alcuni possibili valori da usare per <code>cmd</code> sono:</p>
 <ul>
 <li><code>SETVAL</code>: imposta il valore, specificato come quarto parametro, di uno specifico semaforo indentificato da <code>semnum</code> all’interno del <em>semaphore set</em> <code>semid</code>;</li>
@@ -899,11 +899,11 @@ semctl(semid, 1, SETVAL, val2);
 <p>Il campo <code>semadj</code> indica <strong>quanto bisogna correggere</strong> il valore del semaforo se il processo muore prima di “bilanciare” le sue operazioni.</p>
 <p>Quindi per implementere l’operazione di <code>signal()</code> dobbiamo prima costruire e modificare i campo della struttura <code>sembuf</code> (definisce il tipo di operazione), impostando <code>sem_op</code> maggiore di zero.</p>
 <pre><code class="language-c">void Signal_Sem (int id_sem,int numsem){
-	struct sembuf sem_buf;
-	sem_buf.sem_num = numsem;
-	sem_buf.sem_flg = 0;
-	sem_buf.sem_op = 1;
-	semop(id_sem, &amp;sem_buf, 1);   //semaforo verde
+    struct sembuf sem_buf;
+    sem_buf.sem_num = numsem;
+    sem_buf.sem_flg = 0;
+    sem_buf.sem_op = 1;
+    semop(id_sem, &amp;sem_buf, 1);   //semaforo verde
 }
 </code></pre>
 <h4 id="implementazione-di-wait"><a class="header" href="#implementazione-di-wait">Implementazione di <code>wait()</code></a></h4>
@@ -941,7 +941,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <li>altrimenti se <code>semval ≠ 0</code> ci sono due casi:
 <ul>
 <li>se è specificato il flag <code>IPC_NOWAIT</code> in <code>sem_flg</code>, la system call fallisce restituendo un codice di errore <code>EAGAIN</code> a mezzo della variabile globale <code>errno</code>;</li>
-<li>altrimenti la variabile <code>semzcnt</code> (indica il numero di processi sospesi nell’attesa che il <strong>valore del semaforo</strong> <strong>diventi nullo</strong>)  è incrementato di <code>1</code>, forzando il processo a sospendersi finché una delle seguenti condizioni si verificherá:
+<li>altrimenti la variabile <code>semzcnt</code> (indica il numero di processi sospesi nell’attesa che il <strong>valore del semaforo</strong> <strong>diventi nullo</strong>) è incrementato di <code>1</code>, forzando il processo a sospendersi finché una delle seguenti condizioni non si verifica:
 <ul>
 <li><code>semval</code> diventa <code>0</code> (di conseguenza viene decrementato il valore di <code>semzcnt</code>);</li>
 <li>il semaforo è rimosso: la system call fallisce (<code>errno = EIDRM</code>)</li>

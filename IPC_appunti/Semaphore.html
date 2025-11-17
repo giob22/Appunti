@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3d7f8c81.js";
+            window.path_to_searchindex_js = "searchindex-ff2786ff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -277,7 +277,7 @@ struct semid_ds {
 <pre><code class="language-c">#define SEMMSL  250
 </code></pre>
 <p>Questo valore dipende dalla propria architettura, per ottenere tali informazioni è necessario utilizzare il comando <code>ipcs -l</code> che restituisce diverse informazioni anche per le altre IPC.</p>
-<p>Per creare un array semaforico di 2 semafori <strong>con chiave</strong> nulla (quindi i semafori saranno accessibili unicamente al processo padre e agli eventualli figli):</p>
+<p>Per creare un array semaforico di 2 semafori <strong>con chiave</strong> nulla (quindi i semafori saranno accessibili unicamente al processo padre e agli eventuali figli):</p>
 <pre><code class="language-c">key_t sem_key = IPC_PRIVATE;
 int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 </code></pre>
@@ -286,7 +286,7 @@ int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 <p>Per poter inizializzare e rimuovere un semafor si utilizza la system call <code>semctl()</code>.</p>
 <pre><code class="language-c">int semctl(int semid, int semnum, int cmd, ...);
 </code></pre>
-<p>La system call esegue l’operazione specificata in <code>cmd</code> sul <em>semaphore set</em> indentificato da <code>semid</code> e sull’<code>semnum</code>-esimo semaforo dell’array.</p>
+<p>La system call esegue l’operazione specificata in <code>cmd</code> sul <em>semaphore set</em> identificato da <code>semid</code> e sull’<code>semnum</code>-esimo semaforo dell’array.</p>
 <p>Alcuni possibili valori da usare per <code>cmd</code> sono:</p>
 <ul>
 <li><code>SETVAL</code>: imposta il valore, specificato come quarto parametro, di uno specifico semaforo indentificato da <code>semnum</code> all’interno del <em>semaphore set</em> <code>semid</code>;</li>
@@ -337,11 +337,11 @@ semctl(semid, 1, SETVAL, val2);
 <p>Il campo <code>semadj</code> indica <strong>quanto bisogna correggere</strong> il valore del semaforo se il processo muore prima di “bilanciare” le sue operazioni.</p>
 <p>Quindi per implementere l’operazione di <code>signal()</code> dobbiamo prima costruire e modificare i campo della struttura <code>sembuf</code> (definisce il tipo di operazione), impostando <code>sem_op</code> maggiore di zero.</p>
 <pre><code class="language-c">void Signal_Sem (int id_sem,int numsem){
-	struct sembuf sem_buf;
-	sem_buf.sem_num = numsem;
-	sem_buf.sem_flg = 0;
-	sem_buf.sem_op = 1;
-	semop(id_sem, &amp;sem_buf, 1);   //semaforo verde
+    struct sembuf sem_buf;
+    sem_buf.sem_num = numsem;
+    sem_buf.sem_flg = 0;
+    sem_buf.sem_op = 1;
+    semop(id_sem, &amp;sem_buf, 1);   //semaforo verde
 }
 </code></pre>
 <h4 id="implementazione-di-wait"><a class="header" href="#implementazione-di-wait">Implementazione di <code>wait()</code></a></h4>
@@ -379,7 +379,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <li>altrimenti se <code>semval ≠ 0</code> ci sono due casi:
 <ul>
 <li>se è specificato il flag <code>IPC_NOWAIT</code> in <code>sem_flg</code>, la system call fallisce restituendo un codice di errore <code>EAGAIN</code> a mezzo della variabile globale <code>errno</code>;</li>
-<li>altrimenti la variabile <code>semzcnt</code> (indica il numero di processi sospesi nell’attesa che il <strong>valore del semaforo</strong> <strong>diventi nullo</strong>)  è incrementato di <code>1</code>, forzando il processo a sospendersi finché una delle seguenti condizioni si verificherá:
+<li>altrimenti la variabile <code>semzcnt</code> (indica il numero di processi sospesi nell’attesa che il <strong>valore del semaforo</strong> <strong>diventi nullo</strong>) è incrementato di <code>1</code>, forzando il processo a sospendersi finché una delle seguenti condizioni non si verifica:
 <ul>
 <li><code>semval</code> diventa <code>0</code> (di conseguenza viene decrementato il valore di <code>semzcnt</code>);</li>
 <li>il semaforo è rimosso: la system call fallisce (<code>errno = EIDRM</code>)</li>
