@@ -4,44 +4,138 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Menu Appunti</title>
+
     <style>
+        :root {
+            --bg: hsl(226, 23%, 11%);
+            --fg: #bcbdd0;
+            --sidebar-bg: #282d3f;
+            --sidebar-fg: #c8c9db;
+            --sidebar-non-existant: #505274;
+            --sidebar-active: #2b79a2;
+            --sidebar-spacer: #2d334f;
+            --scrollbar: var(--sidebar-fg);
+            --icons: #737480;
+            --icons-hover: #b7b9cc;
+            --links: #2b79a2;
+            --inline-code-color: #c5c8c6;
+            --theme-popup-bg: #161923;
+            --theme-popup-border: #737480;
+            --theme-hover: #282e40;
+            --quote-bg: hsl(226, 15%, 17%);
+            --quote-border: hsl(226, 15%, 22%);
+            --warning-border: #ff8e00;
+            --table-border-color: hsl(226, 23%, 16%);
+            --table-header-bg: hsl(226, 23%, 31%);
+            --table-alternate-bg: hsl(226, 23%, 14%);
+            --searchbar-border-color: #aaa;
+            --searchbar-bg: #aeaec6;
+            --searchbar-fg: #000;
+            --searchbar-shadow-color: #aaa;
+            --searchresults-header-fg: #5f5f71;
+            --searchresults-border-color: #5c5c68;
+            --searchresults-li-bg: #242430;
+            --search-mark-bg: #a2cff5;
+            --color-scheme: dark;
+            --copy-button-filter: invert(51%) sepia(10%) saturate(393%) hue-rotate(198deg) brightness(86%) contrast(87%);
+            --copy-button-filter-hover: invert(46%) sepia(20%) saturate(1537%) hue-rotate(156deg) brightness(85%) contrast(90%);
+            --footnote-highlight: #4079ae;
+            --overlay-bg: rgba(33, 40, 48, 0.4);
+            --blockquote-note-color: #4493f8;
+            --blockquote-tip-color: #09ca09;
+            --blockquote-important-color: #ab7df8;
+            --blockquote-warning-color: #d29922;
+            --blockquote-caution-color: #f21424;
+            --sidebar-header-border-color: #2f6ab5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            padding: 40px;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
+        .container {
+            background: var(--sidebar-bg);
+            padding: 32px 40px;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+            max-width: 480px;
+            width: 90%;
+            border: 1px solid var(--sidebar-header-border-color);
+        }
+
         h1 {
+            font-size: 24px;
+            margin: 0 0 24px 0;
             text-align: center;
+            color: var(--sidebar-fg);
+            letter-spacing: 0.5px;
         }
+
         ul {
             list-style: none;
             padding: 0;
-            max-width: 400px;
-            margin: auto;
+            margin: 0;
         }
-        li {
-            background: white;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        li + li {
+            margin-top: 12px;
         }
+
         a {
+            display: block;
+            padding: 12px 16px;
+            border-radius: 10px;
             text-decoration: none;
-            font-size: 18px;
-            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--sidebar-fg);
+            background: var(--quote-bg);
+            border: 1px solid var(--table-border-color);
+            transition: background 0.2s ease, 
+                        color 0.2s ease, 
+                        transform 0.15s ease,
+                        box-shadow 0.15s ease,
+                        border-color 0.2s ease;
         }
+
         a:hover {
-            color: #007acc;
+            background: var(--theme-hover);
+            color: #ffffff;
+            border-color: var(--sidebar-active);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+        }
+
+        a:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .link-label {
+            color: var(--links);
         }
     </style>
 </head>
 <body>
-    <h1>Menu Appunti</h1>
-    <ul>
-        <li><a href="IPC_appunti/index.html">IPC</a></li>
-        <li><a href="syscall_fork_exec/index.html">syscall_fork_exec</a></li>
-    </ul>
+    <div class="container">
+        <h1>Menu Appunti</h1>
+
+        <ul>
+            <li><a href="IPC_appunti/index.html"><span class="link-label">IPC</span></a></li>
+            <li><a href="syscall_fork_exec/index.html"><span class="link-label">syscall_fork_exec</span></a></li>
+        </ul>
+    </div>
 </body>
 </html>
