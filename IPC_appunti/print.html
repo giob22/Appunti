@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3f8a806d.js";
+            window.path_to_searchindex_js = "searchindex-565e015e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -1915,7 +1915,7 @@ if (result &lt; 0){
 <tbody>
 <tr><td><code>msgtyp == 0</code></td><td>viene prelevato il primo messaggio della coda (ovvero quello inviato da più tempo).</td></tr>
 <tr><td><code>msgtyp &gt; 0</code></td><td>viene prelevato il primo messaggio della coda il cui campo tipo sia pari al valore di <code>msgtyp</code>.</td></tr>
-<tr><td><code>msgtyp &lt; 0</code></td><td>viene prelevato il primo messaggio dalla coda il cui campo tipo abbia un valore minore o uguale a <code>|msgtyp|</code>.</td></tr>
+<tr><td><code>msgtyp &lt; 0</code></td><td>vengono considerati tutti i messaggi aventi <code>message_type &lt;= |msgtyp|</code>, e tra questi viene prelevato il messaggio con tipo minore.</td></tr>
 </tbody>
 </table>
 </div>
