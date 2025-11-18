@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-565e015e.js";
+            window.path_to_searchindex_js = "searchindex-61255e41.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -181,12 +181,12 @@
 <p>Un processo più fare generalmente due operazioni su un semaforo <code>s</code>:</p>
 <ul>
 <li><code>signal(s)</code>: può inviare un segnale al semaforo e in certe condizioni risvegliare i processi in attesa.</li>
-<li><code>wait(s)</code>: primitiva che permette ad un processo di assicurarsi la risorsa. Nel caso la risorsa non sia disponibile perché il processo che la possiede non ha ancora inviato un segnale <code>signal(s)</code>, il processo che la richiede si sospende fino a che non riceverà il segnale <code>signal(s)</code>.</li>
+<li><code>wait(s)</code>: primitiva che permette a un processo di assicurarsi la risorsa. Nel caso la risorsa non sia disponibile perché il processo che la possiede non ha ancora inviato un segnale <code>signal(s)</code>, il processo che la richiede si sospende fino a che non riceverà il segnale <code>signal(s)</code>.</li>
 </ul>
 <h4 id="modello-concettuale-semaforico"><a class="header" href="#modello-concettuale-semaforico">MODELLO CONCETTUALE SEMAFORICO:</a></h4>
 <p><img src="images/modello_concettuale_semaforico.png" alt="alt text"></p>
-<p>L’uso classico di un semaforo è per implementare un meccanismo di <strong>locking</strong> che grantisca la <strong>mutua esclusione</strong> tra processi.</p>
-<p>Possiamo implementare la <code>wait()</code> e la <code>signal()</code> sfruttando quelle che sono le primitive offerte offerte dalla libreria <code>sys/sem.h</code>.</p>
+<p>L’uso classico di un semaforo è per implementare un meccanismo di <strong>locking</strong> che garantisca la <strong>mutua esclusione</strong> tra processi.</p>
+<p>Possiamo implementare la <code>wait()</code> e la <code>signal()</code> sfruttando quelle che sono le primitive offerte dalla libreria <code>sys/sem.h</code>.</p>
 <p>Queste due procedure ci serviranno per delimitare la sezione critica.</p>
 <h2 id="strutture-semaforiche-nel-kernel"><a class="header" href="#strutture-semaforiche-nel-kernel">Strutture semaforiche nel kernel</a></h2>
 <p>Il kernel Linux mantiene due strutture per implementare un semaforo: <code>sem</code> e <code>semid_ds</code>.</p>
@@ -244,7 +244,7 @@ struct semid_ds {
 <p><code>sem_base</code> è il puntatore al primo semaforo nell’array;</p>
 </li>
 <li>
-<p><code>sem_undo</code> è il puntatore ad un lista di strutture, una per ogni processo che ha richiesto una <em>undo</em> durante una <code>semop()</code> sul set di semafori <code>sem_base</code>;</p>
+<p><code>sem_undo</code> è il puntatore a un lista di strutture, una per ogni processo che ha richiesto una <em>undo</em> durante una <code>semop()</code> sul set di semafori <code>sem_base</code>;</p>
 <p>Ovvero il numero di richieste al kernel di sistemare le situazioni in cui un processo muore prima di effettuare una <code>signal()</code> e quindi riportare il valore di <code>sem_val</code> a quello iniziale.</p>
 <p>Quindi il kernel, nel caso in cui un processo muore prima di poter effettuare la <code>signal()</code> e l’operazione che ha fatto utilizza il flag <code>SEM_UNDO</code>, annulla automaticamente tale operazione sul semaforo, riportandolo al valore iniziale;</p>
 <p>Evita situazioni di <em>deadlock</em></p>
@@ -281,7 +281,8 @@ struct semid_ds {
 <pre><code class="language-c">key_t sem_key = IPC_PRIVATE;
 int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 </code></pre>
-<p><img src="images/creazione_semaforo.svg" alt="alt text"></p>
+<p align="center"><img src="images/creazione_semaforo.svg" width="700"></p>
+
 <h3 id="inizializzazione-e-rimozione-semctl"><a class="header" href="#inizializzazione-e-rimozione-semctl">Inizializzazione e rimozione: <code>semctl()</code></a></h3>
 <p>Per poter inizializzare e rimuovere un semafor si utilizza la system call <code>semctl()</code>.</p>
 <pre><code class="language-c">int semctl(int semid, int semnum, int cmd, ...);
@@ -289,7 +290,7 @@ int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 <p>La system call esegue l’operazione specificata in <code>cmd</code> sul <em>semaphore set</em> identificato da <code>semid</code> e sull’<code>semnum</code>-esimo semaforo dell’array.</p>
 <p>Alcuni possibili valori da usare per <code>cmd</code> sono:</p>
 <ul>
-<li><code>SETVAL</code>: imposta il valore, specificato come quarto parametro, di uno specifico semaforo indentificato da <code>semnum</code> all’interno del <em>semaphore set</em> <code>semid</code>;</li>
+<li><code>SETVAL</code>: imposta il valore, specificato come quarto parametro, di uno specifico semaforo identificato da <code>semnum</code> all’interno del <em>semaphore set</em> <code>semid</code>;</li>
 <li><code>IPC_RMID</code>: rimuove il <em>semaphore set</em> <code>semid</code> dal kernel. In realtà il <em>semaphore set</em> viene <strong>marcato come eliminabile</strong>, non eliminato direttamente. Viene effettivamente eliminato dal kernel nel momento in cui nessun processo lo sta ancora utilizzando.</li>
 </ul>
 <p>In definitiva per poter un array semaforico, a due valori <code>val1</code> e <code>val2</code>:</p>
@@ -312,11 +313,11 @@ semctl(semid, 1, SETVAL, val2);
 }
 </code></pre>
 <p>Due sono i valori che può assumere <code>sem_flg</code>: <code>IPC_NOWAIT</code> e <code>IPC_UNDO</code>.</p>
-<p>Se si specifica <code>IPC_UNDO</code>, l’operazione sará annullata nel momento in cui il processo termina inaspettatamente o volontariamente.</p>
+<p>Se si specifica <code>IPC_UNDO</code>, l’operazione sarà annullata nel momento in cui il processo termina inaspettatamente o volontariamente.</p>
 <p>L’insieme delle operazioni specificate da <code>sops</code>, array di <code>sembuf</code> passato per parametro alla chiamata di sistema <code>semop()</code>, sono eseguite in maniera <strong>atomica</strong>, ossia tutte le operazioni indicate devono poter essere effettuate simultaneamente, altrimenti la <code>semop()</code> si blocca o ritorna immediatamente.</p>
 <p>Si blocca nel caso default, ovvero un’operazione dell’array non può esser effettuata in maniera atomica e nessuna operazione ha specificato il flag <code>IPC_NOWAIT</code>. Quando avviene ciò il processo che vuole effettuare queste operazioni viene <strong>sospeso</strong> finché le condizioni per eseguire tutte le operazioni sui semafori non diventano soddisfatte.</p>
-<p>Invece ritorna immediatamente un errore nel caso in <strong>c’è una operazione non atomica</strong>, e almeno una operazione dell’array ha specificato il flag <code>IPC_NOWAIT</code>. Questo perché prevale la <strong>proprietá di atomicitá della <code>semop()</code></strong></p>
-<p>Ogni operazione è eseguita sul semaforo individuato da <code>sem_num</code> (in <code>sembuf</code>). In altre parole <code>sem_num</code> indica su quale semaforo, tra quelli presenti nel <em>semaphore set</em>, dovrá esser eseguita l’operazione.</p>
+<p>Invece ritorna immediatamente un errore nel caso in <strong>c’è una operazione non atomica</strong>, e almeno una operazione dell’array ha specificato il flag <code>IPC_NOWAIT</code>. Questo perché prevale la <strong>proprietà di atomicità della <code>semop()</code></strong></p>
+<p>Ogni operazione è eseguita sul semaforo individuato da <code>sem_num</code> (in <code>sembuf</code>). In altre parole <code>sem_num</code> indica su quale semaforo, tra quelli presenti nel <em>semaphore set</em>, dovrà esser eseguita l’operazione.</p>
 <p>Ovviamente specificando un valore di <code>sem_num</code> con un indice non valido, la chiamata <code>semop()</code> fallisce e ritorna <code>-1</code>, impostando <code>errno</code> a <code>EINVAL</code>.</p>
 <p><code>errno</code> è una <strong>variabile globale</strong> usata dalle funzioni di sistema in C per indicare il tipo di errore avvenuto. Quando una chiamata di sistema fallisce (ritorna <code>-1</code>), imposta <code>errno</code> a un <strong>codice numerico</strong> che rappresenta la causa dell’errore.</p>
 <p>Nel caso analizzato: <code>EINVAL</code> è una costante simbolica (definita in <code>&lt;errno.h&gt;</code>) che significa “invalid argument”, cioè <strong>argomento non valido</strong>.</p>
@@ -327,15 +328,15 @@ semctl(semid, 1, SETVAL, val2);
 <p>I valori che può assumere il campo <code>sem_op</code> specificano tre possibili tipologie di operazioni che si possono compiere sul semaforo.</p>
 <p>Utilizzando queste tre tipi di operazioni, è possibile implementare le primitive <em>wait</em> (<code>sem_op &lt; 0</code>), <em>wait for zero</em> (<code>sem_op == 0</code>) e <em>signal</em> (<code>sem_op &gt; 0</code>).</p>
 <h4 id="implementazione-di-signal-sem_op--0"><a class="header" href="#implementazione-di-signal-sem_op--0">Implementazione di <code>signal()</code>: <code>sem_op &gt; 0</code></a></h4>
-<p>Se <code>sem_op &gt; 0</code>, l’operazione consisterá nell’addizionare il valore di <code>sem_op</code> al valore <code>semval</code> del semaforo.</p>
+<p>Se <code>sem_op &gt; 0</code>, l’operazione consisterà nell’addizionare il valore di <code>sem_op</code> al valore <code>semval</code> del semaforo.</p>
 <pre><code class="language-c">semval += sem_op;
 </code></pre>
-<p>Per implementare l’operazione di <code>signal()</code> è necessario che il processo chiamante dovrá avere i permessi per modificare i valori del semaforo.</p>
+<p>Per implementare l’operazione di <code>signal()</code> è necessario che il processo chiamante dovrà avere i permessi per modificare i valori del semaforo.</p>
 <p>Questa operazione <strong>non</strong> causa in alcun caso il blocco del processo.</p>
 <p>Nel caso in cui sia specificato il flag <code>SEM_UNDO</code>, il kernel sottrae il valore <code>sem_op</code> dal valore del <em>semaphore adjustment</em> (<code>semadj</code>), il quale identifica un contatore delle operazioni <em>undo</em>.</p>
 <p>Tale contatore <code>semadj</code> è mantenuto all’interno di una struttura dati chiamata <strong>semaphore undo list</strong> che il kernel mantiene per <strong>processo</strong>.</p>
 <p>Il campo <code>semadj</code> indica <strong>quanto bisogna correggere</strong> il valore del semaforo se il processo muore prima di “bilanciare” le sue operazioni.</p>
-<p>Quindi per implementere l’operazione di <code>signal()</code> dobbiamo prima costruire e modificare i campo della struttura <code>sembuf</code> (definisce il tipo di operazione), impostando <code>sem_op</code> maggiore di zero.</p>
+<p>Quindi per implementare l’operazione di <code>signal()</code> dobbiamo prima costruire e modificare i campo della struttura <code>sembuf</code> (definisce il tipo di operazione), impostando <code>sem_op</code> maggiore di zero.</p>
 <pre><code class="language-c">void Signal_Sem (int id_sem,int numsem){
     struct sembuf sem_buf;
     sem_buf.sem_num = numsem;
@@ -355,10 +356,10 @@ semctl(semid, 1, SETVAL, val2);
 <p>Se <code>semval &lt; |sem_op|</code>, se specificato il flag <code>IPC_NOWAIT</code> la system call fallisce (<code>errno = EAGAIN</code>);</p>
 <p>altrimenti il valore del campo <code>semncnt</code> (il contatore dei processi sospesi nell’attesa che il <strong>valore del semaforo venga incrementato</strong>) viene incrementato di <code>1</code> e il processo chiamante si sospende finché una delle seguenti condizioni si avveri:</p>
 <ul>
-<li><code>semval &gt;= |sem_op|</code>, quando questa condizione sará verificata (significa che altri processi non sospesi avranno incrementato il valore di <code>semval</code>) il valore di <code>semncnt</code> sará decrementato e il valore corrente del semaforo sará:
+<li><code>semval &gt;= |sem_op|</code>, quando questa condizione sarà verificata (significa che altri processi non sospesi avranno incrementato il valore di <code>semval</code>) il valore di <code>semncnt</code> sarà decrementato e il valore corrente del semaforo sarà:
 <pre><code class="language-c">semval -= |sem_op|
 </code></pre>
-Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>semadj</code> del processo associato al semaforo in questione.</li>
+Se specificato <code>SEM_UNDO</code> il sistema aggiornerà il contatore <code>semadj</code> del processo associato al semaforo in questione.</li>
 <li>Il semaforo viene rimosso. In questo caso la system call fallisce (<code>errno = EIDRM</code>).</li>
 </ul>
 </li>

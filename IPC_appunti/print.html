@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-565e015e.js";
+            window.path_to_searchindex_js = "searchindex-61255e41.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -350,11 +350,26 @@ struct shmid_ds {
 	struct vm_area_struct *attaches; /* descriptors for attaches */
 };
 </code></pre>
-<p><img src="images/struct_shm.png" alt="alt text"></p>
+<p>In particolare:</p>
+<ul>
+<li>
+<p><code>shm_npages</code> è il numero di pagine totali per tutti i segmenti utilizzati che sono puntati dal campo successivo;</p>
+</li>
+<li>
+<p><code>shm_pages</code> è l’array di puntatori alle pagine fisiche del segmento shared memory;</p>
+</li>
+<li>
+<p><code>vm_area_struct</code> è una struttura fondamentale nel kernel Linux, usata per <strong>rappresentare una regione contigua di memoria virtuale</strong> in un processo.</p>
+<p>In questo caso serve a tener <strong>traccia della posizione</strong> del segmento shared memory nello <strong>spazio di indirizzi virtuali di ogni singolo processo</strong> che esegue una <code>shmat()</code>.</p>
+</li>
+</ul>
+<p align="center"><img src="images/struct_shm.png" width="650"></p>
+
+<!-- @fix ricordati di cambiare il nome da shm_segs in shm_pages -->
 <h2 id="creazione"><a class="header" href="#creazione">Creazione:</a></h2>
 <pre><code class="language-c">int shmget(key_t key, int size, int flag);
 </code></pre>
-<p><code>size</code> è la dimensione in byte della memoria condivisa. Possiamo quindi specificare qualsiasi valore di dimensione; supponendo di scegliere <code>size = 4</code> stiamo chiedendo di avere una memoria condivisa di <code>4 byte</code> ma in realtá il kernel sta allocando uno spazio di memoria pari a <code>4KB</code> perché la memoria condivisa viene alocata in <strong>unitá di pagina</strong> del sistema, e la <strong>dimensione di una pagina su linux</strong> è pari a <strong><code>4 KB</code></strong>.</p>
+<p><code>size</code> è la dimensione in byte della memoria condivisa. Possiamo quindi specificare qualsiasi valore di dimensione; supponendo di scegliere <code>size = 4</code> stiamo chiedendo di avere una memoria condivisa di <code>4 byte</code> ma in realtà il kernel sta allocando uno spazio di memoria pari a <code>4KB</code> perché la memoria condivisa viene alocata in <strong>unitá di pagina</strong> del sistema, e la <strong>dimensione di una pagina su linux</strong> è pari a <strong><code>4 KB</code></strong>.</p>
 <p>Restituisce <code>-1</code> in caso di fallimento. Invece se ha successo restituisce il <strong>descrittore della risorsa</strong>.</p>
 <hr>
 <p>ESEMPIO: con chiave cablata e senza flags</p>
@@ -409,7 +424,7 @@ struct shmid_ds {
 	... Utilizza la shared memory ...
 </code></pre>
 <p>La shared memory viene creata dal primo <code>get</code> solamente se non ne esiste giá una con la stessa chiave, altrimenti restituisce <code>-1</code>.</p>
-<p>In quest’ultimo caso otteniamo il descrittore con una chiamata <code>get</code> senza flag poichè sappiamo esistere la risorse IPC.</p>
+<p>In quest’ultimo caso otteniamo il descrittore con una chiamata <code>get</code> senza flag poiché sappiamo esistere la risorse IPC.</p>
 <hr>
 <p>ESEMPIO: utilizzo <code>ftok()</code> per creare una key adatta a una risorsa IPC</p>
 <pre><code class="language-c">	key_t chiave = ftok("./eseguibile", 'k');
@@ -743,12 +758,12 @@ indirizzo della shm dopo l`attach: 0x78f6872c7000
 <p>Un processo più fare generalmente due operazioni su un semaforo <code>s</code>:</p>
 <ul>
 <li><code>signal(s)</code>: può inviare un segnale al semaforo e in certe condizioni risvegliare i processi in attesa.</li>
-<li><code>wait(s)</code>: primitiva che permette ad un processo di assicurarsi la risorsa. Nel caso la risorsa non sia disponibile perché il processo che la possiede non ha ancora inviato un segnale <code>signal(s)</code>, il processo che la richiede si sospende fino a che non riceverà il segnale <code>signal(s)</code>.</li>
+<li><code>wait(s)</code>: primitiva che permette a un processo di assicurarsi la risorsa. Nel caso la risorsa non sia disponibile perché il processo che la possiede non ha ancora inviato un segnale <code>signal(s)</code>, il processo che la richiede si sospende fino a che non riceverà il segnale <code>signal(s)</code>.</li>
 </ul>
 <h4 id="modello-concettuale-semaforico"><a class="header" href="#modello-concettuale-semaforico">MODELLO CONCETTUALE SEMAFORICO:</a></h4>
 <p><img src="images/modello_concettuale_semaforico.png" alt="alt text"></p>
-<p>L’uso classico di un semaforo è per implementare un meccanismo di <strong>locking</strong> che grantisca la <strong>mutua esclusione</strong> tra processi.</p>
-<p>Possiamo implementare la <code>wait()</code> e la <code>signal()</code> sfruttando quelle che sono le primitive offerte offerte dalla libreria <code>sys/sem.h</code>.</p>
+<p>L’uso classico di un semaforo è per implementare un meccanismo di <strong>locking</strong> che garantisca la <strong>mutua esclusione</strong> tra processi.</p>
+<p>Possiamo implementare la <code>wait()</code> e la <code>signal()</code> sfruttando quelle che sono le primitive offerte dalla libreria <code>sys/sem.h</code>.</p>
 <p>Queste due procedure ci serviranno per delimitare la sezione critica.</p>
 <h2 id="strutture-semaforiche-nel-kernel"><a class="header" href="#strutture-semaforiche-nel-kernel">Strutture semaforiche nel kernel</a></h2>
 <p>Il kernel Linux mantiene due strutture per implementare un semaforo: <code>sem</code> e <code>semid_ds</code>.</p>
@@ -806,7 +821,7 @@ struct semid_ds {
 <p><code>sem_base</code> è il puntatore al primo semaforo nell’array;</p>
 </li>
 <li>
-<p><code>sem_undo</code> è il puntatore ad un lista di strutture, una per ogni processo che ha richiesto una <em>undo</em> durante una <code>semop()</code> sul set di semafori <code>sem_base</code>;</p>
+<p><code>sem_undo</code> è il puntatore a un lista di strutture, una per ogni processo che ha richiesto una <em>undo</em> durante una <code>semop()</code> sul set di semafori <code>sem_base</code>;</p>
 <p>Ovvero il numero di richieste al kernel di sistemare le situazioni in cui un processo muore prima di effettuare una <code>signal()</code> e quindi riportare il valore di <code>sem_val</code> a quello iniziale.</p>
 <p>Quindi il kernel, nel caso in cui un processo muore prima di poter effettuare la <code>signal()</code> e l’operazione che ha fatto utilizza il flag <code>SEM_UNDO</code>, annulla automaticamente tale operazione sul semaforo, riportandolo al valore iniziale;</p>
 <p>Evita situazioni di <em>deadlock</em></p>
@@ -843,7 +858,8 @@ struct semid_ds {
 <pre><code class="language-c">key_t sem_key = IPC_PRIVATE;
 int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 </code></pre>
-<p><img src="images/creazione_semaforo.svg" alt="alt text"></p>
+<p align="center"><img src="images/creazione_semaforo.svg" width="700"></p>
+
 <h3 id="inizializzazione-e-rimozione-semctl"><a class="header" href="#inizializzazione-e-rimozione-semctl">Inizializzazione e rimozione: <code>semctl()</code></a></h3>
 <p>Per poter inizializzare e rimuovere un semafor si utilizza la system call <code>semctl()</code>.</p>
 <pre><code class="language-c">int semctl(int semid, int semnum, int cmd, ...);
@@ -851,7 +867,7 @@ int sem_ds = semget(key, 2, IPC_CREATE | 0644);
 <p>La system call esegue l’operazione specificata in <code>cmd</code> sul <em>semaphore set</em> identificato da <code>semid</code> e sull’<code>semnum</code>-esimo semaforo dell’array.</p>
 <p>Alcuni possibili valori da usare per <code>cmd</code> sono:</p>
 <ul>
-<li><code>SETVAL</code>: imposta il valore, specificato come quarto parametro, di uno specifico semaforo indentificato da <code>semnum</code> all’interno del <em>semaphore set</em> <code>semid</code>;</li>
+<li><code>SETVAL</code>: imposta il valore, specificato come quarto parametro, di uno specifico semaforo identificato da <code>semnum</code> all’interno del <em>semaphore set</em> <code>semid</code>;</li>
 <li><code>IPC_RMID</code>: rimuove il <em>semaphore set</em> <code>semid</code> dal kernel. In realtà il <em>semaphore set</em> viene <strong>marcato come eliminabile</strong>, non eliminato direttamente. Viene effettivamente eliminato dal kernel nel momento in cui nessun processo lo sta ancora utilizzando.</li>
 </ul>
 <p>In definitiva per poter un array semaforico, a due valori <code>val1</code> e <code>val2</code>:</p>
@@ -874,11 +890,11 @@ semctl(semid, 1, SETVAL, val2);
 }
 </code></pre>
 <p>Due sono i valori che può assumere <code>sem_flg</code>: <code>IPC_NOWAIT</code> e <code>IPC_UNDO</code>.</p>
-<p>Se si specifica <code>IPC_UNDO</code>, l’operazione sará annullata nel momento in cui il processo termina inaspettatamente o volontariamente.</p>
+<p>Se si specifica <code>IPC_UNDO</code>, l’operazione sarà annullata nel momento in cui il processo termina inaspettatamente o volontariamente.</p>
 <p>L’insieme delle operazioni specificate da <code>sops</code>, array di <code>sembuf</code> passato per parametro alla chiamata di sistema <code>semop()</code>, sono eseguite in maniera <strong>atomica</strong>, ossia tutte le operazioni indicate devono poter essere effettuate simultaneamente, altrimenti la <code>semop()</code> si blocca o ritorna immediatamente.</p>
 <p>Si blocca nel caso default, ovvero un’operazione dell’array non può esser effettuata in maniera atomica e nessuna operazione ha specificato il flag <code>IPC_NOWAIT</code>. Quando avviene ciò il processo che vuole effettuare queste operazioni viene <strong>sospeso</strong> finché le condizioni per eseguire tutte le operazioni sui semafori non diventano soddisfatte.</p>
-<p>Invece ritorna immediatamente un errore nel caso in <strong>c’è una operazione non atomica</strong>, e almeno una operazione dell’array ha specificato il flag <code>IPC_NOWAIT</code>. Questo perché prevale la <strong>proprietá di atomicitá della <code>semop()</code></strong></p>
-<p>Ogni operazione è eseguita sul semaforo individuato da <code>sem_num</code> (in <code>sembuf</code>). In altre parole <code>sem_num</code> indica su quale semaforo, tra quelli presenti nel <em>semaphore set</em>, dovrá esser eseguita l’operazione.</p>
+<p>Invece ritorna immediatamente un errore nel caso in <strong>c’è una operazione non atomica</strong>, e almeno una operazione dell’array ha specificato il flag <code>IPC_NOWAIT</code>. Questo perché prevale la <strong>proprietà di atomicità della <code>semop()</code></strong></p>
+<p>Ogni operazione è eseguita sul semaforo individuato da <code>sem_num</code> (in <code>sembuf</code>). In altre parole <code>sem_num</code> indica su quale semaforo, tra quelli presenti nel <em>semaphore set</em>, dovrà esser eseguita l’operazione.</p>
 <p>Ovviamente specificando un valore di <code>sem_num</code> con un indice non valido, la chiamata <code>semop()</code> fallisce e ritorna <code>-1</code>, impostando <code>errno</code> a <code>EINVAL</code>.</p>
 <p><code>errno</code> è una <strong>variabile globale</strong> usata dalle funzioni di sistema in C per indicare il tipo di errore avvenuto. Quando una chiamata di sistema fallisce (ritorna <code>-1</code>), imposta <code>errno</code> a un <strong>codice numerico</strong> che rappresenta la causa dell’errore.</p>
 <p>Nel caso analizzato: <code>EINVAL</code> è una costante simbolica (definita in <code>&lt;errno.h&gt;</code>) che significa “invalid argument”, cioè <strong>argomento non valido</strong>.</p>
@@ -889,15 +905,15 @@ semctl(semid, 1, SETVAL, val2);
 <p>I valori che può assumere il campo <code>sem_op</code> specificano tre possibili tipologie di operazioni che si possono compiere sul semaforo.</p>
 <p>Utilizzando queste tre tipi di operazioni, è possibile implementare le primitive <em>wait</em> (<code>sem_op &lt; 0</code>), <em>wait for zero</em> (<code>sem_op == 0</code>) e <em>signal</em> (<code>sem_op &gt; 0</code>).</p>
 <h4 id="implementazione-di-signal-sem_op--0"><a class="header" href="#implementazione-di-signal-sem_op--0">Implementazione di <code>signal()</code>: <code>sem_op &gt; 0</code></a></h4>
-<p>Se <code>sem_op &gt; 0</code>, l’operazione consisterá nell’addizionare il valore di <code>sem_op</code> al valore <code>semval</code> del semaforo.</p>
+<p>Se <code>sem_op &gt; 0</code>, l’operazione consisterà nell’addizionare il valore di <code>sem_op</code> al valore <code>semval</code> del semaforo.</p>
 <pre><code class="language-c">semval += sem_op;
 </code></pre>
-<p>Per implementare l’operazione di <code>signal()</code> è necessario che il processo chiamante dovrá avere i permessi per modificare i valori del semaforo.</p>
+<p>Per implementare l’operazione di <code>signal()</code> è necessario che il processo chiamante dovrà avere i permessi per modificare i valori del semaforo.</p>
 <p>Questa operazione <strong>non</strong> causa in alcun caso il blocco del processo.</p>
 <p>Nel caso in cui sia specificato il flag <code>SEM_UNDO</code>, il kernel sottrae il valore <code>sem_op</code> dal valore del <em>semaphore adjustment</em> (<code>semadj</code>), il quale identifica un contatore delle operazioni <em>undo</em>.</p>
 <p>Tale contatore <code>semadj</code> è mantenuto all’interno di una struttura dati chiamata <strong>semaphore undo list</strong> che il kernel mantiene per <strong>processo</strong>.</p>
 <p>Il campo <code>semadj</code> indica <strong>quanto bisogna correggere</strong> il valore del semaforo se il processo muore prima di “bilanciare” le sue operazioni.</p>
-<p>Quindi per implementere l’operazione di <code>signal()</code> dobbiamo prima costruire e modificare i campo della struttura <code>sembuf</code> (definisce il tipo di operazione), impostando <code>sem_op</code> maggiore di zero.</p>
+<p>Quindi per implementare l’operazione di <code>signal()</code> dobbiamo prima costruire e modificare i campo della struttura <code>sembuf</code> (definisce il tipo di operazione), impostando <code>sem_op</code> maggiore di zero.</p>
 <pre><code class="language-c">void Signal_Sem (int id_sem,int numsem){
     struct sembuf sem_buf;
     sem_buf.sem_num = numsem;
@@ -917,10 +933,10 @@ semctl(semid, 1, SETVAL, val2);
 <p>Se <code>semval &lt; |sem_op|</code>, se specificato il flag <code>IPC_NOWAIT</code> la system call fallisce (<code>errno = EAGAIN</code>);</p>
 <p>altrimenti il valore del campo <code>semncnt</code> (il contatore dei processi sospesi nell’attesa che il <strong>valore del semaforo venga incrementato</strong>) viene incrementato di <code>1</code> e il processo chiamante si sospende finché una delle seguenti condizioni si avveri:</p>
 <ul>
-<li><code>semval &gt;= |sem_op|</code>, quando questa condizione sará verificata (significa che altri processi non sospesi avranno incrementato il valore di <code>semval</code>) il valore di <code>semncnt</code> sará decrementato e il valore corrente del semaforo sará:
+<li><code>semval &gt;= |sem_op|</code>, quando questa condizione sarà verificata (significa che altri processi non sospesi avranno incrementato il valore di <code>semval</code>) il valore di <code>semncnt</code> sarà decrementato e il valore corrente del semaforo sarà:
 <pre><code class="language-c">semval -= |sem_op|
 </code></pre>
-Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>semadj</code> del processo associato al semaforo in questione.</li>
+Se specificato <code>SEM_UNDO</code> il sistema aggiornerà il contatore <code>semadj</code> del processo associato al semaforo in questione.</li>
 <li>Il semaforo viene rimosso. In questo caso la system call fallisce (<code>errno = EIDRM</code>).</li>
 </ul>
 </li>
@@ -1104,7 +1120,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <p>Da notare che l’implementazione di queste due funzioni è l’analogo delle funzioni per inizio e fine lettura per i lettori. L’unica differenza sta nel fatto che per gli scrittori è da gestire la loro mutua esclusione sulla <code>shm</code> che non è necessario per i lettori.</p>
 <p>A questo proposito infatti è impiegato il semaforo identificato all’interno del <em>semaphor set</em> dalla costante <code>MUTEX</code>.</p>
 <h2 id="implementazione-con-monitor"><a class="header" href="#implementazione-con-monitor">Implementazione con MONITOR</a></h2>
-<p>L’implementazione con monitor è presente nella repository Sistemi_Operativi/IPC/monitor su GitHub.</p>
+<p>L’implementazione con monitor è presente nella repository Sistemi_Operativi/IPC/monitor su GitHub con commenti annessi.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="monitor"><a class="header" href="#monitor">Monitor</a></h1>
 <p>Il <strong>monitor</strong> è una struttura sintattica (modello concettuale) che opera su una risorsa condivisa (shm) gestendone l’accesso e la sincronizzazione tra processi/thread concorrenti.</p>
@@ -1234,7 +1250,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 
 <p>Il processo entra nel monitor chiedendo di eseguire una procedura in mutua esclusione. Quindi dopo la chiamata alla procedura di interesse viene chiamata una <code>enter_monitor()</code>.</p>
 <p>All’interno della procedura potrebbe esserci una condizione che potrebbe portare il processo a sospendersi nel caso in cui non sia verificata; condizioni associate a condition variables.</p>
-<p>→ Per ogni condition variable oltre ad una condizione logica è associata una <strong>coda</strong> in cui saranno memorizzati tutti i processi che si sono sospesi per il mancato soddisfacimento della condizione logica.</p>
+<p>→ Per ogni condition variable oltre a una condizione logica è associata una <strong>coda</strong> in cui saranno memorizzati tutti i processi che si sono sospesi per il mancato soddisfacimento della condizione logica.</p>
 <p>Quindi nel momento in cui è da gestire una cooperazione le procedure controllano, tramite le variabili locali, se la <strong>condizione di sincronizzazione</strong> è valida (es. buffer vuoto, buffer occupato).</p>
 <p>Se la <strong>condizione di sincronizzazione</strong> è valida, il processo completa l’esecuzione e libera il monitor con una chiamata <code>leave_monitor()</code>.</p>
 <p>Condizione <strong>non</strong> valida:</p>
@@ -1264,10 +1280,10 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 </p>
 
 <p>Supponiamo che <code>P</code> acceda al monitor e debba eseguire una procedura in mutua esclusione, ma <strong>non soddisfa</strong> una condizione definita per la cooperazione.</p>
-<p>→ Il processo spontaneamente si sospense utilizzando <code>wait_cond()</code> sulla condition variables associata a tale condizione.</p>
+<p>→ Il processo spontaneamente si sospende utilizzando <code>wait_cond()</code> sulla condition variables associata a tale condizione.</p>
 <p>Nel momento in cui <code>P</code> si sospende questo rilascia la risorsa monitor agli altri processi in attesa. Quindi il prossimo processo schedulato in attesa, <code>Q</code>, entra nel monitor ed esegue una procedura che potrebbe comportare <strong>l’aggiornamento dello stato della risorsa</strong>.</p>
 <p>→ La condizione di sincronizzazione che ha portato <code>P</code> a sospendersi viene soddisfatta, quindi tale processo può continuare la propria esecuzione</p>
-<p>Il processo <code>Q</code> dopo la modifica che ha portato la risorsa ad essere pronta per <code>P</code>, riattiva <code>P</code> che ritorna pronto, mediante l’esecuzione di una <code>signal_cond()</code> sulla condition variable su cui <code>P</code> è sospeso.</p>
+<p>Il processo <code>Q</code> dopo la modifica che ha portato la risorsa a essere pronta per <code>P</code>, riattiva <code>P</code> che ritorna pronto, mediante l’esecuzione di una <code>signal_cond()</code> sulla condition variable su cui <code>P</code> è sospeso.</p>
 <hr>
 <p><strong>PROBLEMA:</strong> <code>P</code> e <code>Q</code> non possono eseguire entrambi nel monitor, si violerebbe la <strong>mutua esclusione</strong>.</p>
 <hr>
@@ -1282,7 +1298,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <p><code>Q</code> viene sospeso per evitare che possa modificare nuovamente la condizione di sincronizzazione per cui <code>P</code> si è sospeso.</p>
 <p>Utilizzo della primitiva <code>wait_cond()</code> in questa semantica di <code>signal_cond()</code>:</p>
 <ul>
-<li>il processo segnalato è il primo ad eseguire;</li>
+<li>il processo segnalato è il primo a eseguire;</li>
 <li>al risveglio, il segnalato <strong>ha certezza di trovare verificata</strong> la condizione di sincronizzazione, quindi non è necessario che questo la verifichi nuovamente.</li>
 </ul>
 <p>Quindi lo schema di uso della <code>wait_cond()</code> sarà:</p>
@@ -1311,7 +1327,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <p>Tale soluzione di Hoare è un caso particolare di signal_and_wait, detta <strong>signal_and_urgent_wait</strong>.</p>
 <p>Prevede che il processo <code>Q</code> abbia la <strong>priorità</strong> su ogni altro processo che intende entrare nel monitor.</p>
 <p>Questa soluzione si può ottenere sospendendo il processo <code>Q</code> dopo la <code>signal_wait()</code> su una coda detta <em>urgent_queue</em>, separata da quella del mutex (coda di processi in attesa per entrare nel monitor).</p>
-<p>mutex: meccanismo di mutua escluzione che permette l’accesso al monitor ad un solo processo per volta.</p>
+<p>mutex: meccanismo di mutua esclusione che permette l’accesso al monitor a un solo processo per volta.</p>
 <h3 id="seconda-soluzione-signal-and-continue"><a class="header" href="#seconda-soluzione-signal-and-continue">Seconda soluzione: signal and continue</a></h3>
 <p><em><strong>signal_and_continue</strong></em>:</p>
 <ul>
@@ -1325,7 +1341,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 </p>
 
 <p>Essendo che <code>P</code> compete con gli altri processi per accedere al monitor potrebbe verificarsi la situazione in cui ad esser schedulato prima di <code>P</code> è <code>K</code>, che entra nel monitor una volra che <code>Q</code> lo ha rilasciato.</p>
-<p>In questa sistuazione potrebbe accadere che <code>K</code> <strong>modifichi nuovamente la risorsa</strong> (le strutture contenute in <em>local data</em>) e quindi potrebbe far in modo che la condizione di sincronizzazione per <code>P</code> sia <strong>non più verificata</strong>.</p>
+<p>In questa situazione potrebbe accadere che <code>K</code> <strong>modifichi nuovamente la risorsa</strong> (le strutture contenute in <em>local data</em>) e quindi potrebbe far in modo che la condizione di sincronizzazione per <code>P</code> sia <strong>non più verificata</strong>.</p>
 <p>Quindi è necessario che una volta che <code>P</code> rientri all’interno del monitor verifichi nuovamente la condizione di sincronizzazione.</p>
 <p>→ Non abbiamo più la certezza che nel momento in cui <code>P</code> rientra nel monitor la condizione sia verificata.</p>
 <p>Questo si può tradurre anche in una condizione di <strong>attesa indefinita</strong> per <code>P</code> (<strong>starvation</strong>).</p>
@@ -1352,16 +1368,16 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <p>→ ovvero nel momento in cui è soddisfatta la condizione di sincronizzazione.</p>
 <p>La semantica di <em>signal-and-continue</em> (e <em>signal-all</em>) è più <strong>robusta</strong>:</p>
 <ul>
-<li>il processo segnalante può chiamarla anche quando non è sicuro di se/quali processi risegliare;</li>
-<li>saranno i processi risvegliati a controllare se possono eseguire, oppure sospensersi.</li>
+<li>il processo segnalante può chiamarla anche quando non è sicuro di se/quali processi risvegliare;</li>
+<li>saranno i processi risvegliati a controllare se possono eseguire, oppure sospendersi.</li>
 </ul>
 <h3 id="granularità-semaforo-vs-monitor"><a class="header" href="#granularità-semaforo-vs-monitor">Granularità: semaforo vs monitor</a></h3>
-<p>Entrambi, sia monitor che semafori, sono dei concetti necessaria per la gestione di situazioni di cooperazione o competizione tra processi concorrenti su una risorca condivisa.</p>
+<p>Entrambi, sia monitor che semafori, sono dei concetti necessaria per la gestione di situazioni di cooperazione o competizione tra processi concorrenti su una risorsa condivisa.</p>
 <p>Sono simili nell’utilizzo ma hanno tante differenza sia rispetto alla robustezza che alla granularità.</p>
-<p>In particolar modo i semafori hanno una granularita <em>fine</em>, molto bassa, proprio perché gestiscono la mutua esclusione a <strong>livello di singole operazioni</strong>.</p>
+<p>In particolar modo i semafori hanno una granularità <em>fine</em>, molto bassa, proprio perché gestiscono la mutua esclusione a <strong>livello di singole operazioni</strong>.</p>
 <p>Mentre i monitor hanno una granularità più alta: il controllo non è sulla singola operazione sulla risorsa condivisa, ma sull’intera risorsa condivisa.</p>
-<p>→ infatti nell’implementazione del problema produttori/consumatori con buffer di stato la modifica di questo a fine di un’operazione (<code>IN_USO → OCCUPATO/LIBERO</code>), che sia di scrittura o lettura, deve essere eseguira all’interno del monitor (bloccando quindi gli altri processi che desiderano accedervi). <br> →devono esser modificate delle variabili di stato (es. <code>num_liberi</code>, <code>num_occupati</code>).</p>
-<p>Mentre con i semafori la modifica sul buffer di stato <code>IN_USO → OCCUPATO/LIBERO</code> non era inclusa nella sezione critica, non ostacolavamo gli altri processi ad operare sulla risorsa.</p>
+<p>→ infatti nell’implementazione del problema produttori/consumatori con buffer di stato la modifica di questo a fine di un’operazione (<code>IN_USO → OCCUPATO/LIBERO</code>), che sia di scrittura o lettura, deve essere eseguirà all’interno del monitor (bloccando quindi gli altri processi che desiderano accedervi). <br> →devono esser modificate delle variabili di stato (es. <code>num_liberi</code>, <code>num_occupati</code>).</p>
+<p>Mentre con i semafori la modifica sul buffer di stato <code>IN_USO → OCCUPATO/LIBERO</code> non era inclusa nella sezione critica, non ostacolavamo gli altri processi a operare sulla risorsa.</p>
 <p>Invece parlando di <strong>robustezza</strong> i monitor sono sicuramente molto più sicuri per via del loro <strong>livello di astrazione maggiore</strong>. Tutti le operazioni sulla memoria condivisa sono contenute all’interno del monitor. (possiamo dire che il monitor è un wrapper della <code>shm</code>)</p>
 <p>Mentre per i semafori la gestione è esplicita, quindi è più alto il rischio di eventuali <strong>deadlock</strong>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -1467,7 +1483,7 @@ int queue_condition(Monitor*, int);
 <li>altrimenti la chiamata è ininfluente.</li>
 </ol>
 <p>In entrambi i casi, sia che la verifica sia vero oppure falsa, il processo segnalatore continua la sua esecuzione all’interno del monitor.</p>
-<!--todo aggiungi il codice sorgente per ogni workflow   --><div style="break-before: page; page-break-before: always;"></div>
+<!-- @todo aggiungi il codice sorgente per ogni workflow   --><div style="break-before: page; page-break-before: always;"></div>
 <h1 id="sincronizzazione-nel-modello-ad-ambiente-locale"><a class="header" href="#sincronizzazione-nel-modello-ad-ambiente-locale">Sincronizzazione nel modello ad ambiente locale</a></h1>
 <p>Il modello ad ambiente <strong>locale</strong> si riferisce a una struttura in cui ogni processo opera nel proprio ambiente privato, <strong>senza alcuna memoria condivisa</strong> tra vari processi.</p>
 <p>In questo modello tutte le risorse sono privare a ciascun processo e non possono essere modificate direttamente da altri processi.</p>

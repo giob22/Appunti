@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-565e015e.js";
+            window.path_to_searchindex_js = "searchindex-61255e41.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -211,11 +211,26 @@ struct shmid_ds {
 	struct vm_area_struct *attaches; /* descriptors for attaches */
 };
 </code></pre>
-<p><img src="images/struct_shm.png" alt="alt text"></p>
+<p>In particolare:</p>
+<ul>
+<li>
+<p><code>shm_npages</code> è il numero di pagine totali per tutti i segmenti utilizzati che sono puntati dal campo successivo;</p>
+</li>
+<li>
+<p><code>shm_pages</code> è l’array di puntatori alle pagine fisiche del segmento shared memory;</p>
+</li>
+<li>
+<p><code>vm_area_struct</code> è una struttura fondamentale nel kernel Linux, usata per <strong>rappresentare una regione contigua di memoria virtuale</strong> in un processo.</p>
+<p>In questo caso serve a tener <strong>traccia della posizione</strong> del segmento shared memory nello <strong>spazio di indirizzi virtuali di ogni singolo processo</strong> che esegue una <code>shmat()</code>.</p>
+</li>
+</ul>
+<p align="center"><img src="images/struct_shm.png" width="650"></p>
+
+<!-- @fix ricordati di cambiare il nome da shm_segs in shm_pages -->
 <h2 id="creazione"><a class="header" href="#creazione">Creazione:</a></h2>
 <pre><code class="language-c">int shmget(key_t key, int size, int flag);
 </code></pre>
-<p><code>size</code> è la dimensione in byte della memoria condivisa. Possiamo quindi specificare qualsiasi valore di dimensione; supponendo di scegliere <code>size = 4</code> stiamo chiedendo di avere una memoria condivisa di <code>4 byte</code> ma in realtá il kernel sta allocando uno spazio di memoria pari a <code>4KB</code> perché la memoria condivisa viene alocata in <strong>unitá di pagina</strong> del sistema, e la <strong>dimensione di una pagina su linux</strong> è pari a <strong><code>4 KB</code></strong>.</p>
+<p><code>size</code> è la dimensione in byte della memoria condivisa. Possiamo quindi specificare qualsiasi valore di dimensione; supponendo di scegliere <code>size = 4</code> stiamo chiedendo di avere una memoria condivisa di <code>4 byte</code> ma in realtà il kernel sta allocando uno spazio di memoria pari a <code>4KB</code> perché la memoria condivisa viene alocata in <strong>unitá di pagina</strong> del sistema, e la <strong>dimensione di una pagina su linux</strong> è pari a <strong><code>4 KB</code></strong>.</p>
 <p>Restituisce <code>-1</code> in caso di fallimento. Invece se ha successo restituisce il <strong>descrittore della risorsa</strong>.</p>
 <hr>
 <p>ESEMPIO: con chiave cablata e senza flags</p>
@@ -270,7 +285,7 @@ struct shmid_ds {
 	... Utilizza la shared memory ...
 </code></pre>
 <p>La shared memory viene creata dal primo <code>get</code> solamente se non ne esiste giá una con la stessa chiave, altrimenti restituisce <code>-1</code>.</p>
-<p>In quest’ultimo caso otteniamo il descrittore con una chiamata <code>get</code> senza flag poichè sappiamo esistere la risorse IPC.</p>
+<p>In quest’ultimo caso otteniamo il descrittore con una chiamata <code>get</code> senza flag poiché sappiamo esistere la risorse IPC.</p>
 <hr>
 <p>ESEMPIO: utilizzo <code>ftok()</code> per creare una key adatta a una risorsa IPC</p>
 <pre><code class="language-c">	key_t chiave = ftok("./eseguibile", 'k');
