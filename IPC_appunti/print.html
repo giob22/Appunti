@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6a689324.js";
+            window.path_to_searchindex_js = "searchindex-7175f7a9.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -1084,7 +1084,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <li>Effettua una <code>wait_sem()</code> su <code>MUTEXS</code> per modificare <code>Num_Scrittori</code> in mutua esclusione;</li>
 <li>Se il processo è il primo scrittore allora esegue la <code>wait_sem()</code> su <code>SYNCH</code> per bloccare l’accesso ai lettori;</li>
 <li>Rilascio della variabile <code>Num_Scrittori</code> con una <code>signal_sem()</code> su <code>MUTEXS</code> così che altri scrittori possano accedervi;</li>
-<li>Infine il processo fa una <code>wait_sem()</code> su <code>MUTEX</code> affinchè altri scrittori non possano accedere alla <code>shm</code>.</li>
+<li>Infine il processo fa una <code>wait_sem()</code> su <code>MUTEX</code> affinché altri scrittori non possano accedere alla <code>shm</code>.</li>
 </ul>
 <pre><code class="language-c">void Fine_Scrittura(int sem){
     signal_sem(sem, MUTEX);
@@ -1104,7 +1104,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerá il contatore <code>s
 <p>Da notare che l’implementazione di queste due funzioni è l’analogo delle funzioni per inizio e fine lettura per i lettori. L’unica differenza sta nel fatto che per gli scrittori è da gestire la loro mutua esclusione sulla <code>shm</code> che non è necessario per i lettori.</p>
 <p>A questo proposito infatti è impiegato il semaforo identificato all’interno del <em>semaphor set</em> dalla costante <code>MUTEX</code>.</p>
 <h2 id="implementazione-con-monitor"><a class="header" href="#implementazione-con-monitor">Implementazione con MONITOR</a></h2>
-<!-- @todo fai l'implementazione di inizio e fine scrittura e lettura sfruttando un monitor signal-and-wait ed uno signal-and-continue-->
+<p>L’implementazione con monitor è presente nella repository Sistemi_Operativi/IPC/monitor su GitHub.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="monitor"><a class="header" href="#monitor">Monitor</a></h1>
 <p>Il <strong>monitor</strong> è una struttura sintattica (modello concettuale) che opera su una risorsa condivisa (shm) gestendone l’accesso e la sincronizzazione tra processi/thread concorrenti.</p>
