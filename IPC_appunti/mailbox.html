@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2a5edb96.js";
+            window.path_to_searchindex_js = "searchindex-6a689324.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-efead60a.js"></script>
@@ -306,7 +306,7 @@ struct msqid_ds {
 <p>Il campo <code>message_type</code> diventa molto importante quando viene accoppiato con funzioni di <code>receive</code> <strong>selettive</strong>, che permettono di estrarre un particolare messaggio dalla coda della mailbox.</p>
 <p>Infatti, è possibile estrarre dalla coda di messaggi il messaggio che il cui campo tipo è quello specificato in <code>message_type</code> nonostante non si trovi in cima alla coda.</p>
 <p>Se <code>message_type</code> assume il valore del PID del processo mittente possiamo implementare una <strong>comunicazione diretta asimmetrica</strong> sfruttando una <strong>comunicazione indiretta</strong> offerta dalle mailbox (nel caso di <strong>una sola coda</strong>).</p>
-<p>In <code>sys/msg.h</code> fornisce una struttura messaggio che possiamo sfruttare (ma non è obbligatorio):</p>
+<p>La libreria <code>sys/msg.h</code> fornisce una struttura messaggio che possiamo sfruttare (ma non è obbligatorio):</p>
 <pre><code class="language-c">struct msgbuf
 {
   __syscall_slong_t mtype;	/* type of received/sent message */
