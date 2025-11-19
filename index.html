@@ -189,12 +189,15 @@
                 subject: "Sistemi Operativi",
                 subjectColor: "text-blue-400",
                 borderColor: "#3b82f6", 
-                description: "Comunicazione tra processi concorrenti, shared memory, semafori, message queue.",
+                description: "Comunicazione tra processi concorrenti, shared memory, semafori, message queue, monitor, etc.",
                 topics: [
                     "Processi Concorrenti",
                     "Shared Memory",
                     "Semafori",
-                    "Message Queue"
+                    "Message Queue",
+                    "Monitor",
+                    "Problema lettore scrittore",
+                    "Problema consumatore produttore"
                 ],
                 link: "IPC_appunti/index.html",
                 lastUpdate: "Caricamento..."
@@ -275,7 +278,7 @@
 
                     <!-- Footer Card -->
                     <div class="mt-auto pt-4 flex items-center justify-between text-xs font-mono text-gray-500">
-                        <span>Ultimo aggiornamento: ${book.lastUpdate}</span>
+                        <span>Last update: ${book.lastUpdate}</span>
                         <span class="flex items-center gap-1 group-hover:text-white transition-colors">
                             Apri
                             <svg class="arrow-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
