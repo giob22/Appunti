@@ -183,7 +183,6 @@
 
     <script>
         // --- CONFIGURAZIONE LIBRI (MACRO TEMI) ---
-        
         const books = [
             {
                 title: "IPC (Inter-Process Communication)",
@@ -198,7 +197,7 @@
                     "Message Queue"
                 ],
                 link: "IPC_appunti/index.html",
-                lastUpdate: "Disponibile"
+                lastUpdate: "Caricamento..."
             },
             {
                 title: "Syscall: Fork & Exec",
@@ -213,13 +212,15 @@
                     "Gestione Processi"
                 ],
                 link: "syscall_fork_exec/index.html",
-                lastUpdate: "Disponibile"
+                lastUpdate: "Caricamento..."
             }
         ];
 
         const grid = document.getElementById('booksGrid');
         const searchInput = document.getElementById('searchInput');
         const emptyState = document.getElementById('emptyState');
+
+        let currentSearchTerm = '';
 
         function renderBooks(items) {
             grid.innerHTML = '';
@@ -231,7 +232,6 @@
             emptyState.classList.add('hidden');
 
             items.forEach(book => {
-                // Creiamo la lista dei topic (ne mostriamo max 4 per non allungare troppo la card)
                 const topicsList = book.topics.slice(0, 4).map(topic => `
                     <li class="flex items-start gap-2 text-sm text-gray-400">
                         <span class="topic-dot ${book.subjectColor} opacity-60"></span>
@@ -239,7 +239,6 @@
                     </li>
                 `).join('');
 
-                // Indicatore se ci sono più topic di quelli mostrati
                 const moreTopics = book.topics.length > 4 
                     ? `<li class="text-xs text-gray-600 pl-4 italic mt-1">+ altri ${book.topics.length - 4} argomenti</li>` 
                     : '';
@@ -247,7 +246,6 @@
                 const card = document.createElement('a');
                 card.href = book.link;
                 card.className = 'book-card block bg-surface border border-border rounded-2xl p-6 relative group overflow-hidden flex flex-col h-full';
-                // Passiamo il colore hover tramite variabile CSS inline per flessibilità
                 card.style.setProperty('--hover-color', book.borderColor);
 
                 card.innerHTML = `
@@ -277,10 +275,12 @@
 
                     <!-- Footer Card -->
                     <div class="mt-auto pt-4 flex items-center justify-between text-xs font-mono text-gray-500">
-                        <span>${book.lastUpdate}</span>
+                        <span>Ultimo aggiornamento: ${book.lastUpdate}</span>
                         <span class="flex items-center gap-1 group-hover:text-white transition-colors">
                             Apri
-                            <svg class="arrow-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            <svg class="arrow-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
                         </span>
                     </div>
                 `;
@@ -288,19 +288,64 @@
             });
         }
 
-        // Logica di Ricerca
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = books.filter(book => 
+        function getFilteredBooks() {
+            const term = currentSearchTerm.trim().toLowerCase();
+            if (!term) return books;
+
+            return books.filter(book => 
                 book.title.toLowerCase().includes(term) || 
                 book.subject.toLowerCase().includes(term) ||
                 book.topics.some(t => t.toLowerCase().includes(term))
             );
-            renderBooks(filtered);
+        }
+
+        // Logica di Ricerca
+        searchInput.addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value;
+            renderBooks(getFilteredBooks());
         });
 
-        // Render iniziale
+        // --- RECUPERO DATA ULTIMA MODIFICA DA GITHUB ---
+        function fetchLastUpdates() {
+            const user = "giob22";
+            const repo = "Appunti";
+
+            books.forEach((book) => {
+                // Prendiamo il nome della cartella dal link ("IPC_appunti/index.html" -> "IPC_appunti")
+                const path = book.link.split('/')[0];
+
+                const url = `https://api.github.com/repos/${user}/${repo}/commits?path=${encodeURIComponent(path)}&per_page=1`;
+
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (Array.isArray(data) && data.length > 0 && data[0].commit && data[0].commit.committer) {
+                            const date = new Date(data[0].commit.committer.date);
+                            // Formato italiano gg/mm/aaaa hh:mm
+                            book.lastUpdate = date.toLocaleString('it-IT', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        } else {
+                            book.lastUpdate = "N/D";
+                        }
+                        // Rirenderizza con il filtro attuale
+                        renderBooks(getFilteredBooks());
+                    })
+                    .catch((err) => {
+                        console.error("Errore nel recupero dell'ultima modifica per", path, err);
+                        book.lastUpdate = "N/D";
+                        renderBooks(getFilteredBooks());
+                    });
+            });
+        }
+
+        // Render iniziale + fetch delle date
         renderBooks(books);
+        fetchLastUpdates();
     </script>
 </body>
 </html>
