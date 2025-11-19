@@ -153,8 +153,16 @@
                 type="text" 
                 id="searchInput"
                 placeholder="Cerca un argomento (es. semafori)..." 
-                class="w-full pl-12 pr-4 py-3 bg-surface border border-border rounded-xl text-textMain placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-lg"
+                class="w-full pl-12 pr-10 py-3 bg-surface border border-border rounded-xl text-textMain placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-lg"
             >
+            <!-- Pulsante Cancella (X) -->
+            <button 
+                id="clearSearchBtn" 
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-white cursor-pointer hidden transition-colors"
+                aria-label="Cancella ricerca"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
         </div>
 
         <!-- BOOKS GRID -->
@@ -221,6 +229,7 @@
 
         const grid = document.getElementById('booksGrid');
         const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
         const emptyState = document.getElementById('emptyState');
 
         let currentSearchTerm = '';
@@ -305,6 +314,23 @@
         // Logica di Ricerca
         searchInput.addEventListener('input', (e) => {
             currentSearchTerm = e.target.value;
+            
+            // Toggle pulsante X
+            if (currentSearchTerm.length > 0) {
+                clearSearchBtn.classList.remove('hidden');
+            } else {
+                clearSearchBtn.classList.add('hidden');
+            }
+
+            renderBooks(getFilteredBooks());
+        });
+
+        // Logica Click Clear
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            currentSearchTerm = '';
+            clearSearchBtn.classList.add('hidden');
+            searchInput.focus(); // Mantiene il focus
             renderBooks(getFilteredBooks());
         });
 
@@ -314,9 +340,7 @@
             const repo = "Appunti";
 
             books.forEach((book) => {
-                // Prendiamo il nome della cartella dal link ("IPC_appunti/index.html" -> "IPC_appunti")
                 const path = book.link.split('/')[0];
-
                 const url = `https://api.github.com/repos/${user}/${repo}/commits?path=${encodeURIComponent(path)}&per_page=1`;
 
                 fetch(url)
@@ -324,7 +348,6 @@
                     .then(data => {
                         if (Array.isArray(data) && data.length > 0 && data[0].commit && data[0].commit.committer) {
                             const date = new Date(data[0].commit.committer.date);
-                            // Formato italiano gg/mm/aaaa hh:mm
                             book.lastUpdate = date.toLocaleString('it-IT', {
                                 year: 'numeric',
                                 month: '2-digit',
@@ -335,7 +358,6 @@
                         } else {
                             book.lastUpdate = "N/D";
                         }
-                        // Rirenderizza con il filtro attuale
                         renderBooks(getFilteredBooks());
                     })
                     .catch((err) => {
