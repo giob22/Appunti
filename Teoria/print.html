@@ -30,16 +30,18 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root and default themes to javascript -->
         <script>
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fe7efb02.js";
+            window.path_to_searchindex_js = "searchindex-f937b56b.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-79dbd344.js"></script>
+        <script src="toc-f52c506f.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -175,7 +177,216 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="chapter-1"><a class="header" href="#chapter-1">Chapter 1</a></h1>
+                        <h1 id="deadlock"><a class="header" href="#deadlock">Deadlock</a></h1>
+<p>Deadlock è un fenomeno che può presentarsi nelle <strong>applicazioni concorrenti</strong> che porta a un blocco permanente di processi in <strong>competizione per risorse condivise</strong>.</p>
+<p>→ può portare a crash, situazioni di stallo, etc. (da evitare completamente)</p>
+<p>Nei sistemi operativi <strong>general porpose</strong>, si ammette l’esistenza di deadlock → non si implementano tecniche per evitare il problema ma si rileva nel momento in cui si presenta e si cerca di risolverlo.</p>
+<h2 id="deadlock-definizione-e-generalità"><a class="header" href="#deadlock-definizione-e-generalità">Deadlock: definizione e generalità</a></h2>
+<p>Indica una situazione di <strong>blocco permanente</strong> di un gruppo di processi in competizione per le risorse di sistema (che sono limitate → motivo principale per cui si deve gestire la competizione).</p>
+<p>Deadlock è un problema complesso e di rilievo, che può provocare gravi malfunzionamenti.</p>
+<p>A seconda dello scopo per cui è progettato, un sistema operativo adotta una <strong>gestione</strong> diversa per controllare il deadlock.</p>
+<p>Ad esempio, per i sistemi <strong>real-time</strong> evitare il deadlock è fondamentale, quindi avranno una gestione più rigida che tende a prevenire tali fenomeni a differenza di altri tipi di sistemi operativi, come general porpose, che potranno tendere a non rilevarli e risolverli a posteriori.</p>
+<hr>
+<p>Esempio: attraversamento di un incrocio</p>
+<p align="center"><img src="images/incrocio_deadlock.png" width="450"></p>
+
+<p>Sono presenti diversi quadranti identificati dalle lettere <code>a</code>, <code>b</code>, <code>c</code> e <code>d</code>; che possono rappresentare le risorse critiche.</p>
+<ul>
+<li>Ogni auto ha bisogno di attraversare due quadranti;</li>
+<li>Ogni auto rappresenta un processo di un sistema operativo.</li>
+</ul>
+<p>Ogni si inserisce nel rispettivo primo quadrante, ma per completare la curva deve ottenere l’accesso al quadrante alla loro destra (o sinistra) occupato da un’altra auto, e per quest’ultima vale lo stesso ragionamento.</p>
+<p>Facendo lo stesso ragionamento si crea un situazione di stallo (se nessun’auto indietreggia).</p>
+<hr>
+<p>Esempio: copia di un file</p>
+<ul>
+<li>un sistema ha 2 dischi esterni</li>
+<li><code>P1</code> e <code>P2</code> copiano un grosso file da un disco all’altro;</li>
+<li>si suppone sia necessaria la <strong>mutua esclusione</strong>.</li>
+</ul>
+<p>Quindi ciascun processo acquisisce uno dei due dischi per leggere e successivamente richiedono l’accesso all’altro.</p>
+<p>Ma l’altro disco si ritrova già acquisito. Quindi i due processi attendono a vicenda che l’altro rilasci la risorse.</p>
+<p align="center"><img src="images/esempio_dischi.png" width="350"></p>
+
+<p>→ si crea la cosiddetta <strong>attesa circolare</strong> che è la manifestazione del deadlock.</p>
+<hr>
+<h3 id="il-problema-del-deadlock"><a class="header" href="#il-problema-del-deadlock">Il problema del deadlock</a></h3>
+<p>Una condizione <strong>necessaria</strong> affinché nelle <strong>applicazioni concorrenti</strong> si verifichi un deadlock è che siano presenti almeno due semafori <strong>mutex</strong>, ovvero entrambi inizializzati ad 1.</p>
+<p>Quindi quando è presente la <strong>mutua esclusione</strong>.</p>
+<div style="display:flex; gap:20px;">
+  <!-- Colonna P1 -->
+<div style="border:2px solid #b7c0e3; background:#eef1ff; padding:15px; width:45%; border-radius:6px;"><b>P₁</b><br><br>
+wait (<span style="color:red;">mutex1</span>)<br>
+&lt;inizio uso disco 1&gt;<br>
+…<br><br>
+<div style="border:2px dashed red; padding:6px; border-radius:4px;">
+  wait (<span style="color:green;">mutex2</span>)
+</div>
+
+&lt;inizio uso disco 2&gt;<br>
+…<br><br>
+signal (<span style="color:green;">mutex2</span>)<br>
+…<br>
+signal (<span style="color:red;">mutex1</span>)<br>
+  </div>
+
+  <!-- Colonna P2 -->
+<div style="border:2px solid #d0d0d0; background:#f5f5f5; padding:15px; width:45%; border-radius:6px;">
+<b>P₂</b><br><br>
+wait (<span style="color:green;">mutex2</span>)<br>
+&lt;inizio uso disco 2&gt;<br>
+…<br><br>
+<div style="border:2px dashed red; padding:6px; border-radius:4px;">
+  wait (<span style="color:red;">mutex1</span>)
+</div>
+
+&lt;inizio uso disco 1&gt;<br>
+…<br><br>
+signal (<span style="color:red;">mutex1</span>)<br>
+…<br>
+signal (<span style="color:green;">mutex2</span>)<br>
+  </div>
+
+</div>
+
+<p>I due processi potrebbero sospendersi entrambi su le <code>wait()</code> evidenziate.</p>
+<p>Questo è un classico esempio di attesa circolare che si presenta se avviene la seguente sequenza di azioni:</p>
+<ul>
+<li><code>P1</code> esegue <code>wait(mutex1)</code> e acquisisce la prima risorsa critica;</li>
+<li><code>P2</code> esegue <code>wait(mutex2)</code> e acquisisce la seconda risorsa critica;</li>
+<li><code>P1</code> ha bisogno della seconda risorsa critica, quindi esegue <code>wait(mutex2)</code> e si blocca;</li>
+<li><code>P2</code> ha bisogno della prima risorse critica, quindi esegue <code>wait(mutex1)</code> e si blocca.</li>
+</ul>
+<p>Nel caso in cui l’esecuzione dei due processi segue questa sequenza, i due processi rimangono bloccati</p>
+<p>Questa situazione però <strong>non</strong> <strong>è</strong> <strong>detto</strong> che accada a ogni esecuzione dell’applicazione concorrente.</p>
+<p>→ <strong>non</strong> è un fenomeno <strong>deterministico</strong>, ovvero non significa che questo si manifesti ogni volta che si hanno le condizioni adatte.</p>
+<p>In alcuni casi il deadlock dipende da come i processi si alternano sulla CPU.</p>
+<p>Per questo motivo il deadlock può manifestarsi <strong>saltuariamente</strong>, in base alla <strong>velocità relativa di esecuzione dei processi</strong>.</p>
+<blockquote>
+<p>La velocità relativa di esecuzione dei processi è un modo per descrivere come i processi avanzano nel tempo l’uno rispetto l’altro, questo avanzamento non è deterministico perché durante l’esecuzione possono:</p>
+<ul>
+<li>essere interrotti dal kernel (preemption),</li>
+<li>essere sospesi in attesa di un operazione di I/O (la cui durata non è sempre la stessa),</li>
+<li>ricevere più o meno tempo di CPU in base alla politica di sheduling adottata,</li>
+<li>essere ritardati da cache miss.</li>
+</ul>
+</blockquote>
+<p>Come si potrebbe risolvere questa situazione?</p>
+<p>Un terzo dovrebbe gestire questa concorrenza, andando ad esempio a killare un processo in modo che questo liberi la risorsa detenuta a favore dell’altro.</p>
+<div align="center">
+<h2 id="deadlock--starvation"><a class="header" href="#deadlock--starvation"><strong>Deadlock ≠ Starvation</strong></a></h2>
+<table>
+<tr>
+<td align="center" style="border: none">
+<p><strong>attesa <span style="color:red">infinita</span></strong></p>
+</td>
+<td align="center" style="border: none">
+<p><strong>attesa <span style="color:red">indefinita</span></strong></p>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+<p>Deadlock e starvation sono due concetti totalmente diversi che possono essere confusi.</p>
+<ul>
+<li>
+<p>Con starvation identifichiamo una situazione di attesa <strong>indefinita</strong>. Tale fenomeno è molto legato al concetto di priorità.</p>
+</li>
+<li>
+<p>Con deadlock identifichiamo una situazione di attesa <strong>infinita</strong>, in nessun modo i processi possono uscire da questa situazione, al contrario della starvation. Tale fenomeno è molto legato al concetto di mutua esclusione.</p>
+</li>
+</ul>
+<h2 id="grafo-di-assegnazione-delle-risorse"><a class="header" href="#grafo-di-assegnazione-delle-risorse">Grafo di assegnazione delle risorse</a></h2>
+<p>Il grafo si assegnazione delle risorse serve a modellare in modo formale lo stato delle risorse e dei processi di un sistema, per poter <strong>capire se esiste il rischio di deadlock</strong>.</p>
+<p>Tramite questa formalizzazione possiamo implementare algoritmi in grado di rilevare una possibile manifestazione di deadlock tra i processi in esecuzione.</p>
+<p>Un grafo è un insieme di vertici (o nodi) <em>V</em> e un insieme di archi <em>E</em>.</p>
+<ul>
+<li>
+<p>V è partizionato in <strong>due tipi</strong>:</p>
+<ul>
+<li><em>P</em> = {P1, P2, …, Pn} è l’insieme costituito da tutti i <strong>processi</strong> nel sistema.</li>
+<li><em>R</em> = {R1, R2, …, Rn} è l’insieme costituito da tutti i tipi di <strong>risorse</strong> nel sistema.</li>
+</ul>
+</li>
+<li>
+<p><strong>Arco di richiesta</strong> (arco orientato) Pi → Rj, Pi chiede l’accesso a Rj.</p>
+</li>
+<li>
+<p><strong>Arco di assegnazione</strong> (arco orientato) Rj → Pi, Rj è assegnata al processo Pi.</p>
+</li>
+</ul>
+<p>Ogni risorsa può avere più istanze.</p>
+<p align="center"><img src="images/def_grafo.png" width="300"></p>
+
+<p>Una condizione <strong>sufficiente</strong> per la possibile (perché dipende sempre dalla velocità relativa di esecuzione) manifestazione di un deadlock è un <strong>ciclo</strong> nel grafo di assegnazione.</p>
+<p align="center"><img src="images/grafo_deadlock.png" width="300"></p>
+
+<p>In questo caso <code>P1</code> richiede <code>Ra</code> la cui unica istanza è detenuta da <code>P2</code> che richiede a sua volta <code>Rb</code> la cui unica istanza è detenuta da <code>P1</code>.</p>
+<p>Nel momento in cui è presente un ciclo del genere possiamo essere <strong>sicuri</strong> che tra questi processi è <strong>possibile</strong> che avvenga una situazione di deadlock.</p>
+<p>Ovviamente nel caso in cui le risorse avessero più istanze non ci sarebbe un problema, perché i due processi accederebbero a istanze diverse e quindi non si violerebbe la <strong>mutua esclusione</strong>.</p>
+<p align="center"><img src="images/grafo_nodeadolock.png" width="300"></p>
+
+<p>→ Questo <strong>non</strong> significa che avere più istanze <strong>risolva</strong> il problema, perché basta che si aggiungano altri processi al grafo con una particolare configurazione che la situazione di deadlock potrebbe accadere.</p>
+<p>OSSERVAZIONI:</p>
+<ul>
+<li>
+<p>Un ciclo è una condizione sufficiente per la possibile condizione di deadlock.</p>
+<p>→ Se il grafo <strong>non contiene cicli</strong> ⟹ non si verificano situazioni di stallo</p>
+</li>
+<li>
+<p>Se il grafo <strong>contiene un ciclo</strong> ⟹ si potrebbe verificare una situazione di stallo, la cui possibilità diminuisce con il numero di istanze per ogni risorsa. (ma non è mai zero)</p>
+</li>
+</ul>
+<p>Linux cosa fa? Quando rileva un deadlock tenta di <strong>eliminare</strong> (a posteriori) questa condizione andando a terminare uno dei processi scatenanti, la cui scelta dipende da delle metriche.</p>
+<p>Quindi accetta che questa situazione può verificarsi e nel momento in cui è tale risolve il problema mediante una sua politica di gestione.</p>
+<h2 id="metodi-per-la-gestione-dei-deadlock"><a class="header" href="#metodi-per-la-gestione-dei-deadlock">Metodi per la gestione dei deadlock</a></h2>
+<p>Esistono diversi approcci per gestire la situazione di deadlock che consistono principalmente in prevenirli (a priori) o rilevarli (a posteriori).</p>
+<ol>
+<li>
+<p>Prevenzione dei deadlock (<strong>PREVENTION</strong>):</p>
+<p>rendere <strong>impossibile</strong> il verificarsi delle <strong>condizioni di deadlock</strong>, ma al costo di un basso utilizzo delle risorse.</p>
+<p>Questo approccio tenta di annullare le condizioni che possono causare un deadlock → evitano che si creino dei cicli nel grafo di assegnazione delle risorse.</p>
+<p>Ma nel fare questo <strong>limitano l’utilizzo delle risorse non sfruttandole a pieno</strong>, quindi rallentando il sistema.</p>
+</li>
+<li>
+<p>Evitare i deadlock (<strong>AVOIDANCE</strong>):</p>
+<p>le condizioni per il deadlock sono consentite, quindi si ammette l’esistenza delle condizioni tali per cui esso può avvenire, me il sistema <strong>evita di entrare</strong> in uno stato di deadlock.</p>
+<p>Evita la condizione <strong>analizzando ogni richiesta</strong> di risorse prima di concederla, e <strong>accettandola solo</strong> se non porta il sistema in uno “<strong>stato non sicuro</strong>”.</p>
+</li>
+<li>
+<p>Rilevazione del deadlock (<strong>DETECTION</strong>):</p>
+<p>Si permette al sistema di entrare in uno stato di deadlock, per poi risolvere il problema (<strong>ripristino il sistema</strong>).</p>
+<p>Quindi si ammette che ci possa esser la condizione di deadlock, non si fa nulla per evitarla, ma nel momento in cui questa si verifica il sistema tenta di tornare in uno stato sicuro.</p>
+<p>Ovvero si gestisce il deadlock solo dopo che questo si verifica.</p>
+</li>
+</ol>
+<p>La maggioranza dei sistemi operativi general-porpose, inclusi UNIX e Windows, <strong>non dispone di una soluzione generale ed efficiente</strong> al problema del deadlock.</p>
+<p>Poiché tutte le politiche di gestione elencate hanno grandi problemi per cui non possono essere adottati.</p>
+<p>NOTA: se creo due processi e faccio in modo che questi vadino in deadlock, il sistema operativo non fa nulla. Sarà un problema demandato al programmatore offrire una soluzione alla specifica situazione.</p>
+<h2 id="condizioni-per-il-deadlock"><a class="header" href="#condizioni-per-il-deadlock">Condizioni per il deadlock</a></h2>
+<p>Le condizioni <strong>necessarie</strong> sono:</p>
+<ul>
+<li>
+<p><strong>Mutua esclusione</strong></p>
+</li>
+<li>
+<p><strong>Impossibilità di prelazione</strong> → significa non poter eliminare un arco in modo arbitrario rispetto chi l’ha creato.</p>
+<p>Ovvero un processo non può togliere una risorsa a un altro processo che la sta utilizzando.</p>
+</li>
+<li>
+<p><strong>Possesso e attesa</strong> → il processo che possiede già una risorsa fa una richiesta per un’altra risorsa.</p>
+</li>
+</ul>
+<p>Invece le condizioni <strong>sufficienti</strong> sono:</p>
+<ul>
+<li><strong>Mutua esclusione</strong></li>
+<li><strong>Impossibilità di prelazione</strong></li>
+<li><strong>Possesso e attesa</strong></li>
+<li><strong>Attesa circolare</strong> → che abbiamo visto essere una <strong>condizione necessaria e sufficiente</strong>.</li>
+</ul>
+<p>Affinché ci sia attesa circolare devono necessariamente esser verificate tutte le condizioni necessarie. Quindi possiamo dire che se è presente un’attesa circolare allora automaticamente è presente una condizione di deadlock.</p>
 
                     </main>
 
@@ -219,7 +430,9 @@
 
         <script>
         window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
         });
         </script>
 
