@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f937b56b.js";
+            window.path_to_searchindex_js = "searchindex-6dc314ae.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f52c506f.js"></script>
@@ -179,12 +179,12 @@
                         <h1 id="deadlock"><a class="header" href="#deadlock">Deadlock</a></h1>
 <p>Deadlock è un fenomeno che può presentarsi nelle <strong>applicazioni concorrenti</strong> che porta a un blocco permanente di processi in <strong>competizione per risorse condivise</strong>.</p>
 <p>→ può portare a crash, situazioni di stallo, etc. (da evitare completamente)</p>
-<p>Nei sistemi operativi <strong>general porpose</strong>, si ammette l’esistenza di deadlock → non si implementano tecniche per evitare il problema ma si rileva nel momento in cui si presenta e si cerca di risolverlo.</p>
+<p>Nei sistemi operativi <strong>general-porpose</strong>, si ammette l’esistenza di deadlock → non si implementano tecniche per evitare il problema ma si rileva nel momento in cui si presenta e si cerca di risolverlo.</p>
 <h2 id="deadlock-definizione-e-generalità"><a class="header" href="#deadlock-definizione-e-generalità">Deadlock: definizione e generalità</a></h2>
 <p>Indica una situazione di <strong>blocco permanente</strong> di un gruppo di processi in competizione per le risorse di sistema (che sono limitate → motivo principale per cui si deve gestire la competizione).</p>
 <p>Deadlock è un problema complesso e di rilievo, che può provocare gravi malfunzionamenti.</p>
 <p>A seconda dello scopo per cui è progettato, un sistema operativo adotta una <strong>gestione</strong> diversa per controllare il deadlock.</p>
-<p>Ad esempio, per i sistemi <strong>real-time</strong> evitare il deadlock è fondamentale, quindi avranno una gestione più rigida che tende a prevenire tali fenomeni a differenza di altri tipi di sistemi operativi, come general porpose, che potranno tendere a non rilevarli e risolverli a posteriori.</p>
+<p>Ad esempio, per i sistemi <strong>real-time</strong> evitare il deadlock è fondamentale, quindi avranno una gestione più rigida che tende a prevenire tali fenomeni a differenza di altri tipi di sistemi operativi, come general-porpose, che potranno tendere a non rilevarli e risolverli a posteriori.</p>
 <hr>
 <p>Esempio: attraversamento di un incrocio</p>
 <p align="center"><img src="images/incrocio_deadlock.png" width="450"></p>
@@ -214,37 +214,40 @@
 <p>Quindi quando è presente la <strong>mutua esclusione</strong>.</p>
 <div style="display:flex; gap:20px;">
   <!-- Colonna P1 -->
-<div style="border:2px solid #b7c0e3; background:#eef1ff; padding:15px; width:45%; border-radius:6px;"><b>P₁</b><br><br>
-wait (<span style="color:red;">mutex1</span>)<br>
-&lt;inizio uso disco 1&gt;<br>
-…<br><br>
-<div style="border:2px dashed red; padding:6px; border-radius:4px;">
-  wait (<span style="color:green;">mutex2</span>)
-</div>
+<div style="border:2px solid #b7c0e3; background:#eef1ff; padding:15px; width:45%; border-radius:6px; color:#2b2b2b;">
+  <b>P₁</b><br><br>
+  wait (<span style="color:red;">mutex1</span>)<br>
+  &lt;inizio uso disco 1&gt;<br>
+  …<br><br>
+  
+<div style="border:2px dashed red; padding:6px; border-radius:4px; color:#2b2b2b;">
+    wait (<span style="color:green;">mutex2</span>)
+  </div>
 
-&lt;inizio uso disco 2&gt;<br>
+<p>&lt;inizio uso disco 2&gt;<br>
 …<br><br>
 signal (<span style="color:green;">mutex2</span>)<br>
 …<br>
-signal (<span style="color:red;">mutex1</span>)<br>
-  </div>
+signal (<span style="color:red;">mutex1</span>)<br></p>
+</div>
 
   <!-- Colonna P2 -->
-<div style="border:2px solid #d0d0d0; background:#f5f5f5; padding:15px; width:45%; border-radius:6px;">
-<b>P₂</b><br><br>
-wait (<span style="color:green;">mutex2</span>)<br>
-&lt;inizio uso disco 2&gt;<br>
-…<br><br>
-<div style="border:2px dashed red; padding:6px; border-radius:4px;">
-  wait (<span style="color:red;">mutex1</span>)
-</div>
+<div style="border:2px solid #d0d0d0; background:#f5f5f5; padding:15px; width:45%; border-radius:6px; color:#2b2b2b;">
+  <b>P₂</b><br><br>
+  wait (<span style="color:green;">mutex2</span>)<br>
+  &lt;inizio uso disco 2&gt;<br>
+  …<br><br>
+  
+<div style="border:2px dashed red; padding:6px; border-radius:4px; color:#2b2b2b;">
+    wait (<span style="color:red;">mutex1</span>)
+  </div>
 
-&lt;inizio uso disco 1&gt;<br>
+<p>&lt;inizio uso disco 1&gt;<br>
 …<br><br>
 signal (<span style="color:red;">mutex1</span>)<br>
 …<br>
-signal (<span style="color:green;">mutex2</span>)<br>
-  </div>
+signal (<span style="color:green;">mutex2</span>)<br></p>
+</div>
 
 </div>
 
