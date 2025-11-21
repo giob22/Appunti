@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-84f8caf7.js";
+            window.path_to_searchindex_js = "searchindex-72ed4977.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -228,6 +228,36 @@ key        semid      owner      perms      nsems
 FINE 2
 FINE 1
 </code></pre>
+<h2 id="errore-riscontrato-con-la-ftok"><a class="header" href="#errore-riscontrato-con-la-ftok">Errore riscontrato con la <code>ftok()</code></a></h2>
+<p><strong>PROBLEMA CON <code>key_t queue_key = ftok(".",'a')</code></strong></p>
+<p><code>ftok()</code> è una funzione che serve a generare una chiave <strong>IPC</strong> da usare con:</p>
+<ul>
+<li><code>msgget</code></li>
+<li><code>shmget</code></li>
+<li><code>semget</code></li>
+</ul>
+<p>Non è l’unico modo per utilizzare correttamente queste primitive, ma è sicuramente il modo più generale e corretto.</p>
+<p>La funzione prende come input 2 parametri:</p>
+<ol>
+<li>
+<p><code>pathname</code></p>
+<ul>
+<li>deve essere un percorso esistente nel filesystem</li>
+<li>deve puntare ad un file esistente → se non esiste, <code>ftok</code> fallisce e ha come valore di ritorno <code>-1</code> (valore non ammissibile ad essere una chiave)</li>
+</ul>
+</li>
+<li>
+<p><code>proj_id</code></p>
+<ul>
+<li>un intero di cui solo i primi 8 bit vengono considerati</li>
+<li>quindi possiamo utilizzare un carattere per tale parametro</li>
+</ul>
+</li>
+</ol>
+<p>Il problema riscontrato è in riferimento al primo parametro, perché il processo deve avere il permesso ad accedere al file che il percorso punta.</p>
+<p>Nel caso in cui tale file non ha i permessi corretti il processo si interrompe impostando la variabile <code>errno = 13</code>, dove tale valore corrisponde a <code>EACCES</code> cioè <strong>permission denied</strong>.</p>
+<p>Situazioni del genere potrebbero essere molto fastidiose se non si verifica sempre quello che accade nel momento di un crash, in questo caso è bastato verificare il contenuto della variabile globale <code>errno</code>.</p>
+<p>Tale variabile bisogna importarla poiché risiede nella libreria standard <code>errno</code>.</p>
 <!-- @todo inserisci qui tutte le note importanti sulla logica -->
                     </main>
 
