@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7c265c23.js";
+            window.path_to_searchindex_js = "searchindex-66a58563.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f52c506f.js"></script>
@@ -426,7 +426,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <p>come, ad esempio, le risorse read-only.</p>
 </li>
 <li>
-<p>Comporta costi maggiori → il sistema deve garantire che una risorsa critica (che potrebbe generare inconstistenze) non sia accessibile da più processi che ne fanno richiesta.</p>
+<p>Comporta costi maggiori → il sistema deve garantire che una risorsa critica (che potrebbe generare inconsistenze) non sia accessibile da più processi che ne fanno richiesta.</p>
 <p>Quindi che la risorsa è posseduta da un solo processo per volta.</p>
 </li>
 </ul>
@@ -555,7 +555,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <p>Non si avvia un processo se le sue richieste potrebbero portare ad un deadlock</p>
 </li>
 <li>
-<p><strong>Resource Allocation Denial</strong>: al momento di una richiesta di allocare una risorsa. (il processo esegue ma possono essere vietate le richieste nonstante la disponibilità corrente è valida)</p>
+<p><strong>Resource Allocation Denial</strong>: al momento di una richiesta di allocare una risorsa. (il processo esegue ma possono essere vietate le richieste nonostante la disponibilità corrente è valida)</p>
 <p>Si consente l’avvio, ma le richieste di allocazione possono essere rifiutate se possono portare a deadlock.</p>
 </li>
 </ol>
