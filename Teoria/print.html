@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-66a58563.js";
+            window.path_to_searchindex_js = "searchindex-450dc199.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f52c506f.js"></script>
@@ -446,7 +446,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <p>Quindi non si mette in attesa per la singola risorsa che richiede mantenendo il possesso di quelle già allocate, ma libera tutte le risorse e si mette in attesa.</p>
 <p>Tale processo quindi non si metterà in attesa per la sola risorsa in più richiesta ma anche per tutte le altre che possedeva e che ha rilasciato.</p>
 <p>→ il processo verrà eseguito nuovamente solo quando può riottenere il possesso sia delle <strong>vecchie che delle nuove risorse</strong>.</p>
-<!-- @todo inserisci un immagine o una git esemplificativa -->
+<!-- @todo inserisci un immagine o una gif esemplificativa -->
 <h3 id="attesa-circolare"><a class="header" href="#attesa-circolare">Attesa circolare</a></h3>
 <p>Si stabilisce a priori un <strong>ordinamento totale</strong> tra tutte le risorse.</p>
 <p>E si richiede che ogni processo richieda le risorse seguendo l’ordine prestabilito.</p>
@@ -582,6 +582,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <p>Aij = allocazione corrente al processo Pi della risorsa Rj</p>
 </li>
 </ul>
+<hr>
 <h3 id="process-initiation-denial"><a class="header" href="#process-initiation-denial">Process Initiation Denial</a></h3>
 <ul>
 <li>
@@ -614,7 +615,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 </ul>
 <h3 id="resource-allocation-denial"><a class="header" href="#resource-allocation-denial">Resource Allocation Denial</a></h3>
 <p>Tale approccio viene chiamato anche <strong>algoritmo del banchiere</strong></p>
-<p>→ viene eseguito ad ogni tentativo di allocazione</p>
+<p>→ viene eseguito ad ogni tentativo di allocazione;</p>
 <ul>
 <li>se l’allocazione può portare ad uno stato “non-sicuro” viene rifiutata.</li>
 </ul>
