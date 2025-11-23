@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-450dc199.js";
+            window.path_to_searchindex_js = "searchindex-4ad0bc7e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f52c506f.js"></script>
@@ -540,7 +540,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <p>Questo produce un <strong>overhead</strong> elevato sullo sheduler e in generale sul kernel. Ma da una soluzione per non entrare nel deadlock.</p>
 <p>Linux implementa ciò? No perché non si conosce a priori la storia di allocazione di ogni processo → è impossibile prevedere un deadlock in questo modo.</p>
 <div style="border:3px solid #202092ff; background:#eef1ff; padding:12px; border-radius:6px; color:#555555">
-  <b style="color:#d40000;">**Presupposto**</b>: queste tecniche richiedono di
+  <b style="color:#d40000;">Presupposto</b>: queste tecniche richiedono di
   <span style="color:#d40000;">conoscere in anticipo</span>
   tutte le richieste che un processo può fare nell’arco della sua esecuzione.
 </div>
@@ -628,7 +628,26 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <p>ESEMPIO:</p>
 <p align="center"><img src="images/esempio_unsafe.png" width="500"></p>
 
-<p>In questo esempio si può vedere l’avanzamento dell’esecuzione di P1 e P2.</p>
+<p>In questo esempio si può vedere la sequenza delle operazioni di richiesta e rilascio delle risorse R1 e R2 per i processi P1 e P2.<br>Si nota subito che questa configurazione <strong>potrebbe</strong> portare ad uno stato non sicuro (deadlock) a run-time (dipende dalla velocità relativa di esecuzione).</p>
+<p>Infatti non è detto che possa esserci un deadlock, perché come vediamo l’algoritmo del banchiere ha come risultato due sequenze sicure per lo stato iniziale.<br>→ quindi lo stato iniziale è uno stato sicuro, ciò significa che l’esecuzione potrebbe arrivare a terminare senza il manifestarsi di <strong>deadlock</strong> (se viene seguita una delle sequenze sicure).</p>
+<p align="center"><img src="images/esempio_spazio_stato.png" width="600"></p>
+
+<ul>
+<li>Il modo in cui sono stati eseguiti i due processi hanno portato lo stato ad essere <strong>non sicuro</strong>, in questo caso è inevitabile il deadlock.</li>
+<li>Entrambi i processi resteranno in attesa l’uno dell’altro.</li>
+</ul>
+<h4 id="sequenza-sicura"><a class="header" href="#sequenza-sicura">Sequenza sicura</a></h4>
+<div style="border:3px solid #202092ff; background:#eef1ff; padding:12px; border-radius:6px; color:#555555">
+Il sistema è in uno <b style="color:#d40000;"> stato sicuro</b> se, partendo da questo stato, <b style="color:#d40000;">esiste un sequenza sicura</b> di esecuzione di tutti i processi nel sistema.
+</div>
+
+<p>Tale sequenza è una sequenza di <strong>esecuzione “ipotetica”</strong> dei processi nel sistema che porta al processo richiedente di una risorsa ad terminare la propria esecuzione. (es. Pa, Pb, Pc, …)</p>
+<p>Affinché uno stato sia sicuro è sufficiente che esista almeno una sequenza sicura.</p>
+<p>L’algoritmo del banchiere prevede proprio di trovare la sequenza sicura che verifichi lo stato, se al processo che ha richiesto una risorsa la ottiene.</p>
+<p>Se esiste almeno una sequenza sicura,<br>tale che il processo richiedente possa terminare dopo una serie di terminazione di altri processi.</p>
+<p>→ Allora lo stato <strong>è</strong> <strong>sicuro</strong> e la richiesta viene accettata.</p>
+<p>→ Altrimenti se <strong>non esiste</strong> lo stato non sarà sicuro e quindi la richiesta <strong>viene rifiutata</strong>;
+il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel momento in cui la sua richiesta porti in uno stato sicuro.</p>
 <!-- @fix continua.... pag43 ppt SO15 -->
 
                     </main>
