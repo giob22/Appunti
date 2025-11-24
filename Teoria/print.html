@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4ad0bc7e.js";
+            window.path_to_searchindex_js = "searchindex-4df32aaf.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f52c506f.js"></script>
@@ -649,6 +649,66 @@ Il sistema è in uno <b style="color:#d40000;"> stato sicuro</b> se, partendo da
 <p>→ Allora lo stato <strong>è</strong> <strong>sicuro</strong> e la richiesta viene accettata.</p>
 <p>→ Altrimenti se <strong>non esiste</strong> lo stato non sarà sicuro e quindi la richiesta <strong>viene rifiutata</strong>;
 il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel momento in cui la sua richiesta porti in uno stato sicuro.</p>
+<h4 id="workflow"><a class="header" href="#workflow">workflow</a></h4>
+<ul>
+<li>
+<p>Si parte da uno stato che si suppone esser sicuro.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/1.png" width="500"></p>
+
+</li>
+<li>
+<p>Un processo Pa fa una richiesta di istanze di risorsa.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/2.png" width="500"></p>
+
+</li>
+<li>
+<p>Dopo tale richiesta si verifica che lo stato sia sicuro, supponendo che la richiesta sia stata accettata.</p>
+</li>
+</ul>
+<p>→ come avviene tale verifica:</p>
+<ul>
+<li>
+<p>si tenta di trovare una sequenza sicura partendo dallo stato in cui la richiesta di Pa sia stata accettata.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/3.png" width="500"></p>
+
+</li>
+<li>
+<p>si considera <strong>ogni processo Pi</strong> in esecuzione che necessita dello stesso tipo di risorse (Pa,Pb,Pc);</p>
+</li>
+<li>
+<p>si verifica se il processo Pi possa terminare, con <strong>le risorse disponibili rimanenti</strong>, considerando che la richiesta di Pa sia stata accettata.</p>
+<p>Quindi si suppone di assegnare al processo Pi tutte le risorse del suo <strong>claim</strong>, se disponibili.<br>Se c’è disponibilità si suppone che il processo termini e rilasci le risorse possedute;</p>
+</li>
+</ul>
+<div style="
+    width: 100%;
+    max-width: 750px;          /* larghezza massima, simile alla colonna di testo */
+    margin: 0 auto;            /* centra il blocco */
+    overflow-x: auto;          /* scroll orizzontale se le img non ci stanno */
+    overflow-y: hidden;
+    white-space: nowrap;       /* tutte le immagini sulla stessa riga */
+    padding-bottom: 10px;
+  ">
+  <img src="images/esempio_resource_allocation_denial/4.png" style="height: 300px; display: inline-block; margin-right: 20px;">
+  <img src="images/esempio_resource_allocation_denial/5.png" style="height: 300px; display: inline-block; margin-right: 20px;">
+  <img src="images/esempio_resource_allocation_denial/6.png" style="height: 300px; display: inline-block; margin-right: 20px;">
+</div>
+
+<ul>
+<li>se il processo i-esimo riesce a terminare allora potrà essere aggiunto alla <strong>sequenza sicura</strong>; altrimenti si passa al prossimo processo.</li>
+</ul>
+<p>Si itera questo procedimento fin quando:</p>
+<ul>
+<li>il prossimo processo a far parte della sequenza sicura è il processo richiedente, Pa.</li>
+<li>A questo punto <strong>termina l’algoritmo con una sequenza sicura di esecuzione</strong>.</li>
+</ul>
+<p>⟹ la richiesta viene accettata perché lo <strong>stato</strong> dopo l’allocazione delle risorse al processo Pa è <strong>sicuro</strong>.</p>
+<p>oppure</p>
+<ul>
+<li>se per un’iterazione <strong>non</strong> si trova alcun processo in <strong>grado</strong> <strong>di</strong> <strong>terminare</strong> <strong>completamente</strong>, supponendo di assegnargli tutte le risorse del <strong>claim</strong> (<strong>se disponibili</strong>).</li>
+<li>Allora il risultato dell’algoritmo è che non esiste una sequenza sicura.</li>
+</ul>
+<p>⟹ la richiesta di Pa viene <strong>rifiutata</strong> perché lo stato successivo se la richiesta fosse accettata sarebbe <strong>non sicuro</strong>.<br>Il processo rimane in attesa fin quando la propria richiesta non porti in uno stato sicuro.</p>
 <!-- @fix continua.... pag43 ppt SO15 -->
 
                     </main>
