@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-9460d1c6.js";
+            window.path_to_searchindex_js = "searchindex-fa708c71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f52c506f.js"></script>
@@ -812,8 +812,18 @@ il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel mom
 <li>si <strong>uccidono tutti i processi</strong> in uno stato di deadlock</li>
 <li>si esegue un <strong>checkpoint</strong> di uno stato precedente al deadlock e si fanno <strong>ripartire i processi</strong></li>
 <li>si <strong>uccide un processo alla volta</strong> fino a quando il deadlock non esiste più</li>
+<li>si <strong>prelazionano le risorse</strong> ai processi bloccati fino a quando il deadlock non esiste più</li>
 </ul>
-<!-- @fix continua.... pag43 ppt SO15 -->
+<p>Nel caso in cui la strategia prevede l’aborto di un processo in esecuzione, si possono utilizzare diverse metriche per decidere quale tra quelli interessati:</p>
+<ul>
+<li>minor tempo di CPU consumato fino a quel momento</li>
+<li>minor numero di linee di output prodotte finora</li>
+<li>maggior tempo stimato per la terminazione</li>
+<li>minor numero di risorse allocate finora</li>
+<li>minore priorità</li>
+</ul>
+<p align="center"><img src="images/ricapitolazione.png" width="500"></p>
+
 
                     </main>
 
