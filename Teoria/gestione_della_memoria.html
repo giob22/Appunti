@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0888a7d4.js";
+            window.path_to_searchindex_js = "searchindex-dd3df16d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ca1e5903.js"></script>
@@ -333,6 +333,7 @@ location of code : 0x1095afe50
 <p align="center"><img src="images/caso_obsoleto.png" width="550"></p>
 
 <p>Ovviamente dobbiamo prevedere un modo per modificare i registri dell’MMU, che sono specifici per ogni processo.</p>
+<p>Oltre a cambiare valore per ogni processo i due registri devono esser modificati anche ogni volta che un processo passa in esecuzione da che era swappato<br>→ con la rilocazione dinamica potrebbe ritrovarsi in una posizione della memoria fisica differente alla precedente</p>
 <p>Questo modello infatti non è la realtà, è uno schema di funzionamento base dell’MMU.</p>
 <h2 id="gestione-dello-spazio-virtuale"><a class="header" href="#gestione-dello-spazio-virtuale">Gestione dello spazio virtuale</a></h2>
 <p>Vi sono due possibili approcci per gestire lo <strong>spazio virtuale</strong> degli indirizzi.</p>
@@ -379,6 +380,102 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 </ul>
 <p align="center"><img src="images/info_indirizzi_virtuali.png" width="600"></p>
 
+<p>L’<strong>MMU</strong> è il componente su cui si basa anche la segmentazione.</p>
+<ul>
+<li>Traduce gli indirizzi virtuali dalla forma (<em>segmento</em>, <em>offset</em>) in indirizzi fisici.</li>
+<li>Nel caso di <strong>pochi segmenti</strong>, è sufficiente avere nella MMU più coppie di registri base/limite: uno per ogni segmento.</li>
+</ul>
+<p>Questo è un <strong>limite</strong> fisico importante perché non mi permetterebbe di avere molti segmenti. → non posso avere un numero infinito di registri.</p>
+<hr>
+<p>ESEMPIO SEGMENTAZIONE CASO SEMPLICE:</p>
+<p align="center"><img src="images/MMU_multi_registro.png" width="500"></p>
+
+<ul>
+<li>in questo caso ogni coppia di registri corrisponde a limite e base per un segmento allocato in memoria fisica</li>
+</ul>
+<hr>
+<p>Nel caso <strong>generale</strong>, quando si vuole supportare un <strong>numero arbitrario di segmenti</strong>, non è possibile avere una coppia <strong>base/limite</strong> nella MMU per ogni segmento di un processo.</p>
+<p>Per questo motivo:</p>
+<ul>
+<li>le coppie base/limite non risiedono nella MMU, ma sono memorizzare in <strong>memoria RAM</strong>;</li>
+<li>queste informazioni sono raccolte in una struttura dedicata, chiamata <strong>tabella dei segmenti (segment table)</strong> unica <strong>per ogni processo</strong>;</li>
+<li>ogni <strong>entry</strong> della tabella dei segmenti contiene i dati relativi a un <strong>segmento del processo</strong>: <strong>indirizzo base</strong>, <strong>limite</strong> e <strong>bit di controllo</strong> (permessi rwx).</li>
+</ul>
+<p>La MMU gestisce la segment table con due appositi <strong>registri</strong>:</p>
+<ul>
+<li><strong>STBR</strong> (Segment Table Base Register): indirizzo in memoria fisica in cui si trova la tabella dei segmenti.</li>
+<li><strong>STLR</strong> (Segment Table Limit Register): dimensione della tabella dei segmenti (indica il <strong>numero di segmenti del processo</strong>)</li>
+</ul>
+<hr>
+<p>ESEMPIO DI TRADUZIONE UTILIZZANDO LA SEGMENT TABLE:</p>
+<p align="center"><img src="images/trad_segment_table.png" width="600"></p>
+
+<ul>
+<li><code>sg</code> è l’offset per identificare l’entry point relativo ad un segmento.</li>
+<li>Per accedere alla tabella il processore utilizza le informazioni contenute in <code>STBR</code> e <code>STLR</code>  i cui valori sono contenuti all’interno del PCB di ogni processo.</li>
+</ul>
+<hr>
+<p>NOTA sulla segment table:</p>
+<ul>
+<li>ogni processo ha una <strong>segment table differente</strong></li>
+<li>i registri STBR/STLR sono configurati ad ogni <strong>contex switch</strong> dei processi<br>→ durante il contex switch il SO carica i valori di STBR/STLR dal <strong>PCB del processo</strong> (sono legati al singolo processo).</li>
+</ul>
+<p align="center"><img src="images/contex_ST.png" width="600"></p>
+
+<h4 id="protezione"><a class="header" href="#protezione">protezione</a></h4>
+<p>Ogni segmento può avere diversi <strong>permessi di accesso</strong> specificati da bit di controllo contenuti nella segment table.</p>
+<ul>
+<li>Ogni riga della segment table di un processo contiene per ogni entry anche una sequenza di <strong>bit di controllo</strong> per gestire i permessi sull’area di memoria in cui è mappato il segmento.</li>
+<li>MMU produce una <strong>exception</strong> se il programma non rispetta i permessi.</li>
+</ul>
+<p align="center"><img src="images/entry_bit.png" width="400"></p>
+
+<h4 id="condivisione"><a class="header" href="#condivisione">condivisione</a></h4>
+<p>La segmentazione consente la <strong>condivisione dei segmenti</strong> tra più processi, allocando in memoria fisica una sola copia del segmento.</p>
+<p>Abbiamo due processi con le rispettive tabelle dei segmenti.</p>
+<p>→ Se hanno una entry in comune significa che i due processi possono accedere alla stessa area di memoria fisica.<br>Quindi stanno effettivamente condividendo la copia del segmento di memoria. Questo permette di allocare una sola copia del segmento in memoria.</p>
+<p align="center"><img src="images/condivisione_segmento.png" width="500"></p>
+
+<h4 id="allocazione"><a class="header" href="#allocazione">allocazione</a></h4>
+<p>Uno spazio/segmento di memoria virtuale può essere <strong>collocato in memoria fisica</strong> in due possibili modi:</p>
+<ul>
+<li>
+<p>allocazione <strong>contigua</strong>:</p>
+<p>lo spazio/segmento è <strong>copiato per intero</strong>, in un intervallo di memoria fisica agli indirizzi [D;D+I]</p>
+</li>
+<li>
+<p>allocazione <strong>non contigua</strong> (<strong>paginazione</strong>)</p>
+</li>
+</ul>
+<h5 id="allocazione-contigua"><a class="header" href="#allocazione-contigua">allocazione contigua</a></h5>
+<ul>
+<li>
+<p>Il SO colloca il proprio blocco di memoria virtuale, e quelli dei processi, in intervalli <strong>non-sovrapposti</strong> della memoria fisica</p>
+</li>
+<li>
+<p>Quando un processo termina, la memoria fisica occupata si libera, creando un <strong>hole</strong></p>
+</li>
+<li>
+<p>Quando un nuovo processo viene caricato, occorre <strong>cercare un hole sufficientemente grande</strong> da contenerlo</p>
+<p>→ compito dello sheduler a medio termine.</p>
+</li>
+</ul>
+<p align="center"><img src="images/allocazione_contigua.png" width="600"></p>
+
+<p>Questo è un esempio su come facilmente si può arrivare ad un problema di <strong>frammentazione esterna</strong> della memoria.</p>
+<p>Se ci sono <strong>più buchi liberi</strong>, ci sono vari criteri per scegliere dove collocare un segmento:</p>
+<ul>
+<li><strong>first-fit</strong>: si assegna il <strong>primo</strong> hole sufficientemente grande;</li>
+<li><strong>best-fit</strong>: si assegna lo hole <strong>più piccolo</strong> tra quelli sufficientemente grandi per contenere lo spazio di indirizzamento del processo;</li>
+<li><strong>worst fit</strong>: si assegna lo hole più grande.</li>
+</ul>
+<p>In generale, gli <strong>schemi a partizione di dimensione variabile</strong> soffrono del problema della frammentazione esterna.</p>
+<p><strong>Frammentazione esterna</strong>: spazio di memoria perduto sotto forma di spezzoni.</p>
+<ul>
+<li>Lo spazio di memoria totale sarebbe sufficiente per soddisfare una richiesta, <strong>ma non è contiguo</strong>.</li>
+<li>→ non si sfrutta a pieno la quantità di memoria totale a disposizione.</li>
+</ul>
+<p>Dualmente gli schemi a partizione di dimensione fissa soffrono del problema della frammentazione interna.</p>
 <!-- @todo continua -->
                     </main>
 
