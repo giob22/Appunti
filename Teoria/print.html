@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bda98b53.js";
+            window.path_to_searchindex_js = "searchindex-0888a7d4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ca1e5903.js"></script>
@@ -943,7 +943,7 @@ location of code : 0x1095afe50
 <p>La posizione del codice e dei dati <strong>non può più essere modificata</strong> a tempo di esecuzione.<br>→ nella programmazione in assembly si decide a priori dove il codice viene posizionato in memoria centrale.</p>
 <p align="center"><img src="images/rilocazione_statica.png" width="550"></p>
 
-<p>Il problema di questo tipo di rilocazione si presenta nel <strong>contex switch</strong>: il processo quando viene prelazionato e inserito nella coda dei processi pronti oppure swappato, nel momento della sua successiva esecuzione deve trovarsi sempre nella stessa area di memoria.<br>Questo è un grande <strong>onere computazionale</strong> affidato al sistema operativo.</p>
+<p>Il problema di questo tipo di rilocazione si presenta nel <strong>contex switch</strong>: il processo quando viene prelazionato e inserito nella coda dei processi pronti oppure swappato<br>→nel momento della sua successiva esecuzione deve trovarsi sempre nella stessa area di memoria.<br>Questo è un grande <strong>onere computazionale</strong> affidato al sistema operativo.</p>
 <h3 id="dinamica"><a class="header" href="#dinamica">dinamica</a></h3>
 <p>Nella rilocazione di tipo dinamico si introduce un distinzione fondamentale:</p>
 <ul>
@@ -982,6 +982,52 @@ location of code : 0x1095afe50
 <p align="center"><img src="images/caso_obsoleto.png" width="550"></p>
 
 <p>Ovviamente dobbiamo prevedere un modo per modificare i registri dell’MMU, che sono specifici per ogni processo.</p>
+<p>Questo modello infatti non è la realtà, è uno schema di funzionamento base dell’MMU.</p>
+<h2 id="gestione-dello-spazio-virtuale"><a class="header" href="#gestione-dello-spazio-virtuale">Gestione dello spazio virtuale</a></h2>
+<p>Vi sono due possibili approcci per gestire lo <strong>spazio virtuale</strong> degli indirizzi.</p>
+<ul>
+<li>Uno <strong>spazio unico</strong><br>(corrispondente all’intero processo)</li>
+<li>Un insieme di <strong>segmenti</strong><br>(<strong>segmentazione</strong> → la memoria del processo è gestita in porzioni separate)</li>
+</ul>
+<p align="center"><img src="images/approcci_spazio_virtuale.png" width="500"></p>
+
+<p>Nell’approccio segmentato l’immagine del processo è suddivisa in <strong>porzioni logiche</strong> (segmenti) gestite in modo separato ed indipendente dal sistema operativo.<br>Ogni segmento può avere una dimensione variabile, in base alla struttura logica del programma (codice, heap, stack, dati).</p>
+<p><strong>Vantaggio principale</strong>:<br>La segmentazione facilita la condivisione di aree di memoria fisica tra più processi, mappandole in segmenti distinti del loro spazio di indirizzamento.\</p>
+<ul>
+<li>→ Esempio:<br>il segmento di codice (text) di un programma è di sola lettura.<br>Più processi che eseguono lo stesso programma possono <strong>condividere la stessa copia fisica</strong> del codice, mappandola nel proprio spazio di indirizzamento virtuale all’interno del segmento dedicato all’area testo.</li>
+</ul>
+<h3 id="segmentazione"><a class="header" href="#segmentazione">segmentazione</a></h3>
+<div style="display: flex;">
+<div>
+A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
+<p>Viene creato un diverso <strong>segmento</strong> per ciascun <strong>modulo</strong> del programma.</p>
+<hr>
+<h4 id="vantaggi-della-segmentazione"><a class="header" href="#vantaggi-della-segmentazione">vantaggi della segmentazione</a></h4>
+<ul>
+<li><strong>Protezione</strong> dei segmenti;<br>permette una <strong>granularità fine</strong> nella gestione dei permessi sullo spazio di indirizzamento.<br>Ad ogni segmento può avere <strong>permessi diversi</strong> (lettura, scrittura, esecuzione).</li>
+</ul>
+</div>
+
+<p align="center"><img src="images/segmenti_per_moduli.png" width="300"></p>
+
+</div>
+
+<ul>
+<li>
+<p><strong>Condivisione</strong> dei segmenti;<br>segmenti come <strong>codice</strong> (text) o le <strong>librerie</strong> <strong>condivise</strong> possono essere mappate da più processi e condividere un’unica copia fisica, <strong>riducendo l’uso della memoria</strong>.</p>
+</li>
+<li>
+<p><strong>Allocazione indipendente</strong> dei segmenti in memoria fisica → riduce (ma non elimina) il problema della frammentazione.<br>Ogni segmento può essere <strong>collocato separatamente in punti diversi</strong> della memoria fisica.</p>
+</li>
+</ul>
+<hr>
+<p>Un indirizzo virtuale è una coppia (contiene due informazioni), fatta da:</p>
+<ul>
+<li>un <strong>identificativo</strong> del segmento;</li>
+<li>uno <strong>scostamento</strong> (offset) all’interno del segmento.</li>
+</ul>
+<p align="center"><img src="images/info_indirizzi_virtuali.png" width="600"></p>
+
 <!-- @todo continua -->
                     </main>
 
