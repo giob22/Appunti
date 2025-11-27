@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-dd3df16d.js";
+            window.path_to_searchindex_js = "searchindex-cca7a64c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ca1e5903.js"></script>
@@ -289,14 +289,52 @@ location of code : 0x1095afe50
 <!-- @todo aggiungi paginazione e segmentazione con paginazione -->
 <h2 id="rilocazione"><a class="header" href="#rilocazione">Rilocazione</a></h2>
 <p>Modalità di allocazione dei dati e del codice di un processo in memoria fisica.</p>
+<p>L’associazione di <strong>istruzioni e dati</strong> ad indirizzi di memoria (fisica) si può compiere in ognuna delle sequenti fasi:</p>
+<ul>
+<li>
+<p><strong>compilazione</strong>: se nella fase di compilazione conosce dove il processo risiederà nella memoria, allora può <strong>inserire direttamente gli indirizzi fisici nel codice oggetto</strong>.</p>
+<p>→ si genera così <strong>codice assoluto</strong>: gli indirizzi nel codice oggetto sono indirizzi fisici reali della RAM. Quindi codice e dati saranno allocati sempre in tali posizioni ad ogni esecuzione.</p>
+<p>→ potrebbe essere un problema se il SO decidesse di caricare il programma in un’altra zona della memoria. Sarebbe necessaria una ricompilazione perché tutti gli indirizzi sarebbero <strong>sbagliati</strong>.</p>
+<p>Quindi in questo caso gli indirizzi sarebbero fissati per sempre (fino ad una successiva ricompilazione)<br>→ nessuna <strong>flessibilità</strong>;</p>
+</li>
+<li>
+<p><strong>caricamento</strong>: se nella fase di compilazione non è possibile sapere in che punto della memoria risiederà il processo, il compilatore deve generare <strong>codice rilocabile</strong>.</p>
+<p>Quindi il <strong>compilatore</strong> <strong>non</strong> <strong>inserisce</strong> nel codice oggetto <strong>indirizzi fisici</strong> ma dei valori relativi che il loader dovrà sistemare.</p>
+<p>Quando il processo viene caricato in memoria, il <strong>loader sceglie un indirizzo di partenza</strong> e scorre il codice oggetto aggiustando tutti gli altri indirizzi relativi.</p>
+<p>→ dopo il caricamento, lo spazio di indirizzamento del processo non può più esser spostato, altrimenti andrebbero aggiornati tutti gli indirizzi fisici;</p>
+</li>
+<li>
+<p><strong>esecuzione</strong>: se durante l’esecuzione il processo può essere spostato da un segmento di memoria ad un altro, è necessario che si ritardi l’associazione degli indirizzi fino alla fase di esecuzione. (rilocazione dinamica)</p>
+<p>→ Qui entriamo in merito della <strong>memoria virtuale</strong> che permette al SO di:</p>
+<ul>
+<li>spostare un processo in RAM;</li>
+<li>fare swapping su disco;</li>
+<li>caricare pezzi di processo dove capita (dove si ha disponibilità) → utilizzo efficiente della memoria.</li>
+</ul>
+<p>Per permettere ciò <strong>non conviene</strong> fissare gli indirizzi fisici <strong>né a compilazione, né al caricamento</strong>.<br>Allora cosa accade:</p>
+<ul>
+<li>nel codice non vengono inseriti indirizzi fisici ma <strong>logici</strong>;</li>
+<li>ogni volta che la CPU fa un accesso a memoria, interviene la <strong>MMU</strong> che traduce gli indirizzi logici nei corrispettivi indirizzi fisici a run-time.</li>
+</ul>
+<p>Se il processo viene spostato, basta cambiare il <strong>modo</strong> con cui la MMU traduce gli indirizzi.</p>
+<p>Quindi per realizzare questo schema sono necessarie specifiche caratteristiche dell’architettura → MMU</p>
+</li>
+</ul>
 <h3 id="statica"><a class="header" href="#statica">statica</a></h3>
 <p>La rilocazione statica stabilisce gli indirizzi di codice e dati <strong>al momento della compilazione o caricamento</strong>.</p>
 <p>La posizione del codice e dei dati <strong>non può più essere modificata</strong> a tempo di esecuzione.<br>→ nella programmazione in assembly si decide a priori dove il codice viene posizionato in memoria centrale.</p>
 <p align="center"><img src="images/rilocazione_statica.png" width="550"></p>
 
-<p>Il problema di questo tipo di rilocazione si presenta nel <strong>contex switch</strong>: il processo quando viene prelazionato e inserito nella coda dei processi pronti oppure swappato<br>→nel momento della sua successiva esecuzione deve trovarsi sempre nella stessa area di memoria.<br>Questo è un grande <strong>onere computazionale</strong> affidato al sistema operativo.</p>
+<p>Il problema di questo tipo di rilocazione si presenta nel <strong>contex switch</strong>: il processo quando viene prelazionato e inserito nella coda dei processi pronti oppure swappato<br>→nel momento della sua successiva esecuzione deve trovarsi sempre nella stessa area di memoria, altrimenti tutti gli indirizzi fisici su cui lavora sarebbero sbagliati.<br>Questo è un grande <strong>onere computazionale</strong> affidato al sistema operativo.</p>
+<p>Quindi con una rilocazione statica è il compilatore o il caricatore ad inserire degli indirizzi fisici all’interno rispettivamente del codice oggetto o del codice eseguibile.</p>
+<p align="center"><img src="images/rilocazione_statica_1.png" width="600"></p>
+
+<p>Questi indirizzi non potranno esser cambiato al meno che il codice non venga ricompilato oppure ricaricato.</p>
 <h3 id="dinamica"><a class="header" href="#dinamica">dinamica</a></h3>
-<p>Nella rilocazione di tipo dinamico si introduce un distinzione fondamentale:</p>
+<p>Con questo approccio, dinamico, l’indirizzo di codice/dati nella immagine (<em>virtuale</em>) <strong>non corrisponde</strong> alla loro posizione effettiva in RAM (<em>indirizzo fisico</em>).</p>
+<p>L’effettiva posizione dello spazio di indirizzamento del processo è <strong>scelta da SO</strong>, al caricamento iniziale del processo, o anche durante la sua esecuzione.</p>
+<p>→ richiede un supporto hardware che permetta a tempo di esecuzione di tradurre gli indirizzi virtuali in indirizzi fisici.</p>
+<p>Infatti la rilocazione di tipo dinamico si introduce un distinzione fondamentale:</p>
 <ul>
 <li>
 <p><strong>Indirizzo virtuale</strong>:</p>
@@ -307,8 +345,8 @@ location of code : 0x1095afe50
 <p>indirizzo visto dall’unità di memoria, <strong>posizione effettiva</strong> del dato/istruzione.</p>
 </li>
 </ul>
-<p>Quando otteniamo <strong>segmentation foult</strong> significa che l’indirizzo virtuale che stiamo utilizzando, erroneamente, non è associato ad un indirizzo fisico facente parte dell’immagine del processo nella memoria fisica → l’indirizzo fisico che stiamo deferenziando non è mappato nella memoria virtuale.<br>→ la traduzione da indirizzo virtuale a indirizzo fisico ha dato questo problema.</p>
-<p>Vedremo che il foult può essere <strong>ripristinabile</strong>, perché il segmento/pagina non sono in memoria fisica ma sono swappati in memoria di massa. → ci troviamo nella situazione di un caricamento a domanda.</p>
+<p>Quando otteniamo <strong>segmentation fault</strong> significa che l’indirizzo virtuale che stiamo utilizzando, erroneamente, non è associato ad un indirizzo fisico facente parte dell’immagine del processo nella memoria fisica → l’indirizzo fisico che stiamo deferenziando non è mappato nella memoria virtuale.<br>→ la traduzione da indirizzo virtuale a indirizzo fisico ha dato questo problema.</p>
+<p>Vedremo che il fault può essere <strong>ripristinabile</strong>, perché il segmento/pagina non sono in memoria fisica ma sono swappati in memoria di massa. → ci troviamo nella situazione di un caricamento a domanda.</p>
 <p>Il processore vede solo indirizzi logici (virtuali)<br>→ <strong>tradotti dall’hardware</strong> che ha la visibilità della memoria fisica, ovvero MMU.<br>MMU rende trasparente l’accesso del processore agli indirizzi fisici.</p>
 <p>Se non fosse così il processore <strong>sarebbe più performante</strong> (vedrebbe direttamente gli indirizzi fisici), ma perderei tutta la parte di virtualizzazione.</p>
 <p>Infatti come abbiamo visto, aprendo il file eseguibile od oggetto, non sono presenti indirizzi fisici ma unicamente indirizzi virtuali che solitamente partono tutti da <code>0x0</code>.</p>
@@ -335,6 +373,35 @@ location of code : 0x1095afe50
 <p>Ovviamente dobbiamo prevedere un modo per modificare i registri dell’MMU, che sono specifici per ogni processo.</p>
 <p>Oltre a cambiare valore per ogni processo i due registri devono esser modificati anche ogni volta che un processo passa in esecuzione da che era swappato<br>→ con la rilocazione dinamica potrebbe ritrovarsi in una posizione della memoria fisica differente alla precedente</p>
 <p>Questo modello infatti non è la realtà, è uno schema di funzionamento base dell’MMU.</p>
+<h2 id="caricamento-unico-e-a-domanda"><a class="header" href="#caricamento-unico-e-a-domanda">Caricamento unico e a domanda</a></h2>
+<p>Il caricamento in memoria dell’immagine del processo è fatta dal <strong>loader</strong> che è parte del SO che:</p>
+<ul>
+<li><strong>legge</strong> l’eseguibile (e.g. ELF);</li>
+<li><strong>alloca</strong> memoria per il processo;</li>
+<li><strong>mappa</strong> gli indirizzi virtuali negli indirizzi fisici (a seconda della rilocazione utilizzata: statica o dinamica);</li>
+<li><strong>copia</strong> in RAM le parti necessarie del programma (<strong>a seconda della tipologia di caricamento</strong>);</li>
+<li><strong>prepara</strong> il processo per la prima esecuzione → ad esempio, crea il PCB.</li>
+</ul>
+<p>Nella fase di copia il loader si può comportare in due modi a seconda della tipologia di caricamento implementata:</p>
+<ul>
+<li>
+<p>Nel <strong>caricamento unico</strong> (tutto insieme)</p>
+<ul>
+<li>Il loader carica tutta l’immagine del programma in memoria RAM.</li>
+</ul>
+<p>Questo è un approccio tipico dei vecchi sistemi o microcontrollori.</p>
+</li>
+<li>
+<p>Nel <strong>caricamento a domanda</strong> (demand loading)</p>
+<ul>
+<li>Il loader crea solo le mappature virtuali → fisiche.</li>
+<li>Il caricamento effettivo del codice/dati avviene <strong>solo quando necessario</strong>.</li>
+<li>La MMU genera un fault quando la <strong>CPU tenta di accedere a una parte del processo che NON è ancora stata caricata in memoria fisica</strong>.</li>
+</ul>
+<p>A questa fault generata, che corrisponde una trap asincrona, il SO chiama un handler che fa una recovery. Ovvero verifica se tale parte di processo a cui voule accedere la CPU è presente in memoria secondaria e la carica, permettendo al processore di proseguire con l’esecuzione.</p>
+<p>Se tale parte non viene trovata viene rilanciata ancora la fault che in questo caso genera la terminazione del processo → ha tentato di accedere ad un indirizzo di memoria che non fa parte del proprio spazio di indirizzamento.</p>
+</li>
+</ul>
 <h2 id="gestione-dello-spazio-virtuale"><a class="header" href="#gestione-dello-spazio-virtuale">Gestione dello spazio virtuale</a></h2>
 <p>Vi sono due possibili approcci per gestire lo <strong>spazio virtuale</strong> degli indirizzi.</p>
 <ul>
@@ -348,7 +415,7 @@ location of code : 0x1095afe50
 <ul>
 <li>→ Esempio:<br>il segmento di codice (text) di un programma è di sola lettura.<br>Più processi che eseguono lo stesso programma possono <strong>condividere la stessa copia fisica</strong> del codice, mappandola nel proprio spazio di indirizzamento virtuale all’interno del segmento dedicato all’area testo.</li>
 </ul>
-<h3 id="segmentazione"><a class="header" href="#segmentazione">segmentazione</a></h3>
+<h2 id="segmentazione"><a class="header" href="#segmentazione">segmentazione</a></h2>
 <div style="display: flex;">
 <div>
 A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
@@ -392,6 +459,8 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 
 <ul>
 <li>in questo caso ogni coppia di registri corrisponde a limite e base per un segmento allocato in memoria fisica</li>
+<li>l’identificativo <code>sg</code> servirà per capire a quale tipologia di segmento accedere facendo riferimento alla giusta coppia D, I</li>
+<li>l’offset (<code>off</code>) sarà sommato al corretto registro base I se &lt;= del registro limite D corrispondente ad un segmento, altrimenti la MMU solleverà un eccezione (segmentation fault).</li>
 </ul>
 <hr>
 <p>Nel caso <strong>generale</strong>, quando si vuole supportare un <strong>numero arbitrario di segmenti</strong>, non è possibile avere una coppia <strong>base/limite</strong> nella MMU per ogni segmento di un processo.</p>
@@ -406,6 +475,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <li><strong>STBR</strong> (Segment Table Base Register): indirizzo in memoria fisica in cui si trova la tabella dei segmenti.</li>
 <li><strong>STLR</strong> (Segment Table Limit Register): dimensione della tabella dei segmenti (indica il <strong>numero di segmenti del processo</strong>)</li>
 </ul>
+<p>Il SO, all’atto del caricamento in memoria del processo da eseguire, imposterà l’<strong>indirizzo fisico</strong> dell’<em>entry point</em> della <em>segment table</em> nel registro <strong>STBR</strong></p>
 <hr>
 <p>ESEMPIO DI TRADUZIONE UTILIZZANDO LA SEGMENT TABLE:</p>
 <p align="center"><img src="images/trad_segment_table.png" width="600"></p>
@@ -476,6 +546,122 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <li>→ non si sfrutta a pieno la quantità di memoria totale a disposizione.</li>
 </ul>
 <p>Dualmente gli schemi a partizione di dimensione fissa soffrono del problema della frammentazione interna.</p>
+<p><strong>Frammentazione interna</strong>: è un concetto relativo al singolo segmento, in particolare è legato alla dimensione di questo.</p>
+<p>Se i segmenti hanno una dimensione fissa, non è detto che l’immagine di un processo sia un multiplo di questa dimensione. Quindi tale immagine potrebbe occupare un numero di segmenti, ma non tutte le word di questi segmenti avranno un significato.</p>
+<p>Ovvero siamo sprecando una porzione dell’ultimo segmento in cui è contenuta l’immagine del processo.</p>
+<p align="center"><img src="images/frammentazione_interna.png" width="550"></p>
+
+<h2 id="paginazione"><a class="header" href="#paginazione">Paginazione</a></h2>
+<p><strong>Paginazione</strong>:</p>
+<ul>
+<li>
+<p>tecnica di allocazione <strong>non contigua</strong> → se fosse contigua la paginazione non avrebbe senso;</p>
+</li>
+<li>
+<p>lo spazio virtuale è diviso in <strong>blocchi di dimensione fissa</strong>;</p>
+</li>
+<li>
+<p>evita la frammentazione esterna;</p>
+</li>
+<li>
+<p>introduce la frammentazione interna.</p>
+<p>A causa del fatto che lo spazio virtuale è suddiviso e quindi caricato in memoria fisica all’interno di blocchi di dimensione <strong>fissa</strong>.</p>
+</li>
+</ul>
+<p align="center"><img src="images/associazione_pag_vir_fis.png" width="500"></p>
+
+<ul>
+<li>La <strong>tabella delle pagine</strong> è salvata in RAM e come per la segmentazione l’<em>entry point</em> è memorizzato nel PCB di ogni processo.</li>
+<li>Ogni processo ha la propria tabella delle pagine.</li>
+</ul>
+<p>Come detto questo approccio è soggetto alla frammentazione interna.</p>
+<p align="center"><img src="images/frammentazione_int.png" width="500"></p>
+
+<ul>
+<li>La pagina associata all’ultima pagina della memoria virtuale non è completamente utilizzata.<br>→ spreco della memoria, perché non è possibile più utilizzarla fino a quando non viene deallocata.</li>
+</ul>
+<p>Cosa accade nel momento in cui si verifica una frammentazione interna:</p>
+<ul>
+<li>spazio di memoria perso per un blocco assegnato ma non utilizzato a pieno</li>
+<li>si verifica se la dimensione del processo non è un multiplo esatto della dimensione dei blocchi</li>
+</ul>
+<p>Questo fenomeno è tanto <strong>più trascurabile</strong> quanto <strong>più piccola è assegnata la dimensione</strong> di ogni pagina.</p>
+<blockquote>
+<p>Tipicamente, la <strong>dimensione di pagina</strong> è una potenza di 2, compresa tra 512 byte e 16 MB.</p>
+</blockquote>
+<h3 id="traduzione-degli-indirizzi"><a class="header" href="#traduzione-degli-indirizzi">Traduzione degli indirizzi</a></h3>
+<p>Essendo l’allocazione non contigua è necessario memorizzare ogni pagina virtuale in che posizione della memoria fisica si trova.</p>
+<p>Nel codice, quindi, si utilizzano indirizzi virtuali che devono essere <strong>tradotti dall’MMU</strong> in indirizzi fisici a run-time.</p>
+<p>Questo hardware è necessario perché nell’approccio di allocazione <strong>non contigua non si conosce a priori dove sarà rilocato il codice</strong>.<br>→ dobbiamo sempre tener conto che se parliamo di paginazione allora stiamo parlando di rilocazione non contigua, altrimenti la paginazione non avrebbe senso.</p>
+<p>Quindi quando l’architettura utilizza l’approccio di paginazione si tutti i programmi utilizzano indirizzi virtuali.</p>
+<p>La paginazione, inoltre, non è solo una tecnica di allocazione non contigua, ma anche una tecnica per la <strong>gestione della memoria virtuale</strong>. In altre parole, la paginazione permette di creare uno spazio virtuale più grande della memoria fisica, se la gestione del caricamento delle pagine è della tipologia: <strong>a domanda</strong>.</p>
+<p>Un indirizzo virtuale contiene la <strong>coppia</strong>:</p>
+<ul>
+<li><strong>numero di pagina (p)</strong>:<br>identifica una pagina nella memoria fisica → nel contesto di un processo.</li>
+<li><strong>scostamento di pagina(d)</strong>:<br>indica la posizione dell’indirizzo all’interno della pagina.</li>
+</ul>
+<p><strong>A differenza della segmentazione</strong>, non sono due valori separati, ma sono contenuti entrambi in un <strong>unico valore</strong>.<br>→ Nel constesto della CPU, ovvero questa vede un unico indirizzo le cui informazioni non le tratta separatamente.</p>
+<p>ESEMPIO: indirizzo virtuale a <strong>16bit</strong>: <code>0x0803</code></p>
+<p align="center"><img src="images/indirizzo_paginazione.png" width="470"></p>
+
+<p>Quindi l’indirizzo viene diviso in due campi ognuno dei quali porta con se un’informazione.</p>
+<p>Vediamo come avviene la traduzione con l’utlizzo dell’MMU sulla <em>page table</em>.</p>
+<p align="center"><img src="images/traduzione_pag.png" width="500"></p>
+
+<p>L’MMU valuta in che posizione si trova l’indirizzo base della pagina identificata da <code>p</code> e utilizza tale indirizzo <code>f</code> sommato all’offset <code>d</code> per ottenere la traduzione in indirizzo fisico.</p>
+<p>Ovviamente saranno presenti condizioni che bloccano i casi in cui si eccede dalla tabella delle pagine con <code>p</code>.</p>
+<h3 id="tabella-delle-pagine"><a class="header" href="#tabella-delle-pagine">Tabella delle pagine</a></h3>
+<p>La tabella delle pagine ha una riga per <strong>ogni pagina virtuale</strong> del <strong>processo</strong>.</p>
+<p>All’interno di questa riga sono contenuti:</p>
+<ul>
+<li>indice della <strong>pagina fisica</strong>,</li>
+<li><strong>bit di gestione</strong> (permessi di accesso, etc.).</li>
+</ul>
+<p>Ovviamente quando si tenta di operare su una pagina l’MMU verifica che il programma non violi i permessi presenti su tale.<br>→ in caso di violazione solleva un <strong>page fault</strong>.</p>
+<p align="center"><img src="images/permessi_page_table.png" width="500"></p>
+
+<p>La tabella delle pagine è in <strong>memoria principale</strong>.<br>La MMU usa 2 registri utilizzarla:</p>
+<ul>
+<li><strong>PTBR</strong> (Page-Table Base Register):
+indirizzo fisico della tabella delle pagine in memoria fisica.</li>
+<li><strong>PTLR</strong> (Page-Table Length Register):<br>dimensione della tabella delle pagine.</li>
+</ul>
+<p>Questi due valori sono contenuti all’interno del PCB di ogni processo e vengono caricati in tali registri ogni volta che avviene un <strong>contex switch</strong>.</p>
+<p align="center"><img src="images/PTBR_PTLR.png" width="480"></p>
+
+<h3 id="architettura-di-paginazione-con-tlb"><a class="header" href="#architettura-di-paginazione-con-tlb">architettura di paginazione con TLB</a></h3>
+<p>Per accedere ad ogni singolo dato nella memoria quindi servono <strong>due accessi</strong>.</p>
+<ol>
+<li>per <strong>leggere la tabella delle pagine</strong></li>
+<li>per <strong>accedere al dato/istruzione</strong> vero e proprio</li>
+</ol>
+<p>Questo provoca un <strong>rallentamento</strong> degli accessi a memoria.</p>
+<p>Per <strong>migliorare l’efficienza</strong>, si usa una <strong>cache associativa</strong> detta <strong>TLB</strong> (Translation Look-aside Buffer) che si trova all’interno dell’MMU.</p>
+<p>La ricerca di un valore in tale cache associativa ha complessità O(1) → costante.</p>
+<!-- @todo da chiedere perché è lineare -->
+<p align="center"><img src="images/TLB.png" width="600"></p>
+
+<ul>
+<li>
+<p>Si possono verificare due situaizioni:</p>
+<ul>
+<li>L’accesso alla TLB produce un cache hit, quindi subito ho l’entry point della pagina in memoria fisica, tale operazione richiede nanosecondi.</li>
+<li>L’accesso alla TLB produce un cache miss, quindi la ricerca passa sulla tabella delle pagine, tale operazione richiede decine di nanosecondi</li>
+</ul>
+<p>In ogni caso dovrò fare più di un accesso per ottenere il dato/istruzione nella memoria fisica.</p>
+</li>
+</ul>
+<h4 id="tempo-effettivo-di-accesso"><a class="header" href="#tempo-effettivo-di-accesso">Tempo effettivo di accesso</a></h4>
+<p><strong>Tasso di successo</strong> (hit ratio, <strong>ɑ</strong>): percentuale di volte che un numero di pagina virtuale si trova nel TLB.</p>
+<p>Supponiamo che:</p>
+<ul>
+<li>Lookup associativo = <strong>ε</strong> unità di tempo</li>
+<li>Un accesso alla memoria = <strong>ĸ</strong> unità di tempo</li>
+</ul>
+<p>Allora il <strong>tempo effettivo d’accesso</strong> (<em>effective access time</em>):</p>
+<p>$$EAT = (ĸ + ε)ɑ + (2ĸ + ε)(1-ɑ) = (2-ɑ)ĸ +ε$$</p>
+<p>Dove la prima parte indica il tempo in caso di successo mentre la seconda indica il tempo in caso di insuccesso.</p>
+<p>Questo <em>EAT</em> è il <strong>tempo medio che un sistema impiega per accedere alla memoria</strong>, tendendo conto sia degli <strong>hit cache</strong> che dei <strong>miss cache</strong>.</p>
 <!-- @todo continua con la prossima lezione -->
                     </main>
 
