@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cca7a64c.js";
+            window.path_to_searchindex_js = "searchindex-e53f38f0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ca1e5903.js"></script>
@@ -1311,7 +1311,106 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>$$EAT = (ĸ + ε)ɑ + (2ĸ + ε)(1-ɑ) = (2-ɑ)ĸ +ε$$</p>
 <p>Dove la prima parte indica il tempo in caso di successo mentre la seconda indica il tempo in caso di insuccesso.</p>
 <p>Questo <em>EAT</em> è il <strong>tempo medio che un sistema impiega per accedere alla memoria</strong>, tendendo conto sia degli <strong>hit cache</strong> che dei <strong>miss cache</strong>.</p>
-<!-- @todo continua  -->
+<h4 id="dimensione-della-tabella-delle-pagine"><a class="header" href="#dimensione-della-tabella-delle-pagine">Dimensione della tabella delle pagine</a></h4>
+<p>La scelta della dimensione della pagina influenza molto l’efficienza, per questo è necessario che si trovi un gusto compromesso per sistemi general porpose.</p>
+<p>Supponendo di avere un sistema che valuta indirizzi a <code>32bit</code>.
+→ Lo spazio totale di indirizzamento:  \(2^{32} = 4\)GB.</p>
+<p>Usando pagine di \(1\)KB (\(2^{10}\)):</p>
+<ul>
+<li><strong>dimensione</strong> della tabella: \(2^{22} = 4\)MB → ⚠️​</li>
+<li><strong>frammentazione interna</strong> media: \(\frac{2^{10}}{2} = 0.5\)KB → 👍🏿</li>
+</ul>
+<p>Usando pagine di \(64\)KB (\(2^{16}\)):</p>
+<ul>
+<li><strong>dimensione</strong> della tabella: \(2^{16} = 64\)KB → 👍🏿</li>
+<li><strong>frammentazione interna</strong> media: \(\frac{2^{10}}{2} = 0.5\)KB → ⚠️​</li>
+</ul>
+<p>→ bisogna scegliere una <strong>dimensione di pagina</strong> che abbia un buon <strong>compromesso</strong> tra i due valori.</p>
+<h3 id="validità-delle-pagine-virtuali"><a class="header" href="#validità-delle-pagine-virtuali">Validità delle pagine virtuali</a></h3>
+<p>Raramente un processo usa tutto il suo spazio di indirizzamento virtuale.<br>→ quantità di memoria usata tipicamente da una applicazione desktop si aggira intorno: ~\(100\)MB. (single process)</p>
+<p>Lo spazio virtuale che un processo potenzialmente può utilizzare è pari all’intero spazio di indirizzamento: se ho <code>16bit</code> per indirizzo → \(4\)GB</p>
+<p align="center"><img src="images/spazio_processi.png" width="300"></p>
+
+<p>In realtà alcune delle pagine all’interno dello spazio virtuale allocato, non sono veramente utilizzate.</p>
+<p>→ tra i bit di controllo possiamo aggiungere un <em>validity bit</em>.</p>
+<p>Quindi il SO può marcare le pagine <strong>virtuali in uso</strong> usando tale bit nella tabella delle pagine.</p>
+<blockquote>
+<p>il bit di validità so riferisce alle pagine virtuali → infatti ogni entry point della tabella delle pagine identifica una pagina virtuale.</p>
+</blockquote>
+<p>Il bit di validità viene attivato nel momento in cui la pagina è <strong>allocata</strong> dal processo (es. tramite <code>malloc()</code>).</p>
+<p align="center"><img src="images/bit_validita.png" width="400"></p>
+
+<!-- @todo : chiedi al professore questa parte → slide 429 -->
+<p>Cosa accede durante un <strong>contex switch</strong></p>
+<p align="center"><img src="images/contex_switch.png" width="500"></p>
+
+<ul>
+<li>La TLB viene popolata a <strong>run-time</strong> → inizialmente saranno presenti solo page fault che porsano al SO a ricaricare le pagine in memoria principale.</li>
+</ul>
+<p>Oltre al bit di validità è presente un ulteriore bit di controllo: il <em>dirty bit</em>.</p>
+<p>Questo dirty bit è legato al fatto che la pagina <strong>è stata scritta</strong> durante la sua permanenza in memoria fisica.</p>
+<p>Quando un processo <strong>scrive</strong> in una pagina fisica, la MMU setta automaticamente il dirty bit a \(1\).<br>Questo bit indica che il contenuto della pagina <strong>non coincide più</strong> con la copia originale presente su disco. → tale informazione ha un implicazione durante lo <strong>swap-out</strong>.</p>
+<ul>
+<li>Se il dirty bit = 1, significa che la oagina contiene modifiche <strong>che devono essere salvate nello swap</strong>, altrimenti andrebbero perse.</li>
+<li>Se il dirty bit = 0, significa che la pagina <strong>non è stata modificata</strong> e che <strong>esiste già una copia valida</strong> della pagina su disco (es. nell’eseguibile del processo, è stata già salvata precedentemente).</li>
+</ul>
+<p>Per il meccanismo di coerenza caching, si deve garantire la coerenza tra memoria grande e memoria piccola.</p>
+<h3 id="struttura-della-tabella-delle-pagine"><a class="header" href="#struttura-della-tabella-delle-pagine">Struttura della tabella delle pagine</a></h3>
+<p>Bisogna capire quale struttura sia più adatta a contenere la tabella delle pagine al fine di risolvere diverse problematiche:</p>
+<p><strong>Problemi</strong>: le tabelle delle pagine:</p>
+<ul>
+<li>hanno grosse dimensioni</li>
+<li>sono numerose (una per ogni processo)</li>
+<li>sono “sparse” (poche pagine valide)</li>
+</ul>
+<p><strong>Soluzioni</strong>: per ogni problema</p>
+<ul>
+<li>Paginazione gerarchica → evita il problema della <strong>grandezza</strong></li>
+<li>Tabella delle pagine basata su hash → evita il problema della <strong>numerosità</strong></li>
+<li>Tabella delle pagine invertita → non si usa più (ideale per vecchi sistemi operativi)<br>→ per evitare il problema della <strong>sparsità</strong></li>
+</ul>
+<h4 id="paginazione-gerarchica"><a class="header" href="#paginazione-gerarchica">Paginazione gerarchica</a></h4>
+<p>Suddivisione della tabella delle pagine in parti più piccole, secondo una <strong>organizzazione <strong>gerarchica</strong></strong>.</p>
+<ul>
+<li>La MMU divide l’indirizzo di pagina in più parti (\(p_1,p_2)\).</li>
+<li>Nella tabella di primo libello, trova l’indirizzo della tabella di secondo livello, e così via.</li>
+</ul>
+<hr>
+<blockquote>
+<p>Nota: la MMU <strong>impiega più tempo per attraversare la tabella gerarchica</strong> (aumentano i tempi di accesso).</p>
+</blockquote>
+<p>Vediamo il motivo di questo tempo aggiuntivo per attraversare la memoria: (2 livelli di gerarchia)</p>
+<p>indirizzo virtuale: \((p_1, p_2, offset)\).</p>
+<p>Il flusso sarebbe:</p>
+<ol>
+<li>La MMU accede alla tabella di primo livello e usando \(p_1\) (<strong>accesso a memoria</strong>) ottiene l’indirizzo base della tabella di secondo livello.</li>
+<li>La MMU accede alla tabella di secondo livello e usando \(p_2\) (<strong>accesso a memoria</strong>) ottiene il numero di frame corrispondente.</li>
+<li>Infine, la MMU accede alla memoria principale nel frame trovaro e utilizza \(offset\) (<strong>accesso a memoria</strong>) per recuperare la casella desiderata.</li>
+</ol>
+<p>Il motivo dell’aumento del tempo per attraversare la tabella è che la MMU ha bisogno di fare molti <strong>più accessi a memoria fisica</strong> per tradurre un <strong>singolo</strong> <strong>indirizzo</strong> <strong>virtuale</strong>.</p>
+<p>Nel caso di paginazione semplice (ad un livello) il numero di accessi totali per operare la traduzione di un indirizzo virtuale è pari a 2.</p>
+<ol>
+<li>Accesso alla page table</li>
+<li>accesso alla memoria fisica</li>
+</ol>
+<hr>
+<p align="center"><img src="images/tabella_gerarchica.png" width="500"></p>
+
+<ul>
+<li>Con l’utilizzo di questa struttura si è risolto il problema della grandezza di una tabella delle pagine.</li>
+</ul>
+<p align="center"><img src="images/struttura_gerarchica.png" width="600"></p>
+
+<ul>
+<li>Linux utilizza 4 livelli gerarchici per la tabella delle pagine di ogni processo.</li>
+<li>Questa struttura serve <strong>per evitare di allocare una struttura grande quanto tutto lo spazio indirizzabile dal processo</strong>.<br>→ sono presenti delle porzioni per cui è possibile evitare l’allocazione</li>
+</ul>
+<p>Le singole tabelle sono più piccole rispetto alla tabella non gerarchica.</p>
+<p>ESEMPIO DI PAGINAZIONE A DUE LIVELLI:</p>
+<p>Nella paginazione gerarchica, il “numero di pagina” nell’indirizzo virtuale viene <strong>a sua volta suddiviso in più parti</strong> (tante quante sono i livelli di gerarchia).</p>
+<p align="center"><img src="images/esempio_gerarchia.png" width="400"></p>
+
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
