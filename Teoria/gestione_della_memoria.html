@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e53f38f0.js";
+            window.path_to_searchindex_js = "searchindex-42a8a06e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ca1e5903.js"></script>
@@ -398,8 +398,12 @@ location of code : 0x1095afe50
 <li>Il caricamento effettivo del codice/dati avviene <strong>solo quando necessario</strong>.</li>
 <li>La MMU genera un fault quando la <strong>CPU tenta di accedere a una parte del processo che NON è ancora stata caricata in memoria fisica</strong>.</li>
 </ul>
-<p>A questa fault generata, che corrisponde una trap asincrona, il SO chiama un handler che fa una recovery. Ovvero verifica se tale parte di processo a cui voule accedere la CPU è presente in memoria secondaria e la carica, permettendo al processore di proseguire con l’esecuzione.</p>
+<p>A questa fault generata (<strong>interruzione sincrona</strong>), il SO chiama un handler che fa una recovery. Ovvero verifica se tale parte di processo a cui voule accedere la CPU è presente in memoria secondaria e la carica, permettendo al processore di proseguire con l’esecuzione.</p>
 <p>Se tale parte non viene trovata viene rilanciata ancora la fault che in questo caso genera la terminazione del processo → ha tentato di accedere ad un indirizzo di memoria che non fa parte del proprio spazio di indirizzamento.</p>
+<blockquote>
+<p>NOTA: fault è un tipo di interruzione sincrona perché viene chiamata nel momento in cui nella tabella delle pagine o segmenti non è stata mappata la pagina virtuale in una fisica.
+<strong>NON è asincrona</strong>.</p>
+</blockquote>
 </li>
 </ul>
 <h2 id="gestione-dello-spazio-virtuale"><a class="header" href="#gestione-dello-spazio-virtuale">Gestione dello spazio virtuale</a></h2>
@@ -475,7 +479,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <li><strong>STBR</strong> (Segment Table Base Register): indirizzo in memoria fisica in cui si trova la tabella dei segmenti.</li>
 <li><strong>STLR</strong> (Segment Table Limit Register): dimensione della tabella dei segmenti (indica il <strong>numero di segmenti del processo</strong>)</li>
 </ul>
-<p>Il SO, all’atto del caricamento in memoria del processo da eseguire, imposterà l’<strong>indirizzo fisico</strong> dell’<em>entry point</em> della <em>segment table</em> nel registro <strong>STBR</strong></p>
+<p>Il SO, all’atto del caricamento in memoria del processo da eseguire, imposterà l’<strong>indirizzo fisico</strong> dell’<em>entry point</em> della <em>segment table</em> nel registro <strong>STBR</strong>.<br>Tale indirizzo essendo strettamente legato al processo, è contenuto all’interno del PCB.</p>
 <hr>
 <p>ESEMPIO DI TRADUZIONE UTILIZZANDO LA SEGMENT TABLE:</p>
 <p align="center"><img src="images/trad_segment_table.png" width="600"></p>
@@ -552,6 +556,9 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p align="center"><img src="images/frammentazione_interna.png" width="550"></p>
 
 <h2 id="paginazione"><a class="header" href="#paginazione">Paginazione</a></h2>
+<p>La segmentazione oggi non viene più utilizzata.</p>
+<p>Invece viene utilizzata la paginazione perché permette di eliminare un enorme problema: la frammentazione esterna.</p>
+<p>Ovviamente non è perfetto come approccio infatti anche questo introduce un problema, quello di frammentazione interna. → perdo mediamente per ogni pagina una quantità di memoria pari alla metà della dimensione della pagina stessa.</p>
 <p><strong>Paginazione</strong>:</p>
 <ul>
 <li>
@@ -676,7 +683,8 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li><strong>dimensione</strong> della tabella: \(2^{16} = 64\)KB → 👍🏿</li>
 <li><strong>frammentazione interna</strong> media: \(\frac{2^{10}}{2} = 0.5\)KB → ⚠️​</li>
 </ul>
-<p>→ bisogna scegliere una <strong>dimensione di pagina</strong> che abbia un buon <strong>compromesso</strong> tra i due valori.</p>
+<p>Come si può notare la scelta di una dimensione o del numero di pagine influenza l’altra grandezza.</p>
+<p>→ bisogna scegliere una <strong>dimensione di pagina</strong> che abbia un buon <strong>compromesso</strong> tra i due valori.<br>→ Il compromesso è tra <strong>frammentazione e performance</strong>. Perché aumentato il numero di pagine riduco la frammentazione ma diminuisco le performance poiché il SO deve gestire un grande numero di pagine; invece diminuendo il numero di pagine aumento la frammentazione interna media per ogni pagina.</p>
 <h3 id="validità-delle-pagine-virtuali"><a class="header" href="#validità-delle-pagine-virtuali">Validità delle pagine virtuali</a></h3>
 <p>Raramente un processo usa tutto il suo spazio di indirizzamento virtuale.<br>→ quantità di memoria usata tipicamente da una applicazione desktop si aggira intorno: ~\(100\)MB. (single process)</p>
 <p>Lo spazio virtuale che un processo potenzialmente può utilizzare è pari all’intero spazio di indirizzamento: se ho <code>16bit</code> per indirizzo → \(4\)GB</p>
@@ -691,7 +699,23 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Il bit di validità viene attivato nel momento in cui la pagina è <strong>allocata</strong> dal processo (es. tramite <code>malloc()</code>).</p>
 <p align="center"><img src="images/bit_validita.png" width="400"></p>
 
-<!-- @todo : chiedi al professore questa parte → slide 429 -->
+<p>Supponendo che all’interno della page table sono contenute tutte le possibili pagine che un processo può utilizzare. → copre l’intero spazio di indirizzamento.</p>
+<p>Allora potremmo avere due casistiche nel momenti in cui un processo genera un indirizzo virtuale la cui parte che <strong>identifica il numero</strong> di pagina non è associato a nessun frame fisico.<br>Le cause di questa situazione sono dovute al fatto che:</p>
+<ul>
+<li>la pagina potrebbe esser stata swappata V = 0;</li>
+<li>l’indirizzo virtuale non appartiene ad alcuna regione di memoria valida del processo.</li>
+</ul>
+<p align="center"><img src="images/page_fault.png" width="500"></p>
+
+<p>La MMU genera quindi genera una <strong>exception</strong> (page fault).</p>
+<ul>
+<li>Il SO non termina subito il processo se la pagina appartiene al suo spazio di indirizzamento, infatti viene eseguita l’ISR per gestire il page fault che cerca di allocarla dalla memoria secondaria.
+<ul>
+<li>Il SO termina il processo solo le il risultato del page fault handler non mappa la pagina virtuale in una pagina fisica → perché non è stata trovata nella memoria secondaria.</li>
+<li>Oppure se l’operazione che il processo tenta di fare su tale area non è valida secondo i permessi descritti su questa.</li>
+</ul>
+</li>
+</ul>
 <p>Cosa accede durante un <strong>contex switch</strong></p>
 <p align="center"><img src="images/contex_switch.png" width="500"></p>
 
@@ -723,7 +747,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <h4 id="paginazione-gerarchica"><a class="header" href="#paginazione-gerarchica">Paginazione gerarchica</a></h4>
 <p>Suddivisione della tabella delle pagine in parti più piccole, secondo una <strong>organizzazione <strong>gerarchica</strong></strong>.</p>
 <ul>
-<li>La MMU divide l’indirizzo di pagina in più parti (\(p_1,p_2)\).</li>
+<li>La MMU divide l’indirizzo di pagina in più parti (\(p_1,p_2)\), tante quanti sono i livelli di gerarchia.</li>
 <li>Nella tabella di primo libello, trova l’indirizzo della tabella di secondo livello, e così via.</li>
 </ul>
 <hr>
@@ -754,13 +778,74 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 
 <ul>
 <li>Linux utilizza 4 livelli gerarchici per la tabella delle pagine di ogni processo.</li>
-<li>Questa struttura serve <strong>per evitare di allocare una struttura grande quanto tutto lo spazio indirizzabile dal processo</strong>.<br>→ sono presenti delle porzioni per cui è possibile evitare l’allocazione</li>
+<li>Questa struttura serve <strong>per evitare di allocare una struttura grande quanto tutto lo spazio indirizzabile dal processo</strong>.<br>→ sono presenti delle porzioni (tabelle intermedie) per cui è possibile evitare l’allocazione perché vuote</li>
 </ul>
 <p>Le singole tabelle sono più piccole rispetto alla tabella non gerarchica.</p>
 <p>ESEMPIO DI PAGINAZIONE A DUE LIVELLI:</p>
 <p>Nella paginazione gerarchica, il “numero di pagina” nell’indirizzo virtuale viene <strong>a sua volta suddiviso in più parti</strong> (tante quante sono i livelli di gerarchia).</p>
 <p align="center"><img src="images/esempio_gerarchia.png" width="400"></p>
 
+<h3 id="tabelle-delle-pagine-basate-su-hash"><a class="header" href="#tabelle-delle-pagine-basate-su-hash">Tabelle delle pagine basate su hash</a></h3>
+<p>Le righe della tabella delle pagine sono organizzate utilizzando una <strong>lista concatenata (linked list)</strong>.</p>
+<ul>
+<li>Si memorizzano esclusivamente le righe per le pagine valide.</li>
+<li>Otteniamo quindi un ulteriore <strong>risparmio di memoria</strong>, ma ciò <strong>rallenta la ricerca</strong> (occorre scandire la linked list, ricerca basata sul contenuto).</li>
+</ul>
+<p>Per ottimizzare i tempi di ricerca, si dividono le righe su <strong>tante liste concatenate</strong> di <strong>piccole dimensioni</strong>.</p>
+<ul>
+<li>Una funzione di hash è applicata al numero della pagina virtuale.</li>
+<li>Gli elementi (entry) con lo <strong>stesso valore della funzione di hash</strong> sono <strong>collocati</strong> nella <strong>stessa</strong> <strong>lista</strong> <strong>concatenata</strong>.</li>
+</ul>
+<p align="center"><img src="images/hash_page_table.png" width="500"></p>
+
+<ul>
+<li>Dopo l’applicazione della funzione di hash sul numero di pagina, che si trovava nell’indirizzo virtuale, si individua una delle \(M\) pagine (liste concatenate).</li>
+<li>Dove \(M &lt; N\) perché la funzione di hash procude delle collisioni (\(N\) è il numero di pagine totali).</li>
+<li>Dopo aver individuato la lista concatenata si cerca all’interno di questa il numero di pagina che identifica la pagina fisica in cui è mappata la pagina virtuale.</li>
+</ul>
+<p>Ovviamente in questo approccio la lunghezza delle liste concatenate è contenuto rispetto al caso in cui abbiamo solo una lista concatenata di tutte le pagine associate ad un processo.</p>
+<h3 id="tabella-delle-pagine-invertita"><a class="header" href="#tabella-delle-pagine-invertita">Tabella delle pagine invertita</a></h3>
+<p>Negli schemi precedenti esiste <strong>una tabella distinta per ogni processo</strong>.</p>
+<p>In questo approccio, <strong>tabella delle pagine invertita</strong>, si hanno queste caratteristiche:</p>
+<ul>
+<li><strong>Una</strong> sola tabella delle pagine <strong>comune a tutti i processi</strong>.</li>
+<li>Questa tabella ha un elemento per <strong>ogni pagina fisica</strong>.</li>
+<li>Ogni elemento contiene l’indirizzo <strong>virtuale</strong> della pagina memorizzata <strong>in quella locazione fisica</strong>, con informazioni sul processo detentore della pagina.</li>
+</ul>
+<p align="center"><img src="images/tabella_delle_pagine_invertita.png" width="500"></p>
+
+<p>Una sola è la tabella delle pagine → globale.</p>
+<p>Il numero di righe è pari al numero di pagine fisiche (invece che virtuali).</p>
+<ul>
+<li>
+<p>Ogni entry della tabella contiene il PID, del processo che possiede la pagina fisica, e l’indirizzo virtuale di tale pagina.</p>
+</li>
+<li>
+<p>Una volta trovata la riga corrispondente si valuta l’offset rispetto l’indirizzo di base della tabella delle pagine invertita.<br>Tale offset corrisponde alla prima parte dell’indirizzo fisico della pagina in memoria fisica.</p>
+<p>Infatti l’ultima operazione è quella di inserire l’offset nella parte dell’indirizzo virtuale in cui è presente il numero di pagina e il PID.</p>
+</li>
+</ul>
+<p>In questo approccio risparmiamo la numerosità delle pagine, oltre al fatto che queste non sono più sparse nella memoria fisica. → si può sfruttare il principio di località.</p>
+<h3 id="segmentazione-paginata"><a class="header" href="#segmentazione-paginata">Segmentazione paginata</a></h3>
+<p>Utilizzata in Linux.</p>
+<p align="center"><img src="images/segmentazione_paginata.png" width="500"></p>
+
+<p>In questa soluzione si utilizza principalmente una paginazione con il supporto hardware.</p>
+<p>Ma a livello software si sfruttano tutti i vantaggi della segmentazione:</p>
+<ul>
+<li>condivisione dei segmenti</li>
+<li>granularità fine per l’assegnazione dei permessi → protezione delle aree di memoria</li>
+<li>dimensione variabile dei segmenti</li>
+</ul>
+<p>Questa tabella dei segmenti viene risolta in software, mentre la tabella delle pagine viene risolta in hardware sempre dall’MMU.</p>
+<p>La <strong>tabella dei segmenti</strong> è unica <strong>per ogni processo</strong>.<br>La <strong>tabella delle pagine</strong> è unica per <strong>ogni segmento del processo</strong>.</p>
+<p>Quindi per ogni segmento avremo una tabella delle pagine in cui sono mappate le pagine virtuali corrispondenti a tale segmento in pagine fisiche.</p>
+<p>Quando il processore utilizza un indirizzo virtuale <code>x = &lt;sg, sc&gt;</code>, <code>sg</code> identifica un segmento all’interno della tabella dei segmenti.<br>Una volta ottenuto l’indirizzo base della tabella delle pagine per il segmento identificato precedentemente, viene utilizzata l’altra parte dell’indirizzo virtuale <code>sc</code> per identificare la pagine fisica.</p>
+<p>A questo punto, ottenuta l’indirizzo base della pagina fisica, si somma a questo l’offset <code>of</code> per ottenere l’indirizzo fisico a cui il processo fa riferimento.</p>
+<p>Ovviamente durante tutto questo processo si devono verificare le condizione che non causino inconsistenze tra i processi, come le condizione di limite con <code>STBL</code> e <code>PTLR</code>.</p>
+<blockquote>
+<p>Quindi nella tabella dei segmenti individuo l’entry point che fa riferimento alla tabella delle pagine per quel segmento.</p>
+</blockquote>
 
                     </main>
 
