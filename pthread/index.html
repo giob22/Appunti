@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6e647268.js";
+            window.path_to_searchindex_js = "searchindex-5a558eab.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ff725845.js"></script>
@@ -268,7 +268,7 @@
 <li>è buona norma utilizzarla in tutti i thread;</li>
 <li><code>retval</code>: indica lo stato di uscita del thread.</li>
 </ul>
-<p>ESEMPIO PER <code>ptrhead_exit()</code>:</p>
+<p>ESEMPIO PER <code>pthread_exit()</code>:</p>
 <pre><code class="language-c">#include &lt;pthread.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
@@ -558,6 +558,75 @@ int main(){
 <h3 id="condition-variables-cv"><a class="header" href="#condition-variables-cv">Condition Variables (CV)</a></h3>
 <p>La gestione della cooperazione e sincronizzazione tra thread avviene mediante <strong>condition variables (CV)</strong>.</p>
 <p>Queste variabili vanno sempre utilizzate in abbinamento con un <strong>mutex</strong>, realizzando un costrutto Monitor di tipo <strong>signal-and-continue</strong>.<br>É necessario che siano utilizzate in contemporanea ad un mutex proprio perché molte procedure che operano con le condition variables hanno la necessità di un mutex.</p>
+<h4 id="creazione-e-distruzione-di-cv"><a class="header" href="#creazione-e-distruzione-di-cv">Creazione e distruzione di CV</a></h4>
+<ul>
+<li><code>pthread_cond_t</code>
+<ul>
+<li>Struttura dati “opaca”</li>
+<li>Rappresenta un oggetto-varcondition</li>
+</ul>
+</li>
+<li><code>pthread_cond_init(pthread_cond_t* cond, pthread_condattr_t * attr)</code>
+<ul>
+<li>Inizializza la condition variable per l’uso</li>
+<li><code>cond</code> è il puntatore alla condition variable da inizializzare</li>
+<li><code>attr</code> è una struttura dati passata per riferimento che specifica le caratteristiche della condition variable</li>
+</ul>
+</li>
+<li><code>pthread_cond_destroy(pthread_cond_t cond)</code>
+<ul>
+<li>Disattiva la CV che non serve più identificata da <code>cond</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="gestione-delle-condition-variables-wait-e-signal"><a class="header" href="#gestione-delle-condition-variables-wait-e-signal">Gestione delle condition variables: wait e signal</a></h4>
+<ul>
+<li><code>pthread_cond_wait(pthread_cond_t * cond, pthread_mutex_t * mutex)</code>
+<ul>
+<li>Deve essere utilizzata dentro un <strong>monitor</strong>, quindi richiede in ingresso anche un mutex</li>
+<li>Per eseguirla correttamente lo stesso thread deve aver già chiamato <code>pthread_mutex_lock(&amp;mutex)</code></li>
+<li>Il thread chiamante viene sospeso e messo nella coda di attesa della condition variable<br>Il mutex viene rilasciato automaticamente</li>
+<li>Quando il thread viene riattivato, il mutex viene riacquisito sempre all’interno della <code>pthread_cond_wait</code></li>
+</ul>
+</li>
+<li><code>pthread_cond_signal(pthread_cond_t * cond)</code>
+<ul>
+<li>Viene risvegliato un thread in attesa sulla condition variable identificata per il riferimento passato per parametro</li>
+<li>La semantica utilizzata è quella di un monitor <strong>signal-and-wait</strong>, quindi quando un thread chiamata tale funzione non viene sospeso ma continua la sua esecuzione all’interno del monitor<br>→ motivo per cui troviamo questa asimmetria nei prototipi delle funzioni <code>pthread_cond_wait()</code> e <code>pthread_cond_signal()</code>; la seconda non ha bisogno del riferimento al monitor dato che non lo rilascia durante la sua esecuzione</li>
+</ul>
+</li>
+<li><code>pthread_cond_broadcast(pthread_cond_t * cond)</code>
+<ul>
+<li>Essendo una semantica <strong>signal-and-continue</strong> possiamo utilizzare anche questa funzione</li>
+<li>Attiva tutti i thread sospesi sulla condition variable passata per riferimento</li>
+<li>I thread risvegliti accederanno uno alla volta al monitor</li>
+</ul>
+</li>
+</ul>
+<p>Per gestire le condizioni di sincronizzazione che determinano se un thread ha bisogno di sospendersi su una condition variable o meno, dobbiamo utilizzare un costrutto <code>while</code>.<br>→ Perché la semantica è <strong>signal-and-continue</strong>, quindi nei momento in cui un thread sospeso viene riattivato ed entra nel monitor non abbiamo la sicurezza che la condizione di sincronizzazione sia valida ancora.</p>
+<h3 id="monitor-con-pthreads"><a class="header" href="#monitor-con-pthreads">Monitor con PThreads</a></h3>
+<p>In PThreads, un monitor può essere ottenuto combinando <strong>un mutex</strong> e una o più <strong>condition variables</strong></p>
+<ul>
+<li>Tipicamente per permettere a tutti i thread di operare con lo stesso monitor e stesse CV, questi si inseriscono all’interno di una <code>struct</code>.</li>
+<li>La <code>struct</code> conterrà, oltre la risorsa che condivideranno i thread, anche il monitor, definito da un mutex e una o più condition variables.</li>
+<li>Tale struttura per essere condivisa in modo corretto andrà allocata all’interno dello <strong>heap</strong>.</li>
+</ul>
+<pre><code class="language-c">struct dati_condivisi{
+  ... // es., un buffer e le variabili di stato
+  ... // ad esso associato
+
+  pthread_mutex_t mutex;
+  pthread_cond_t cv1;
+  pthread_cond_t cv2;
+  ... // altre condition variables
+};
+</code></pre>
+<p>→ ESEMPIO DI SINCRONIZZAZIONE TRA THREAD</p>
+<p align="center"><img src="images/esempio_var_cond.png" width="700"></p>
+
+<p>La gestione della sincronizzazione e mutua esclusione è analoga a quella vista per programmi multi-processo, a cambiare sono le performance e il modo in cui vengono condivise le risorse in questione.</p>
+<p align="center"><img src="images/analogia_multi_process_threads.png" width="550"></p>
+
 <!-- 15:55 -->
 
                     </main>
