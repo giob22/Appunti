@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-9caf290f.js";
+            window.path_to_searchindex_js = "searchindex-6e647268.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ff725845.js"></script>
@@ -466,6 +466,98 @@ pthread_join(id, &amp;dati);
 ...// lettura dei dati
 </code></pre>
 <h3 id="creazione-e-distribuzione-di-mutex"><a class="header" href="#creazione-e-distribuzione-di-mutex">Creazione e distribuzione di Mutex</a></h3>
+<p>La libreria PThread ci mette a disposizione l’implementazione di un <strong>mutex</strong> o <strong>lock</strong> per gestire la mutua esclusione tra risorse condivise tra thread.</p>
+<ul>
+<li><code>pthread_mutex_t</code>
+<ul>
+<li>Una struttura dati “opaca” (il programmatore non deve conoscerne il contenuto)</li>
+<li>Rappresenta un <strong>oggetto-mutex</strong></li>
+</ul>
+</li>
+<li><code>pthread_mutex_init(pthread_mutex_t * mutex, pthread_attr_t * attr)</code>
+<ul>
+<li>Crea un nuovo mutex e lo inizializza come “sbloccato” (unlocked)</li>
+<li><code>mutex</code> è il puntatore di tipo <code>pthread_mutex_t</code></li>
+<li><code>attr</code> è il puntatore di tipo <code>pthread_attr_t</code> utilizzato per impostare degli attributi del mutex (possiamo inserire <code>NULL</code> se vogliamo un mutex di default)</li>
+</ul>
+</li>
+<li><code>pthread_mutex_destroy (pthread_mutex_t * mutex)</code>
+<ul>
+<li>Disattiva il mutex identificato dal valore della variabile passata per parametro.</li>
+</ul>
+</li>
+<li><code>pthread_mutex_lock(pthread_mutex_t * mutex)</code>
+<ul>
+<li>Serve ad un thread per acquisire una risorsa in mutua esclusione rispetto gli altri thread. Quindi serve per delineare la sezione critica.</li>
+<li>Se è già stato acquisito da un altro thread, il chiamante si <strong>blocca in attesa</strong> di un <strong>unlock</strong></li>
+</ul>
+</li>
+<li><code>pthread_mutex_unlock(pthread_mutex_t * mutex)</code>
+<ul>
+<li>Invocato da un thread per <strong>rilasciare la sezione critica</strong>, e per consentire quindi l’accesso ad un altro thread precedentemente bloccato a questa.</li>
+</ul>
+</li>
+<li><code>pthread_mutex_trylock(pthread_mutex_t * mutex)</code>
+<ul>
+<li>Analoga alla lock, ma non bloccante. Se il mutex è già acquisito, ritorna immediatamente con codice di errore <code>EBUSY</code></li>
+<li>Altrimenti lo acquisisce e ritorna come risultato <code>0</code></li>
+<li>Possiamo dire che è una versione non bloccante della <code>pthread_mutex_lock</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>ESEMPIO CONTATORE CONDIVISTO</p>
+<pre><code class="language-c">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define NUM_THREADS 2
+// definisco la struttura counter
+struct counter{
+  int valore;
+  pthread_mutex_t mutex;
+
+};
+
+void* in_counter(void* p){
+  struct counter* pc = (struct counter*)p;
+  for (int i = 0; i &lt; 100000; i++){
+    pthread_mutex_lock(&amp;(pc-&gt;mutex));
+    pc-&gt;valore++;
+    pthread_mutex_unlock(&amp;(pc-&gt;mutex));
+  }
+  pthread_exit(NULL);
+}
+
+int main(){
+
+  pthread_t threads[NUM_THREADS];
+
+  struct counter* p = (struct counter*) malloc(sizeof(struct counter));
+  // inizializzo il counter
+  p-&gt;valore = 0; 
+  // inizializzo il mutex
+  pthread_mutex_init(&amp;(p-&gt;mutex), NULL);
+
+  // creo i thread che faranno gli incrementi
+  for (int i = 0; i &lt; NUM_THREADS; i++){
+    pthread_create(&amp;threads[i], NULL, in_counter, (void*)p);
+  }
+  // faccio la join così che il padre si blocchi 
+  // in attesa della terminazione dei thread figli
+  for (int i = 0; i &lt; NUM_THREADS; i++){
+    pthread_join(threads[i], NULL);
+  }
+
+  printf("valore raggiunto dal counter → %d\n", p-&gt;valore);
+
+  return 0;
+}
+</code></pre>
+<hr>
+<h3 id="condition-variables-cv"><a class="header" href="#condition-variables-cv">Condition Variables (CV)</a></h3>
+<p>La gestione della cooperazione e sincronizzazione tra thread avviene mediante <strong>condition variables (CV)</strong>.</p>
+<p>Queste variabili vanno sempre utilizzate in abbinamento con un <strong>mutex</strong>, realizzando un costrutto Monitor di tipo <strong>signal-and-continue</strong>.<br>É necessario che siano utilizzate in contemporanea ad un mutex proprio perché molte procedure che operano con le condition variables hanno la necessità di un mutex.</p>
 <!-- 15:55 -->
 
                     </main>
