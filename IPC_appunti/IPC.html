@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bd506d9d.js";
+            window.path_to_searchindex_js = "searchindex-91c66b0d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-914c42a9.js"></script>
@@ -308,7 +308,7 @@ key        semid      owner      perms      nsems
 <li><strong>semafori</strong> → <code>/proc/sysvipc/sem</code>.</li>
 </ul>
 <p>Il comando <code>ipcrm</code> invece ci permette di marcare come eliminabile al kernel una struttura IPC dato il suo identificativo. Il comando è molto utile quando il programmatore non ha rimosso esplicitamente le strutture allocate.</p>
-<p>ESEMPIO: eliminiamo la shared memory avente pid <code>133215</code></p>
+<p>ESEMPIO: eliminiamo la shared memory avente file descriptor <code>133215</code></p>
 <pre><code class="language-bash">ipcrm -m 133215
 </code></pre>
 
