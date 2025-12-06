@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-72ed4977.js";
+            window.path_to_searchindex_js = "searchindex-7175f7a9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-dcbba2e9.js"></script>
+        <script src="toc-efead60a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -378,7 +378,7 @@ if (result &lt; 0){
 <tbody>
 <tr><td><code>msgtyp == 0</code></td><td>viene prelevato il primo messaggio della coda (ovvero quello inviato da più tempo).</td></tr>
 <tr><td><code>msgtyp &gt; 0</code></td><td>viene prelevato il primo messaggio della coda il cui campo tipo sia pari al valore di <code>msgtyp</code>.</td></tr>
-<tr><td><code>msgtyp &lt; 0</code></td><td>vengono considerati tutti i messaggi aventi <code>message_type &lt;= |msgtyp|</code>, e tra questi viene prelevato il messaggio con tipo minore.</td></tr>
+<tr><td><code>msgtyp &lt; 0</code></td><td>viene prelevato il primo messaggio dalla coda il cui campo tipo abbia un valore minore o uguale a <code>|msgtyp|</code>.</td></tr>
 </tbody>
 </table>
 </div>
@@ -433,11 +433,6 @@ printf(”Messaggio: tipo=%d, text=%s, val=%d\n”,
 <p>Inoltre mediante l’ausilio di <strong>due Message Queue</strong> possiamo implementare una <strong>comunicazione diretta simmetrica</strong> utilizzando sempre una comunicazione indiretta.</p>
 <p>Sfruttando il campo tipo di ogni messaggio e il PID dei processi che vogliono comunicare tra loro.</p>
 <p>A mediare la comunicazione è necessario un terzo processo che faccia da <strong>server</strong>, il quale smista i messaggi nella coda di entrata (aventi come tipo il PID del destinatario e nel payload il PID del mittente) nella coda di uscita modificando il tipo con il PID del mittente.</p>
-<hr>
-<p>Un altro tipo di implementazione possibile sarebbe quella che sfrutta i tipi di messaggi interi negativi: <code>msgtyp &lt; 0</code> nella system call <code>msgrcv()</code>.</p>
-<p>L’implementazione consiste in un server che risponde a diverse richieste ognuna identificata dal tipo del messaggio. A ciascun tipo è associata una diversa priorità, in modo che il tipo <code>1</code> abbia priorità massima e il tipo <code>n</code> abbia priorità minima.</p>
-<p>Nel momento in cui il server esegue una <code>msgrcv()</code> bloccante con argomento <code>msgtyp = n</code>, il risultato è il messaggio che ha il valore tipo <strong>più piccolo tra tutti quelli con <code>message_type &lt; |msgtyp|</code></strong> e quindi con priorità massima.</p>
-<p>Naturalmente, se sono presenti più messaggi con stesso tipo e tale tipo è il più piccolo tra quelli selezionabili, la politica FIFO implementata sulla coda fa sì che venga restituito il messaggio che è in attesa da più tempo.</p>
 <h2 id="errori"><a class="header" href="#errori">Errori</a></h2>
 <p>Nel momento in cui si verifica un errore in una delle system call viste (di controllo, invio, ricezione o creazione), il tipo di errore è indicato nella variabile globale <code>errno</code>, definita per ogni processo.</p>
 <p>Questo vale non solo per le <em>Message Queue</em> ma per qualsiasi primitiva che utilizziamo.</p>
