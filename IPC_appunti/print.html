@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-91c66b0d.js";
+            window.path_to_searchindex_js = "searchindex-db10255e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-914c42a9.js"></script>
@@ -326,6 +326,7 @@ key        semid      owner      perms      nsems
 <p>ESEMPIO: eliminiamo la shared memory avente file descriptor <code>133215</code></p>
 <pre><code class="language-bash">ipcrm -m 133215
 </code></pre>
+<p>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="shared-memory"><a class="header" href="#shared-memory">Shared memory</a></h1>
 <p>I processi UNIX( a differenza dei thread) non possono condividere memoria, neanche i processi “parenti”; questi non sono altro che copie dell’immagine del processo padre e hanno uno <em>spazio di indirizzamento</em> diverso. Un processo <strong>figlio</strong> eredita una <strong>copia</strong> dei dati del processo <strong>padre</strong>: dopo la system call <code>fork()</code> la modifica dei dati da parte di un processo non si ripercuite sui dati dell’altro processo.</p>
