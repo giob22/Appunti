@@ -12,6 +12,7 @@ window.addEventListener("load", () => {
                 behavior: "smooth"
                 }
             );
+            createBackButton();
         }, 100);
     }
 });
@@ -22,7 +23,7 @@ document.addEventListener("scroll", () => {
 
 
 // aggiungo pulsante "back"
-
+function createBackButton(){
 
 let css = `
 /* CSS */
@@ -79,3 +80,4 @@ DivBackButton.appendChild(BackA);
 
 Menu.prepend(DivBackButton);
 Menu.prepend(style);
+}
