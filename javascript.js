@@ -72,16 +72,24 @@ function createBackButton(){
 
     let Menu = document.querySelector(".sidebar-scrollbox");
     let DivBackButton = document.createElement("div");
+
+
+    let FontAwasomeLink = document.createElement("link");
+    FontAwasomeLink.setAttribute("href", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css");
+    FontAwasomeLink.setAttribute("rel", "stylesheet");
+
+
     let BackA = document.createElement("button");
-    //  onclick="window.location.href='pagina.html'"
     BackA.setAttribute("href", "../index.html");
     BackA.setAttribute("class", "button-89");
     BackA.setAttribute("role", "button");
     BackA.setAttribute("onclick", "window.location.href='../index.html'");
-    BackA.innerHTML = "APPUNTI"; //* <-- TESTO BOTTONE
+    BackA.innerHTML = `<i class="fa-solid fa-angles-left"></i> APPUNTI`; //* <-- TESTO BOTTONE
 
     DivBackButton.appendChild(BackA);
 
+
     Menu.prepend(DivBackButton);
+    Menu.prepend(FontAwasomeLink);
     Menu.prepend(style);
 }

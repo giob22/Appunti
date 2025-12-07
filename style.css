@@ -1,0 +1,28 @@
+
+.GitHover:hover{
+    animation: GitHoverAnimation 1s linear infinite;
+}
+
+@keyframes GitHoverAnimation {
+    0% {
+        transform: rotateZ(0deg);
+        color: white;
+    }
+
+    25% {
+        transform: rotateZ(90deg);
+        color: blue;
+    }
+    50% {
+        transform: rotateZ(180deg);
+        color: pink;
+    }
+    75% {
+        transform: rotateZ(270deg);
+        color: yellow;
+    }
+    100% {
+        transform: rotateZ(360deg);
+        color: green;
+    }
+}
