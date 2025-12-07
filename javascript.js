@@ -12,9 +12,12 @@ window.addEventListener("load", () => {
                 behavior: "smooth"
                 }
             );
-            createBackButton();
+            
         }, 100);
     }
+    setTimeout(() => {
+        createBackButton();
+    }, 500);
 });
 
 document.addEventListener("scroll", () => {
@@ -24,6 +27,7 @@ document.addEventListener("scroll", () => {
 
 // aggiungo pulsante "back"
 function createBackButton(){
+console.log("test");
 
 let css = `
 /* CSS */
