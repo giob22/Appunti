@@ -1,7 +1,21 @@
+const firstP = document.querySelector(".active");
+const key = `SavedPosition${firstP.textContent}`;
 
+window.addEventListener("load", () => {
+    const y = Number(localStorage.getItem(key));
 
+    if (!isNaN(y)) {
+        setTimeout(() => {
+            window.scrollTo(
+                {
+                top: y,
+                behavior: "smooth"
+                }
+            );
+        }, 100);
+    }
+});
 
-document.addEventListener("scroll", (event) => {
-    let SaveNewPosyCoords = window.scrollY;
-    localStorage.setItem(`SavedPosition${document.getRootNode()}`, SaveNewPosyCoords);
+document.addEventListener("scroll", () => {
+    localStorage.setItem(key, window.scrollY);
 });
