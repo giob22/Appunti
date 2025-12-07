@@ -188,7 +188,7 @@
 <li><a href="#coda-di-messaggi-mailbox">Mailbox</a></li>
 <li><a href="#note">Note:</a></li>
 </ol>
-<script src="../javascript.js"></script><div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="ipc-interprocess-communication"><a class="header" href="#ipc-interprocess-communication">IPC: Interprocess Communication</a></h1>
 <p>Per implementare la comunicazione e quindi anche la sincronizzazione tra processi, abbiamo bisogno che questi comunichino mediante un mezzo; tale mezzo è definito come <strong>risorse IPC</strong>.</p>
 <p>Utilizzeremo <strong>meccanismi di comunicazione</strong> introdotti originariamente nel sistema operativo <strong>UNIX System V</strong>. In particolare <strong>System V IPC</strong> fornisce tre principali tipi di risorse gestite dal kernel:</p>
@@ -326,7 +326,7 @@ key        semid      owner      perms      nsems
 <p>ESEMPIO: eliminiamo la shared memory avente file descriptor <code>133215</code></p>
 <pre><code class="language-bash">ipcrm -m 133215
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="shared-memory"><a class="header" href="#shared-memory">Shared memory</a></h1>
 <p>I processi UNIX( a differenza dei thread) non possono condividere memoria, neanche i processi “parenti”; questi non sono altro che copie dell’immagine del processo padre e hanno uno <em>spazio di indirizzamento</em> diverso. Un processo <strong>figlio</strong> eredita una <strong>copia</strong> dei dati del processo <strong>padre</strong>: dopo la system call <code>fork()</code> la modifica dei dati da parte di un processo non si ripercuite sui dati dell’altro processo.</p>
 <p>Una memoria condivisa (SHM) è una porzione di memoria accessibile da piú processi.</p>
@@ -764,7 +764,7 @@ indirizzo della shm dopo l`attach: 0x78f6872c7000
 [PADRE 73758] contenuto della shm: 123
 </code></pre>
 <p>Da notare che l’indirizzo per la shared memory è cambiato. Appunto perché il processo figlio non è più una copia <strong>dell’immagine</strong> del processo padre una volta utilizzato la chiamata <code>exec()</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="semaphore"><a class="header" href="#semaphore">Semaphore</a></h1>
 <p>I semafori sono delle risorse IPC, ma il loro valore interno si comporta come una variabile condivisa gestita dal kernel.</p>
 <p>Vengono utilizzati per la <strong>cooperazione</strong> e la <strong>competizione</strong> tra processi. Due o più processi possono cooperare o competere nell’esecuzione di una <strong>sezione critica</strong> attraverso l’uso dei semafori affinché non ci siano problemi di <em>sincronizzazione</em> o <em>interferenze</em>.</p>
@@ -989,7 +989,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerà il contatore <code>s
 	semop(id_sem, &amp;sem_buf, 1);   //semaforo rosso
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="problema-dei-lettoriscrittori"><a class="header" href="#problema-dei-lettoriscrittori">Problema dei lettori/scrittori</a></h1>
 <p>Come per il problema produttori/consumatori sono presenti due categorie di processi:</p>
 <ul>
@@ -1135,7 +1135,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerà il contatore <code>s
 <p>A questo proposito infatti è impiegato il semaforo identificato all’interno del <em>semaphor set</em> dalla costante <code>MUTEX</code>.</p>
 <h2 id="implementazione-con-monitor"><a class="header" href="#implementazione-con-monitor">Implementazione con MONITOR</a></h2>
 <p>L’implementazione con monitor è presente nella repository Sistemi_Operativi/IPC/monitor su GitHub (con commenti annessi).</p>
-<div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="monitor"><a class="header" href="#monitor">Monitor</a></h1>
 <p>Il <strong>monitor</strong> è una struttura sintattica (modello concettuale) che opera su una risorsa condivisa (shm) gestendone l’accesso e la sincronizzazione tra processi/thread concorrenti.</p>
 <p>Un monitor abbina un insieme di <strong>operazioni</strong> ad una struttura dati (risorsa) condivisa tra processi.</p>
@@ -1394,7 +1394,7 @@ Se specificato <code>SEM_UNDO</code> il sistema aggiornerà il contatore <code>s
 <p>Mentre con i semafori la modifica sul buffer di stato <code>IN_USO → OCCUPATO/LIBERO</code> non era inclusa nella sezione critica, non ostacolavamo gli altri processi a operare sulla risorsa.</p>
 <p>Invece parlando di <strong>robustezza</strong> i monitor sono sicuramente molto più sicuri per via del loro <strong>livello di astrazione maggiore</strong>. Tutti le operazioni sulla memoria condivisa sono contenute all’interno del monitor. (possiamo dire che il monitor è un wrapper della <code>shm</code>)</p>
 <p>Mentre per i semafori la gestione è esplicita, quindi è più alto il rischio di eventuali <strong>deadlock</strong>.</p>
-<div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="monitor-implementazione-in-c"><a class="header" href="#monitor-implementazione-in-c">Monitor Implementazione in C</a></h1>
 <p>Per sfruttare il concetto di monitor in <code>c</code> dobbiamo realizzare una libreria sfruttando il concetto di <strong>semaforo</strong> per implementare tutte le funzionalità di un <strong>monitor</strong>.</p>
 <p>La libreria in questione, che sia un monitor: signal-and-wait, signal-and-continue oppure signal-and-wait-Hoare;</p>
@@ -1497,7 +1497,7 @@ int queue_condition(Monitor*, int);
 <li>altrimenti la chiamata è ininfluente.</li>
 </ol>
 <p>In entrambi i casi, sia che la verifica sia vero oppure falsa, il processo segnalatore continua la sua esecuzione all’interno del monitor.</p>
-<!-- @todo aggiungi il codice sorgente per ogni workflow   --><div style="break-before: page; page-break-before: always;"></div>
+<!-- @todo aggiungi il codice sorgente per ogni workflow   --><div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="sincronizzazione-nel-modello-ad-ambiente-locale"><a class="header" href="#sincronizzazione-nel-modello-ad-ambiente-locale">Sincronizzazione nel modello ad ambiente locale</a></h1>
 <p>Il modello ad ambiente <strong>locale</strong> si riferisce a una struttura in cui ogni processo opera nel proprio ambiente privato, <strong>senza alcuna memoria condivisa</strong> tra vari processi.</p>
 <p>In questo modello tutte le risorse sono privare a ciascun processo e non possono essere modificate direttamente da altri processi.</p>
@@ -1740,7 +1740,7 @@ int queue_condition(Monitor*, int);
 
 <p>Possiamo quindi capire da questa immagine quali sono le informazioni di interesse per una mailbox.</p>
 <p>Il ruolo della mailbox è da <strong>intermediario</strong> nella comunicazione.</p>
-<div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="coda-di-messaggi-mailbox"><a class="header" href="#coda-di-messaggi-mailbox">Coda di messaggi: mailbox</a></h1>
 <p>UNIX (System V), come anche Linux, mette a disposizione primitive IPC che supportano la <strong>comunicazione indiretta</strong> tra processi (anche indipendenti) basata su uno <strong>scambio di messaggi</strong>.</p>
 <p>Questa comunicazione è realizzata tramite le <strong>System V Message Queue</strong>, ovvero strutture dati gestite dal kernel che consentono l’invio e la ricezione di messaggi in maniera <strong>indiretta</strong>.</p>
@@ -2008,7 +2008,7 @@ printf(”Messaggio: tipo=%d, text=%s, val=%d\n”,
 <h2 id="errori"><a class="header" href="#errori">Errori</a></h2>
 <p>Nel momento in cui si verifica un errore in una delle system call viste (di controllo, invio, ricezione o creazione), il tipo di errore è indicato nella variabile globale <code>errno</code>, definita per ogni processo.</p>
 <p>Questo vale non solo per le <em>Message Queue</em> ma per qualsiasi primitiva che utilizziamo.</p>
-<div style="break-before: page; page-break-before: always;"></div>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="note"><a class="header" href="#note">NOTE</a></h1>
 <h2 id="utilizzo-di-semafori-tra-processi-con-fork--exec"><a class="header" href="#utilizzo-di-semafori-tra-processi-con-fork--exec">Utilizzo di semafori tra processi con fork + exec</a></h2>
 <p><strong>PROBLEMA DELLA VALIDITÁ DEL DESCRITTORE DELL’ARRAY SEMAFORICO:</strong></p>

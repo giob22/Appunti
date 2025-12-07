@@ -174,7 +174,8 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="note"><a class="header" href="#note">NOTE</a></h1>
+                        <script src="../javascript.js"></script>
+<h1 id="note"><a class="header" href="#note">NOTE</a></h1>
 <h2 id="utilizzo-di-semafori-tra-processi-con-fork--exec"><a class="header" href="#utilizzo-di-semafori-tra-processi-con-fork--exec">Utilizzo di semafori tra processi con fork + exec</a></h2>
 <p><strong>PROBLEMA DELLA VALIDITÁ DEL DESCRITTORE DELL’ARRAY SEMAFORICO:</strong></p>
 <p>Supponiamo di avere un processo che crea altri <code>N</code> processi con <code>fork() + exec()</code> oppure in generale più processi con area testo diversa che operano su una <code>shm</code> il cui accesso è gestito dall’utilizzo di semafori.</p>

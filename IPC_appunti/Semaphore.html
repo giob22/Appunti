@@ -174,7 +174,8 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="semaphore"><a class="header" href="#semaphore">Semaphore</a></h1>
+                        <script src="../javascript.js"></script>
+<h1 id="semaphore"><a class="header" href="#semaphore">Semaphore</a></h1>
 <p>I semafori sono delle risorse IPC, ma il loro valore interno si comporta come una variabile condivisa gestita dal kernel.</p>
 <p>Vengono utilizzati per la <strong>cooperazione</strong> e la <strong>competizione</strong> tra processi. Due o più processi possono cooperare o competere nell’esecuzione di una <strong>sezione critica</strong> attraverso l’uso dei semafori affinché non ci siano problemi di <em>sincronizzazione</em> o <em>interferenze</em>.</p>
 <p>I processi condividono tra loro una <strong>istanza di semaforo</strong> <code>s</code>. Tramite questa variabile i processi possono sincronizzarsi sull’utilizzo di una <strong>risorsa critica</strong>, ovvero una risorsa condivisa.</p>
