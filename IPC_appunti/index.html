@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>indice - IPC</title>
+        <title>IPC - IPC</title>
 
 
         <!-- Custom HTML head -->
@@ -27,9 +27,6 @@
         <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
         <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-56612340.css">
 
-
-        
-
         <!-- Custom theme stylesheets -->
 
 
@@ -38,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-53a422a5.js";
+            window.path_to_searchindex_js = "searchindex-12bcf412.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-914c42a9.js"></script>
+        <script src="toc-dcbba2e9.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -71,7 +68,6 @@
                 }
             } catch (e) { }
         </script>
-
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
@@ -178,25 +174,151 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <p>Indice:</p>
-<ol>
-<li><a href="./IPC.html">IPC</a></li>
-<li><a href="./Shared_memory.html">Shared Memory</a></li>
-<li><a href="./Semaphore.html">Semaphore</a></li>
-<li><a href="./Problema_lettori_scrittori.html">Problema Lettori/Scrittori</a></li>
-<li><a href="./Monitor.html">Monitor</a></li>
-<li><a href="./Monitor_implementazione_in_c.html">Monitor Implementazione in C</a></li>
-<li><a href="./Sincronizzazione_locale.html">Sincronizzazione nel modello ad ambiente locale</a></li>
-<li><a href="./Mailbox.html">Mailbox</a></li>
-<li><a href="./Note.html">Note:</a></li>
-</ol>
+                        <script src="../javascript.js"></script>
+<h1 id="ipc-interprocess-communication"><a class="header" href="#ipc-interprocess-communication">IPC: Interprocess Communication</a></h1>
+<p>Per implementare la comunicazione e quindi anche la sincronizzazione tra processi, abbiamo bisogno che questi comunichino mediante un mezzo; tale mezzo è definito come <strong>risorse IPC</strong>.</p>
+<p>Utilizzeremo <strong>meccanismi di comunicazione</strong> introdotti originariamente nel sistema operativo <strong>UNIX System V</strong>. In particolare <strong>System V IPC</strong> fornisce tre principali tipi di risorse gestite dal kernel:</p>
+<ul>
+<li><strong>Shared memory (SHM)</strong> → memoria condivisa tra più processi;</li>
+<li><strong>Semaphores (SEM)</strong> → strutture per la sincronizzazione e mutua esclusione;</li>
+<li><strong>Message queue (MSG)</strong> → code di messaggi per lo scambio asincrono di dati.</li>
+</ul>
+<p>Quindi Linux/UNIX permette la <strong>comunicazione tra processi</strong> mediante primitive e strutture dati fornite dal kernel.</p>
+<p>Alla base dei meccanismi di comunicazione è presente una <em>shared memory</em>; per implementare semafori e code di messaggi, necessari a gestire rispettivamente mutua escluzione (competizione) e sincronizzazione (cooperazione), sono necessarie delle porzioni di memoria condivise tra i processi.</p>
+<h2 id="primitive-get-e-ctl"><a class="header" href="#primitive-get-e-ctl">Primitive GET e CTL</a></h2>
+<p>Ogni risorsa <strong>IPC</strong> è gestita con l’utilizzo di due primitive <strong>get</strong> e <strong>ctl</strong>.</p>
+<p>La primitiva <strong>get</strong> utilizza una “chiave” (IPC key), e opportuni parametri, per restituire al processo un <strong>descrittore della risorsa</strong>.</p>
+<p>La primitiva <strong>ctl</strong> (control) permette, dato un descrittore, di:</p>
+<ul>
+<li>verificare lo stato di una risorsa;</li>
+<li>cambiare lo stato di una risorsa;</li>
+<li>rimuovere una risorsa</li>
+</ul>
+<p>La rimozione però non nel senso stretto, in realtà la risorsa vine <strong>solamente etichettata</strong> come eliminabile al kernel: infatti questa viene eliminata se non sono presenti processi che la stanno utilizzando; ovvero processi <code>attached</code> alla risorsa.</p>
+<p><img src="images/shared_memory_flow.svg" alt="Diagramma chiave IPC"></p>
+<hr>
+<p>Le risorse IPC sono <strong>permanenti</strong>: se un processo termina o si stacca dalla risorsa questa non si elimina automaticamente. Sarà necessario una chiamata esplicita alla primitiva <code>clt</code>.</p>
+<p><img src="images/persistenza_ipc.svg" alt="Diagramma chiave IPC"></p>
+<h2 id="primitiva-get"><a class="header" href="#primitiva-get">Primitiva <code>get</code></a></h2>
+<p>La primitiva <code>get</code> ha la seguente firma:</p>
+<pre><code class="language-c">  int ...get(key_t key, ..., int flag);
+</code></pre>
+<ul>
+<li>
+<p><strong>key</strong> è la chiave dell’oggetto IPC.</p>
+<p>Tale chiave è un valore intero arbitrario che può essere:</p>
+<ul>
+<li>cablato nel codice;</li>
+<li>generato da <code>ftok()</code>;</li>
+<li>impostato con la macro <code>IPC_PRIVATE</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>flag</strong>: indica la modalità di acquisizione della risorsa e i permessi di accesso.</p>
+<p>Corrisponde ad una o più costanti, passate insieme in “or logico” (carattere di pipe <code>|</code>). Tali costanti sono:</p>
+<ul>
+<li>macro <code>IPC_CREAT</code> definita in <code>sys/ipc.h</code>: impone di creare una nuova risorsa se non ne esiste già una con la stessa chiave indicata. Se la risorsa è già esistente allora il flag è ininfluente.</li>
+<li>macro <code>IPC_EXCL</code> definita in <code>sys/ipc.h</code>: utilizzabile con <code>IPC_CREAT</code> per imporre di ritornare un errore se la risorsa è già esistente. Questa modalità è utile per evitare di inizializzare la risorsa IPC più volte. Però nel caso la risorsa non esista questa viene creata.</li>
+<li><strong>Permessi di accesso</strong>: sono specificati con la notazione ottale. Per esempio, il valore <code>0664</code> indica i permessi di lettura e scrittura per <code>user</code> e <code>group</code>, e di sola lettura per <code>others</code>.</li>
+</ul>
+</li>
+</ul>
+<p>La primitiva <code>get</code> infine restituisce come risultato il <strong>descrittore della risorsa IPC</strong>, ovvero un valore intero che identifica la risorsa.</p>
+<h2 id="primitiva-ctl"><a class="header" href="#primitiva-ctl">Primitiva <code>ctl</code></a></h2>
+<p>La primitiva <code>ctl</code> ha la seguente firma:</p>
+<pre><code class="language-c">  int ...ctl(int desc, ..., int cmd, ...);
+</code></pre>
+<ul>
+<li><code>desc</code>: indica il descrittore della risorsa ( ottenuto dalla chiamata <code>get()</code>).</li>
+<li><code>cmd</code>: specifica il comando da eseguire, è possibile scegliere tra:
+<ul>
+<li><code>IPC_RMID</code>: rimozione della risorsa indicata;</li>
+<li><code>IPC_STAT</code>: richiede informazioni statistiche sulla risorsa indicata;</li>
+<li><code>IPC_SET</code>: richiede al sistema la modifica di un sottoinsieme degli attributi della risorsa (es. i permessi di accesso).</li>
+</ul>
+</li>
+</ul>
+<p>Il parametro di ritorno di <code>ctl()</code> è pari ad <code>-1</code> nel caso di un errore, <code>0</code> nel caso di operazione riuscita.</p>
+<h2 id="ipc-keys"><a class="header" href="#ipc-keys">IPC keys</a></h2>
+<p>Ogni risorsa <code>IPC</code> è identificata da un <strong>valore univoco nel sistema</strong>, denominato <strong>chiave</strong>(IPC key). Abbiamo diversi modi per assegnare una chiave a una risorsa IPC:</p>
+<h3 id="chiave-cablata-nel-codice"><a class="header" href="#chiave-cablata-nel-codice">Chiave cablata nel codice</a></h3>
+<p>Il modo più semplice di <strong>scegliere una chiave</strong> è <strong>usare un valore a piacere</strong> del programmatore, “cablato” nel programma.</p>
+<p>ESEMPIO:</p>
+<pre><code class="language-c">key_t mykey = 123;
+int id = ...get(mykey,...);
+</code></pre>
+<p>Tale approccio è molto svantaggioso perché è <strong>statico</strong>, la chiave viene assegnata in modo statico, questo vuol dire che erroneamente un processo potrebbe utilizzare una chiave già utilizzata per un’altra risorsa IPC destinata ad uno scopo completamente diverso.</p>
+<p>In questo caso potrebbero crearsi delle <strong>interferenze</strong> e quindi problemi di comunicazione tra processi.</p>
+<h3 id="chiave-generata-da-ftok"><a class="header" href="#chiave-generata-da-ftok">Chiave generata da <code>ftok()</code></a></h3>
+<p>La chiamata di sistema <code>ftok()</code> genera una chiave univoca per una risorsa partendo da una stringa e un carattere passatogli per parametri.</p>
+<pre><code class="language-c">key_t ftok(char * path, char id);
+</code></pre>
+<p>ESEMPIO:</p>
+<pre><code class="language-c">key_t mykey = ftok("./percorso", 'a');
+</code></pre>
+<p>Per convesione si utilizza come prima stringa il percorso file dell’eseguibile che intende creare la risorsa. In generale più esser inserita una qualsiasi stringa di caratteri. Il secondo parametro <code>id</code> invece è un carattere scelto a piacere.</p>
+<p>La primitiva restituisce una chiave IPC ottenuta da una funzione aritmetica che combina l’<em>inode number</em>, il <em>minor device number</em>, del file indicato dal path, e il carattere indicato come secondo argomento.</p>
+<ul>
+<li><em>inode number</em> è l’identificatore univoco del file nel file system;</li>
+<li><em>minor device number</em> è l’identificatore della partizione/dispositivo dove risiede il file.</li>
+</ul>
+<p>Il metodo che utilizza <code>ftok()</code> per la creazione di una chiave associabile a una risorsa IPC è quello più versatile; è l’unico modo che abbiamo per permettere la comunicazione tra due processi associati a eseguibili differenti.</p>
+<h2 id="chiave-ipc_private"><a class="header" href="#chiave-ipc_private">Chiave <code>IPC_PRIVATE</code></a></h2>
+<p><code>IPC_PRIVATE</code> (equivale a <code>0</code>), è un valore costante, che può essere usato per creare una risorsa <strong>senza chiave</strong>. In questo caso la risorsa è accessibile unicamente dal processo creatore e degli eventuali figli aventi la stessa immagine (utilizzare <code>exec()</code> significherebbe perdere l’accesso alla risorsa).</p>
+<p>ESEMPIO:</p>
+<pre><code class="language-c">key_t mykey = IPC_PRIVATE;
+int id = ...get(mykey, ...);
+
+pid_t pid = fork();
+if(pid == 0){
+  /*figlio, utilizza il descrittore "id" */
+}
+else if(pid &gt; 0){
+  /*padre, utilizza il descrittore "id" */
+}
+</code></pre>
+<h2 id="i-comandi-ipcs-e-ipcrm"><a class="header" href="#i-comandi-ipcs-e-ipcrm">I comandi <code>ipcs</code> e <code>ipcrm</code></a></h2>
+<p>Il comando <code>ipcs</code> visualizza tutte le strutture IPC (code di messaggi, shared memory, semafori) allocate, mostrandone la chiave IPC, l’identificativo del descrittore della risorsa, l’utente proprietario, i permessi per la risorsa e informazioni legate al tipo di risorsa IPC.</p>
+<pre><code class="language-bash">------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages    
+
+------ Shared Memory Segments --------
+key        shmid      owner      perms      bytes      nattch     status      
+0x00000000 6          giovanni   600        524288     2          dest         
+0x00000000 65564      giovanni   600        33554432   2          dest         
+0x00000000 65573      giovanni   606        4718592    2          dest         
+0x00000000 65574      giovanni   606        4718592    2          dest         
+0x00000000 32810      giovanni   606        12072960   2          dest         
+0x00000000 32811      giovanni   606        12072960   2          dest         
+0x00000000 32821      giovanni   600        524288     2          dest         
+
+------ Semaphore Arrays --------
+key        semid      owner      perms      nsems   
+</code></pre>
+<p>è possibile utilizzare i seguenti flag per mostrare solo alcune risorse IPC:</p>
+<pre><code class="language-bash">  Resource options:
+ -m, --shmems      shared memory segments
+ -q, --queues      message queues
+ -s, --semaphores  semaphores
+ -a, --all         all (default)
+</code></pre>
+<p>Tale comando (<code>ipcs</code>) cattura le sue informazione dal <strong>file system virtuale</strong> <code>/proc</code> di Linux. In particolar modo in <code>/proc/sysvipc/shm</code> sono contenute tutte le informazioni sulle shared memory.</p>
+<p>Sempre nella stessa cartella possiamo trovare informazioni anche per le altre IPC:</p>
+<ul>
+<li><strong>message queue</strong> → <code>/proc/sysvipc/msg</code>;</li>
+<li><strong>semafori</strong> → <code>/proc/sysvipc/sem</code>.</li>
+</ul>
+<p>Il comando <code>ipcrm</code> invece ci permette di marcare come eliminabile al kernel una struttura IPC dato il suo identificativo. Il comando è molto utile quando il programmatore non ha rimosso esplicitamente le strutture allocate.</p>
+<p>ESEMPIO: eliminiamo la shared memory avente file descriptor <code>133215</code></p>
+<pre><code class="language-bash">ipcrm -m 133215
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
 
-                            <a rel="next prefetch" href="IPC.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="Shared_memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -207,7 +329,7 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
 
-                    <a rel="next prefetch" href="IPC.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="Shared_memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
