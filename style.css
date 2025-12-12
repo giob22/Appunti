@@ -26,3 +26,115 @@
         color: green;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+h2 {
+            color: #c0caf5;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* --- STILE DELLA GRIGLIA STATISTICHE --- */
+        .github-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Stile comune per le card */
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #16161e; /* Leggermente più scuro dello sfondo per contrasto */
+            border: 1px solid #2f354b;
+            border-radius: 12px;
+            padding: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden; /* Per gestire immagini che sbordano */
+        }
+
+        /* Effetto hover carino per le card */
+        .grid-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: #7aa2f7; /* Un tocco di blu acceso all'hover */
+        }
+
+        /* Immagini responsive */
+        .grid-item img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            display: block;
+            border-radius: 6px;
+        }
+
+        /* --- CLASSI SPECIALI PER IL LAYOUT --- */
+        
+        /* Fa occupare al grafico tutta la larghezza su schermi grandi */
+        .grid-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Media query per schermi piccoli (mobile) */
+        @media (max-width: 600px) {
+            .github-stats-grid {
+                grid-template-columns: 1fr; /* Una colonna su mobile */
+            }
+        }
+
+        /* --- IL TUO CSS ESISTENTE --- */
+        /* Questo blocco è sicuro e non interferisce con la griglia sopra,
+           a meno che tu non applichi la classe .GitHover alle card stesse. */
+        
+        .GitHover:hover{
+            animation: GitHoverAnimation 1s linear infinite;
+        }
+
+        @keyframes GitHoverAnimation {
+            0% {
+                transform: rotateZ(0deg);
+                color: white;
+            }
+
+            25% {
+                transform: rotateZ(90deg);
+                color: blue;
+            }
+            50% {
+                transform: rotateZ(180deg);
+                color: pink;
+            }
+            75% {
+                transform: rotateZ(270deg);
+                color: yellow;
+            }
+            100% {
+                transform: rotateZ(360deg);
+                color: green;
+            }
+        }
