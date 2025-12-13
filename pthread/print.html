@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-109204fd.js";
+            window.path_to_searchindex_js = "searchindex-99e766cd.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ff725845.js"></script>
@@ -298,13 +298,6 @@ int main(){
   pthread_exit(NULL); // terminazione del thread padre
 }
 </code></pre>
-<p>output:</p>
-<pre><code class="language-bash">valore raggiunto dal counter → 200000
-</code></pre>
-<p>Nel caso togliessi il lock e l’unlock prima e dopo la modifica del buffer singolo otterrei un risultato del tipo:</p>
-<pre><code class="language-bash">valore raggiunto dal counter → 115111
-</code></pre>
-<p>Molto diverso rispetto a quello che mi sarei dovuto aspettare.</p>
 <p>Questo è un buon utilizzo di <code>pthread_exit()</code> da parte dei thread creati e dal thread master.</p>
 <p>Non possiamo dire la stessa cosa per il parametro passato che viene utilizzato come argomento nella <code>print_hello()</code>.<br>Infatti, tale parametro appartiene allo stack del thread padre, non è copiata per valore ma per riferimento, quindi nel momento in cui il padre la modifica cambia il valore anche nel contesto dei thread figli.</p>
 <p>L’output sul terminale:</p>
@@ -563,6 +556,13 @@ int main(){
   return 0;
 }
 </code></pre>
+<p>output:</p>
+<pre><code class="language-bash">valore raggiunto dal counter → 200000
+</code></pre>
+<p>Nel caso togliessi il lock e l’unlock prima e dopo la modifica del buffer singolo otterrei un risultato del tipo:</p>
+<pre><code class="language-bash">valore raggiunto dal counter → 115111
+</code></pre>
+<p>Molto diverso rispetto a quello che mi sarei dovuto aspettare.</p>
 <hr>
 <h3 id="condition-variables-cv"><a class="header" href="#condition-variables-cv">Condition Variables (CV)</a></h3>
 <p>La gestione della cooperazione e sincronizzazione tra thread avviene mediante <strong>condition variables (CV)</strong>.</p>
