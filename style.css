@@ -1,54 +1,4 @@
 
-.GitHover:hover{
-    animation: GitHoverAnimation 1s linear infinite;
-}
-
-@keyframes GitHoverAnimation {
-    0% {
-        transform: rotateZ(0deg);
-        color: white;
-    }
-
-    25% {
-        transform: rotateZ(90deg);
-        color: blue;
-    }
-    50% {
-        transform: rotateZ(180deg);
-        color: pink;
-    }
-    75% {
-        transform: rotateZ(270deg);
-        color: yellow;
-    }
-    100% {
-        transform: rotateZ(360deg);
-        color: green;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 h2 {
             color: #c0caf5;
             margin-bottom: 2rem;
@@ -111,30 +61,16 @@ h2 {
         /* Questo blocco è sicuro e non interferisce con la griglia sopra,
            a meno che tu non applichi la classe .GitHover alle card stesse. */
         
-        .GitHover:hover{
-            animation: GitHoverAnimation 1s linear infinite;
+        .GitHover{
+            display: flex;
+            padding: 2px;
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
         }
-
-        @keyframes GitHoverAnimation {
-            0% {
-                transform: rotateZ(0deg);
-                color: white;
-            }
-
-            25% {
-                transform: rotateZ(90deg);
-                color: blue;
-            }
-            50% {
-                transform: rotateZ(180deg);
-                color: pink;
-            }
-            75% {
-                transform: rotateZ(270deg);
-                color: yellow;
-            }
-            100% {
-                transform: rotateZ(360deg);
-                color: green;
-            }
+        .GitHover:hover{
+            transition: all 500ms;
+            transform: rotateZ(360deg);
+            color: black;
+            background-color: white;
         }
