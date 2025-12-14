@@ -63,10 +63,14 @@ h2 {
         
         .GitHover{
             display: flex;
-            padding: 2px;
+            padding: 18px;
             border-radius: 50%;
+            text-align: center;
             justify-content: center;
             align-items: center;
+            font-size: xx-large;
+            width: 25px;
+            height: 25px;
         }
         .GitHover:hover{
             transition: all 500ms;
