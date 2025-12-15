@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>SEMAPHOR - Gestione_della_sincronizzazione</title>
+        <title>SEMAPHOR - System V Gestione della sincronizzazione</title>
 
 
         <!-- Custom HTML head -->
@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ba7dfa57.js";
+            window.path_to_searchindex_js = "searchindex-aa0b34ad.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-db229f52.js"></script>
+        <script src="toc-c0609917.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -137,7 +137,7 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">Gestione_della_sincronizzazione</h1>
+                    <h1 class="menu-title">System V Gestione della sincronizzazione</h1>
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
@@ -218,12 +218,12 @@ typedef struct {
 <li>un produttore deve produrre se c’è spazio nel buffer;</li>
 <li>un consumatore deve consumare se c’è un prodotto nel buffer;</li>
 <li>i produttori devono accedere in modo esclusivo alle variabili di stato (<code>testa</code>);</li>
-<li>i consumatori devono accedere in modo esclusivo alle variabili di stato (<code>cosa</code>).</li>
+<li>i consumatori devono accedere in modo esclusivo alle variabili di stato (<code>coda</code>).</li>
 </ol>
 <pre><code class="language-c">#define SPAZIO_DISP 0
 #define MESS_DISP 1
-#define MUTEXC 2
-#define MUTEXP 3
+#define MUTEXP 2
+#define MUTEXC 3
 </code></pre>
 <p>Il semaforo dedicato ai produttori <code>SPAZIO_DISP</code> deve essere settato con valore iniziale pari al numero di buffer liberi, ovvero <code>DIM_BUFF</code>.</p>
 <p>Il semaforo dei consumatori <code>MESS_DISP</code> deve essere settato con valore iniziale pari a <code>0</code>, sempre perché non vogliamo che un consumatore acceda al buffer prima che non l’abbia fatto un produttore.</p>
@@ -372,10 +372,10 @@ fine_lettura(int semid, Buffer* buf){
 <li>per gestire l’accesso dei lettori alla variabile <code>num_lettori</code> in mutua esclusione;</li>
 <li>per gestire l’accesso degli scrittori alla variabile <code>num_scrittori</code> in mutua esclusione.</li>
 </ol>
-<pre><code class="language-c">#define MUTEX 0
-#define MUTEXS 1
+<pre><code class="language-c">#define SYNCH 0
+#define MUTEX 1
 #define MUTEXL 2
-#define SYNCH 3
+#define MUTEXS 3
 </code></pre>
 <p>Tutti questi semafori devono essere settati con valore inziale pari ad <code>1</code>.</p>
 <ul>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>MONITOR - System V Gestione della sincronizzazione</title>
+        <title>RENDEZ-VOUS - System V Gestione della sincronizzazione</title>
 
 
         <!-- Custom HTML head -->
@@ -175,482 +175,74 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <script src="../javascript.js"></script>
-<h1 id="monitor"><a class="header" href="#monitor">MONITOR</a></h1>
-<p>Prendiamo in considerazione due implementazioni del costrutto monitor:</p>
-<ul>
-<li><code>singal-and-wait</code> o <code>signal-and-wait-hoare</code></li>
-<li><code>signal-and-continue</code></li>
-</ul>
-<h2 id="prod_cons-single-buffer"><a class="header" href="#prod_cons-single-buffer">PROD_CONS SINGLE BUFFER</a></h2>
-<p>La struttura che utiliziamo per mantenere tutte le informazioni necessarire è del tipo</p>
-<pre><code class="language-c">#define VALIDO 1
-#define NON_VALIDO 0
-typedef struct {
-    int buffer;
-
-    int stato;
-
-    Monitor m;
-} buffer;
-</code></pre>
-<p>Utilizzare un monitor per il problema consumatori produttori nel caso di un buffer singolo richiede due <code>condition variables</code>.</p>
-<ol>
-<li>un produttore si deve sospendere se il buffer è pieno;</li>
-<li>un consumatore si deve sospendere se il buffer è vuoto.</li>
-</ol>
-<pre><code class="language-c">#define CV_PROD
-#define CV_CONS
-</code></pre>
-<ul>
-<li>
-<p>PRODUTTORE</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-if (pc-&gt;stato == VALIDO) wait_condition(&amp;(pc-&gt;m), CV_PROD);
-...// operazioni di produzione
-pc-&gt;stato = VALIDO;
-signal_condition(&amp;(pc-&gt;m), CV_CONS)
-leave_monitor(&amp;(pc-&gt;m));
-</code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-while (pc-&gt;stato == VALIDO) wait_condition(&amp;(pc-&gt;m), CV_PROD);
-...// operazioni di produzione
-pc-&gt;stato = VALIDO
-signal_condition(&amp;(pc-&gt;c), CV_CONS);
-leave_monitor(&amp;(pc-&gt;m));
-</code></pre>
-</li>
-</ul>
-</li>
-<li>
-<p>CONSUMATORE</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-if (pc-&gt;stato == NON_VALIDO) wait_condition(&amp;(pc-&gt;m), CV_CONS)
-...// operazioni di consumazione
-pc-&gt;stato = NON_VALIDO;
-signal_condition(&amp;(pc-&gt;m), CV_PROD);
-laeve_monitor(&amp;(pc-&gt;m));
-</code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-while (pc-&gt;stato == NON_VALIDO) wait_condition(&amp;(pc-&gt;m), CV_CONS)
-...// operazioni di consumazione
-pc-&gt;stato = NON_VALIDO;
-signal_condition(&amp;(pc-&gt;m), CV_PROD);
-laeve_monitor(&amp;(pc-&gt;m));
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="prod_cons-coda-circlare"><a class="header" href="#prod_cons-coda-circlare">PROD_CONS CODA CIRCLARE</a></h2>
-<p>Si utilizza una struttura che oltre a contenere informazioni riguardanti la risorsa condivisa, contiene anche delle variabili necessarie alla sincronizzazione:</p>
-<pre><code class="language-c">#define VARCOND_CONSUMATORI 0
-#define VARCOND_PRODUTTORI 1
-
-#define DIM N
+<h1 id="rendez-vous"><a class="header" href="#rendez-vous">RENDEZ-VOUS</a></h1>
+<p>Questo protocollo ci permette di implementare una send <strong>sincrona</strong> sfruttando la send asincrona e la receive bloccante fornite da System V UNIX.</p>
+<p>Il concetto è molto simile a quello che si utilizza per il protocollo TCP.</p>
+<pre><code class="language-c">#define OTS 100
+#define RTS 101
 
 typedef struct{
-  int buffer[DIM];
-
-  int testa, coda, dim;
-  Monitor m;
-} Buffer_c;
-</code></pre>
-<p>Il monitor deve contenere due condition variables:</p>
-<ol>
-<li>un produttore non può produrre se la coda è piena;</li>
-<li>un consumatore non può consumare se la coda è vuota.</li>
-</ol>
-<ul>
-<li>
-<p>PRODUTTORE</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">enter_monitor(&amp;(p-&gt;m));
-// condizione di sincronizzazione
-if (p-&gt;dim == DIM){
-  wait_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-}
-p-&gt;dim++;
-p-&gt;buffer[p-&gt;testa] = ...// valore
-p-&gt;testa = (p-&gt;testa + 1)%DIM
-signal_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI);
-leave_monitor(&amp;(p-&gt;m));
-</code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">enter_monitor(&amp;(p-&gt;m));
-// condizione di sincronizzazione
-while (p-&gt;dim == DIM){
-  wait_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-}
-p-&gt;dim++;
-p-&gt;buffer[p-&gt;testa] = ...// valore
-p-&gt;testa = (p-&gt;testa + 1)%DIM
-signal_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI);
-leave_monitor(&amp;(p-&gt;m));
-</code></pre>
-</li>
-</ul>
-</li>
-<li>
-<p>CONSUMATORE</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-if (p-&gt;dim == 0){
-  wait_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI);
-}
-p-&gt;dim--;
-p-&gt;buffer[p-&gt;coda] = ...// valore
-p-&gt;coda = (p-&gt;coda + 1)%DIM;
-signal_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-leave_monitr(&amp;(p-&gt;m));
-</code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-while (p-&gt;dim == 0){
-  wait_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI);
-}
-p-&gt;dim--;
-p-&gt;buffer[p-&gt;coda] = ...// valore
-p-&gt;coda = (p-&gt;coda + 1)%DIM;
-signal_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-leave_monitr(&amp;(p-&gt;m));
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="prod_cons-vettore-di-stato"><a class="header" href="#prod_cons-vettore-di-stato">PROD_CONS VETTORE DI STATO</a></h2>
-<p>Si utilizza una struttura che contiene le seguenti informazioni:</p>
-<pre><code class="language-c">#define DIM N
-
-#define PROD 0
-#define CONS 1
-
-#define LIBERO 0
-#define OCCUPATO 1
-#define IN_USO 2
-
+    long type;
+} ok_to_send;
 typedef struct{
-  int buffer[DIM];
-  int stato[DIM];
+    long type;
+} request_to_send;
+typedef struct{
+    long type;
+    ... // qualsiasi dato si voglia passare
+} Messaggio;
 
-  int num_liberi;
-  int num_occupati
-
-  Monitor m;
-}pool_buffer;
-</code></pre>
-<p>Il monitor dovrà essere inizializzato con due condition variales.</p>
-<ul>
-<li>
-<p>PRODUTTORE</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">enter_monitor(&amp;(p-&gt;m));
-// condizioni di sincronizzazione
-if (p-&gt;num_liberi == 0)
-  wait_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-int i = 0;
-while(i &lt; DIM &amp;&amp; p-&gt;stato[i] != LIBERO) i++;
-p-&gt;stato[i] = IN_USO;
-p-&gt;num_liberi--;
-leave_monitor(&amp;(p-&gt;m));
-...// operazioni di produzione
-enter_monitor(&amp;(p-&gt;m));
-p-&gt;num_occupati++:
-p-&gt;stato[i] = OCCUPATO;
-signal_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI);
-leave_monitor(&amp;(p-&gt;m));
-</code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">enter_monitor(&amp;(p-&gt;m));
-// condizioni di sincronizzazione
-while (p-&gt;num_liberi == 0)
-  wait_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-int i = 0;
-while(i &lt; DIM &amp;&amp; p-&gt;stato[i] != LIBERO) i++;
-p-&gt;stato[i] = IN_USO;
-p-&gt;num_liberi--;
-leave_monitor(&amp;(p-&gt;m));
-...// operazioni di produzione
-enter_monitor(&amp;(p-&gt;m));
-p-&gt;num_occupati++:
-p-&gt;stato[i] = OCCUPATO;
-signal_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI);
-leave_monitor(&amp;(p-&gt;m));
-</code></pre>
-</li>
-</ul>
-</li>
-<li>
-<p>CONSUMATORE</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-if (p-&gt;num_occupati == 0){ wait_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI); }
-int i = 0;
-while (i &lt; DIM &amp;&amp; p-&gt;stato[i] != OCCUPATO) i++;
-p-&gt;stato[i] = IN_USO;
-p-&gt;num_occupati--;
-leave_monitor(&amp;(p-&gt;m));
-...// operazioni di consumazione
-enter_monitor(&amp;(p-&gt;m));
-p-&gt;num_liberi++;
-p-&gt;stato[i] = LIBERO;
-signal_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-leave_monitor(&amp;(p-&gt;m));
-</code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">enter_monitor(&amp;(pc-&gt;m));
-// condizione di sincronizzazione
-while (p-&gt;num_occupati == 0){ wait_condition(&amp;(p-&gt;m), VARCOND_CONSUMATORI); }
-int i = 0;
-while (i &lt; DIM &amp;&amp; p-&gt;stato[i] != OCCUPATO) i++;
-p-&gt;stato[i] = IN_USO;
-p-&gt;num_occupati--;
-leave_monitor(&amp;(p-&gt;m));
-...// operazioni di consumazione
-enter_monitor(&amp;(p-&gt;m));
-p-&gt;num_liberi++;
-p-&gt;stato[i] = LIBERO;
-signal_condition(&amp;(p-&gt;m), VARCOND_PRODUTTORI);
-leave_monitor(&amp;(p-&gt;m));
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
-<!--
-## LETT_SCRITT STARVATION DEGLI SCRITTORI (!ERRATO!)
-
-Si utilizza una struttura dati di questo tipo:
-
-```c
-#define SYNCH 0 // gestire la cooperazione tra scrittori e lettori
-#define MUTEXL 1
-
-typedef struct {
-  int buffer;
-
-  int num_lettori;
-  int num_scrittori;
-
-  Monitor m;
-} buffer;
-```
-
-Il monitor in questo caso deve essere inizializzato con due condition variables:
-
-1) un lettore non può leggere se uno scrittore sta scrivendo;
-2) uno scrittore non più scrivere se più lettori stanno leggendo.
-
-Però è importante considerare che in questo caso il dato non è consumato, ciò significa che possono leggere contemporaneamente più processi lettori.
-
-- SCRITTORI
-  - signal-and-wait / hoare
-
-    ```c
-    inizio_scrittura(buffer* b){  
-      enter_monitor(&(b->m));
-      // condizione di sincronizzazione per gli scrittori
-      while (b->num_lettori > 0){
-        leave_monitor(&(b->m)); // esce dal monitor
-        enter_monitor(&(b->m)); // si mette nuovamente in attesa del monitor
-      }
-      b->num_scrittori++;
+send_sincrona(Messaggio*m, int queue){
+    ok_to_send ots;
+    request_to_send rts;
+    rts.type = RTS;
+    // invio richiesta di invio
+    if (msgsnd(queue, &amp;rts, sizeof(request_to_send) - sizeof(long), 0) &lt; 0){
+        perror("Errore");
+        exit(-1);
     }
-    ... // operazioni di scrittura
-    fine_scrittura(buffer* b){
-      b->num_scrittori--;
-      signal_condition(&(b->m), MUTEXL);
-      leave_monitor(&(b->m));
+    // attende l'ack
+    if (msgrcv(queue, &amp;ots, sizeof(ok_to_send) - sizeof(long), OTS, 0) &lt; 0){
+        perror("Errore");
+        exit(-1);
     }
-    ```
-  - signal-and-continue
-
-    ```c
-    inizio_scrittura(buffer* b){  
-      enter_monitor(&(b->m));
-      // condizione di sincronizzazione per gli scrittori
-      while (b->num_lettori > 0){
-        leave_monitor(&(b->m)); // esce dal monitor
-        enter_monitor(&(b->m)); // si mette nuovamente in attesa del monitor
-      }
-      b->num_scrittori++;
+    // invia il messaggio effettivo
+    if (msgsnd(queue, m, sizeof(Messaggio) - sizeof(long), 0) &lt; 0){
+        perror("Errore");
+        exit(-1);
     }
-    ... // operazioni di scrittura
-    fine_scrittura(buffer* b){
-      b->num_scrittori--;
-      signal_all(&(b->m), MUTEXL); // cambiamento inportante
-      leave_monitor(&(b->m));
+}
+receive_sincrona(Messaggio*m, int queue, int type_message){
+    ok_to_send ots;
+    request_to_send rts;
+    // attende l'ack
+    if (msgrcv(queue, &amp;rts, sizeof(request_to_send) - sizeof(long), RTS, 0) &lt; 0){
+        perror("Errore");
+        exit(-2);
     }
-    ```
--->
-<h2 id="lett_scritt-starvation-di-entrambi"><a class="header" href="#lett_scritt-starvation-di-entrambi">LETT_SCRITT STARVATION DI ENTRAMBI</a></h2>
-<p>Si utilizza una struttura contenente tali variabili</p>
-<pre><code class="language-c">#define CV_LETT 0
-#define CV_SCRITT 1
-
-typedef struct {
-
-  int buffer
-
-  int num_lettori;
-  int num_scrittori;
-
-  Monitor m;
-
-} Buffer;
-</code></pre>
-<p>Il monitor deve contenere due condition variables:</p>
-<ol>
-<li>un lettore può leggere se non sono ci sono scrittori a scrivere;</li>
-<li>uno scrittore non può scrivere se sono presenti scrittori o lettori stanno operando sulla risorsa condivisa.</li>
-</ol>
-<ul>
-<li>
-<p>SCRITTORI</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">inizio_scrittura(Buffer* b){  
-  enter_monitor(&amp;(b-&gt;m));
-  // condizione di sincronizzazione per gli scrittori
-  if (b-&gt;num_lettori &gt; 0 || b-&gt;num_scrittori &gt; 0){
-    wait_condition(&amp;(b-&gt;m), CV_SCRITT);
-  }
-  b-&gt;num_scrittori++;
-  leave_monitor(&amp;(b-&gt;m));
-}
-... // operazioni di scrittura
-fine_scrittura(Buffer* b){
-  b-&gt;num_scrittori--;
-  if (queue_condition(&amp;(b-&gt;m), CV_SCRITT) &gt; 0){
-    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
-  }else if (queue_condition(&amp;(b-&gt;m), CV_LETT) &gt; 0){
-    signal_condition(&amp;(b-&gt;m), CV_LETT);
-  }
-  leave_monitor(&amp;(b-&gt;m));
+    // invia il riscontro
+    ots.type = OTS;
+    if (msgsnd(queue, &amp;ots, sizeof(ok_to_send) - sizeof(long), 0) &lt; 0){
+        perror("Errore");
+        exit(-2);
+    }
+    // attende il messaggio effettivo
+    if (msgrcv(queue, m, sizeof(Messaggio) - sizeof(long), type_message, 0) &lt; 0){
+        perror("Errore");
+        exit(-2);
+    }
 }
 </code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">inizio_scrittura(Buffer* b){  
-  enter_monitor(&amp;(b-&gt;m));
-  // condizione di sincronizzazione per gli scrittori
-  while (b-&gt;num_lettori &gt; 0 || b-&gt;num_scrittori &gt; 0){
-    wait_condition(&amp;(b-&gt;m), CV_SCRITT);
-  }
-  b-&gt;num_scrittori++;
-  leave_monitor(&amp;(b-&gt;m));
-}
-... // operazioni di scrittura
-fine_scrittura(Buffer* b){
-  b-&gt;num_scrittori--;
-  if (queue_condition(&amp;(b-&gt;m), CV_SCRITT) &gt; 0){
-    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
-  }else if (queue_condition(&amp;(b-&gt;m), CV_LETT) &gt; 0){
-    signal_all(&amp;(b-&gt;m), CV_LETT);
-  }
-  leave_monitor(&amp;(b-&gt;m));
-}
-</code></pre>
-</li>
-</ul>
-</li>
-<li>
-<p>LETTORI</p>
-<ul>
-<li>
-<p>signal-and-wait / hoare</p>
-<pre><code class="language-c">inizio_lettura(Buffer* b){  
-  enter_monitor(&amp;(b-&gt;m));
-  // condizione di sincronizzazione per gli scrittori
-  if (b-&gt;num_scrittori &gt; 0){
-    wait_condition(&amp;(b-&gt;m), CV_LETT);
-  }
-  b-&gt;num_lettori++;
-  signal_condition(&amp;(b-&gt;m), CV_LETT);
-  leave_monitor(&amp;(b-&gt;m));
-}
-... // operazioni di lettura
-fine_lettura(Buffer* b){
-  b-&gt;num_lettori--;
-  if (b-&gt;num_lettori == 0){
-    // ultimo lettore
-    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
-  }
-  leave_monitor(&amp;(b-&gt;m));
-}
-</code></pre>
-</li>
-<li>
-<p>signal-and-continue</p>
-<pre><code class="language-c">inizio_lettura(Buffer* b){  
-  enter_monitor(&amp;(b-&gt;m));
-  // condizione di sincronizzazione per gli scrittori
-  while (b-&gt;num_lettori &gt; 0){
-    wait_condition(&amp;(b-&gt;m), CV_LETT);
-  }
-  b-&gt;num_lettori++;
-  leave_monitor(&amp;(b-&gt;m));
-}
-... // operazioni di lettura
-fine_lettura(Buffer* b){
-  b-&gt;num_lettori--;
-  if (b-&gt;num_lettori == 0){
-    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
-  }
-  leave_monitor(&amp;(b-&gt;m));
-}
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="g_synch_sem.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="g_synch_monitor.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="Rendez-vous.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="EXCL.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -660,11 +252,11 @@ fine_lettura(Buffer* b){
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="g_synch_sem.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="g_synch_monitor.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="Rendez-vous.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="EXCL.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Gestione_della_sincronizzazione</title>
+        <title>System V Gestione della sincronizzazione</title>
         <meta name="robots" content="noindex">
 
 
@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ba7dfa57.js";
+            window.path_to_searchindex_js = "searchindex-aa0b34ad.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-db229f52.js"></script>
+        <script src="toc-c0609917.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -138,7 +138,7 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">Gestione_della_sincronizzazione</h1>
+                    <h1 class="menu-title">System V Gestione della sincronizzazione</h1>
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
@@ -219,12 +219,12 @@ typedef struct {
 <li>un produttore deve produrre se c’è spazio nel buffer;</li>
 <li>un consumatore deve consumare se c’è un prodotto nel buffer;</li>
 <li>i produttori devono accedere in modo esclusivo alle variabili di stato (<code>testa</code>);</li>
-<li>i consumatori devono accedere in modo esclusivo alle variabili di stato (<code>cosa</code>).</li>
+<li>i consumatori devono accedere in modo esclusivo alle variabili di stato (<code>coda</code>).</li>
 </ol>
 <pre><code class="language-c">#define SPAZIO_DISP 0
 #define MESS_DISP 1
-#define MUTEXC 2
-#define MUTEXP 3
+#define MUTEXP 2
+#define MUTEXC 3
 </code></pre>
 <p>Il semaforo dedicato ai produttori <code>SPAZIO_DISP</code> deve essere settato con valore iniziale pari al numero di buffer liberi, ovvero <code>DIM_BUFF</code>.</p>
 <p>Il semaforo dei consumatori <code>MESS_DISP</code> deve essere settato con valore iniziale pari a <code>0</code>, sempre perché non vogliamo che un consumatore acceda al buffer prima che non l’abbia fatto un produttore.</p>
@@ -373,10 +373,10 @@ fine_lettura(int semid, Buffer* buf){
 <li>per gestire l’accesso dei lettori alla variabile <code>num_lettori</code> in mutua esclusione;</li>
 <li>per gestire l’accesso degli scrittori alla variabile <code>num_scrittori</code> in mutua esclusione.</li>
 </ol>
-<pre><code class="language-c">#define MUTEX 0
-#define MUTEXS 1
+<pre><code class="language-c">#define SYNCH 0
+#define MUTEX 1
 #define MUTEXL 2
-#define SYNCH 3
+#define MUTEXS 3
 </code></pre>
 <p>Tutti questi semafori devono essere settati con valore inziale pari ad <code>1</code>.</p>
 <ul>
@@ -888,6 +888,112 @@ fine_lettura(Buffer* b){
 </ul>
 </li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
+<h1 id="rendez-vous"><a class="header" href="#rendez-vous">RENDEZ-VOUS</a></h1>
+<p>Questo protocollo ci permette di implementare una send <strong>sincrona</strong> sfruttando la send asincrona e la receive bloccante fornite da System V UNIX.</p>
+<p>Il concetto è molto simile a quello che si utilizza per il protocollo TCP.</p>
+<pre><code class="language-c">#define OTS 100
+#define RTS 101
+
+typedef struct{
+    long type;
+} ok_to_send;
+typedef struct{
+    long type;
+} request_to_send;
+typedef struct{
+    long type;
+    ... // qualsiasi dato si voglia passare
+} Messaggio;
+
+send_sincrona(Messaggio*m, int queue){
+    ok_to_send ots;
+    request_to_send rts;
+    rts.type = RTS;
+    // invio richiesta di invio
+    if (msgsnd(queue, &amp;rts, sizeof(request_to_send) - sizeof(long), 0) &lt; 0){
+        perror("Errore");
+        exit(-1);
+    }
+    // attende l'ack
+    if (msgrcv(queue, &amp;ots, sizeof(ok_to_send) - sizeof(long), OTS, 0) &lt; 0){
+        perror("Errore");
+        exit(-1);
+    }
+    // invia il messaggio effettivo
+    if (msgsnd(queue, m, sizeof(Messaggio) - sizeof(long), 0) &lt; 0){
+        perror("Errore");
+        exit(-1);
+    }
+}
+receive_sincrona(Messaggio*m, int queue, int type_message){
+    ok_to_send ots;
+    request_to_send rts;
+    // attende l'ack
+    if (msgrcv(queue, &amp;rts, sizeof(request_to_send) - sizeof(long), RTS, 0) &lt; 0){
+        perror("Errore");
+        exit(-2);
+    }
+    // invia il riscontro
+    ots.type = OTS;
+    if (msgsnd(queue, &amp;ots, sizeof(ok_to_send) - sizeof(long), 0) &lt; 0){
+        perror("Errore");
+        exit(-2);
+    }
+    // attende il messaggio effettivo
+    if (msgrcv(queue, m, sizeof(Messaggio) - sizeof(long), type_message, 0) &lt; 0){
+        perror("Errore");
+        exit(-2);
+    }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
+<h1 id="utilizzo-di-excl"><a class="header" href="#utilizzo-di-excl">UTILIZZO DI EXCL</a></h1>
+<h2 id="caso-creazione-di-una-message-queue"><a class="header" href="#caso-creazione-di-una-message-queue">CASO CREAZIONE DI UNA MESSAGE QUEUE</a></h2>
+<p>Come verificare se una coda è stata già creata o meno. Per farlo abbiamo diverse alternative</p>
+<ul>
+<li>
+<pre><code class="language-c"> key_t key = ...;
+ int queue = msgget(key, IPC_CREAT | IPC_EXCL | 0664);
+ if (queue &lt; 0){
+     // oppure queue == -1
+     // errno = EEXIST se la coda già esiste
+     if (errno == EEXIST){
+         queue = msgget(key, 0);
+     }else{
+         // qualsiasi altro errore che ha portato in fallimento l'operazione
+         perror("errore");
+         exit(1);
+     }
+ }else{
+     // errore perché la message queue è stata appena creata
+     // errore se ci si aspetta che lo sia già
+     msgctl(queue, IPC_RMID, NULL);
+     perror("errore");
+     exit(1);
+ }
+ ... // codice
+</code></pre>
+</li>
+<li>
+<pre><code class="language-c">key_t key = ...;
+int queue = mssget(key, 0); // il kernel cerca un'associazione tra key e msqid_ds
+if (queue &lt; 0){
+    if (errno == ENOENT){ 
+        // ovvero ENOENT indica che non c'è corrispondeza tra chiave e descrittore di code di messaggi
+        perror("errore");
+        exit(1);
+    }else{
+        // caso di un qualsiasi altro errore differente
+        perror("errore");
+        exit(1);
+    }
+}
+... // codice
+</code></pre>
+</li>
+</ul>
+<p>Questo funzionamento vale, oltre per <code>msgget</code>, anche per le primitive <code>shmget</code> e <code>semget</code>.</p>
 
                     </main>
 
