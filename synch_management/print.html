@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-52846d49.js";
+            window.path_to_searchindex_js = "searchindex-ba7dfa57.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-db229f52.js"></script>
@@ -699,9 +699,13 @@ leave_monitor(&amp;(p-&gt;m));
 </ul>
 </li>
 </ul>
-<h2 id="lett_scritt-starvation-degli-scrittori-1"><a class="header" href="#lett_scritt-starvation-degli-scrittori-1">LETT_SCRITT STARVATION DEGLI SCRITTORI</a></h2>
-<p>Si utilizza una struttura dati di questo tipo:</p>
-<pre><code class="language-c">#define SYNCH 0 // gestire la cooperazione tra scrittori e lettori
+<!--
+## LETT_SCRITT STARVATION DEGLI SCRITTORI (!ERRATO!)
+
+Si utilizza una struttura dati di questo tipo:
+
+```c
+#define SYNCH 0 // gestire la cooperazione tra scrittori e lettori
 #define MUTEXL 1
 
 typedef struct {
@@ -712,51 +716,122 @@ typedef struct {
 
   Monitor m;
 } buffer;
+```
+
+Il monitor in questo caso deve essere inizializzato con due condition variables:
+
+1) un lettore non può leggere se uno scrittore sta scrivendo;
+2) uno scrittore non più scrivere se più lettori stanno leggendo.
+
+Però è importante considerare che in questo caso il dato non è consumato, ciò significa che possono leggere contemporaneamente più processi lettori.
+
+- SCRITTORI
+  - signal-and-wait / hoare
+
+    ```c
+    inizio_scrittura(buffer* b){  
+      enter_monitor(&(b->m));
+      // condizione di sincronizzazione per gli scrittori
+      while (b->num_lettori > 0){
+        leave_monitor(&(b->m)); // esce dal monitor
+        enter_monitor(&(b->m)); // si mette nuovamente in attesa del monitor
+      }
+      b->num_scrittori++;
+    }
+    ... // operazioni di scrittura
+    fine_scrittura(buffer* b){
+      b->num_scrittori--;
+      signal_condition(&(b->m), MUTEXL);
+      leave_monitor(&(b->m));
+    }
+    ```
+  - signal-and-continue
+
+    ```c
+    inizio_scrittura(buffer* b){  
+      enter_monitor(&(b->m));
+      // condizione di sincronizzazione per gli scrittori
+      while (b->num_lettori > 0){
+        leave_monitor(&(b->m)); // esce dal monitor
+        enter_monitor(&(b->m)); // si mette nuovamente in attesa del monitor
+      }
+      b->num_scrittori++;
+    }
+    ... // operazioni di scrittura
+    fine_scrittura(buffer* b){
+      b->num_scrittori--;
+      signal_all(&(b->m), MUTEXL); // cambiamento inportante
+      leave_monitor(&(b->m));
+    }
+    ```
+-->
+<h2 id="lett_scritt-starvation-di-entrambi-1"><a class="header" href="#lett_scritt-starvation-di-entrambi-1">LETT_SCRITT STARVATION DI ENTRAMBI</a></h2>
+<p>Si utilizza una struttura contenente tali variabili</p>
+<pre><code class="language-c">#define CV_LETT 0
+#define CV_SCRITT 1
+
+typedef struct {
+
+  int buffer
+
+  int num_lettori;
+  int num_scrittori;
+
+  Monitor m;
+
+} Buffer;
 </code></pre>
-<p>Il monitor in questo caso deve essere inizializzato con due condition variables:</p>
+<p>Il monitor deve contenere due condition variables:</p>
 <ol>
-<li>un lettore non può leggere se uno scrittore sta scrivendo;</li>
-<li>uno scrittore non più scrivere se più lettori stanno leggendo.</li>
+<li>un lettore può leggere se non sono ci sono scrittori a scrivere;</li>
+<li>uno scrittore non può scrivere se sono presenti scrittori o lettori stanno operando sulla risorsa condivisa.</li>
 </ol>
-<p>Però è importante considerare che in questo caso il dato non è consumato, ciò significa che possono leggere contemporaneamente più processi lettori.</p>
 <ul>
 <li>
 <p>SCRITTORI</p>
 <ul>
 <li>
 <p>signal-and-wait / hoare</p>
-<pre><code class="language-c">inizio_scrittura(buffer* b){  
+<pre><code class="language-c">inizio_scrittura(Buffer* b){  
   enter_monitor(&amp;(b-&gt;m));
   // condizione di sincronizzazione per gli scrittori
-  if (b-&gt;num_lettori &gt; 0){
-    leave_monitor(&amp;(b-&gt;m)); // esce dal monitor
-    enter_monitor(&amp;(b-&gt;m)); // si mette nuovamente in attesa del monitor
+  if (b-&gt;num_lettori &gt; 0 || b-&gt;num_scrittori &gt; 0){
+    wait_condition(&amp;(b-&gt;m), CV_SCRITT);
   }
   b-&gt;num_scrittori++;
+  leave_monitor(&amp;(b-&gt;m));
 }
 ... // operazioni di scrittura
-fine_scrittura(buffer* b){
+fine_scrittura(Buffer* b){
   b-&gt;num_scrittori--;
-  signal_condition(&amp;(b-&gt;m), MUTEXL);
+  if (queue_condition(&amp;(b-&gt;m), CV_SCRITT) &gt; 0){
+    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
+  }else if (queue_condition(&amp;(b-&gt;m), CV_LETT) &gt; 0){
+    signal_condition(&amp;(b-&gt;m), CV_LETT);
+  }
   leave_monitor(&amp;(b-&gt;m));
 }
 </code></pre>
 </li>
 <li>
 <p>signal-and-continue</p>
-<pre><code class="language-c">inizio_scrittura(buffer* b){  
+<pre><code class="language-c">inizio_scrittura(Buffer* b){  
   enter_monitor(&amp;(b-&gt;m));
   // condizione di sincronizzazione per gli scrittori
-  while (b-&gt;num_lettori &gt; 0){
-    leave_monitor(&amp;(b-&gt;m)); // esce dal monitor
-    enter_monitor(&amp;(b-&gt;m)); // si mette nuovamente in attesa del monitor
+  while (b-&gt;num_lettori &gt; 0 || b-&gt;num_scrittori &gt; 0){
+    wait_condition(&amp;(b-&gt;m), CV_SCRITT);
   }
   b-&gt;num_scrittori++;
+  leave_monitor(&amp;(b-&gt;m));
 }
 ... // operazioni di scrittura
-fine_scrittura(buffer* b){
+fine_scrittura(Buffer* b){
   b-&gt;num_scrittori--;
-  signal_all(&amp;(b-&gt;m), MUTEXL); // cambiamento inportante
+  if (queue_condition(&amp;(b-&gt;m), CV_SCRITT) &gt; 0){
+    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
+  }else if (queue_condition(&amp;(b-&gt;m), CV_LETT) &gt; 0){
+    signal_all(&amp;(b-&gt;m), CV_LETT);
+  }
   leave_monitor(&amp;(b-&gt;m));
 }
 </code></pre>
@@ -764,43 +839,48 @@ fine_scrittura(buffer* b){
 </ul>
 </li>
 <li>
-<p>LETTORE</p>
+<p>LETTORI</p>
 <ul>
 <li>
 <p>signal-and-wait / hoare</p>
-<pre><code class="language-c">inizio_lettura(buffer* b){
+<pre><code class="language-c">inizio_lettura(Buffer* b){  
   enter_monitor(&amp;(b-&gt;m));
-  // condizione di sincronizzazione
+  // condizione di sincronizzazione per gli scrittori
   if (b-&gt;num_scrittori &gt; 0){
-    wait_condition(&amp;(b-&gt;m), MUTEXL);
+    wait_condition(&amp;(b-&gt;m), CV_LETT);
   }
   b-&gt;num_lettori++;
-  signal_condition(&amp;(b-&gt;m), MUTEXL); // permette di risvegliare gli altri lettori, è da utilizzare perché lo scrittore non fa un signal_all essendo il monitor signal-and-wait
+  signal_condition(&amp;(b-&gt;m), CV_LETT);
   leave_monitor(&amp;(b-&gt;m));
 }
 ... // operazioni di lettura
-fine_lettura(buffer* b){
-  enter_monitor(&amp;(b-&gt;m));
+fine_lettura(Buffer* b){
   b-&gt;num_lettori--;
+  if (b-&gt;num_lettori == 0){
+    // ultimo lettore
+    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
+  }
   leave_monitor(&amp;(b-&gt;m));
 }
 </code></pre>
 </li>
 <li>
 <p>signal-and-continue</p>
-<pre><code class="language-c">inizio_lettura(buffer* b){
+<pre><code class="language-c">inizio_lettura(Buffer* b){  
   enter_monitor(&amp;(b-&gt;m));
-  // condizione di sincronizzazione
-  while (b-&gt;num_scrittori &gt; 0){
-    wait_condition(&amp;(b-&gt;m), MUTEXL);
+  // condizione di sincronizzazione per gli scrittori
+  while (b-&gt;num_lettori &gt; 0){
+    wait_condition(&amp;(b-&gt;m), CV_LETT);
   }
   b-&gt;num_lettori++;
   leave_monitor(&amp;(b-&gt;m));
 }
 ... // operazioni di lettura
-fine_lettura(buffer* b){
-  enter_monitor(&amp;(b-&gt;m));
+fine_lettura(Buffer* b){
   b-&gt;num_lettori--;
+  if (b-&gt;num_lettori == 0){
+    signal_condition(&amp;(b-&gt;m), CV_SCRITT);
+  }
   leave_monitor(&amp;(b-&gt;m));
 }
 </code></pre>
@@ -808,7 +888,6 @@ fine_lettura(buffer* b){
 </ul>
 </li>
 </ul>
-<h2 id="lett_scritt-starvation-di-entrambi-1"><a class="header" href="#lett_scritt-starvation-di-entrambi-1">LETT_SCRITT STARVATION DI ENTRAMBI</a></h2>
 
                     </main>
 
