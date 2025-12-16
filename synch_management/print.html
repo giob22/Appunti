@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-aa0b34ad.js";
+            window.path_to_searchindex_js = "searchindex-83f45588.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c0609917.js"></script>
@@ -271,7 +271,7 @@ typedef struct {
 <li>per gestire la mutua esclusione sul vettore di stato tra produttori per la <strong>ricerca del buffer libero</strong>;</li>
 <li>per gestire la mutua esclusione sul vettore di stato tra consumatori per la <strong>ricerca del buffer occupato</strong>.</li>
 </ol>
-<pre><code class="language-c">#define SPAZIO_DISP DIM_BUFFER
+<pre><code class="language-c">#define SPAZIO_DISP 0
 #define MESS_DISP 1
 #define MUTEXP 2
 #define MUTEXC 3
@@ -286,7 +286,7 @@ typedef struct {
 wait_sem(semid, MUTEXP);
 // trova il primo buffer non occupato
 int i = 0;
-while (p-&gt;stato[i] != LIBERO &amp;&amp; i &lt; DIM_BUFFER) i++;
+while (p-&gt;stato[i] != LIBERO &amp;&amp; i &lt; DIM_BUFF) i++;
 p-&gt;stato[i] = IN_USO;
 signal_sem(semid, MUTEXP);
 //opera sul buffer in posizione i del pool
