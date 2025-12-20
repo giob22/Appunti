@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Gestione della memoria in LINUX - Teoria</title>
+        <title>Virtualizzazione - Teoria</title>
 
 
         <!-- Custom HTML head -->
@@ -176,113 +176,182 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="gestione-della-memoria-in-linux"><a class="header" href="#gestione-della-memoria-in-linux">Gestione della memoria in Linux</a></h1>
-<p>Con l’uso di <code>top</code> possiamo avere info sull’utilizzo di memoria fisica utilizzata e la dimensione degli spazi di indirizzamento di ogni processo.</p>
-<p align="center"><img src="images/top.png" width="500"></p>
-
+                        <h1 id="virtualizzazione"><a class="header" href="#virtualizzazione">Virtualizzazione</a></h1>
+<p>Una macchian <strong>virtuale (VM)</strong> è una emulazione (mediante tecniche sw/hw) di una macchina reale.</p>
+<p>Ogni macchina virtuale esegue il proprio <strong>sistema operativo</strong> ed applicazioni.</p>
+<p>Le VM sono gestite da una <strong>virtual machine monitor (VMM)</strong>, o <strong>hypervisor</strong>. Più macchine virtuali condividono le risorse fisiche della macchina su cui eseguono.</p>
+<p>Su una stessa macchina reale possono coesistere diverse macchine virtuale attive che condividono le risorse di questa.</p>
+<h3 id="motivi-che-hanno-portato-allutilizzo-delle-vm"><a class="header" href="#motivi-che-hanno-portato-allutilizzo-delle-vm">Motivi che hanno portato all’utilizzo delle VM</a></h3>
 <ul>
+<li>Performance</li>
+<li>Flessibilità</li>
+<li>Affidabilità</li>
+<li>Sicurezza</li>
+</ul>
+<p>Per ottenere queste qualità sarebbe necessario isolare ogni applicazione in modo che una di queste vada in crash le altre non sarebbero influenzate.</p>
+<p>Senza VM, il problema sarebbe che per ottenere questo isolamento usando solo hardware fisico, bisognerebbe comprare una macchina fisica per ogni singolo servizio.</p>
+<p>Utilizzare tante macchine fisiche quanti sono i servizi oltre ad essere molto costoso è anche uno spreco di energia e spazio.</p>
+<p>Utilizzando invece diverse VM, una per ogni servizio da eseguire, possiamo ottenere la caratteristica di isolamento e inoltre si riducono enormemente gli spazi e il costo necessario.</p>
+<blockquote>
+<p>Questa operazione è detta <strong>consolidation</strong>, ovvero raggruppare più macchine virtuali su un unico server fisico per ottimizzare l’uso delle risorse.</p>
+</blockquote>
+<h3 id="gestione-di-sistemi-virtualizzati"><a class="header" href="#gestione-di-sistemi-virtualizzati">Gestione di sistemi virtualizzati</a></h3>
+<p>Le macchine virtuali possono essere velocemente create, configurate, monitorate, migrate…</p>
+<p>Attraverso strumenti software centralizzati.</p>
+<h3 id="efficienza"><a class="header" href="#efficienza">Efficienza</a></h3>
+<p>Avere più VM su una stessa macchina fisica (<strong>workload consolidation</strong>) permette di sfruttare appieno la capacità dell’hardware e di ridurre i consumi energetici.</p>
+<p align="center"><img src="images/efficienza_delle_VM.png" width="500"></p>
+
+<h3 id="flessibilità"><a class="header" href="#flessibilità">Flessibilità</a></h3>
+<p>Applicazioni <strong>legacy</strong>, basare su SO obsoleti e non più supportati, possono essere eseguite su macchine moderne.</p>
+<p>Quindi questo eviterebbe il problema di continuare ad utilizzare macchine legacy unicamente per la loro compatibilità con l’applicazione che è in esecuzione su esse.</p>
+<h3 id="virtualizzazione-e-cloud-computing"><a class="header" href="#virtualizzazione-e-cloud-computing">Virtualizzazione e cloud computing</a></h3>
+<p>Il <strong>cloud computing</strong> permette lo outsourcing (spostare) di VM in centri di calcolo privati o di terze parti (<strong>pat-per-use</strong>).</p>
+<p>Quindi invece di eseguire le macchine virtuali sui propri server in azienda, il Cloud Computing permette di spostare la loro esecuzione in centri di calcolo. → Non si paga più per l’hardware ma per l’utilizzo di risorse.</p>
+<p>Questo riduce il costo della manutenzione e gestione dei server fisici per le aziende.</p>
+<h3 id="affidabilità-e-sicurezza"><a class="header" href="#affidabilità-e-sicurezza">Affidabilità e sicurezza</a></h3>
+<p>Le macchine virtuali permettono di isolare meglio le applicazioni, questo mi garantisce affidabilità e sicurezza.</p>
+<ul>
+<li>Un’applicazione compromessa o difettosa opera solo sulla VM isolata, e non può interferire con le altre VM su cui sono eseguiti altri servizi.</li>
+<li>Il VMM è l’unico componente <strong>privilegiato</strong> che può gestire l’hardware fisico e le macchine virtuali.</li>
+</ul>
+<p align="center"><img src="images/safe_VM.png" width="300"></p>
+
+<h2 id="confronto-tra-vmm-e-so"><a class="header" href="#confronto-tra-vmm-e-so">Confronto tra VMM e SO</a></h2>
+<p>Il VMM, come il SO, fornisce una <strong>astrazione</strong> della macchina fisica su cui esegue</p>
+<p>Il SO è già di per se un virtualizzatore dell’hardware (di risorse):</p>
+<ul>
+<li>concetto di processo</li>
+<li>concetto di file e directory attraverso il FS</li>
+<li>concetto di memoria virtuale</li>
+<li>socket</li>
+<li>…</li>
+</ul>
+<p>“Container (Fine slide)”</p>
+<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è quello di emulare completamente l’intera architettura virtuale su un’architettura fisica del tutto diversa.</p>
+<p>Posso emulare un’architettura <code>arm</code> su una intel <code>x86</code> senza problemi, per il tipo di astrazione offerta da un VMM.</p>
+<p align="center"><img src="images/confronto_SO_VMM.png" width="500"></p>
+
+<h2 id="architetture-principali-di-una-hypervisor"><a class="header" href="#architetture-principali-di-una-hypervisor">Architetture principali di una hypervisor</a></h2>
+<ul>
+<li>TIPO 1</li>
+<li>TIPO 2</li>
+</ul>
+<ol>
 <li>
-<p><span style="color: #ff3131; background: #333;"><b>Memoria RAM e SWAP del sistema, il loro utilizzo e la quantità libera</b></span></p>
+<p>Il VMM esegue su un “hardware nudo” (<strong>bare-metal virtualizzation</strong> o <strong>server virtualizzation</strong>).</p>
+<p>In questa architettura, il software di virtualizzazione è il padrone dell’hardware assoluto.</p>
+<p>Questo tipo di hypervisor viene molto utilizzato nei data center.</p>
+<p>L’architettura di tipo 1 ha migliori prestazioni perché non c’è un ulteriore layer (livello di indirezione) che divide il VMM dall’hardware, a differenza di ciò che accade nell’architettura di tipo 2</p>
+<p align="center"><img src="images/architettura1.png" width="300"></p>
+
 </li>
 <li>
-<p><span style="color: #cb6ce6; background: #333;"><b>Spazio di indirizzamento utilizzato dal processo</b></span></p>
+<p>Il VMM esegue su un SO tradizionale (es. Windows), viene detta <strong>hosted hypervisor</strong>.</p>
+<p>Per comunicare con l’hardware il sistema operativo <strong>guest</strong> deve passare per l’hypervisor che a sua volta deve passare per il sistema operativo <strong>host</strong>.</p>
+<p>L’hypervisor è considerato per il SO host come un qualsiasi altro processo in esecuzione.</p>
+<p>Questo utilizzo facilita l’integrazione tra sistemi operativi, ad esempio, posso copiare file facilmente dal desktop dell’host dentro la macchina virtuale guest.</p>
+<p>Ha come svantaggio le performance perché ogni richiesta della VM deve attraversare due strati: l’Hypervisor e poi il sistema operativo host.</p>
+<p>Consiste nell’architettura che utilizziamo con VMware Workstation/Fusion, Oracle VM VirtualBox.</p>
 </li>
+</ol>
+<p>In generale un hypervisor deve garantire di virtualizzare:</p>
+<ul>
+<li>la CPU</li>
+<li>la memoria</li>
+<li>l’I/O</li>
+</ul>
+<h2 id="virtualizzazione-della-cpu"><a class="header" href="#virtualizzazione-della-cpu">Virtualizzazione della CPU</a></h2>
+<p>Le prime tecniche di virtualizzazione della CPU consistono nel far credere al kernel della macchina virtuale guest che il <strong>processore virtuale</strong> su cui opera <strong>sia fisico</strong>.</p>
+<p>L’hypervisor deve quindi implementare un mapping 1:1 tra il processore da emulare e quello fisico su cui effettivamente viene eseguito il kernel guest.</p>
+<p>Tutto quello che viene eseguito in kernel mode nel guest in realtà non è un vero e proprio kernel mode; in realtà è in user mode rispetto al sistema operativo host.</p>
+<p>Quindi se per il sistema operativo host la macchina virtuale non è altro che un semplice processo, deve essere l’hypervisot ad astrarre completamente un macchina fisica per il kernel guest.</p>
+<p>L’hypervisor deve quindi intercettare delle “istruzioni critiche” (<strong>sensitive instructions</strong>)</p>
+<p align="center"><img src="images/istruzioni_critiche.png" width="500"></p>
+
+<p>L’hypervisor deve intercettare le istruzioni critiche che necessitano di un grado di privilegio superiore che la VM non ha. C’è la necessità di emulare questa istruzione.</p>
+<h3 id="de-privileging"><a class="header" href="#de-privileging">De-privileging</a></h3>
+<p>Primo meccanismo che deve essere implementato all’interno degli hypervisor.</p>
+<p>Tale concetto consiste nel “degradare” o togliere i privilegi al SO ospite, spostandolo a un livello di esecuzione inferiore rispetto a quello a cui è abituato a girare, ovvero spostarlo in user mode.</p>
+<ul>
+<li>La VMM (hypervisor) gira nel vero <strong>kernel</strong> <strong>mode</strong>. È l’unico che ha il controllo diretto e privilegiato dell’hardware fisico</li>
+<li>Il guest SO viene spostato in <strong>user mode</strong> completamente. Quindi quanto il guest SO pensa di operare in kernel mode in realtà di trova ancora in user mode, e chiamiamo questo livello di privilegio <strong>virtual kernel mode</strong></li>
+</ul>
+<p>Ovvero:</p>
+<ul>
+<li>VMM → kernel mode</li>
+<li>VM → user mode, dentro cui:
+<ul>
+<li>→ guest SO è in virtual kernel mode</li>
+<li>→ i processi del guest SO sono in virtual user mode</li>
+</ul>
+</li>
+</ul>
+<p align="center"><img src="images/virtual_mode.png" width="500"></p>
+
+<p>Per permettere al guest SO di operare in kernel mode, un primo meccanismo che si può sfruttare è quello delle trap: nel momento in cui il guest esegue delle istruzioni privilegiate/critiche, allora la CPU virtuale genera una <strong>trap</strong>.</p>
+<p>Questo meccanismo è detto: <strong>TRAP-AND-EMULATE</strong>.</p>
+<p>Questa trap viene intercettata dall’hypervisor, elabora il tipo di istruzione che ha generato quella trap ed emula l’istruzione privilegiata associata.</p>
+<p>Tutte le istruzioni sensitive non possono eseguire direttamente, ma devono passare per l’hypervisor, e vengono a scatenare una trap → passa il controllo (de-privilegin) all’hypervisor che emula/simula l’effetto dell’istruzione.</p>
+<p align="center"><img src="images/intercettazione_trap.png" width="500"></p>
+
+<p>Nel caso di CPU intel questa cosa avviene in maniera diversa, perché in queste CPU esistono diversi livelli di privilegio, classificati in Ring.</p>
+<p>4 livelli di privilegio, dove Ring 3 ha il più basso livello di privilegio mentre in Ring 0 la VMM.</p>
+<p>Cosa accade quando il guest SO vuole eseguire una instruzione sensitive:</p>
+<p align="center"><img src="images/sensitive_inst_inte.png" width="400"></p>
+
+<ul>
+<li>L’applicazione che gira nella VM esegue una system call, questo causa una trap della CPU virtuale che viene gestita dalla VMM. La VMM saltà al guest host per far esegure l’interrupt handler e poi la ISR associata alla trap generata.</li>
+<li>L’interrupt hardware invece sono gestite dalla VMM che eseguono l’ISR e successivamente si salta all’esecuzione dell’ISR del guest SO.</li>
+<li>Invece le istruzioni privilegiate nel guest SO causano il generarsi di una trap che viene intercettata dalla VMM che la gestisce ed emula l’effetto desiderato dal guest SO.</li>
+</ul>
+<hr>
+<p>Poniamo in esempio che il guest SO voglia eseguire una <code>CLI</code>.</p>
+<p>Il VMM simula la <code>CLI</code> ponendo a <code>0</code> lo <em><strong>Interrupt Flag</strong></em> all’interno di una struttura dati dedicata alla VM.</p>
+<ul>
+<li>Lo <em>Interrupt Flag</em> nel <strong>registro fisico</strong> della CPU è inalterato</li>
+<li>Le interrupt fisiche sono ancora ricevute dallo VMM</li>
+</ul>
+<p>La VMM emula l’effetto della chiamata di sistema, infatti da quel momento in poi la VMM continuerà a ricevere delle interruzioni dalla CPU fisica, ma non le inoltra al guest SO.</p>
+<h3 id="problemi-con-larchitettura-x86"><a class="header" href="#problemi-con-larchitettura-x86">Problemi con l’architettura <code>x86</code></a></h3>
+<p>L’architettura <code>x86</code> tradizionale <strong>non è</strong> <strong>“virtualizzabile”</strong> con solo il trap-and-emulate.</p>
+<p>Il motivo è che molte delle istruzioni sensibili <strong>non generano alcuna trap</strong></p>
+<p>Quindi non è più sufficiente il meccanismo di trap-and-emulate.</p>
+<p>Se il guest tenta di eseguire una istruzione sensitive, la CPU <strong>ignora l’istruzione</strong>; tali istruzioni sono dette <strong>“sensibili ma non privilegiate”</strong>.</p>
+<p>Questo è stato risolto grazie ad un supporto hardware, cioè sono state introdotte delle istruzioni specifiche per la virtualizzazione.</p>
+<p>Ma prima di ciò non era possibile virtualizzare tale architettura.</p>
+<!-- @todo metti il teorema in un quadretto carino -->
+<ul>
 <li>
-<p><span style="color: #c1ff72; background: #333;"><b>Memoria “residente”, ovvero lo spazio occupato in RAM dal processo</b></span></p>
+<p>Teorema di Popek e Goldberg</p>
+<p>Una macchina può essere virtualizzata se ogni istruzione sensitive è privilegiata.</p>
+<p>Le istruzioni privilegiate sono quelle che scatenano una <em>trap</em> quando eseguite in user mode.</p>
+<p>Invece un’istruzione è definita sensitive quanto interagisce direttamente con la configurazione o lo stato dell’hardware sottostante.</p>
 </li>
-<li>
-<p><span style="color: #5ce1e6; background: #333;"><b>Pagine condivise dai processi (es. codice librerie)</b></span></p>
+</ul>
+<h3 id="tecniche-della-virtualizzazione-delle-cpu"><a class="header" href="#tecniche-della-virtualizzazione-delle-cpu">Tecniche della virtualizzazione delle CPU</a></h3>
+<ul>
+<li><strong>Full virtualizzation</strong>, senza supporto hardware</li>
+<li><strong>Para-virtualizzation</strong>
+<ul>
+<li>il guest SO è sviluppato appositamente per cooperare con il VMM</li>
+</ul>
+</li>
+<li><strong>Full virtualizzation</strong>, con <strong>supporto hardware</strong>
+<ul>
+<li>migliori prestazioni e VMM più semplice.</li>
+</ul>
 </li>
 </ul>
-<p>Linux utilizza una gestione della memoria del tipo <strong>paginata</strong> e <strong>segmentata</strong>.</p>
-<ul>
-<li>Paginazione: la memoria è suddivisa in piccole unità chiamate <em>pagine</em> che possono essere mappate in memoria fisica.</li>
-<li>Segmentazione: è una tecnica più vecchia, ma non più utilizzata in modo prevalente nelle versioni moderne, ma offre diversi vantaggi rispetto la paginazione che si intendono sfruttare.</li>
-</ul>
-<p>Una delle caratteristiche di Linux è la sua <strong>portabilità</strong>, ossia capacità di girare su più architetture diverse. Tale gestione della memoria infatti è fatta per essere compatibile con diverse piattaforme hardware, rendendo il sistema operativo glessibile e adattabile a veri tipi di dispositivi</p>
-<p>Infatti tale gestione della memoria è supportata anche per sistemi con grandi quantità di memoria (NUMA) e multi-processore (SMP).</p>
-<p>Linux sfrutta la paginazione gerarchica per mantenere le tabelle delle pagine. Questa gerarchia solitamente è su 4 livelli, infatti ogni indirizzo virtuale (o lineare) è suddiviso logicamente in campi ognuno dei quali identificano un offset per la tabella della pagine di un livello.</p>
-<p>ESEMPIO DI TRADUZIONE DI UN INDIRIZZO VIRTUALE:</p>
-<p align="center"><img src="images/paginazione_gerarchica.png" width="500"></p>
-
-<p>Ogni pagina ha una dimensione fissata che può esser modificata all’atto della compilazione del kernel.</p>
-<p>Tipicamente, le due dimensioni possibili in <code>x86</code> sono <code>4KB</code> e <code>4MB</code>. Per Linux di default ogni pagina ha una dimensione di <code>4KB</code>.</p>
-<p>Per riferirci alla prima tabella delle pagine che si trova al livello più basso sfruttiamo l’indirizzo virtuale mantenuto all’interno del <em>controll register</em>, che per <code>x86</code> è il register 3.</p>
-<p>Questo registro viene popolato all’atto del <strong>contex switch</strong>, ogni processo ha associata la propria gerarchia di tabelle di pagine. Essendo una caratteristica direttamente legata al processo, tale indirizzo è contenuto all’interno del descrittore, che in Linux è chiamato <code>task_struct</code>.</p>
-<h2 id="spazio-di-indirizzamento-virtuale"><a class="header" href="#spazio-di-indirizzamento-virtuale">Spazio di indirizzamento virtuale</a></h2>
-<p>Le nuove versioni di Linux <strong>non si avvalgono del processore per la segmentazione</strong>, ovvero non utilizzano il <strong>meccanismo di segmentazione</strong> fisico implementato dentro la <strong>MMU</strong>.</p>
-<p>Per motivi di:</p>
-<ul>
-<li>portabilità</li>
-<li>efficienza del contex switch e traduzione degli indirizzi</li>
-</ul>
-<p align="center"><img src="images/segmentazione_paginata_1.png" width="500"></p>
-
-<!-- @todo capisci perché non è portabile -->
-<p>Viene quindi utilizzata una paginzazione segmentata in cui la segmentazione è implementata via software. In modo da sfruttare i vantaggi di questa.</p>
-<p>La memoria è organizzata in <strong>Virtual Memory Areas</strong> (<em><strong>VMA</strong></em>) che consiste nell’unità di virtualizzazione della memoria.</p>
-<p>Ogni VMA rappresenta un <strong>blocco contiguo</strong> di <strong>memoria</strong> <strong>virtuale</strong> e corrisponde ad un segmento.</p>
-<p>Quindi possiamo avere VMA, <strong>ovvero pagine virtuali contigue</strong>, contenenti codice, stack, librerie, … .</p>
-<p>Ogni VMA è <strong>tipizzata</strong> per il <strong>contenuto</strong>, come avviene per i segmenti. Inoltre per ognuna possiamo gestire i permessi, per tipologia di pagina.</p>
-<p>Quindi possiamo avere una <strong>maggiore granularità</strong> per gestire l’accesso ai blocchi contigue rispetto alla paginazione in cui la granularità era più fine.</p>
-<p>Ciò mi permette di proteggere e condividere porzioni dello spazio di indirizzamento in base al suo contenuto.</p>
-<h2 id="struttura-di-una-vma"><a class="header" href="#struttura-di-una-vma">Struttura di una VMA</a></h2>
-<p>Una VMA è gestida dal kernel mediante una struttura dati che contiene tutte le informazioni necessarie. Il puntatore a tale struttura è contenuto all’interno del descrittore del processo.</p>
-<p align="center"><img src="images/mm_struct.png" width="500"></p>
-
-<ul>
-<li><code>mm_struct</code> è la struttura del kernel di Linux che rappresenta la <strong>gestione della memoria virtuale di un processo</strong>.</li>
-<li>Ogni <code>vm_area_struct</code> rappresenta una Virtual Memory Area. Ognuna ha un insieme di permessi e la posizione nello spazio di memoria virtuale.</li>
-<li>Ogni <code>vm_area_struct</code> è associata ad un blocco contiguo di memoria .contenente dati di una specifica categoria.</li>
-<li>Inoltre ogni struttura per le VMA punta alla successiva.</li>
-</ul>
-<p>Le pagine <code>anonymous</code> sono quelle che non sono associate a nessun file esterno, ovvero in memoria di massa. Quindi all’atto della terminazione del processo, il contenuto di tali aree viene perso.</p>
-<p>Invece le pagine abbinate ad un file sul disco sono dette <code>memory-mapped</code></p>
-<p align="center"><img src="images/mm_struct_1.png" width="500"></p>
-
-<ul>
-<li><code>vm_file</code> si riferisce al file presente in memoria di massa, quindi non è contenuto nelle VMA anonime.</li>
-<li>All’interno della <code>mm_struct</code>, che rappresenta l’intera memoria virtuale, è presente anche il puntatore alla <strong>page table</strong> che il processo in questione: <code>gpd</code>.</li>
-</ul>
-<p>ESEMPIO DI SPAZIO VIRTUALE DI UN PROCESSO IN LINUX</p>
-<p align="center"><img src="images/Spazio_virtuale_VMA.png" width="400"></p>
-
-<ul>
-<li>Ogni VMA ha un range e una tipologia che identifica il contenuto.</li>
-<li>Gli indirizzi che vengono utilizzati sono indirizzi lineari o virtuali.</li>
-<li>C’è sempre la presenza, per ogni memoria virtuale di un processo, una <strong>porzione riservata al kernel</strong>.</li>
-</ul>
-<p>Possiamo visualizzare la disposizione delle VMA all’interno della memoria virtuale utilizzando le informazioni contenute all’interno dello pseudo-filesystem <code>proc</code>.</p>
-<p>Utilizzando infatti <code>cat /proc/&lt;PID&gt;/maps</code> otteniamo una cosa del genere:</p>
-<p align="center"><img src="images/maps_slide.png" width="500"></p>
-
-<ul>
-<li>In questo caso non sono presenti VMA condivise tra processi.</li>
-<li>Tutti gli indirizzi presenti sono sempre virtuali.</li>
-</ul>
-<p>Con VMA condivise tra processi:</p>
-<p align="center"><img src="images/maps.png" width="600"></p>
-
-<p>Vediamo come possono essere mappate tali pagine virtuali in pagine fisiche in memoria fisica:</p>
-<p align="center"><img src="images/pagine_fisiche_e_disco.png" width="500"></p>
-
-<p>Come possiamo vedere le pagine virtuali della VMA <code>/bin/cat</code> nella memoria fisica non sono allocate in maniera contigua.</p>
-<p>Inoltre tali pagine sono <code>memory-mapped</code>, quindi è presente una loro copia in memoria di massa.</p>
-<p>Lo stesso non si può dire per le pagine fisiche che corrispondono allo <strong>heap</strong> del processo.</p>
-<!-- @todo continua... slide 149 -->
-<p>// TODO: continua.</p>
-
+<!-- mancano 13 minuti alla registrazione dell'ultima lezione! -->
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="gestione_della_memoria.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="memoria_linux.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="virtualizzazione.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -290,13 +359,10 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="gestione_della_memoria.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="memoria_linux.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="virtualizzazione.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                    </a>
             </nav>
 
         </div>
