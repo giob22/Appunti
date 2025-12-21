@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ba3144c7.js";
+            window.path_to_searchindex_js = "searchindex-349ff665.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d4551cd1.js"></script>
@@ -331,19 +331,58 @@
 </ul>
 <h3 id="tecniche-della-virtualizzazione-delle-cpu"><a class="header" href="#tecniche-della-virtualizzazione-delle-cpu">Tecniche della virtualizzazione delle CPU</a></h3>
 <ul>
-<li><strong>Full virtualizzation</strong>, senza supporto hardware</li>
-<li><strong>Para-virtualizzation</strong>
-<ul>
-<li>il guest SO è sviluppato appositamente per cooperare con il VMM</li>
-</ul>
+<li>
+<p><strong>Full virtualizzation</strong>, senza supporto hardware</p>
+<p>Utilizza tecniche software complesse come la <strong>Dynamic Binary Traslation</strong>. Il VMM legge il binario del Guest SO e lo “riscrive” al volo per renderlo sicuro, senza che il guest SO se ne accorga.</p>
 </li>
-<li><strong>Full virtualizzation</strong>, con <strong>supporto hardware</strong>
-<ul>
-<li>migliori prestazioni e VMM più semplice.</li>
-</ul>
+<li>
+<p><strong>Para-virtualizzation</strong></p>
+<p>il guest SO è sviluppato appositamente per cooperare con il VMM.</p>
+<p>Si abbandona l’idea di ingannare il guest SO, è consapevole di essere su una macchina virtuale. Il SO ospite viene riscritto per essere consapevole di girare su una macchina virtuale, quindi invece di provare ad esegure istruzioni hardware direttamente si interfaccia con la VMM (cooperazione).</p>
+</li>
+<li>
+<p><strong>Full virtualizzation</strong>, con <strong>supporto hardware</strong></p>
+<p>migliori prestazioni e VMM più semplice.</p>
+<p>La CPU stessa ha nuove modalità che permettono al VMM di intercettare le operazioni critiche senza dover riscrivere il codice software.</p>
 </li>
 </ul>
-<!-- mancano 13 minuti alla registrazione dell'ultima lezione!!!!!!!!!!! -->
+<hr>
+<p>ESEMPIO: confronto tra <strong>para-virtualizzation</strong> e <strong>full</strong> <strong>virtualizzation</strong></p>
+<p>Il problema da risolvere è lo stesso: il guest SO vuole leggere un registro critico, quello contenente l’indirizzo della <strong>Interrupt Descriptor table</strong>.</p>
+<p>Queste due soluzioni ci permettono di farlo ma con approcci differenti:</p>
+<ul>
+<li>
+<p><strong>Dynamic</strong> <strong>Binary</strong> <strong>Traslation</strong></p>
+<p>Agisce sul <strong>codice binario</strong>.</p>
+<p>Il sorgente del sistema operativo non viene toccato, quindi si può utilizzare un qualsiasi sistema operativo, anche Windows.</p>
+<p>Il VMM analizza il flusso di istruzioni mentre vengono eseguite, intercettando quelle sensitive.</p>
+<p>Infatti quando vede <code>mov val, idtr</code>, la intercetta e la sostituisce dinamicamente con una chiamata alla sua funzione che emula l’effetto di quella istruzione.</p>
+</li>
+<li>
+<p><strong>Hypercall</strong></p>
+<p>Si agisce sul <strong>codice sorgente</strong>. Gli sviluppatori del sistema operativo modificano il codice: cancellando istruzioni problematiche e inserendo una chiamata esplicita alla VMM, chiamata <strong>Hypercall</strong>.</p>
+<p>È una soluzione molto efficiente, ma richiede di poter modificare il codice sorgente del SO e ricompilarlo. (impossibile con Windows)</p>
+</li>
+</ul>
+<p>Quindi consideriamo di trovarci in questa situazione:</p>
+<p align="center"><img src="images/full-para-virtual.png" width="400"></p>
+
+<ul>
+<li>Codice sorgente</li>
+<li>Codice binario che viene eseguito</li>
+<li>fuznione del VMM che emula il comportamento dell’istruzione in esame</li>
+</ul>
+<p>Per l’approccio che utilizza la para-virtualizzation il sorgente deve essere modificato per poter girare su una VM. La modifica consiste nella chiamata alla funzione dal VMM che emula quel comportamento, ovvero <code>emulate_store_idt()</code> (Hypercall).</p>
+<p>Per l’approccio che utilizza la full virtualizzation il sorgente resta invariato, ma a tempo di esecuzione il VMM intercetta le istruzioni sensitive e le sostituisce dinamicamente con una chiamata alla funzione che emula quel comportamento, sempre <code>emulate_store_idt()</code> (Dynamic Binary Traslation).</p>
+<p align="center"><img src="images/risoluzione_DBT_e_HYPERCALL.png" width="470"></p>
+
+<h4 id="full-virtualizzation-no-supporto-hw"><a class="header" href="#full-virtualizzation-no-supporto-hw">Full virtualizzation, no supporto hw</a></h4>
+<p>Nel caso di una CPU fisica che non supporta la virtualizzazione, in cui non tutte le istruzioni sensitive generano una trap, l’hypervisot di <strong>VMware</strong> introdusse tecniche efficienti di full-virtualizzation per Intel <code>x86</code>.</p>
+<p>Queste tecniche sono ad esempio la Dynamic Binary Traslation.</p>
+<p>Il codice binario del guest veniva riscitto dinamicamente dall’hypervisor prima di essere eseguito: sostituendo le istruzioni sensibili con un codice di emulazione</p>
+<p>Comprendo il gap della non virtualizzabilità di <code>x86</code>.</p>
+<p>Oggi con il supporto hardware VMware si è adattata perché è molto più performante.</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
