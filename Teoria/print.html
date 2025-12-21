@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-02afd33a.js";
+            window.path_to_searchindex_js = "searchindex-2aafd454.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d4551cd1.js"></script>
@@ -1827,6 +1827,110 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Vediamo cosa come accade tutto ciò:</p>
 <p align="center"><img src="images/DBT_1.png" width="300"></p>
 
+<ul>
+<li>Codice grezzo che non è stato ancora tradotto dal VMM</li>
+</ul>
+<p align="center"><img src="images/DBT_2.png" width="400"></p>
+
+<ul>
+<li>Il VMM legge il basic block e lo modifica</li>
+</ul>
+<p align="center"><img src="images/DBT_3.png" width="400"></p>
+
+<ul>
+<li>Dopo la modifica nel basic block viene sostituita l’istruzione sensitive e viene modificato il salto finale per poter permettere al VMM di analizzare il basic block successivo</li>
+</ul>
+<p align="center"><img src="images/DBT_4.png" width="400"></p>
+
+<ul>
+<li>Il controllo viene ripristinato al guest SO così che possa eseguire il codice tradotto e sicuro</li>
+<li>Una volta terminata l’esecuzione del blocco l’istruzione di salto riporta il controllo al VMM per continuare con il meccanismo di Dynamic Binary Translation</li>
+</ul>
+<h4 id="para-virtualizzazione"><a class="header" href="#para-virtualizzazione">Para-virtualizzazione</a></h4>
+<p>Con questo approccio c’è la necessità di riscrivere il codice sorgente del guest SO in modo che questo cooperi con il VMM.</p>
+<p>Il guest SO è conscio del fatto di esser eseguito su di una macchina virtuale (VM).</p>
+<ul>
+<li>Le istruzioni sensitive nel guest SO sono sostituite da <strong>hypercalls</strong> che fanno riferimento a funzioni del VMM che emulano il comportamento delle istruzioni originarie.</li>
+</ul>
+<blockquote>
+<p>A differenza della full virtualizzation, si modifica il <strong>codice</strong> <strong>sorgente</strong> <strong>del</strong> <strong>guest</strong> <strong>SO</strong>, non il codice binario.</p>
+<p>La modifica è fatta dal <strong>programmatore</strong> e non dal VMM, quindi i sistemi che possono girare su Hypervisor, che sfruttano questa tecnica di virtualizzazione della CPU, devono essere costruiti ad hoc.</p>
+</blockquote>
+<p align="center"><img src="images/para_virt.png" width="500"></p>
+
+<p>Il guest SO così modificato <strong>non può eseguire sull’hardware fisico</strong>: può eseguire solo in combinazione con il <strong>VMM</strong>.</p>
+<p>Inoltre questo approccio non è utilizzabile per sistemi <strong>legacy</strong> oppure <strong>proprietari</strong>, come Windows.</p>
+<h4 id="supporto-hardware-per-la-full-virtualizzation-della-cpu"><a class="header" href="#supporto-hardware-per-la-full-virtualizzation-della-cpu">Supporto hardware per la full-virtualizzation della CPU</a></h4>
+<p>Le CPU Intel VT introducono:</p>
+<ul>
+<li>due modalità di esecuzione: <strong>VMX root</strong> e <strong>VMX non-root</strong>;</li>
+<li><strong>VMCS</strong> (VM Control Structure).</li>
+</ul>
+<p>Queste soluzioni sono implementate nell’hardware per evitare tutto l’overhead dovuto alla traduzione dinamica del codice binario e per permettere a qualsiasi guest SO di poter eseguire su una VM.</p>
+<p>Hanno come vantaggio:</p>
+<ul>
+<li>semplificano il codice del VMM, buona parte della virtualizzazione è fatta in hardware;</li>
+<li>evita il <strong>ring de-privileging</strong> del guest SO;</li>
+<li>maggiore <strong>efficienza del cambio di contesto</strong> tra VM e VMM;</li>
+<li>garantisce il meccanismo di trap per tutte le istruzioni critiche</li>
+</ul>
+<p>Quindi le principali novità sono:</p>
+<ul>
+<li>
+<p>Modalità di esecuzione (VMX)</p>
+<ul>
+<li><strong>VMX Root Mode</strong>: dove gira il VMM. Qui il software ha pieno controllo dell’hardware, esattamente come il kernel di un sistema operativo tradizionale.</li>
+<li><strong>VMX Non-Root Mode</strong>: dove gira il Guest SO. In questa modalità, il sistema operativo ospite può girare al suo livello di privilegio “naturale” senza dover essere de-privilegiato. Quindi viene eseguito con il massimo dei privilegi ma in VMX non-root mode.</li>
+</ul>
+</li>
+<li>
+<p>Passaggio tra Root mode de Non-Root mode</p>
+<p>Il passaggio tra queste due modalità è gestito direttamente dall’hardware tramite eventi specifici:</p>
+<ul>
+<li>
+<p><strong>VM Entry</strong>: il passaggio dal VMM al Guest SO. Avviene quando il VMM lancia o riprende l’esecuzione di una VM.</p>
+</li>
+<li>
+<p><strong>VM Exit</strong>: il passaggio inverso, dal Guest SO al VMM. Avviene automaticamente quando il Guest SO tenta di eseguire un’istruzione sensitive (Perché nonostante ha tutti i privilegi, si trova in VMX Non-Root mode).</p>
+<p>L’hardware intercetta l’istruzione e restituisce il controllo al VMM affichè possa gestirla.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>VMCS (Virtual Machiene Control structure)</strong></p>
+<p>Per gestire questi passaggi in modo efficiente, intel ha introdotto una struttura dati hardware chiamata <strong>VMCS</strong>. La VMCS agisce coem una “scheda cliente” per ogni VM e contiene:</p>
+<ul>
+<li><strong>Guest state</strong>: lo stato della CPU quando gira la VM. Viene caricato durante la <em>VM Entry</em> e salvato durante la <em>VM Exit</em>.</li>
+<li><strong>Host state</strong>: lo stato della CPU quando gira il VMM. Viene caricato durante la <em>VM Exit</em>.</li>
+<li><strong>Control Data</strong>: istruzioni per la CPU fisica su quali eventi devono causare un <em>VM Exit</em></li>
+</ul>
+</li>
+</ul>
+<p>Eventi che possono causare <strong>VM Exit</strong>:</p>
+<ul>
+<li><strong>Istruzioni sensitive</strong>
+<ul>
+<li>CPUID</li>
+<li>RDMSR. WRMSR</li>
+<li>INVLPG</li>
+<li>RDPMC, RDTSC</li>
+<li>HTL, MWAIT, PAUSE</li>
+<li>VMCALL: nuova istruzione per invocare il VMM</li>
+</ul>
+</li>
+<li><strong>Accessi a stato sensitive</strong>
+<ul>
+<li>MOV DRx: accessi ai debug register</li>
+<li>MOV CRx: accessi ai control register</li>
+<li>Task switch: accessi al CR3 (puntatore alla tabella delle pagine)</li>
+</ul>
+</li>
+<li><strong>Eccezioni ed eventi asincroni</strong>
+<ul>
+<li>Page fault, debug exceptions, interrupts, etc.</li>
+</ul>
+</li>
+</ul>
 
                     </main>
 
