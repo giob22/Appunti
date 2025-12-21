@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-349ff665.js";
+            window.path_to_searchindex_js = "searchindex-02afd33a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d4551cd1.js"></script>
@@ -373,15 +373,41 @@
 <li>fuznione del VMM che emula il comportamento dell’istruzione in esame</li>
 </ul>
 <p>Per l’approccio che utilizza la para-virtualizzation il sorgente deve essere modificato per poter girare su una VM. La modifica consiste nella chiamata alla funzione dal VMM che emula quel comportamento, ovvero <code>emulate_store_idt()</code> (Hypercall).</p>
-<p>Per l’approccio che utilizza la full virtualizzation il sorgente resta invariato, ma a tempo di esecuzione il VMM intercetta le istruzioni sensitive e le sostituisce dinamicamente con una chiamata alla funzione che emula quel comportamento, sempre <code>emulate_store_idt()</code> (Dynamic Binary Traslation).</p>
+<p>Per l’approccio che utilizza la full virtualizzation il sorgente rimane invariato. e a tempo di esecuzione abbiamo due principali tecniche che dipendono dalla presenza o meno del supporto hardware.</p>
+<ul>
+<li>Meccanismo software (Dynamic Binary Traslation): la VMM sostituisce dinamicamente le istruzioni. Il VMM legge il <strong>codice binario</strong> prima che venga eseguito, individue le istruzioni critiche e le riscrive sostituendole con il codice di emulazione → <code>emulate_store_idt()</code>.</li>
+<li>Meccanismo hardware (Intel VT-x / Trap-and-Emulate): in questo caso il codice binario in memoria non viene necessariamente sostituito/riscritto. È la CPU fisica che, quando incontra l’istruzione critica mentre gira la VM (in <em>non-root mode</em>), ferma tutto e genera un evento hardware (<strong>VMExit</strong>). Il controllo passa al VMM che esegue l’emulazione e poi restituisce il controllo.</li>
+</ul>
 <p align="center"><img src="images/risoluzione_DBT_e_HYPERCALL.png" width="470"></p>
 
 <h4 id="full-virtualizzation-no-supporto-hw"><a class="header" href="#full-virtualizzation-no-supporto-hw">Full virtualizzation, no supporto hw</a></h4>
 <p>Nel caso di una CPU fisica che non supporta la virtualizzazione, in cui non tutte le istruzioni sensitive generano una trap, l’hypervisot di <strong>VMware</strong> introdusse tecniche efficienti di full-virtualizzation per Intel <code>x86</code>.</p>
-<p>Queste tecniche sono ad esempio la Dynamic Binary Traslation.</p>
+<p>Queste tecniche sono ad esempio la <strong>Dynamic Binary Traslation</strong>.</p>
 <p>Il codice binario del guest veniva riscitto dinamicamente dall’hypervisor prima di essere eseguito: sostituendo le istruzioni sensibili con un codice di emulazione</p>
-<p>Comprendo il gap della non virtualizzabilità di <code>x86</code>.</p>
+<p>Coprendo il gap della non virtualizzabilità di <code>x86</code>.</p>
 <p>Oggi con il supporto hardware VMware si è adattata perché è molto più performante.</p>
+<h4 id="dynamic-binary-traslation"><a class="header" href="#dynamic-binary-traslation">Dynamic Binary Traslation</a></h4>
+<p>All’avvio della VM, il VMM analizza a blocchi il codice eseguito dal guest SO.</p>
+<p>Ogni blocco, detto <strong>Basic Block</strong> è una breve <strong>sequenza di istruzioni sequenziali</strong> che terminano con una <strong>istruzione di salto</strong>.</p>
+<p align="center"><img src="images/basic_block.png" width="180"></p>
+
+<p>L’Hypervisor quindi va a scandire questi blocchi all’interno del binario del kernel e li analizza e riscrive eventuali istruzioni sensitive.</p>
+<p>Il salto finale viene sostituito con una chiamata all’hypervisor per mantenere la catena di traduzioni attiva:</p>
+<ul>
+<li>La CPU esegue il blocco tradotto (sicuro)</li>
+<li>Arriva all’ultima istruzione (salto modificato)</li>
+<li>Il controllo passa al VMM</li>
+<li>Il VMM controlla se il blocco a cui avrebbe saltato la CPU prima della modifica del salto sia già tradotto
+<ul>
+<li>Se <strong>si</strong>: fa saltare la CPU direttamente alla versione già tradotta e sicura</li>
+<li>Se <strong>no</strong>: traduce il nuovo blocco, lo salva in memoria cache, e poi fa saltare la CPU lì</li>
+</ul>
+</li>
+</ul>
+<p>In poche parole, il salto finale viene modificato per garantire che la CPU non esegua mai codice originale, ma rimbalzi sempre attraverso il VMM per ottenere il prossimo pezzo di codice tradotto e sicuro.</p>
+<p>Vediamo cosa come accade tutto ciò:</p>
+<p align="center"><img src="images/DBT_1.png" width="300"></p>
+
 
                     </main>
 
