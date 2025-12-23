@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6d86ee23.js";
+            window.path_to_searchindex_js = "searchindex-a682cdda.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d4551cd1.js"></script>
@@ -1596,7 +1596,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>// TODO: continua.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="virtualizzazione"><a class="header" href="#virtualizzazione">Virtualizzazione</a></h1>
-<p>Una macchian <strong>virtuale (VM)</strong> è una emulazione (mediante tecniche sw/hw) di una macchina reale.</p>
+<p>Una macchina <strong>virtuale (VM)</strong> è una emulazione (mediante tecniche sw/hw) di una macchina reale.</p>
 <p>Ogni macchina virtuale esegue il proprio <strong>sistema operativo</strong> ed applicazioni.</p>
 <p>Le VM sono gestite da una <strong>virtual machine monitor (VMM)</strong>, o <strong>hypervisor</strong>. Più macchine virtuali condividono le risorse fisiche della macchina su cui eseguono.</p>
 <p>Su una stessa macchina reale possono coesistere diverse macchine virtuale attive che condividono le risorse di questa.</p>
@@ -1716,11 +1716,11 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 
 <p>Nel caso di CPU intel questa cosa avviene in maniera diversa, perché in queste CPU esistono diversi livelli di privilegio, classificati in Ring.</p>
 <p>4 livelli di privilegio, dove Ring 3 ha il più basso livello di privilegio mentre in Ring 0 la VMM.</p>
-<p>Cosa accade quando il guest SO vuole eseguire una instruzione sensitive:</p>
+<p>Cosa accade quando il guest SO vuole eseguire una istruzione sensitive:</p>
 <p align="center"><img src="images/sensitive_inst_inte.png" width="400"></p>
 
 <ul>
-<li>L’applicazione che gira nella VM esegue una system call, questo causa una trap della CPU virtuale che viene gestita dalla VMM. La VMM saltà al guest host per far esegure l’interrupt handler e poi la ISR associata alla trap generata.</li>
+<li>L’applicazione che gira nella VM esegue una system call, questo causa una trap della CPU virtuale che viene gestita dalla VMM. La VMM salta al guest host per far eseguire l’interrupt handler e poi la ISR associata alla trap generata.</li>
 <li>L’interrupt hardware invece sono gestite dalla VMM che eseguono l’ISR e successivamente si salta all’esecuzione dell’ISR del guest SO.</li>
 <li>Invece le istruzioni privilegiate nel guest SO causano il generarsi di una trap che viene intercettata dalla VMM che la gestisce ed emula l’effetto desiderato dal guest SO.</li>
 </ul>
@@ -1757,7 +1757,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li>
 <p><strong>Para-virtualization</strong></p>
 <p>il guest SO è sviluppato appositamente per cooperare con il VMM.</p>
-<p>Si abbandona l’idea di ingannare il guest SO, è consapevole di essere su una macchina virtuale. Il SO ospite viene riscritto per essere consapevole di girare su una macchina virtuale, quindi invece di provare ad esegure istruzioni hardware direttamente si interfaccia con la VMM (cooperazione).</p>
+<p>Si abbandona l’idea di ingannare il guest SO, è consapevole di essere su una macchina virtuale. Il SO ospite viene riscritto per essere consapevole di girare su una macchina virtuale, quindi invece di provare ad eseguire istruzioni hardware direttamente si interfaccia con la VMM (cooperazione).</p>
 </li>
 <li>
 <p><strong>Full virtualization</strong>, con <strong>supporto hardware</strong></p>
@@ -1789,20 +1789,20 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <ul>
 <li>Codice sorgente</li>
 <li>Codice binario che viene eseguito</li>
-<li>fuznione del VMM che emula il comportamento dell’istruzione in esame</li>
+<li>funzione del VMM che emula il comportamento dell’istruzione in esame</li>
 </ul>
 <p>Per l’approccio che utilizza la para-virtualization il sorgente deve essere modificato per poter girare su una VM. La modifica consiste nella chiamata alla funzione dal VMM che emula quel comportamento, ovvero <code>emulate_store_idt()</code> (Hypercall).</p>
-<p>Per l’approccio che utilizza la full virtualization il sorgente rimane invariato. e a tempo di esecuzione abbiamo due principali tecniche che dipendono dalla presenza o meno del supporto hardware.</p>
+<p>Per l’approccio che utilizza la full virtualization il sorgente rimane invariato, e a tempo di esecuzione abbiamo due principali tecniche che dipendono dalla presenza o meno del supporto hardware.</p>
 <ul>
-<li>Meccanismo software (Dynamic Binary Traslation): la VMM sostituisce dinamicamente le istruzioni. Il VMM legge il <strong>codice binario</strong> prima che venga eseguito, individue le istruzioni critiche e le riscrive sostituendole con il codice di emulazione → <code>emulate_store_idt()</code>.</li>
+<li>Meccanismo software (Dynamic Binary Traslation): la VMM sostituisce dinamicamente le istruzioni. Il VMM legge il <strong>codice binario</strong> prima che venga eseguito, individua le istruzioni critiche e le riscrive sostituendole con il codice di emulazione → <code>emulate_store_idt()</code>.</li>
 <li>Meccanismo hardware (Intel VT-x / Trap-and-Emulate): in questo caso il codice binario in memoria non viene necessariamente sostituito/riscritto. È la CPU fisica che, quando incontra l’istruzione critica mentre gira la VM (in <em>non-root mode</em>), ferma tutto e genera un evento hardware (<strong>VMExit</strong>). Il controllo passa al VMM che esegue l’emulazione e poi restituisce il controllo.</li>
 </ul>
 <p align="center"><img src="images/risoluzione_DBT_e_HYPERCALL.png" width="470"></p>
 
 <h4 id="full-virtualization-no-supporto-hw"><a class="header" href="#full-virtualization-no-supporto-hw">Full virtualization, no supporto hw</a></h4>
-<p>Nel caso di una CPU fisica che non supporta la virtualizzazione, in cui non tutte le istruzioni sensitive generano una trap, l’hypervisot di <strong>VMware</strong> introdusse tecniche efficienti di full-virtualization per Intel <code>x86</code>.</p>
+<p>Nel caso di una CPU fisica che non supporta la virtualizzazione, in cui non tutte le istruzioni sensitive generano una trap, l’hypervisor di <strong>VMware</strong> introdusse tecniche efficienti di full-virtualization per Intel <code>x86</code>.</p>
 <p>Queste tecniche sono ad esempio la <strong>Dynamic Binary Traslation</strong>.</p>
-<p>Il codice binario del guest veniva riscitto dinamicamente dall’hypervisor prima di essere eseguito: sostituendo le istruzioni sensibili con un codice di emulazione</p>
+<p>Il codice binario del guest veniva riscritto dinamicamente dall’hypervisor prima di essere eseguito: sostituendo le istruzioni sensibili con un codice di emulazione</p>
 <p>Coprendo il gap della non virtualizzabilità di <code>x86</code>.</p>
 <p>Oggi con il supporto hardware VMware si è adattata perché è molto più performante.</p>
 <h4 id="dynamic-binary-traslation"><a class="header" href="#dynamic-binary-traslation">Dynamic Binary Traslation</a></h4>
