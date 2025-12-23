@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2aafd454.js";
+            window.path_to_searchindex_js = "searchindex-6d86ee23.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d4551cd1.js"></script>
@@ -239,7 +239,7 @@
 </ul>
 <ol>
 <li>
-<p>Il VMM esegue su un “hardware nudo” (<strong>bare-metal virtualizzation</strong> o <strong>server virtualizzation</strong>).</p>
+<p>Il VMM esegue su un “hardware nudo” (<strong>bare-metal virtualization</strong> o <strong>server virtualization</strong>).</p>
 <p>In questa architettura, il software di virtualizzazione è il padrone dell’hardware assoluto.</p>
 <p>Questo tipo di hypervisor viene molto utilizzato nei data center.</p>
 <p>L’architettura di tipo 1 ha migliori prestazioni perché non c’è un ulteriore layer (livello di indirezione) che divide il VMM dall’hardware, a differenza di ciò che accade nell’architettura di tipo 2</p>
@@ -332,22 +332,22 @@
 <h3 id="tecniche-della-virtualizzazione-delle-cpu"><a class="header" href="#tecniche-della-virtualizzazione-delle-cpu">Tecniche della virtualizzazione delle CPU</a></h3>
 <ul>
 <li>
-<p><strong>Full virtualizzation</strong>, senza supporto hardware</p>
+<p><strong>Full virtualization</strong>, senza supporto hardware</p>
 <p>Utilizza tecniche software complesse come la <strong>Dynamic Binary Traslation</strong>. Il VMM legge il binario del Guest SO e lo “riscrive” al volo per renderlo sicuro, senza che il guest SO se ne accorga.</p>
 </li>
 <li>
-<p><strong>Para-virtualizzation</strong></p>
+<p><strong>Para-virtualization</strong></p>
 <p>il guest SO è sviluppato appositamente per cooperare con il VMM.</p>
 <p>Si abbandona l’idea di ingannare il guest SO, è consapevole di essere su una macchina virtuale. Il SO ospite viene riscritto per essere consapevole di girare su una macchina virtuale, quindi invece di provare ad esegure istruzioni hardware direttamente si interfaccia con la VMM (cooperazione).</p>
 </li>
 <li>
-<p><strong>Full virtualizzation</strong>, con <strong>supporto hardware</strong></p>
+<p><strong>Full virtualization</strong>, con <strong>supporto hardware</strong></p>
 <p>migliori prestazioni e VMM più semplice.</p>
 <p>La CPU stessa ha nuove modalità che permettono al VMM di intercettare le operazioni critiche senza dover riscrivere il codice software.</p>
 </li>
 </ul>
 <hr>
-<p>ESEMPIO: confronto tra <strong>para-virtualizzation</strong> e <strong>full</strong> <strong>virtualizzation</strong></p>
+<p>ESEMPIO: confronto tra <strong>para-virtualization</strong> e <strong>full</strong> <strong>virtualization</strong></p>
 <p>Il problema da risolvere è lo stesso: il guest SO vuole leggere un registro critico, quello contenente l’indirizzo della <strong>Interrupt Descriptor table</strong>.</p>
 <p>Queste due soluzioni ci permettono di farlo ma con approcci differenti:</p>
 <ul>
@@ -372,16 +372,16 @@
 <li>Codice binario che viene eseguito</li>
 <li>fuznione del VMM che emula il comportamento dell’istruzione in esame</li>
 </ul>
-<p>Per l’approccio che utilizza la para-virtualizzation il sorgente deve essere modificato per poter girare su una VM. La modifica consiste nella chiamata alla funzione dal VMM che emula quel comportamento, ovvero <code>emulate_store_idt()</code> (Hypercall).</p>
-<p>Per l’approccio che utilizza la full virtualizzation il sorgente rimane invariato. e a tempo di esecuzione abbiamo due principali tecniche che dipendono dalla presenza o meno del supporto hardware.</p>
+<p>Per l’approccio che utilizza la para-virtualization il sorgente deve essere modificato per poter girare su una VM. La modifica consiste nella chiamata alla funzione dal VMM che emula quel comportamento, ovvero <code>emulate_store_idt()</code> (Hypercall).</p>
+<p>Per l’approccio che utilizza la full virtualization il sorgente rimane invariato. e a tempo di esecuzione abbiamo due principali tecniche che dipendono dalla presenza o meno del supporto hardware.</p>
 <ul>
 <li>Meccanismo software (Dynamic Binary Traslation): la VMM sostituisce dinamicamente le istruzioni. Il VMM legge il <strong>codice binario</strong> prima che venga eseguito, individue le istruzioni critiche e le riscrive sostituendole con il codice di emulazione → <code>emulate_store_idt()</code>.</li>
 <li>Meccanismo hardware (Intel VT-x / Trap-and-Emulate): in questo caso il codice binario in memoria non viene necessariamente sostituito/riscritto. È la CPU fisica che, quando incontra l’istruzione critica mentre gira la VM (in <em>non-root mode</em>), ferma tutto e genera un evento hardware (<strong>VMExit</strong>). Il controllo passa al VMM che esegue l’emulazione e poi restituisce il controllo.</li>
 </ul>
 <p align="center"><img src="images/risoluzione_DBT_e_HYPERCALL.png" width="470"></p>
 
-<h4 id="full-virtualizzation-no-supporto-hw"><a class="header" href="#full-virtualizzation-no-supporto-hw">Full virtualizzation, no supporto hw</a></h4>
-<p>Nel caso di una CPU fisica che non supporta la virtualizzazione, in cui non tutte le istruzioni sensitive generano una trap, l’hypervisot di <strong>VMware</strong> introdusse tecniche efficienti di full-virtualizzation per Intel <code>x86</code>.</p>
+<h4 id="full-virtualization-no-supporto-hw"><a class="header" href="#full-virtualization-no-supporto-hw">Full virtualization, no supporto hw</a></h4>
+<p>Nel caso di una CPU fisica che non supporta la virtualizzazione, in cui non tutte le istruzioni sensitive generano una trap, l’hypervisot di <strong>VMware</strong> introdusse tecniche efficienti di full-virtualization per Intel <code>x86</code>.</p>
 <p>Queste tecniche sono ad esempio la <strong>Dynamic Binary Traslation</strong>.</p>
 <p>Il codice binario del guest veniva riscitto dinamicamente dall’hypervisor prima di essere eseguito: sostituendo le istruzioni sensibili con un codice di emulazione</p>
 <p>Coprendo il gap della non virtualizzabilità di <code>x86</code>.</p>
@@ -434,14 +434,14 @@
 <li>Le istruzioni sensitive nel guest SO sono sostituite da <strong>hypercalls</strong> che fanno riferimento a funzioni del VMM che emulano il comportamento delle istruzioni originarie.</li>
 </ul>
 <blockquote>
-<p>A differenza della full virtualizzation, si modifica il <strong>codice</strong> <strong>sorgente</strong> <strong>del</strong> <strong>guest</strong> <strong>SO</strong>, non il codice binario.</p>
+<p>A differenza della full virtualization, si modifica il <strong>codice</strong> <strong>sorgente</strong> <strong>del</strong> <strong>guest</strong> <strong>SO</strong>, non il codice binario.</p>
 <p>La modifica è fatta dal <strong>programmatore</strong> e non dal VMM, quindi i sistemi che possono girare su Hypervisor, che sfruttano questa tecnica di virtualizzazione della CPU, devono essere costruiti ad hoc.</p>
 </blockquote>
 <p align="center"><img src="images/para_virt.png" width="500"></p>
 
 <p>Il guest SO così modificato <strong>non può eseguire sull’hardware fisico</strong>: può eseguire solo in combinazione con il <strong>VMM</strong>.</p>
 <p>Inoltre questo approccio non è utilizzabile per sistemi <strong>legacy</strong> oppure <strong>proprietari</strong>, come Windows.</p>
-<h4 id="supporto-hardware-per-la-full-virtualizzation-della-cpu"><a class="header" href="#supporto-hardware-per-la-full-virtualizzation-della-cpu">Supporto hardware per la full-virtualizzation della CPU</a></h4>
+<h4 id="supporto-hardware-per-la-full-virtualization-della-cpu"><a class="header" href="#supporto-hardware-per-la-full-virtualization-della-cpu">Supporto hardware per la full-virtualization della CPU</a></h4>
 <p>Le CPU Intel VT introducono:</p>
 <ul>
 <li>due modalità di esecuzione: <strong>VMX root</strong> e <strong>VMX non-root</strong>;</li>
