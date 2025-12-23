@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a682cdda.js";
+            window.path_to_searchindex_js = "searchindex-bab1ded1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d4551cd1.js"></script>
@@ -975,7 +975,7 @@ location of code : 0x1095afe50
 <p>La posizione del codice e dei dati <strong>non può più essere modificata</strong> a tempo di esecuzione.<br>→ nella programmazione in assembly si decide a priori dove il codice viene posizionato in memoria centrale.</p>
 <p align="center"><img src="images/rilocazione_statica.png" width="550"></p>
 
-<p>Il problema di questo tipo di rilocazione si presenta nel <strong>contex switch</strong>: il processo quando viene prelazionato e inserito nella coda dei processi pronti oppure swappato<br>→nel momento della sua successiva esecuzione deve trovarsi sempre nella stessa area di memoria, altrimenti tutti gli indirizzi fisici su cui lavora sarebbero sbagliati.<br>Questo è un grande <strong>onere computazionale</strong> affidato al sistema operativo.</p>
+<p>Il problema di questo tipo di rilocazione si presenta nel <strong>context switch</strong>: il processo quando viene prelazionato e inserito nella coda dei processi pronti oppure swappato<br>→nel momento della sua successiva esecuzione deve trovarsi sempre nella stessa area di memoria, altrimenti tutti gli indirizzi fisici su cui lavora sarebbero sbagliati.<br>Questo è un grande <strong>onere computazionale</strong> affidato al sistema operativo.</p>
 <p>Quindi con una rilocazione statica è il compilatore o il caricatore ad inserire degli indirizzi fisici all’interno rispettivamente del codice oggetto o del codice eseguibile.</p>
 <p align="center"><img src="images/rilocazione_statica_1.png" width="600"></p>
 
@@ -1142,7 +1142,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>NOTA sulla segment table:</p>
 <ul>
 <li>ogni processo ha una <strong>segment table differente</strong></li>
-<li>i registri STBR/STLR sono configurati ad ogni <strong>contex switch</strong> dei processi<br>→ durante il contex switch il SO carica i valori di STBR/STLR dal <strong>PCB del processo</strong> (sono legati al singolo processo).</li>
+<li>i registri STBR/STLR sono configurati ad ogni <strong>context switch</strong> dei processi<br>→ durante il context switch il SO carica i valori di STBR/STLR dal <strong>PCB del processo</strong> (sono legati al singolo processo).</li>
 </ul>
 <p align="center"><img src="images/contex_ST.png" width="600"></p>
 
@@ -1283,7 +1283,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li><strong>PTLR</strong> (Page-Table Length Register):<br>dimensione della tabella delle pagine.</li>
 </ul>
-<p>Questi due valori sono contenuti all’interno del PCB di ogni processo e vengono caricati in tali registri ogni volta che avviene un <strong>contex switch</strong>.</p>
+<p>Questi due valori sono contenuti all’interno del PCB di ogni processo e vengono caricati in tali registri ogni volta che avviene un <strong>context switch</strong>.</p>
 <p align="center"><img src="images/PTBR_PTLR.png" width="480"></p>
 
 <h3 id="architettura-di-paginazione-con-tlb"><a class="header" href="#architettura-di-paginazione-con-tlb">architettura di paginazione con TLB</a></h3>
@@ -1367,7 +1367,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </ul>
 </li>
 </ul>
-<p>Cosa accede durante un <strong>contex switch</strong></p>
+<p>Cosa accede durante un <strong>context switch</strong></p>
 <p align="center"><img src="images/contex_switch.png" width="500"></p>
 
 <ul>
@@ -1531,13 +1531,13 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Ogni pagina ha una dimensione fissata che può esser modificata all’atto della compilazione del kernel.</p>
 <p>Tipicamente, le due dimensioni possibili in <code>x86</code> sono <code>4KB</code> e <code>4MB</code>. Per Linux di default ogni pagina ha una dimensione di <code>4KB</code>.</p>
 <p>Per riferirci alla prima tabella delle pagine che si trova al livello più basso sfruttiamo l’indirizzo virtuale mantenuto all’interno del <em>controll register</em>, che per <code>x86</code> è il register 3.</p>
-<p>Questo registro viene popolato all’atto del <strong>contex switch</strong>, ogni processo ha associata la propria gerarchia di tabelle di pagine. Essendo una caratteristica direttamente legata al processo, tale indirizzo è contenuto all’interno del descrittore, che in Linux è chiamato <code>task_struct</code>.</p>
+<p>Questo registro viene popolato all’atto del <strong>context switch</strong>, ogni processo ha associata la propria gerarchia di tabelle di pagine. Essendo una caratteristica direttamente legata al processo, tale indirizzo è contenuto all’interno del descrittore, che in Linux è chiamato <code>task_struct</code>.</p>
 <h2 id="spazio-di-indirizzamento-virtuale"><a class="header" href="#spazio-di-indirizzamento-virtuale">Spazio di indirizzamento virtuale</a></h2>
 <p>Le nuove versioni di Linux <strong>non si avvalgono del processore per la segmentazione</strong>, ovvero non utilizzano il <strong>meccanismo di segmentazione</strong> fisico implementato dentro la <strong>MMU</strong>.</p>
 <p>Per motivi di:</p>
 <ul>
 <li>portabilità</li>
-<li>efficienza del contex switch e traduzione degli indirizzi</li>
+<li>efficienza del context switch e traduzione degli indirizzi</li>
 </ul>
 <p align="center"><img src="images/segmentazione_paginata_1.png" width="500"></p>
 

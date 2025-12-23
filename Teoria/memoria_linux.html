@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a682cdda.js";
+            window.path_to_searchindex_js = "searchindex-bab1ded1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d4551cd1.js"></script>
@@ -208,13 +208,13 @@
 <p>Ogni pagina ha una dimensione fissata che può esser modificata all’atto della compilazione del kernel.</p>
 <p>Tipicamente, le due dimensioni possibili in <code>x86</code> sono <code>4KB</code> e <code>4MB</code>. Per Linux di default ogni pagina ha una dimensione di <code>4KB</code>.</p>
 <p>Per riferirci alla prima tabella delle pagine che si trova al livello più basso sfruttiamo l’indirizzo virtuale mantenuto all’interno del <em>controll register</em>, che per <code>x86</code> è il register 3.</p>
-<p>Questo registro viene popolato all’atto del <strong>contex switch</strong>, ogni processo ha associata la propria gerarchia di tabelle di pagine. Essendo una caratteristica direttamente legata al processo, tale indirizzo è contenuto all’interno del descrittore, che in Linux è chiamato <code>task_struct</code>.</p>
+<p>Questo registro viene popolato all’atto del <strong>context switch</strong>, ogni processo ha associata la propria gerarchia di tabelle di pagine. Essendo una caratteristica direttamente legata al processo, tale indirizzo è contenuto all’interno del descrittore, che in Linux è chiamato <code>task_struct</code>.</p>
 <h2 id="spazio-di-indirizzamento-virtuale"><a class="header" href="#spazio-di-indirizzamento-virtuale">Spazio di indirizzamento virtuale</a></h2>
 <p>Le nuove versioni di Linux <strong>non si avvalgono del processore per la segmentazione</strong>, ovvero non utilizzano il <strong>meccanismo di segmentazione</strong> fisico implementato dentro la <strong>MMU</strong>.</p>
 <p>Per motivi di:</p>
 <ul>
 <li>portabilità</li>
-<li>efficienza del contex switch e traduzione degli indirizzi</li>
+<li>efficienza del context switch e traduzione degli indirizzi</li>
 </ul>
 <p align="center"><img src="images/segmentazione_paginata_1.png" width="500"></p>
 
