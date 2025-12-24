@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bab1ded1.js";
+            window.path_to_searchindex_js = "searchindex-ede9a565.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d4551cd1.js"></script>
+        <script src="toc-73959115.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -177,7 +177,105 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <script src="../javascript.js"></script>
+                        <h1 id="architettura-di-un-so"><a class="header" href="#architettura-di-un-so">Architettura di un SO</a></h1>
+<h2 id="funzionalità-di-un-so"><a class="header" href="#funzionalità-di-un-so">Funzionalità di un SO</a></h2>
+<ul>
+<li>
+<p>Virtualizzazione delle risorse hardware</p>
+<ul>
+<li>file system</li>
+<li>processi</li>
+<li>periferiche astratte</li>
+<li>…</li>
+</ul>
+<p>Sono tutti concetti che permette di ottenere una virtualizzazione e un’estensione delle risorse hardware della macchina fisica.</p>
+<p>Oltre a creare un’astrazione per la macchina fisica fornisca anche un API di sistema che permette alle applicazioni utente di operare sull’hardware delegando le operazioni al SO.</p>
+<p>Queste API garantiscono un accesso uniforme rispetto tutte le componenti hardware che possono essere anche molto eterogenee tra loro.</p>
+</li>
+<li>
+<p>Gestione e coordinamento</p>
+<ul>
+<li>meccanismi di protezione → per evitare azioni illecite</li>
+<li>meccanismi per la comunicazione inter-processo</li>
+<li>gestore delle risorse → scheduling</li>
+</ul>
+</li>
+</ul>
+<p align="center"><img src="images/SO_come_VM.png" width="500"></p>
+
+<ul>
+<li>Tutti questi strati mi <strong>permettono di astrarre</strong> le risorse hardware le quali sono gestite direttamente dal Kernel, che fa da ultimo intermediario tra il livello software e quello hardware.</li>
+<li>Quindi tutti gli strati che si contrappongono tra l’hardware e i programmi di utilità definiscono una <strong>macchina</strong> <strong>virtuale</strong>.</li>
+<li>Tutti gli strati intermedi che definiscono un’astrazione potrebbero essere inclusi all’interno del Kernel, questo infatti dipende dall’architettura del SO.</li>
+</ul>
+<p>Ogni strato serve a nascondere la complessità dello strato sottostante e a fornire servizi più semplici e potenti allo strato superiore.</p>
+<h2 id="kernel"><a class="header" href="#kernel">Kernel</a></h2>
+<p>Il Kernel è quella parte del SO che risiede in memoria principale.</p>
+<p>Contiene funzionalità fondamentali del SO.</p>
+<p>A livello kernel la macchina virtuale realizzata dal SO (dal punto di vista delle singole applicazioni utente):</p>
+<ul>
+<li>
+<p>possiede tante unità centrali quanti sono i processi attivi nel sistema (ovvero processori virtuali).</p>
+<p>Ogni processo ha l’illusione di avere per se un processore dedicato, indipendentemente dal numero reale di processori fisici;</p>
+</li>
+<li>
+<p>non possiede meccanismi di interruzione. I processi vedono un flusso di esecuzione continuo e non devono gestire le interruzioni hardware perché sono intercettate dal kernel che provvede alla gestione;</p>
+</li>
+<li>
+<p>possiede istruzioni di sincronizzazione e scambio di messaggi tra processi che operano su processori virtuali.</p>
+<p>Tali meccanismi di sincronizzazione e scambio di messaggi avvengono tramite l’utilizzo di syscalls.</p>
+</li>
+</ul>
+<h2 id="gestione-della-memoria"><a class="header" href="#gestione-della-memoria">Gestione della memoria</a></h2>
+<p>A livello della <strong>gestione della memoria</strong>, la macchina virtuale realizzata dal SO (dal punto di vista dei processi):</p>
+<ul>
+<li>
+<p>consente di far riferimento a <strong>spazi</strong> <strong>di</strong> <strong>indirizzamento</strong> <strong>virtuali</strong>.</p>
+<p>Questi creano un’astrazione per i processi, illudendo questi di avere a disposizione l’intera memoria centrale per se.</p>
+</li>
+<li>
+<p>gestisce la protezione, ovvero il gestore della memoria verifica che non ci siano interferenze tra i vari processi, quindi che lo spazio di indirizzamento del singolo processo sia isolato e non accessibili da altri processi.</p>
+<p>Quindi due processi potrebbero utilizzare due indirizzi virtuali uguali ma questi saranno mappati in indirizzi virtuali fisici distinti nel momento il cui i processi andranno ad accedere a questi.</p>
+</li>
+<li>
+<p>consente di rendere trasparente la posizione effettiva dei dati/istruzioni per i processi. Infatti i dati che un processo intende leggere e modificare possono risiedere temporaneamente in memoria di massa in casi particolari.</p>
+<p>Questi casi particolari corrispondono ad esempio alla saturazione della memoria centrale. In tali casi alcune pagine vengono swappate in una porzione della memoria secondare utilizzata proprio in questi casi.</p>
+</li>
+</ul>
+<h2 id="gestione-delle-periferiche"><a class="header" href="#gestione-delle-periferiche">Gestione delle periferiche</a></h2>
+<p>Al livello gestione delle periferiche, la macchina virtuale realizzata dal SO (dal punto di vista dei processi):</p>
+<ul>
+<li>
+<p>dispone di periferiche dedicate ai singoli processi.</p>
+<p>Illude quindi i processi di avere a disposizione tutte le risorse disponibili;</p>
+</li>
+<li>
+<p>maschera le caratteristiche fisiche delle periferiche.</p>
+<p>I processi non conoscono quali risorse compongono effettivamente l’hardware poiché il SO crea un’astrazione di queste rendendo il loro accesso uniforme.</p>
+<p>Quindi nel caso di un lettura o scrittura il processo che la richiede non sà effettivamente le caratteristiche fisiche dell’hardware su cui sta scrivendo o leggendo.</p>
+<p>A conoscere ciò sono i driver specifici che implementano effettivamente le operazioni di lettura e scrittura specifiche per il determinato hardware in questione.</p>
+</li>
+<li>
+<p>gestisce parzialmente i malfunzionamenti delle periferiche.</p>
+</li>
+</ul>
+<h2 id="file-system"><a class="header" href="#file-system">File system</a></h2>
+<p>Al livello file system, la macchina virtuale realizzata dal SO (dal punto di vista del processo):</p>
+<ul>
+<li>
+<p>gestisce blocchi di informazioni su memoria di massa strutturati logicamente;</p>
+<p>Quindi delle sequenze di byte memorizzate in memoria di massa identifica le sequenze che rappresentano cartelle e file;</p>
+</li>
+<li>
+<p>ne controlla gli accessi;</p>
+<p>Per ogni accesso verifica se il processo richiedente ha i permessi necessari per leggere o scrivere su tale blocco di memoria;</p>
+</li>
+<li>
+<p>ne gestisce l’organizzazione.</p>
+<p>Gestisce la geometria della memoria di massa e implementa i metodi che devono essere utilizzare per accedere correttamente ai dati.</p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="deadlock"><a class="header" href="#deadlock">Deadlock</a></h1>
 <p>Deadlock è un fenomeno che può presentarsi nelle <strong>applicazioni concorrenti</strong> che porta a un blocco permanente di processi in <strong>competizione per risorse condivise</strong>.</p>
 <p>→ può portare a crash, situazioni di stallo, etc. (da evitare completamente)</p>
@@ -826,7 +924,7 @@ il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel mom
 <p align="center"><img src="images/ricapitolazione.png" width="500"></p>
 
 <div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
-<h1 id="gestione-della-memoria"><a class="header" href="#gestione-della-memoria">Gestione della memoria</a></h1>
+<h1 id="gestione-della-memoria-1"><a class="header" href="#gestione-della-memoria-1">Gestione della memoria</a></h1>
 <p>La <strong>memoria principale</strong> costituisce, insieme la CPU, una delle risorse per realizzare <strong>l’astrazione di processo</strong>.</p>
 <p>Il processo dispone di una <strong>area di memoria</strong> ad esso <strong>riservata</strong> (non accessibile da altri processi).<br>Tale area di memoria (<em>memoria virtuale</em>) illude il processo facendogli credere di avere a disposizione <strong>l’intera memoria principale</strong>.</p>
 <p>Questa memoria riservata permette a ciascun processo di avere una <strong>vista indipendente</strong> <strong>e continua</strong> della memoria, anche se, fisicamente, la memoria principale è condivisa tra più processi e l’allocazione dell’immagine di questi non è detto che sia continua.</p>
