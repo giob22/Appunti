@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ede9a565.js";
+            window.path_to_searchindex_js = "searchindex-e5c797d6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-73959115.js"></script>
@@ -212,7 +212,7 @@
 <h2 id="kernel"><a class="header" href="#kernel">Kernel</a></h2>
 <p>Il Kernel è quella parte del SO che risiede in memoria principale.</p>
 <p>Contiene funzionalità fondamentali del SO.</p>
-<p>A livello kernel la macchina virtuale realizzata dal SO (dal punto di vista delle singole applicazioni utente):</p>
+<p>A livello kernel, la macchina virtuale realizzata dal SO (dal punto di vista delle singole applicazioni utente):</p>
 <ul>
 <li>
 <p>possiede tante unità centrali quanti sono i processi attivi nel sistema (ovvero processori virtuali).</p>
@@ -220,6 +220,8 @@
 </li>
 <li>
 <p>non possiede meccanismi di interruzione. I processi vedono un flusso di esecuzione continuo e non devono gestire le interruzioni hardware perché sono intercettate dal kernel che provvede alla gestione;</p>
+<p>questo è possibile per il context switch che viene fatto all’atto della sospensione del processo per la gestione da parte del SO delle interrupt. Nel momento in cui è terminata la ISR per gestire l’interrupt il processo torna ad eseguire sulla CPU partendo dallo stato in cui è stato sospeso.</p>
+<p>Quindi per il processo la gestione delle interruzioni è trasparente.</p>
 </li>
 <li>
 <p>possiede istruzioni di sincronizzazione e scambio di messaggi tra processi che operano su processori virtuali.</p>
