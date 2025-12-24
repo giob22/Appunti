@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e5c797d6.js";
+            window.path_to_searchindex_js = "searchindex-fc5bfecb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-73959115.js"></script>
@@ -262,6 +262,8 @@
 </li>
 </ul>
 <h2 id="file-system"><a class="header" href="#file-system">File system</a></h2>
+<p>Permette di trasformare un enorme contenitore di bit disordinati, memoria secondaria, in un archivio ordinato.</p>
+<p>Quindi gli strati superiori vedranno un’organizzazione ordinata della memoria.</p>
 <p>Al livello file system, la macchina virtuale realizzata dal SO (dal punto di vista del processo):</p>
 <ul>
 <li>
@@ -270,7 +272,8 @@
 </li>
 <li>
 <p>ne controlla gli accessi;</p>
-<p>Per ogni accesso verifica se il processo richiedente ha i permessi necessari per leggere o scrivere su tale blocco di memoria;</p>
+<p>Per ogni accesso verifica se il processo richiedente ha i permessi necessari per leggere o scrivere su tale blocco di memoria.</p>
+<p>Questo perché ogni file ha associato dei metadati. Tra questi metadati ci sono le informazioni riguardanti i permessi di accesso da parte dei processi;</p>
 </li>
 <li>
 <p>ne gestisce l’organizzazione.</p>
