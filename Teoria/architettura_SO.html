@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3196fa5f.js";
+            window.path_to_searchindex_js = "searchindex-4cf4b71e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-73959115.js"></script>
@@ -189,13 +189,14 @@
 <li>…</li>
 </ul>
 <p>Sono tutti concetti che permette di ottenere una virtualizzazione e un’estensione delle risorse hardware della macchina fisica.</p>
-<p>Oltre a creare un’astrazione per la macchina fisica, il SO fornisce anche un API di sistema che permette alle applicazioni utente di operare sull’hardware delegando le operazioni a quest’ultimo che interagisce direttemnte con l’hardware.</p>
+<p>Oltre a creare un’astrazione per la macchina fisica, il SO fornisce anche un API di sistema che permette alle applicazioni utente di operare sull’hardware delegando le operazioni a quest’ultimo che interagisce direttamente con l’hardware.</p>
 <p>Queste API garantiscono un accesso uniforme rispetto tutte le componenti hardware che possono essere anche molto eterogenee tra loro.</p>
 </li>
 <li>
 <p>Gestione e coordinamento</p>
+<p>Il SO ha il compito di arbitrare le richieste dei programmi utente</p>
 <ul>
-<li>meccanismi di protezione → per evitare azioni illecite</li>
+<li>meccanismi di protezione → per evitare azioni illecite da parte di processi malfunzionanti</li>
 <li>meccanismi per la comunicazione inter-processo</li>
 <li>gestore delle risorse → scheduling</li>
 </ul>
@@ -212,7 +213,7 @@
 <h2 id="kernel"><a class="header" href="#kernel">Kernel</a></h2>
 <p>Il Kernel è quella parte del SO che risiede in memoria principale.</p>
 <p>Contiene funzionalità fondamentali del SO.</p>
-<p>A livello kernel, la macchina virtuale realizzata dal SO (dal punto di vista delle singole applicazioni utente):</p>
+<p>A livello <strong>kernel</strong>, la macchina virtuale realizzata dal SO (dal punto di vista delle singole applicazioni utente):</p>
 <ul>
 <li>
 <p>possiede tante unità centrali quanti sono i processi attivi nel sistema (ovvero processori virtuali).</p>
@@ -237,15 +238,15 @@
 </li>
 <li>
 <p>gestisce la protezione, ovvero il gestore della memoria verifica che non ci siano interferenze tra i vari processi, quindi che lo spazio di indirizzamento del singolo processo sia isolato e non accessibili da altri processi.</p>
-<p>Quindi due processi potrebbero utilizzare due indirizzi virtuali uguali ma questi saranno mappati in indirizzi virtuali fisici distinti nel momento il cui i processi andranno ad accedere a questi.</p>
+<p>Quindi due processi potrebbero utilizzare due indirizzi virtuali uguali ma questi saranno mappati in indirizzi fisici distinti nel momento il cui i processi andranno ad accedere a questi.</p>
 </li>
 <li>
 <p>consente di rendere trasparente la posizione effettiva dei dati/istruzioni per i processi. Infatti i dati che un processo intende leggere e modificare possono risiedere temporaneamente in memoria di massa in casi particolari.</p>
-<p>Questi casi particolari corrispondono ad esempio alla saturazione della memoria centrale. In tali casi alcune pagine vengono swappate in una porzione della memoria secondare utilizzata proprio in questi casi.</p>
+<p>Questi casi particolari corrispondono ad esempio alla saturazione della memoria centrale. In tali casi alcune pagine vengono swappate in una porzione della memoria secondaria utilizzata per mantenere pagine della memoria centrale che non vengono subito utilizzate.</p>
 </li>
 </ul>
 <h2 id="gestione-delle-periferiche"><a class="header" href="#gestione-delle-periferiche">Gestione delle periferiche</a></h2>
-<p>Al livello gestione delle periferiche, la macchina virtuale realizzata dal SO (dal punto di vista dei processi):</p>
+<p>Al livello <strong>gestione delle periferiche</strong>, la macchina virtuale realizzata dal SO (dal punto di vista dei processi):</p>
 <ul>
 <li>
 <p>dispone di periferiche dedicate ai singoli processi.</p>
@@ -264,7 +265,7 @@
 <h2 id="file-system"><a class="header" href="#file-system">File system</a></h2>
 <p>Permette di trasformare un enorme contenitore di bit disordinati, memoria secondaria, in un archivio ordinato.</p>
 <p>Quindi gli strati superiori vedranno un’organizzazione ordinata della memoria.</p>
-<p>Al livello file system, la macchina virtuale realizzata dal SO (dal punto di vista del processo):</p>
+<p>Al livello <strong>file system</strong>, la macchina virtuale realizzata dal SO (dal punto di vista del processo):</p>
 <ul>
 <li>
 <p>gestisce blocchi di informazioni su memoria di massa strutturati logicamente;</p>
