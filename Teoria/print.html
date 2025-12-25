@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4cf4b71e.js";
+            window.path_to_searchindex_js = "searchindex-3cc248cc.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-73959115.js"></script>
@@ -282,6 +282,59 @@
 <p>Gestisce la geometria della memoria di massa e implementa i metodi che devono essere utilizzare per accedere correttamente ai dati.</p>
 </li>
 </ul>
+<h2 id="architettura-dei-sistemi-operativi"><a class="header" href="#architettura-dei-sistemi-operativi">Architettura dei sistemi operativi</a></h2>
+<p>Il SO è un programma di notevole <strong>complessità</strong> e <strong>dimensione</strong>. Infatti tutti i <strong>layer</strong> che abbiamo visto prima, necessari per garantire la virtualizzazione dell’hardware e una sua gestione efficiente, fanno <strong>parte</strong> <strong>del</strong> <strong>SO</strong>.</p>
+<p>É quindi fondamentale applicare durante il suo progetto e la sua realizzazione le più sofisticate <strong>tecniche proprie dell’ingegneria del software</strong>, al fine di garantire un risultato che goda di tutte le <strong>proprietà che garantiscano la qualità di un sistema software</strong>: correttezza, modularità, facilità di manutenzione, efficienza di esecuzione, etc.</p>
+<p>Per questo sono stati proposti, nel tempo, <strong>vari modelli strutturali</strong> cui fare riferimento <strong>per organizzare i componenti</strong> durante le fasi di progetto, realizzazione e test del sistema.</p>
+<h3 id="sistemi-operativi-monolitici"><a class="header" href="#sistemi-operativi-monolitici">sistemi operativi monolitici</a></h3>
+<p>I primi sistemi operativi erano costituiti da un solo programma (<strong>sistemi monolitici</strong>) senza una particolare suddivisione dello stesso in moduli.</p>
+<p>Il sistema operativo era c<strong>ostituito da un insieme di procedure di servizio</strong> a ciascuna delle quali corrispondeva una <strong>chiamata al sistema</strong>.</p>
+<p>Normalmente le procedure erano scritte in <strong>linguaggio</strong> <strong>assembler</strong> per consentire un più efficiente accesso alle risorse hardware della macchina.</p>
+<p>Questo tipo di approccio al progetto del sistema poteva essere <strong>adeguato soltanto nel caso di sistemi molto semplici</strong>, come nel caso dei primi sistemi operativi e, successivamente, come nel caso di semplici <strong>sistemi non multiprogrammati</strong>, per esempio il sistema operativo MS-DOS.</p>
+<p>Col crescere della complessità tipica dei moderni sistemi multiprogrammati questo approccio ha rapidamente mostrato tutti i propri limiti.</p>
+<h3 id="sistemi-operativi-modulari"><a class="header" href="#sistemi-operativi-modulari">sistemi operativi modulari</a></h3>
+<p>Un valido approccio utilizzato per affrontare la complessità di un sistema è quello di fare riferimento a <strong>tecniche di modularizzazione</strong> in modo tale da suddividere il sistema in componenti (moduli), <strong>ciascuno destinato a fornire una delle funzionalità del sistema</strong>.</p>
+<p>Realizzato usualmente in un <strong>linguaggio di alto livello seguendo i criteri tipici della programmazione strutturata</strong> (<strong>sistemi modulari</strong>).</p>
+<p>In base ai criteri della programmazione strutturata, ogni modulo è caratterizzato da una ben precisa interfaccia, che specifica la funzionalità offerta dal modulo, e un corpo contenente l’implementazione del modulo, non visibile all’esterno.</p>
+<p>In questo modo ogni modifica che veniva apportata ai moduli non influenzava il funzionamento degli altri, a meno che la modifica non era fatta sull’interfaccia offerta dal modulo.</p>
+<p>Il primo esempio di strutturazione di un sistema operativo fu quello di che si ottenne modificando la struttura dei primi sistemi monolitici in modo tale da identificare i vari moduli componenti e dettagliando con cura le rispettive interfacce.</p>
+<p align="center"><img src="images/interfaccia_modulo.png" width="300"></p>
+
+<p>I vari moduli furono distinti in due categorie:</p>
+<ul>
+<li>le procedure di servizio offerte dal sistema ai programmi applicativi tramite chiamate di sistema;</li>
+<li>le procedure di utilità, utilizzate dalle prime ma non direttamente visibili ai processi.</li>
+</ul>
+<p align="center"><img src="images/suddivisione_in_moduli.png" width="400"></p>
+
+<p>Ovviamente ogni chiamata di sistema provocava un cambio di contesto da modalità utente a modalità kernel.</p>
+<p>Questo tipo di struttura è anche quello adottato nel sistema Unix. In questo caso fanno parte del sistema:</p>
+<ul>
+<li>sia le tipiche <strong>componenti di un sistema operativo</strong>, invocate tramite le chiamate di sistema, eseguite in <strong>stato</strong> <strong>privilegiato</strong> e identificate globalmente con il termine <em>kernel</em></li>
+<li>sia <strong>l’insieme dei programmi di utilità del sistema</strong> costituiti dalla shell, dai compilatori, dai caricatori, dai linker e dalle librerie di sistema, eseguiti in stato non privilegiato come i normali programmi utente.</li>
+</ul>
+<p>Nonostante gli indubbi vantaggi indotti dall’uso di tecniche di modularità, la complessità dei sistemi operativi è andata progressivamente crescendo, richiedendo quindi ulteriori paradigmi di progetto in grado di affrontare in modo più idoneo la crescente complessità.</p>
+<h3 id="sistemi-operativi-a-livelli-gerarchici-di-astrazione"><a class="header" href="#sistemi-operativi-a-livelli-gerarchici-di-astrazione">sistemi operativi a livelli gerarchici di astrazione</a></h3>
+<p>Consistono in SO modulari, organizzati in una struttura gerarchica.</p>
+<p>Uno degli aspetti fondamentali della tecnica dell’organizzazione gerarchica consiste nel <strong>ridurre il numero di possibili interconnessioni</strong> fra i moduli di un sistema, semplificando quindi sia la fase di progetto sia quella di verifica.</p>
+<p>Ovvero si punta ad ottenere un’organizzazione in moduli che punti a diminuire le dipendenze tra questi e quindi aumentare il livello di coesione.</p>
+<p>Tale tecnica che permette questo tipo di organizzazione di un sistema operativo è possibile applicarla seguendo due possibili paradigmi complementari.</p>
+<ul>
+<li>
+<p>top-down, livelli di raffinamento successivi.</p>
+<p>Consiste nello scomporre il sistema software nelle sue funzionalità principali, astraendo i dettagli implementativi. Successivamente ciascuna di queste funzionalità veniva a sua volta scomposta in altre funzionalità che la comprendessero astraendo sempre i dettagli implementativi; e così via.</p>
+<p>Fino a che non si arrivi ad un livello di funzionalità elementare da cui può iniziare l’implementazione.</p>
+</li>
+<li>
+<p>bottom-up.</p>
+<p>Consiste nel partire dal basso, quindi a stretto contatto con l’hardware.</p>
+<p>Implementare delle funzionalità aggiuntive che non sono disponibili in hardware e da queste funzionalità si parte ad implementarne che le utilizzino.</p>
+<p>Quindi si arriva ad un livello che non è più necessario comunicare direttamente con l’hardware grazie alle funzionalità elementari che sono state implementate in principio.</p>
+<p>Questo quindi permette di implementare funzionalità che astraggono sempre di più il livello hardware.</p>
+</li>
+</ul>
+<p>Un utilizzo combinato di questi due paradigmi permette di realizzare <strong>sistemi operativi strutturati in moduli organizzati gerarchicamente in diversi livelli di astrazione</strong>, in modo tale che i <strong>moduli realizzati a un certo livello</strong> utilizzano esclusivamente le <strong>funzionalità offerte dai moduli di livello più basso</strong> e <strong>forniscano le loro funzionalità ai moduli</strong> di livello più alto.</p>
+<p>Possiamo intendere questa struttura come se ogni livello definisse una nuova macchina astratta, le cui funzionalità sfruttano quelle offerte dalla macchina astratta di livello inferiore.</p>
 <div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="deadlock"><a class="header" href="#deadlock">Deadlock</a></h1>
 <p>Deadlock è un fenomeno che può presentarsi nelle <strong>applicazioni concorrenti</strong> che porta a un blocco permanente di processi in <strong>competizione per risorse condivise</strong>.</p>
