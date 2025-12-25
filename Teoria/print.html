@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-23f5c794.js";
+            window.path_to_searchindex_js = "searchindex-3688e5af.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-73959115.js"></script>
@@ -288,7 +288,7 @@
 <p>Per questo sono stati proposti, nel tempo, <strong>vari modelli strutturali</strong> cui fare riferimento <strong>per organizzare i componenti</strong> durante le fasi di progetto, realizzazione e test del sistema.</p>
 <h3 id="sistemi-operativi-monolitici"><a class="header" href="#sistemi-operativi-monolitici">sistemi operativi monolitici</a></h3>
 <p>I primi sistemi operativi erano costituiti da un solo programma (<strong>sistemi monolitici</strong>) senza una particolare suddivisione dello stesso in moduli.</p>
-<p>Il sistema operativo era c<strong>ostituito da un insieme di procedure di servizio</strong> a ciascuna delle quali corrispondeva una <strong>chiamata al sistema</strong>.</p>
+<p>Il sistema operativo era <strong>costituito da un insieme di procedure di servizio</strong> a ciascuna delle quali corrispondeva una <strong>chiamata al sistema</strong>.</p>
 <p>Normalmente le procedure erano scritte in <strong>linguaggio</strong> <strong>assembler</strong> per consentire un più efficiente accesso alle risorse hardware della macchina.</p>
 <p>Questo tipo di approccio al progetto del sistema poteva essere <strong>adeguato soltanto nel caso di sistemi molto semplici</strong>, come nel caso dei primi sistemi operativi e, successivamente, come nel caso di semplici <strong>sistemi non multiprogrammati</strong>, per esempio il sistema operativo MS-DOS.</p>
 <p>Col crescere della complessità tipica dei moderni sistemi multiprogrammati questo approccio ha rapidamente mostrato tutti i propri limiti.</p>
@@ -308,7 +308,8 @@
 <p align="center"><img src="images/suddivisione_in_moduli.png" width="400"></p>
 
 <p>Ovviamente ogni chiamata di sistema provocava un cambio di contesto da modalità utente a modalità kernel.</p>
-<p>Questo tipo di struttura è anche quello adottato nel sistema Unix. In questo caso fanno parte del sistema:</p>
+<p>Questo tipo di struttura è anche quella adottata nel sistema Unix.</p>
+<p>In questo caso fanno parte del sistema:</p>
 <ul>
 <li>sia le tipiche <strong>componenti di un sistema operativo</strong>, invocate tramite le chiamate di sistema, eseguite in <strong>stato</strong> <strong>privilegiato</strong> e identificate globalmente con il termine <em>kernel</em></li>
 <li>sia <strong>l’insieme dei programmi di utilità del sistema</strong> costituiti dalla shell, dai compilatori, dai caricatori, dai linker e dalle librerie di sistema, eseguiti in stato non privilegiato come i normali programmi utente.</li>
@@ -376,6 +377,12 @@
 </ul>
 <p>Il rischio che si corre con questa struttura è che i moduli che possono essere collegati al kernel girano nello stesso spazio di indirizzamento del kernel, quindi se questi hanno un bug grave possono mandare in crash l’intero sistema (kernel panic).</p>
 <p>In generale, il progetto del kernel linux ha cercato di prendere i vantaggi dei due mondi: monolitico e flessibilità modulare.</p>
+<h2 id="windows-acrchitecture"><a class="header" href="#windows-acrchitecture">Windows acrchitecture</a></h2>
+<p>Struttura modulare per renderlo più flessibile. Questo sistema è basato su un’architettura a microkernel ibrida.</p>
+<ul>
+<li>Non è puramente un’architettura a microkernel, anche se la maggior parte delle funzionalità sono eseguite all’esterno del microkernel.</li>
+<li>Tutti i moduli esterni sono caricati dinamicamente e quindi posso essere rimossi, aggiornati, o sostituiti senza riscrivere o ricompilare tutto il sistema.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="deadlock"><a class="header" href="#deadlock">Deadlock</a></h1>
 <p>Deadlock è un fenomeno che può presentarsi nelle <strong>applicazioni concorrenti</strong> che porta a un blocco permanente di processi in <strong>competizione per risorse condivise</strong>.</p>
