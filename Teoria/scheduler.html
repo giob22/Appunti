@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c78ca99c.js";
+            window.path_to_searchindex_js = "searchindex-7cc58eec.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-75620bcb.js"></script>
@@ -337,6 +337,12 @@
 <p>L’utilizzo di un algoritmo di scheduling a priorità può indurre situazioni di <strong>attesa indefinita</strong> di processi a priorità più bassa (<strong>starvation</strong>).</p>
 <p>Per far fronte a queste situazioni si utilizzano schemi di priorità dinamiche.</p>
 <p>Come ad esempio, utilizzare un aumento graduale della priorità dei processi che si trovano in attesa nel sistema da lungo tempo → <strong>Aging</strong>.</p>
+<hr>
+<p>EPISODIO esemplificativo dei problemi di starvation:</p>
+<p>L’IBM 7094, un computer progettato per applicazioni scientifiche e tecnologia su larga scala, ha avuto il più eclatante problema di starvation.</p>
+<p>Questo computer è stato utilizzato dalla NASA e per operazioni militari ed è stato introdotto nel 1962 e ha terminato il suo servizio nel 1973.</p>
+<p>Quando è terminato il servizio gli utenti trovarono un processo a bassa priorità che fu ammesso nel sistema nel 1976 non è mai terminato perché nella coda dei processi pronti si presentavano ogni volta processi a priorità maggiore.</p>
+<p>In questi casi la soluzione è quella di implementare la tecnica di Aging che consiste nel aumentare gradualmente la priorità di un processo in attesa sulla coda dei processi pronti rispetto ad alcuni parametri, come il tempo di attesa per ottenere la risorsa CPU.</p>
 <h2 id="classificazione-relativa-al-momento-in-cui-interviene-lo-scheduling"><a class="header" href="#classificazione-relativa-al-momento-in-cui-interviene-lo-scheduling">Classificazione relativa al momento in cui interviene lo scheduling</a></h2>
 <p>Una prima classificazione fra gli algoritmi di scheduling è relativva alla scelta di quali siano gli eventi in seguito ai quali lo scheduler deve intervenire:</p>
 <ul>
