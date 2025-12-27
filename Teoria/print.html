@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7cc58eec.js";
+            window.path_to_searchindex_js = "searchindex-0b9ec49b.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-75620bcb.js"></script>
+        <script src="toc-3a561045.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -546,7 +546,7 @@
 <p>Per far fronte a queste situazioni si utilizzano schemi di priorità dinamiche.</p>
 <p>Come ad esempio, utilizzare un aumento graduale della priorità dei processi che si trovano in attesa nel sistema da lungo tempo → <strong>Aging</strong>.</p>
 <hr>
-<p>EPISODIO esemplificativo dei problemi di starvation:</p>
+<p>EPISODIO esemplificativo dei problemi che può causare la starvation:</p>
 <p>L’IBM 7094, un computer progettato per applicazioni scientifiche e tecnologia su larga scala, ha avuto il più eclatante problema di starvation.</p>
 <p>Questo computer è stato utilizzato dalla NASA e per operazioni militari ed è stato introdotto nel 1962 e ha terminato il suo servizio nel 1973.</p>
 <p>Quando è terminato il servizio gli utenti trovarono un processo a bassa priorità che fu ammesso nel sistema nel 1976 non è mai terminato perché nella coda dei processi pronti si presentavano ogni volta processi a priorità maggiore.</p>
@@ -2316,6 +2316,33 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li><strong>Eccezioni ed eventi asincroni</strong>
 <ul>
 <li>Page fault, debug exceptions, interrupts, etc.</li>
+</ul>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="definizioni-utili"><a class="header" href="#definizioni-utili">Definizioni utili</a></h1>
+<ul>
+<li>
+<p><em><strong>Processo</strong></em>:</p>
+<p>Unità base di esecuzione del SO, descrive <strong>l’attività dell’elaboratore relative alla specifica esecuzione di un codice</strong>.</p>
+<p>è un’entità dinamica che consiste in: programma da eseguire + stato di esecuzione.</p>
+<p>Possiamo avere più processi relativi all’esecuzione di più istanze dello stesso programma.</p>
+</li>
+<li>
+<p><em><strong>Programma</strong></em></p>
+<p>Sequenza statica di esecuzione, corrisponde alla codifica in un linguaggio di programmazione comprensibile all’elaboratore, in modo che questo possa essere eseguito.</p>
+</li>
+<li>
+<p><em><strong>Immagine di un processo</strong></em></p>
+<p>L’immagine di un processo è l’insieme completo delle aree di memoria e delle strutture, mantenute dal kernel necessaria alla gestione e all’esecuzione di un processo.</p>
+<ul>
+<li>Stack</li>
+<li>Heap</li>
+<li>Area dati globali</li>
+<li>Codice → rientrante</li>
+<li>PCB</li>
+<li>Stack del kernel → utilizzato dal kernel quando il processo esegue in kernel mode</li>
+<li></li>
 </ul>
 </li>
 </ul>
