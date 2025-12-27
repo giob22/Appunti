@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-28f53d59.js";
+            window.path_to_searchindex_js = "searchindex-c78ca99c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-75620bcb.js"></script>
@@ -311,6 +311,46 @@
 <p>→ evita che ci siano situazioni di starvation per un processo.</p>
 </li>
 </ul>
+<h2 id="esiste-un-algoritmo-perfetto"><a class="header" href="#esiste-un-algoritmo-perfetto">Esiste un algoritmo perfetto?</a></h2>
+<ul>
+<li>Naturalmente NO!</li>
+</ul>
+<p>Ovviamente i parametri descritti che riguardano l’User-oriented e il System-oriented sono interdipendenti tra loro ma alcuni sono nettamente in contrasto.</p>
+<p>Ad esempio ottenere una politica <em>fair</em> non mi garantisce una massimizzazione dell’<em>utilizzo della CPU</em> o il <em>deadlines</em>.</p>
+<p>Mentre ottenere una politica che va verso la minimizzazione del <em>turnaround time</em> porta anche un miglioramento del <em>tempo di risposta</em>.</p>
+<blockquote>
+<p>Il progetto e l’implementazione di una politica di scheduling implica sempre un compromesso tra vari requisiti constrastanti.</p>
+<p>La scelta dovrà essere fatta tenendo conto “per cosa dovrà essere utilizzato il sistema”.</p>
+</blockquote>
+<h2 id="utilizzo-delle-priorità"><a class="header" href="#utilizzo-delle-priorità">Utilizzo delle priorità</a></h2>
+<p>Lo scheduler può scegliere i processi in base alla loro priorità.</p>
+<p>Le priorità assegnate ai processi possono essere:</p>
+<ul>
+<li><strong>Statiche</strong>, se non si modificano durante il periodo di vita del processo nel sistema.</li>
+<li><strong>Dinamiche</strong>, se durante il loro ciclo di vita i processi possono modificare la loro priorità in base ad alcuni parametri come: tempo di CPU o tempo di I/O.</li>
+</ul>
+<p>I processi sono tipicamente raggruppati in <strong>classi di priorità</strong></p>
+<ul>
+<li>L’algoritmo di scheduling dovrà scegliere un processo pronto che appartiene alla classe di priorità più alta.</li>
+</ul>
+<h2 id="starvation"><a class="header" href="#starvation">Starvation</a></h2>
+<p>L’utilizzo di un algoritmo di scheduling a priorità può indurre situazioni di <strong>attesa indefinita</strong> di processi a priorità più bassa (<strong>starvation</strong>).</p>
+<p>Per far fronte a queste situazioni si utilizzano schemi di priorità dinamiche.</p>
+<p>Come ad esempio, utilizzare un aumento graduale della priorità dei processi che si trovano in attesa nel sistema da lungo tempo → <strong>Aging</strong>.</p>
+<h2 id="classificazione-relativa-al-momento-in-cui-interviene-lo-scheduling"><a class="header" href="#classificazione-relativa-al-momento-in-cui-interviene-lo-scheduling">Classificazione relativa al momento in cui interviene lo scheduling</a></h2>
+<p>Una prima classificazione fra gli algoritmi di scheduling è relativva alla scelta di quali siano gli eventi in seguito ai quali lo scheduler deve intervenire:</p>
+<ul>
+<li>
+<p>Si indicano come algoritmi di scheduling senza diritto di <em>revoca</em> (<em>non preemptive</em>) tutti quelli che prevedono l’intervento dello scheduler esclusivamente quando il processi in esecuzione libera spontaneamente la CPU, o perché termina la propria esecuzione o perché si sospende in attesa del verificarsi di un dato evento asincrono.</p>
+</li>
+<li>
+<p>Invece, vengono indicati come algoritmi con il diritto di <em>revoca</em> (<em>preemptive</em>) quelli che prevedono l’intervento dello scheduler anche per decidere di revocare la CPU al processo in esecuzione al fine di allocarla ad un altro processo in attesa sulla coda dei processi pronti.</p>
+<p>Per esempio a causa dell’arrivo di un segnale di interruzione che indica lo scadere del quanto di tempo assegnato al processo, oppure perché entra in coda dei processi pronti un processo ritenuto “urgente”.</p>
+<p>In entrambi i casi il processo in esecuzione viene forzato a rilasciare la risorsa CPU preventivamente e inserito nella coda dei processi pronti.</p>
+</li>
+</ul>
+<p>Gli algoritmi <em>non preeptive</em> sono sicuramente quelli più semplici e riducono il numero delle volte che lo scheduler deve intervenire e quindi il <strong>numero di cambi di contesto</strong> fra processi. → Richiedono un minor <em>overhead</em> di sistema.</p>
+<p>Allo stesso tempo sono anche quelli che non offrono una flessibilità in termini di strategie di scheduling.</p>
 
                     </main>
 
