@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0b9ec49b.js";
+            window.path_to_searchindex_js = "searchindex-97513102.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-3a561045.js"></script>
@@ -2334,7 +2334,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </li>
 <li>
 <p><em><strong>Immagine di un processo</strong></em></p>
-<p>L’immagine di un processo è l’insieme completo delle aree di memoria e delle strutture, mantenute dal kernel necessaria alla gestione e all’esecuzione di un processo.</p>
+<p>L’immagine di un processo consiste nell’insieme del codice, area dati globale, stack, heap e il descrittore. Ovvero tutte quelle componenti necessarie all’esecuzione in un contesto di sistema operativo multiprogrammato.</p>
 <ul>
 <li>Stack</li>
 <li>Heap</li>
@@ -2342,8 +2342,22 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li>Codice → rientrante</li>
 <li>PCB</li>
 <li>Stack del kernel → utilizzato dal kernel quando il processo esegue in kernel mode</li>
-<li></li>
 </ul>
+</li>
+<li>
+<p><em><strong>Spazio di indirizzamento</strong></em></p>
+<p>L’immagine del processo e le risorse da esso possedute costituiscono il suo spazio di indirizzamento.</p>
+</li>
+<li>
+<p><em><strong>Thread</strong></em></p>
+<p>Flusso di controllo sequenziale di un processo eseguito in maniera concorrente a questo.</p>
+<p>A differenza di un processo non possiede delle risorse private alla sua esecuzione ma le condivide con altri thread dello stesso processo e il processo stesso.</p>
+<p>Quello che appartiene ad un thread - processo leggero - sono:</p>
+<ul>
+<li>insieme di registri</li>
+<li>stack</li>
+</ul>
+<p>Tutte le altre aree di memoria fanno parte dello spazio di indirizzamento del processo, quindi condivise.</p>
 </li>
 </ul>
 
