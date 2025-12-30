@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-12bcf412.js";
+            window.path_to_searchindex_js = "searchindex-9be24c9c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -259,6 +259,30 @@ FINE 1
 <p>Nel caso in cui tale file non ha i permessi corretti il processo si interrompe impostando la variabile <code>errno = 13</code>, dove tale valore corrisponde a <code>EACCES</code> cioè <strong>permission denied</strong>.</p>
 <p>Situazioni del genere potrebbero essere molto fastidiose se non si verifica sempre quello che accade nel momento di un crash, in questo caso è bastato verificare il contenuto della variabile globale <code>errno</code>.</p>
 <p>Tale variabile bisogna importarla poiché risiede nella libreria standard <code>errno</code>.</p>
+<h2 id="problematiche-riguardanti-la-programmazione-concorrente"><a class="header" href="#problematiche-riguardanti-la-programmazione-concorrente">Problematiche riguardanti la programmazione concorrente</a></h2>
+<ul>
+<li>
+<p>Comunicazione tra processi</p>
+<p>Ovvero come far comunicare i processi in modo che si coordino:</p>
+<ul>
+<li>in ambiente locale</li>
+<li>in ambiente globale</li>
+</ul>
+</li>
+<li>
+<p>Risorse condivise</p>
+<p>Gestire la concorrenza sull’accesso e modifica delle risorse condivise.</p>
+<p>Sarebbe necessario implementare un meccanismo di mutua esclusione.</p>
+</li>
+<li>
+<p>Sincronizzazione tra processi</p>
+<p>Sincronizzare l’esecuzione di un processo rispetto l’esecuzione di un altro che viene eseguito in maniera concorrente a questo.</p>
+</li>
+<li>
+<p>Assegnazione del tempo del processore</p>
+<p>Come il tempo del processore deve essere distribuito in modo efficiente tra i vari processi la cui esecuzione è alternata.</p>
+</li>
+</ul>
 <!-- @todo inserisci qui tutte le note importanti sulla logica -->
                     </main>
 

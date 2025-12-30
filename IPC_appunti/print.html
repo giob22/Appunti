@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-12bcf412.js";
+            window.path_to_searchindex_js = "searchindex-9be24c9c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -198,7 +198,7 @@
 <p>La rimozione però non nel senso stretto, in realtà la risorsa vine <strong>solamente etichettata</strong> come eliminabile al kernel: infatti questa viene eliminata se non sono presenti processi che la stanno utilizzando; ovvero processi <code>attached</code> alla risorsa.</p>
 <p><img src="images/shared_memory_flow.svg" alt="Diagramma chiave IPC"></p>
 <hr>
-<p>Le risorse IPC sono <strong>permanenti</strong>: se un processo termina o si stacca dalla risorsa questa non si elimina automaticamente. Sarà necessario una chiamata esplicita alla primitiva <code>clt</code>.</p>
+<p>Le risorse IPC sono <strong>permanenti</strong>: se un processo termina o si stacca dalla risorsa questa non si elimina automaticamente. Sarà necessario una chiamata esplicita alla primitiva <code>ctl</code>.</p>
 <p><img src="images/persistenza_ipc.svg" alt="Diagramma chiave IPC"></p>
 <h2 id="primitiva-get"><a class="header" href="#primitiva-get">Primitiva <code>get</code></a></h2>
 <p>La primitiva <code>get</code> ha la seguente firma:</p>
@@ -374,17 +374,16 @@ struct shmid_ds {
 <p>Restituisce <code>-1</code> in caso di fallimento. Invece se ha successo restituisce il <strong>descrittore della risorsa</strong>.</p>
 <hr>
 <p>ESEMPIO: con chiave cablata e senza flags</p>
-<pre><code class="language-c">	...
-	key_t chiave = 40;
-	int ds_shm;
-	ds_shm = shmget(chiave, 1024, 0);
-
-	if(ds_shm &lt; 0) {
-   		// la risorsa non esiste! esci dal programma
-    	perror(“errore shmget!”);
-    	exit(1);
-  	}
-  	... Utilizza la shared memory già esistente...
+<pre><code class="language-c">...
+key_t chiave = 40;
+int ds_shm;
+ds_shm = shmget(chiave, 1024, 0);
+if(ds_shm &lt; 0) {
+  		// la risorsa non esiste! esci dal programma
+   	perror(“errore shmget!”);
+   	exit(1);
+ 	}
+ 	... Utilizza la shared memory già esistente...
 </code></pre>
 <p>Se la shared memory non è stata giá creata da un altro processo, la funzione <code>shmget()</code> restituisce <code>-1</code>.</p>
 <hr>
@@ -402,7 +401,7 @@ exit(1);
 … Utilizza la shared memory (esistente o nuova)…
 ```</p>
 <p>In questo caso il flag <code>IPC_CREAT</code> impone di creare una nuova shared memory se non ne esiste una con la stessa <code>key</code>; la crea con le caratteristiche specificate di dimensione e permessi di accesso.</p>
-<p>Nel caso in cui esiste giá una shared memory vente tale valore di <code>key</code>,  la chiamata restituisce semplicemente il descrittore della risorsa senza tener conto di <code>size</code> e dei permessi di accesso specificati.</p>
+<p>Nel caso in cui esiste giá una shared memory avente tale valore di <code>key</code>,  la chiamata restituisce semplicemente il descrittore della risorsa senza tener conto di <code>size</code> e dei permessi di accesso specificati.</p>
 <hr>
 <p>ESEMPIO: chiave cablata e flag <code>IPC_CREAT</code> e <code>IPC_EXCL</code></p>
 <pre><code class="language-c">	key_t chiave = 40;
@@ -2080,6 +2079,30 @@ FINE 1
 <p>Nel caso in cui tale file non ha i permessi corretti il processo si interrompe impostando la variabile <code>errno = 13</code>, dove tale valore corrisponde a <code>EACCES</code> cioè <strong>permission denied</strong>.</p>
 <p>Situazioni del genere potrebbero essere molto fastidiose se non si verifica sempre quello che accade nel momento di un crash, in questo caso è bastato verificare il contenuto della variabile globale <code>errno</code>.</p>
 <p>Tale variabile bisogna importarla poiché risiede nella libreria standard <code>errno</code>.</p>
+<h2 id="problematiche-riguardanti-la-programmazione-concorrente"><a class="header" href="#problematiche-riguardanti-la-programmazione-concorrente">Problematiche riguardanti la programmazione concorrente</a></h2>
+<ul>
+<li>
+<p>Comunicazione tra processi</p>
+<p>Ovvero come far comunicare i processi in modo che si coordino:</p>
+<ul>
+<li>in ambiente locale</li>
+<li>in ambiente globale</li>
+</ul>
+</li>
+<li>
+<p>Risorse condivise</p>
+<p>Gestire la concorrenza sull’accesso e modifica delle risorse condivise.</p>
+<p>Sarebbe necessario implementare un meccanismo di mutua esclusione.</p>
+</li>
+<li>
+<p>Sincronizzazione tra processi</p>
+<p>Sincronizzare l’esecuzione di un processo rispetto l’esecuzione di un altro che viene eseguito in maniera concorrente a questo.</p>
+</li>
+<li>
+<p>Assegnazione del tempo del processore</p>
+<p>Come il tempo del processore deve essere distribuito in modo efficiente tra i vari processi la cui esecuzione è alternata.</p>
+</li>
+</ul>
 <!-- @todo inserisci qui tutte le note importanti sulla logica -->
                     </main>
 

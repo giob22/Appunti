@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-12bcf412.js";
+            window.path_to_searchindex_js = "searchindex-9be24c9c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -197,7 +197,7 @@
 <p>La rimozione però non nel senso stretto, in realtà la risorsa vine <strong>solamente etichettata</strong> come eliminabile al kernel: infatti questa viene eliminata se non sono presenti processi che la stanno utilizzando; ovvero processi <code>attached</code> alla risorsa.</p>
 <p><img src="images/shared_memory_flow.svg" alt="Diagramma chiave IPC"></p>
 <hr>
-<p>Le risorse IPC sono <strong>permanenti</strong>: se un processo termina o si stacca dalla risorsa questa non si elimina automaticamente. Sarà necessario una chiamata esplicita alla primitiva <code>clt</code>.</p>
+<p>Le risorse IPC sono <strong>permanenti</strong>: se un processo termina o si stacca dalla risorsa questa non si elimina automaticamente. Sarà necessario una chiamata esplicita alla primitiva <code>ctl</code>.</p>
 <p><img src="images/persistenza_ipc.svg" alt="Diagramma chiave IPC"></p>
 <h2 id="primitiva-get"><a class="header" href="#primitiva-get">Primitiva <code>get</code></a></h2>
 <p>La primitiva <code>get</code> ha la seguente firma:</p>

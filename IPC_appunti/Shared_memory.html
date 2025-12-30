@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-12bcf412.js";
+            window.path_to_searchindex_js = "searchindex-9be24c9c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -235,17 +235,16 @@ struct shmid_ds {
 <p>Restituisce <code>-1</code> in caso di fallimento. Invece se ha successo restituisce il <strong>descrittore della risorsa</strong>.</p>
 <hr>
 <p>ESEMPIO: con chiave cablata e senza flags</p>
-<pre><code class="language-c">	...
-	key_t chiave = 40;
-	int ds_shm;
-	ds_shm = shmget(chiave, 1024, 0);
-
-	if(ds_shm &lt; 0) {
-   		// la risorsa non esiste! esci dal programma
-    	perror(“errore shmget!”);
-    	exit(1);
-  	}
-  	... Utilizza la shared memory già esistente...
+<pre><code class="language-c">...
+key_t chiave = 40;
+int ds_shm;
+ds_shm = shmget(chiave, 1024, 0);
+if(ds_shm &lt; 0) {
+  		// la risorsa non esiste! esci dal programma
+   	perror(“errore shmget!”);
+   	exit(1);
+ 	}
+ 	... Utilizza la shared memory già esistente...
 </code></pre>
 <p>Se la shared memory non è stata giá creata da un altro processo, la funzione <code>shmget()</code> restituisce <code>-1</code>.</p>
 <hr>
@@ -263,7 +262,7 @@ exit(1);
 … Utilizza la shared memory (esistente o nuova)…
 ```</p>
 <p>In questo caso il flag <code>IPC_CREAT</code> impone di creare una nuova shared memory se non ne esiste una con la stessa <code>key</code>; la crea con le caratteristiche specificate di dimensione e permessi di accesso.</p>
-<p>Nel caso in cui esiste giá una shared memory vente tale valore di <code>key</code>,  la chiamata restituisce semplicemente il descrittore della risorsa senza tener conto di <code>size</code> e dei permessi di accesso specificati.</p>
+<p>Nel caso in cui esiste giá una shared memory avente tale valore di <code>key</code>,  la chiamata restituisce semplicemente il descrittore della risorsa senza tener conto di <code>size</code> e dei permessi di accesso specificati.</p>
 <hr>
 <p>ESEMPIO: chiave cablata e flag <code>IPC_CREAT</code> e <code>IPC_EXCL</code></p>
 <pre><code class="language-c">	key_t chiave = 40;
