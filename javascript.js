@@ -93,24 +93,23 @@ function createBackButton(){
     background: var(--color);
     color: #fff;
     }
+    img {
+        padding: 8px;
+    }
 
     /* Definiamo l'animazione */
     @keyframes flash-pulse {
         0% {
-            outline: 5px solid yellow;
-            transform: scale(1.05);
-            box-shadow: 0 0 10px yellow;
+            background-color: var(--sidebar-active);
         }
         100% {
-            outline: 5px solid transparent;
-            transform: scale(1);
-            box-shadow: none;
+            background-color: trasparent;
         }
     }
 
     /* Questa classe verrà aggiunta da JS quando clicchi */
-    .flash-attivo img {
-        animation: flash-pulse 1.5s ease-out;
+    .flash-attivo {
+        animation: flash-pulse 1.5s linear;
     }
 
     `
