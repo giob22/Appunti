@@ -25,6 +25,34 @@ document.addEventListener("scroll", () => {
 });
 
 
+document.addEventListener('click', function(e) {
+    // 1. Controlla se l'elemento cliccato è un link interno (inizia con #)
+    // Nota: e.target.closest('a') serve nel caso clicchi su un'icona dentro un link
+    const link = e.target.closest('a');
+    
+    if (link && link.getAttribute('href').startsWith('#')) {
+        const id = link.getAttribute('href').substring(1); // Rimuove il '#'
+        const targetElement = document.getElementById(id);
+
+        if (targetElement) {
+            // 2. Rimuove la classe se c'era già (reset)
+            targetElement.classList.remove('flash-attivo');
+            
+            // 3. Trucco magico: forza il browser a ricalcolare lo stile (Reflow)
+            // Senza di questo, togliere e rimettere la classe subito non riavvia l'animazione
+            void targetElement.offsetWidth; 
+            
+            // 4. Aggiunge la classe che fa partire l'animazione
+            targetElement.classList.add('flash-attivo');
+            
+            // Opzionale: Rimuove la classe alla fine dell'animazione (pulizia)
+            setTimeout(() => {
+                targetElement.classList.remove('flash-attivo');
+            }, 1500); // 1500ms corrisponde alla durata nel CSS
+        }
+    }
+});
+
 // aggiungo pulsante "back"
 function createBackButton(){
     console.log("test");
@@ -64,6 +92,25 @@ function createBackButton(){
     .button-89:active {
     background: var(--color);
     color: #fff;
+    }
+
+    /* Definiamo l'animazione */
+    @keyframes flash-pulse {
+        0% {
+            outline: 5px solid yellow;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px yellow;
+        }
+        100% {
+            outline: 5px solid transparent;
+            transform: scale(1);
+            box-shadow: none;
+        }
+    }
+
+    /* Questa classe verrà aggiunta da JS quando clicchi */
+    .flash-attivo img {
+        animation: flash-pulse 1.5s ease-out;
     }
 
     `
