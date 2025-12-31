@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f48d211a.js";
+            window.path_to_searchindex_js = "searchindex-ba79cc75.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-3a561045.js"></script>
@@ -752,7 +752,7 @@ il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel mom
 </ul>
 <h4 id="considerazioni"><a class="header" href="#considerazioni">considerazioni</a></h4>
 <p>Per un corretto funzionamento è necessario che l’algoritmo sia sempre <strong>eseguito</strong> <strong>ad</strong> <strong>ogni</strong> <strong>tentativo</strong> <strong>di</strong> <strong>allocazione</strong> di risorse.</p>
-<p>In ogni momento in cui lo stato cambia si verifica se esiste almeno una sequenza sicura.</p>
+<p>In ogni momento in cui lo stato cambia, si verifica se esiste almeno una sequenza sicura.</p>
 <p>Intuitivamente, l’algoritmo garantisce sempre che <strong>esista almeno una exit strategy</strong> che evita il deadlock.</p>
 <p>Questa sequenza sicuro non è detto che sia l’ordine effettivo con cui eseguiranno i processi.</p>
 <h4 id="problematiche"><a class="header" href="#problematiche">problematiche:</a></h4>
@@ -788,7 +788,7 @@ il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel mom
 <p>In caso affermativo, il sistema applica un algoritmo di <strong>ripristino</strong> (recovery).</p>
 </li>
 </ul>
-<p>La strategia di detection sfrutta il <strong>grado di attesa</strong>, che è un grafo costruito da quello di assegnazione delle risorse.</p>
+<p>La strategia di detection sfrutta il <strong>grafo di attesa</strong>, che è un grafo costruito da quello di assegnazione delle risorse.</p>
 <p>Tale grafo rappresenta l’attesa che un processo ha rispetto un altro processo.</p>
 <ul>
 <li>
@@ -800,7 +800,7 @@ il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel mom
 <li>
 <p>Periodicamente viene aggiornato e chiamato l’algoritmo per la <strong>ricerca di eventuali cicli di attesa</strong>.</p>
 <ul>
-<li>Tale algoritmo richiede un numero di operazioni dell’ordine di <em>n</em>^2, dove <em>n</em> è il numero di vertici (processi).</li>
+<li>Tale algoritmo richiede un numero di operazioni dell’ordine di \(n^2\) , dove <em>n</em> è il numero di vertici (processi).</li>
 </ul>
 </li>
 </ul>
