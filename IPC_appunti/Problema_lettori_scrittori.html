@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-9be24c9c.js";
+            window.path_to_searchindex_js = "searchindex-34af66db.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-dcbba2e9.js"></script>
@@ -189,7 +189,7 @@
 <li>i <em>lettori</em> e <em>scrittori</em> si <strong>escludono mutuamente</strong> dall’uso della risorsa</li>
 </ol>
 <p>Non è presente un vincolo di ordinamento (un lettore non deve leggere solo dopo una scrittura) tra i processi lettori e scrittori, ma un vincolo di <strong>mutua esclusione</strong> (tra scrittori) e <strong>cooperazione</strong> (tra lettore e scrittore) sull’utilizzo della <code>shm</code>.</p>
-<p>In realtà si vede che è necessario gestire anche la mutua esclusione tra processi scrittori che però non riguarda la <code>shm</code> ma una variabile necessaria all’implementazione di questo paradigma: variabile che tiene conto del numero corrente di lettori sulla <code>shm</code>.</p>
+<p>In realtà si vede che è necessario gestire anche la mutua esclusione tra processi lettori che però non riguarda la <code>shm</code> ma una variabile necessaria all’implementazione di questo paradigma: variabile che tiene conto del numero corrente di lettori sulla <code>shm</code>.</p>
 <p>I processi lettori inoltre non consumano la risorsa nel momento in cui la leggono/usufruiscono, come accadeva per i consumatori → non notificano allo scrittore l’avvenuta lettura perché non c’è il concetto di spazio libero (come avveniva per consumatore/produttore).</p>
 <p>Un <em>side effect</em> dei lettori/scrittori è la starvation che può mostrarsi in due casi:</p>
 <ol>
