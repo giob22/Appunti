@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a4e84b3d.js";
+            window.path_to_searchindex_js = "searchindex-f48d211a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-3a561045.js"></script>
@@ -443,7 +443,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 </ul>
 <h3 id="impossibilità-di-prelazione"><a class="header" href="#impossibilità-di-prelazione">Impossibilità di prelazione</a></h3>
 <p>Rilassando il vincolo di impossibilità di prelazione se un processo già possiede alcune risorse, e ne richiede un’altra che non gli può esser allocata immediatamente, allora <strong>rilascia tutte le risorse possedute</strong>.</p>
-<p>Quindi non si mette in attesa per la singola risorsa che richiede mantenendo il possesso di quelle già allocate, ma libera tutte le risorse e si mette in attesa.</p>
+<p>Quindi non si mette in attesa per la singola risorsa che richiede, mantenendo il possesso di quelle già allocate, ma libera tutte le risorse e si mette in attesa.</p>
 <p>Tale processo quindi non si metterà in attesa per la sola risorsa in più richiesta ma anche per tutte le altre che possedeva e che ha rilasciato.</p>
 <p>→ il processo verrà eseguito nuovamente solo quando può riottenere il possesso sia delle <strong>vecchie che delle nuove risorse</strong>.</p>
 <!-- @todo inserisci un immagine o una gif esemplificativa -->
@@ -513,9 +513,9 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <li><strong>nessun vincolo a priori</strong> delle risorse</li>
 <li>se lo stato attuale delle risorse è <strong>rischioso</strong>, un algoritmo <strong>rifiuta la richiesta</strong> di allocazione</li>
 </ul>
-<p>Quindi si accetta la possibilità di incorrere in un deadlock, non eliminando le condizione necessarie, ma si cerca di evitarlo valutando lo stato in cui si trova in sistema ogni volta che viene effettuata una richiesta (a <em>run-time</em>).</p>
+<p>Quindi si accetta la possibilità di incorrere in un deadlock, non eliminando le condizione necessarie, ma si cerca di evitarlo valutando lo stato in cui si trova il sistema ogni volta che viene effettuata una richiesta (a <em>run-time</em>).</p>
 <p>Quindi istante per istante, possedendo <strong>la storia precedente del grafo delle assegnazioni delle risorse</strong>, un algoritmo valuta se <strong>successivamente</strong> a una certa richiesta da parte di un processo porta l’applicazione a un deadlock.</p>
-<p>Quindi l’algoritmo deve essere in grado di fare una <strong>sorta di predizione sull’andamento dell’esecuzione</strong> dei processi sugli istanti successivi a una qualsiasi richiesta per una risorsa.</p>
+<p>Quindi l’algoritmo deve essere in grado di fare una <strong>sorta di predizione sull’andamento dell’esecuzione</strong> dei processi negli istanti successivi a una qualsiasi richiesta per una risorsa.</p>
 <p>Quindi possiamo considerarla come una prevenzione, che <strong>non è più statica</strong> come per la gestione PREVENTION, ma <strong>dinamica</strong>.</p>
 <p>Anche questa come soluzione al deadlock è molto complicata perché richiede diverse assunzioni: come quella di riuscire a prevedere le eventuali richieste di un processo se questo non le dichiara a priori.</p>
 <p align="center"><img src="images/avoidance_esempio.png" width="500"></p>
@@ -596,8 +596,7 @@ signal (<span style="color:green;">mutex2</span>)<br></p>
 <p align="center"><img src="images/c.png" width="300"></p>
 
 <p>Un processo Pn+1 viene eseguito solo se:</p>
-<p><a id="legge_numero_richieste_massimo"></a></p>
-<p align="center"><img src="images/numero_richieste_massimo.png" width="300"></p>
+<p align="center" id="legge_numero_richieste_massimo"><img src="images/numero_richieste_massimo.png" width="300"></p>
 
 <p>Cioè un processo viene eseguito se il <strong>numero massimo di richieste di tutti i processi</strong> (sommatoria) <strong>più quelle del nuovo processo</strong> (Cij) per la risorse j-esima è minore del numero di istanze della richiesta Rj.</p>
 <p>Questo deve esser calcolato per ogni tipo di risorsa → per ogni colonna di <em>C</em>.</p>
