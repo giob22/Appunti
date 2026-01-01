@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d42c7920.js";
+            window.path_to_searchindex_js = "searchindex-a0989a36.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-3a561045.js"></script>
@@ -1719,7 +1719,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Usando pagine di \(64\)KB (\(2^{16}\)):</p>
 <ul>
 <li><strong>dimensione</strong> della tabella: \(2^{16} = 64\)KB → 👍🏿</li>
-<li><strong>frammentazione interna</strong> media: \(\frac{2^{10}}{2} = 0.5\)KB → ⚠️​</li>
+<li><strong>frammentazione interna</strong> media: \(\frac{2^{10}}{2} = 32\)KB → ⚠️​</li>
 </ul>
 <p>Come si può notare la scelta di una dimensione o del numero di pagine influenza l’altra grandezza.</p>
 <p>→ bisogna scegliere una <strong>dimensione di pagina</strong> che abbia un buon <strong>compromesso</strong> tra i due valori.<br>→ Il compromesso è tra <strong>frammentazione e performance</strong>. Perché aumentato il numero di pagine riduco la frammentazione ma diminuisco le performance poiché il SO deve gestire un grande numero di pagine; invece diminuendo il numero di pagine aumento la frammentazione interna media per ogni pagina.</p>
