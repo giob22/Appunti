@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-9fa46c47.js";
+            window.path_to_searchindex_js = "searchindex-d42c7920.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-3a561045.js"></script>
@@ -601,7 +601,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>Essendo l’allocazione non contigua è necessario memorizzare ogni pagina virtuale in che posizione della memoria fisica si trova.</p>
 <p>Nel codice, quindi, si utilizzano indirizzi virtuali che devono essere <strong>tradotti dall’MMU</strong> in indirizzi fisici a <em>run-time</em>.</p>
 <p>Questo hardware è necessario perché nell’approccio di allocazione <strong>non contigua non si conosce a priori dove sarà rilocato il codice</strong>.<br>→ dobbiamo sempre tener conto che se parliamo di paginazione allora stiamo parlando di allocazione non contigua, altrimenti la paginazione non avrebbe senso.</p>
-<p>Quindi quando l’architettura utilizza l’approccio di paginazione si tutti i programmi utilizzano indirizzi virtuali.</p>
+<p>Quindi quando l’architettura utilizza l’approccio di paginazione, tutti i programmi utilizzano indirizzi virtuali.</p>
 <p>La paginazione, inoltre, non è solo una tecnica di allocazione non contigua, ma anche una tecnica per la <strong>gestione della memoria virtuale</strong>. In altre parole, la paginazione permette di creare uno spazio virtuale più grande della memoria fisica, se la gestione del caricamento delle pagine è della tipologia: <strong>a domanda</strong>.</p>
 <p>Un indirizzo virtuale contiene la <strong>coppia</strong>:</p>
 <ul>
@@ -651,7 +651,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 
 <ul>
 <li>
-<p>Si possono verificare due situaizioni:</p>
+<p>Si possono verificare due situazioni:</p>
 <ul>
 <li>L’accesso alla TLB produce un cache hit, quindi subito ho l’entry point della pagina in memoria fisica, tale operazione richiede nanosecondi.</li>
 <li>L’accesso alla TLB produce un cache miss, quindi la ricerca passa sulla tabella delle pagine, tale operazione richiede decine di nanosecondi.</li>
