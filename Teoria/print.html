@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ba79cc75.js";
+            window.path_to_searchindex_js = "searchindex-9fa46c47.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-3a561045.js"></script>
@@ -1243,7 +1243,7 @@ location of code : 0x1095afe50
 </code></pre>
 <p>Tali indirizzi virtuali che abbiamo stampato vengono tradotti da un componente hardware (MMU - Memory Management Unit) per eseguire le istruzioni desiderate.</p>
 <hr>
-<p>Il kernel a differenza di un Hypervisor astrae l’hardware per consentire l’esecuzione di un processo in modo indipendente.</p>
+<p>Il kernel, a differenza di un Hypervisor, astrae l’hardware per consentire l’esecuzione di un processo in modo indipendente.</p>
 <p>La posizione (<strong>indirizzi</strong>) di codice e dati nella memoria di un processo è un’<strong>astrazione</strong>. → indirizzi virtuali.</p>
 <p>La posizione effettiva in memoria fisica è <strong>gestita dal sistema operativo</strong>.</p>
 <h2 id="aspetti-e-parametri-caratterizzanti-la-gestione-della-memoria"><a class="header" href="#aspetti-e-parametri-caratterizzanti-la-gestione-della-memoria">Aspetti e parametri caratterizzanti la gestione della memoria</a></h2>
@@ -1329,7 +1329,7 @@ location of code : 0x1095afe50
 <p>L’associazione di <strong>istruzioni e dati</strong> ad indirizzi di memoria (fisica) si può compiere in ognuna delle sequenti fasi:</p>
 <ul>
 <li>
-<p><strong>compilazione</strong>: se nella fase di compilazione conosce dove il processo risiederà nella memoria, allora può <strong>inserire direttamente gli indirizzi fisici nel codice oggetto</strong>.</p>
+<p><strong>compilazione</strong>: se nella fase di compilazione si conosce dove il processo risiederà nella memoria, allora può <strong>inserire direttamente gli indirizzi fisici nel codice oggetto</strong>.</p>
 <p>→ si genera così <strong>codice assoluto</strong>: gli indirizzi nel codice oggetto sono indirizzi fisici reali della RAM. Quindi codice e dati saranno allocati sempre in tali posizioni ad ogni esecuzione.</p>
 <p>→ potrebbe essere un problema se il SO decidesse di caricare il programma in un’altra zona della memoria. Sarebbe necessaria una ricompilazione perché tutti gli indirizzi sarebbero <strong>sbagliati</strong>.</p>
 <p>Quindi in questo caso gli indirizzi sarebbero fissati per sempre (fino ad una successiva ricompilazione)<br>→ nessuna <strong>flessibilità</strong>;</p>
@@ -1635,8 +1635,8 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 </blockquote>
 <h3 id="traduzione-degli-indirizzi"><a class="header" href="#traduzione-degli-indirizzi">Traduzione degli indirizzi</a></h3>
 <p>Essendo l’allocazione non contigua è necessario memorizzare ogni pagina virtuale in che posizione della memoria fisica si trova.</p>
-<p>Nel codice, quindi, si utilizzano indirizzi virtuali che devono essere <strong>tradotti dall’MMU</strong> in indirizzi fisici a run-time.</p>
-<p>Questo hardware è necessario perché nell’approccio di allocazione <strong>non contigua non si conosce a priori dove sarà rilocato il codice</strong>.<br>→ dobbiamo sempre tener conto che se parliamo di paginazione allora stiamo parlando di rilocazione non contigua, altrimenti la paginazione non avrebbe senso.</p>
+<p>Nel codice, quindi, si utilizzano indirizzi virtuali che devono essere <strong>tradotti dall’MMU</strong> in indirizzi fisici a <em>run-time</em>.</p>
+<p>Questo hardware è necessario perché nell’approccio di allocazione <strong>non contigua non si conosce a priori dove sarà rilocato il codice</strong>.<br>→ dobbiamo sempre tener conto che se parliamo di paginazione allora stiamo parlando di allocazione non contigua, altrimenti la paginazione non avrebbe senso.</p>
 <p>Quindi quando l’architettura utilizza l’approccio di paginazione si tutti i programmi utilizzano indirizzi virtuali.</p>
 <p>La paginazione, inoltre, non è solo una tecnica di allocazione non contigua, ma anche una tecnica per la <strong>gestione della memoria virtuale</strong>. In altre parole, la paginazione permette di creare uno spazio virtuale più grande della memoria fisica, se la gestione del caricamento delle pagine è della tipologia: <strong>a domanda</strong>.</p>
 <p>Un indirizzo virtuale contiene la <strong>coppia</strong>:</p>
