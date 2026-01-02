@@ -1,0 +1,574 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Virtualizzazione - Teoria</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="latex-style-3e99905e.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-070e67e6.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-ec27ba43.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Teoria</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <script src="../javascript.js"></script>
+<h1 id="virtualizzazione"><a class="header" href="#virtualizzazione">Virtualizzazione</a></h1>
+<p>Una macchina <strong>virtuale (VM)</strong> è una emulazione (mediante tecniche sw/hw) di una macchina reale.</p>
+<p>Ogni macchina virtuale esegue il proprio <strong>sistema operativo</strong> ed applicazioni.</p>
+<p>Le VM sono gestite da una <strong>virtual machine monitor (VMM)</strong>, o <strong>hypervisor</strong>. Più macchine virtuali condividono le risorse fisiche della macchina su cui eseguono.</p>
+<p>Su una stessa macchina reale possono coesistere diverse macchine virtuale attive che condividono le risorse di questa.</p>
+<h3 id="motivi-che-hanno-portato-allutilizzo-delle-vm"><a class="header" href="#motivi-che-hanno-portato-allutilizzo-delle-vm">Motivi che hanno portato all’utilizzo delle VM</a></h3>
+<ul>
+<li>Performance</li>
+<li>Flessibilità</li>
+<li>Affidabilità</li>
+<li>Sicurezza</li>
+</ul>
+<p>Per ottenere queste qualità sarebbe necessario isolare ogni applicazione in modo che una di queste vada in crash le altre non sarebbero influenzate.</p>
+<p>Senza VM, il problema sarebbe che per ottenere questo isolamento usando solo hardware fisico, bisognerebbe comprare una macchina fisica per ogni singolo servizio.</p>
+<p>Utilizzare tante macchine fisiche quanti sono i servizi oltre ad essere molto costoso è anche uno spreco di energia e spazio.</p>
+<p>Utilizzando invece diverse VM, una per ogni servizio da eseguire, possiamo ottenere la caratteristica di isolamento e inoltre si riducono enormemente gli spazi e il costo necessario.</p>
+<blockquote>
+<p>Questa operazione è detta <strong>consolidation</strong>, ovvero raggruppare più macchine virtuali su un unico server fisico per ottimizzare l’uso delle risorse.</p>
+</blockquote>
+<h3 id="gestione-di-sistemi-virtualizzati"><a class="header" href="#gestione-di-sistemi-virtualizzati">Gestione di sistemi virtualizzati</a></h3>
+<p>Le macchine virtuali possono essere velocemente create, configurate, monitorate, migrate…</p>
+<p>Attraverso strumenti software centralizzati.</p>
+<h3 id="efficienza"><a class="header" href="#efficienza">Efficienza</a></h3>
+<p>Avere più VM su una stessa macchina fisica (<strong>workload consolidation</strong>) permette di sfruttare appieno la capacità dell’hardware e di ridurre i consumi energetici.</p>
+<p align="center"><img src="images/efficienza_delle_VM.png" width="500"></p>
+
+<h3 id="flessibilità"><a class="header" href="#flessibilità">Flessibilità</a></h3>
+<p>Applicazioni <strong>legacy</strong>, basare su SO obsoleti e non più supportati, possono essere eseguite su macchine moderne.</p>
+<p>Quindi questo eviterebbe il problema di continuare ad utilizzare macchine legacy unicamente per la loro compatibilità con l’applicazione che è in esecuzione su esse.</p>
+<h3 id="virtualizzazione-e-cloud-computing"><a class="header" href="#virtualizzazione-e-cloud-computing">Virtualizzazione e cloud computing</a></h3>
+<p>Il <strong>cloud computing</strong> permette lo outsourcing (spostare) di VM in centri di calcolo privati o di terze parti (<strong>pat-per-use</strong>).</p>
+<p>Quindi invece di eseguire le macchine virtuali sui propri server in azienda, il Cloud Computing permette di spostare la loro esecuzione in centri di calcolo. → Non si paga più per l’hardware ma per l’utilizzo di risorse.</p>
+<p>Questo riduce il costo della manutenzione e gestione dei server fisici per le aziende.</p>
+<h3 id="affidabilità-e-sicurezza"><a class="header" href="#affidabilità-e-sicurezza">Affidabilità e sicurezza</a></h3>
+<p>Le macchine virtuali permettono di isolare meglio le applicazioni, questo mi garantisce affidabilità e sicurezza.</p>
+<ul>
+<li>Un’applicazione compromessa o difettosa opera solo sulla VM isolata, e non può interferire con le altre VM su cui sono eseguiti altri servizi.</li>
+<li>Il VMM è l’unico componente <strong>privilegiato</strong> che può gestire l’hardware fisico e le macchine virtuali.</li>
+</ul>
+<p align="center"><img src="images/safe_VM.png" width="300"></p>
+
+<h2 id="confronto-tra-vmm-e-so"><a class="header" href="#confronto-tra-vmm-e-so">Confronto tra VMM e SO</a></h2>
+<p>Il VMM, come il SO, fornisce una <strong>astrazione</strong> della macchina fisica su cui esegue</p>
+<p>Il SO è già di per se un virtualizzatore dell’hardware (di risorse):</p>
+<ul>
+<li>concetto di processo</li>
+<li>concetto di file e directory attraverso il FS</li>
+<li>concetto di memoria virtuale</li>
+<li>socket</li>
+<li>…</li>
+</ul>
+<p>“Container (Fine slide)”</p>
+<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è quello di emulare completamente l’intera architettura virtuale su un’architettura fisica del tutto diversa.</p>
+<p>Posso emulare un’architettura <code>arm</code> su una intel <code>x86</code> senza problemi, per il tipo di astrazione offerta da un VMM.</p>
+<p align="center"><img src="images/confronto_SO_VMM.png" width="500"></p>
+
+<h2 id="architetture-principali-di-una-hypervisor"><a class="header" href="#architetture-principali-di-una-hypervisor">Architetture principali di una hypervisor</a></h2>
+<ul>
+<li>TIPO 1</li>
+<li>TIPO 2</li>
+</ul>
+<ol>
+<li>
+<p>Il VMM esegue su un “hardware nudo” (<strong>bare-metal virtualization</strong> o <strong>server virtualization</strong>).</p>
+<p>In questa architettura, il software di virtualizzazione è il padrone dell’hardware assoluto.</p>
+<p>Questo tipo di hypervisor viene molto utilizzato nei data center.</p>
+<p>L’architettura di tipo 1 ha migliori prestazioni perché non c’è un ulteriore layer (livello di indirezione) che divide il VMM dall’hardware, a differenza di ciò che accade nell’architettura di tipo 2</p>
+<p align="center"><img src="images/architettura1.png" width="300"></p>
+
+</li>
+<li>
+<p>Il VMM esegue su un SO tradizionale (es. Windows), viene detta <strong>hosted hypervisor</strong>.</p>
+<p>Per comunicare con l’hardware il sistema operativo <strong>guest</strong> deve passare per l’hypervisor che a sua volta deve passare per il sistema operativo <strong>host</strong>.</p>
+<p>L’hypervisor è considerato per il SO host come un qualsiasi altro processo in esecuzione.</p>
+<p>Questo utilizzo facilita l’integrazione tra sistemi operativi, ad esempio, posso copiare file facilmente dal desktop dell’host dentro la macchina virtuale guest.</p>
+<p>Ha come svantaggio le performance perché ogni richiesta della VM deve attraversare due strati: l’Hypervisor e poi il sistema operativo host.</p>
+<p>Consiste nell’architettura che utilizziamo con VMware Workstation/Fusion, Oracle VM VirtualBox.</p>
+</li>
+</ol>
+<p>In generale un hypervisor deve garantire di virtualizzare:</p>
+<ul>
+<li>la CPU</li>
+<li>la memoria</li>
+<li>l’I/O</li>
+</ul>
+<h2 id="virtualizzazione-della-cpu"><a class="header" href="#virtualizzazione-della-cpu">Virtualizzazione della CPU</a></h2>
+<p>Le prime tecniche di virtualizzazione della CPU consistono nel far credere al kernel della macchina virtuale guest che il <strong>processore virtuale</strong> su cui opera <strong>sia fisico</strong>.</p>
+<p>L’hypervisor deve quindi implementare un mapping 1:1 tra il processore da emulare e quello fisico su cui effettivamente viene eseguito il kernel guest.</p>
+<p>Tutto quello che viene eseguito in kernel mode nel guest in realtà non è un vero e proprio kernel mode; in realtà è in user mode rispetto al sistema operativo host.</p>
+<p>Quindi se per il sistema operativo host la macchina virtuale non è altro che un semplice processo, deve essere l’hypervisot ad astrarre completamente un macchina fisica per il kernel guest.</p>
+<p>L’hypervisor deve quindi intercettare delle “istruzioni critiche” (<strong>sensitive instructions</strong>)</p>
+<p align="center"><img src="images/istruzioni_critiche.png" width="500"></p>
+
+<p>L’hypervisor deve intercettare le istruzioni critiche che necessitano di un grado di privilegio superiore che la VM non ha. C’è la necessità di emulare questa istruzione.</p>
+<h3 id="de-privileging"><a class="header" href="#de-privileging">De-privileging</a></h3>
+<p>Primo meccanismo che deve essere implementato all’interno degli hypervisor.</p>
+<p>Tale concetto consiste nel “degradare” o togliere i privilegi al SO ospite, spostandolo a un livello di esecuzione inferiore rispetto a quello a cui è abituato a girare, ovvero spostarlo in user mode.</p>
+<ul>
+<li>La VMM (hypervisor) gira nel vero <strong>kernel</strong> <strong>mode</strong>. È l’unico che ha il controllo diretto e privilegiato dell’hardware fisico</li>
+<li>Il guest SO viene spostato in <strong>user mode</strong> completamente. Quindi quanto il guest SO pensa di operare in kernel mode in realtà di trova ancora in user mode, e chiamiamo questo livello di privilegio <strong>virtual kernel mode</strong></li>
+</ul>
+<p>Ovvero:</p>
+<ul>
+<li>VMM → kernel mode</li>
+<li>VM → user mode, dentro cui:
+<ul>
+<li>→ guest SO è in virtual kernel mode</li>
+<li>→ i processi del guest SO sono in virtual user mode</li>
+</ul>
+</li>
+</ul>
+<p align="center"><img src="images/virtual_mode.png" width="500"></p>
+
+<p>Per permettere al guest SO di operare in kernel mode, un primo meccanismo che si può sfruttare è quello delle trap: nel momento in cui il guest esegue delle istruzioni privilegiate/critiche, allora la CPU virtuale genera una <strong>trap</strong>.</p>
+<p>Questo meccanismo è detto: <strong>TRAP-AND-EMULATE</strong>.</p>
+<p>Questa trap viene intercettata dall’hypervisor, elabora il tipo di istruzione che ha generato quella trap ed emula l’istruzione privilegiata associata.</p>
+<p>Tutte le istruzioni sensitive non possono eseguire direttamente, ma devono passare per l’hypervisor, e vengono a scatenare una trap → passa il controllo (de-privilegin) all’hypervisor che emula/simula l’effetto dell’istruzione.</p>
+<p align="center"><img src="images/intercettazione_trap.png" width="500"></p>
+
+<p>Nel caso di CPU intel questa cosa avviene in maniera diversa, perché in queste CPU esistono diversi livelli di privilegio, classificati in Ring.</p>
+<p>4 livelli di privilegio, dove Ring 3 ha il più basso livello di privilegio mentre in Ring 0 la VMM.</p>
+<p>Cosa accade quando il guest SO vuole eseguire una istruzione sensitive:</p>
+<p align="center"><img src="images/sensitive_inst_inte.png" width="400"></p>
+
+<ul>
+<li>L’applicazione che gira nella VM esegue una system call, questo causa una trap della CPU virtuale che viene gestita dalla VMM. La VMM salta al guest host per far eseguire l’interrupt handler e poi la ISR associata alla trap generata.</li>
+<li>L’interrupt hardware invece sono gestite dalla VMM che eseguono l’ISR e successivamente si salta all’esecuzione dell’ISR del guest SO.</li>
+<li>Invece le istruzioni privilegiate nel guest SO causano il generarsi di una trap che viene intercettata dalla VMM che la gestisce ed emula l’effetto desiderato dal guest SO.</li>
+</ul>
+<hr>
+<p>Poniamo in esempio che il guest SO voglia eseguire una <code>CLI</code>.</p>
+<p>Il VMM simula la <code>CLI</code> ponendo a <code>0</code> lo <em><strong>Interrupt Flag</strong></em> all’interno di una struttura dati dedicata alla VM.</p>
+<ul>
+<li>Lo <em>Interrupt Flag</em> nel <strong>registro fisico</strong> della CPU è inalterato</li>
+<li>Le interrupt fisiche sono ancora ricevute dallo VMM</li>
+</ul>
+<p>La VMM emula l’effetto della chiamata di sistema, infatti da quel momento in poi la VMM continuerà a ricevere delle interruzioni dalla CPU fisica, ma non le inoltra al guest SO.</p>
+<h3 id="problemi-con-larchitettura-x86"><a class="header" href="#problemi-con-larchitettura-x86">Problemi con l’architettura <code>x86</code></a></h3>
+<p>L’architettura <code>x86</code> tradizionale <strong>non è</strong> <strong>“virtualizzabile”</strong> con solo il trap-and-emulate.</p>
+<p>Il motivo è che molte delle istruzioni sensibili <strong>non generano alcuna trap</strong></p>
+<p>Quindi non è più sufficiente il meccanismo di trap-and-emulate.</p>
+<p>Se il guest tenta di eseguire una istruzione sensitive, la CPU <strong>ignora l’istruzione</strong>; tali istruzioni sono dette <strong>“sensibili ma non privilegiate”</strong>.</p>
+<p>Questo è stato risolto grazie ad un supporto hardware, cioè sono state introdotte delle istruzioni specifiche per la virtualizzazione.</p>
+<p>Ma prima di ciò non era possibile virtualizzare tale architettura.</p>
+<!-- @todo metti il teorema in un quadretto carino -->
+<ul>
+<li>
+<p>Teorema di Popek e Goldberg</p>
+<p>Una macchina può essere virtualizzata se ogni istruzione sensitive è privilegiata.</p>
+<p>Le istruzioni privilegiate sono quelle che scatenano una <em>trap</em> quando eseguite in user mode.</p>
+<p>Invece un’istruzione è definita sensitive quanto interagisce direttamente con la configurazione o lo stato dell’hardware sottostante.</p>
+</li>
+</ul>
+<h3 id="tecniche-della-virtualizzazione-delle-cpu"><a class="header" href="#tecniche-della-virtualizzazione-delle-cpu">Tecniche della virtualizzazione delle CPU</a></h3>
+<ul>
+<li>
+<p><strong>Full virtualization</strong>, senza supporto hardware</p>
+<p>Utilizza tecniche software complesse come la <strong>Dynamic Binary Traslation</strong>. Il VMM legge il binario del Guest SO e lo “riscrive” al volo per renderlo sicuro, senza che il guest SO se ne accorga.</p>
+</li>
+<li>
+<p><strong>Para-virtualization</strong></p>
+<p>il guest SO è sviluppato appositamente per cooperare con il VMM.</p>
+<p>Si abbandona l’idea di ingannare il guest SO, è consapevole di essere su una macchina virtuale. Il SO ospite viene riscritto per essere consapevole di girare su una macchina virtuale, quindi invece di provare ad eseguire istruzioni hardware direttamente si interfaccia con la VMM (cooperazione).</p>
+</li>
+<li>
+<p><strong>Full virtualization</strong>, con <strong>supporto hardware</strong></p>
+<p>migliori prestazioni e VMM più semplice.</p>
+<p>La CPU stessa ha nuove modalità che permettono al VMM di intercettare le operazioni critiche senza dover riscrivere il codice software.</p>
+</li>
+</ul>
+<hr>
+<p>ESEMPIO: confronto tra <strong>para-virtualization</strong> e <strong>full</strong> <strong>virtualization</strong></p>
+<p>Il problema da risolvere è lo stesso: il guest SO vuole leggere un registro critico, quello contenente l’indirizzo della <strong>Interrupt Descriptor table</strong>.</p>
+<p>Queste due soluzioni ci permettono di farlo ma con approcci differenti:</p>
+<ul>
+<li>
+<p><strong>Dynamic</strong> <strong>Binary</strong> <strong>Traslation</strong></p>
+<p>Agisce sul <strong>codice binario</strong>.</p>
+<p>Il sorgente del sistema operativo non viene toccato, quindi si può utilizzare un qualsiasi sistema operativo, anche Windows.</p>
+<p>Il VMM analizza il flusso di istruzioni mentre vengono eseguite, intercettando quelle sensitive.</p>
+<p>Infatti quando vede <code>mov val, idtr</code>, la intercetta e la sostituisce dinamicamente con una chiamata alla sua funzione che emula l’effetto di quella istruzione.</p>
+</li>
+<li>
+<p><strong>Hypercall</strong></p>
+<p>Si agisce sul <strong>codice sorgente</strong>. Gli sviluppatori del sistema operativo modificano il codice: cancellando istruzioni problematiche e inserendo una chiamata esplicita alla VMM, chiamata <strong>Hypercall</strong>.</p>
+<p>È una soluzione molto efficiente, ma richiede di poter modificare il codice sorgente del SO e ricompilarlo. (impossibile con Windows)</p>
+</li>
+</ul>
+<p>Quindi consideriamo di trovarci in questa situazione:</p>
+<p align="center"><img src="images/full-para-virtual.png" width="400"></p>
+
+<ul>
+<li>Codice sorgente</li>
+<li>Codice binario che viene eseguito</li>
+<li>funzione del VMM che emula il comportamento dell’istruzione in esame</li>
+</ul>
+<p>Per l’approccio che utilizza la para-virtualization il sorgente deve essere modificato per poter girare su una VM. La modifica consiste nella chiamata alla funzione dal VMM che emula quel comportamento, ovvero <code>emulate_store_idt()</code> (Hypercall).</p>
+<p>Per l’approccio che utilizza la full virtualization il sorgente rimane invariato, e a tempo di esecuzione abbiamo due principali tecniche che dipendono dalla presenza o meno del supporto hardware.</p>
+<ul>
+<li>Meccanismo software (Dynamic Binary Traslation): la VMM sostituisce dinamicamente le istruzioni. Il VMM legge il <strong>codice binario</strong> prima che venga eseguito, individua le istruzioni critiche e le riscrive sostituendole con il codice di emulazione → <code>emulate_store_idt()</code>.</li>
+<li>Meccanismo hardware (Intel VT-x / Trap-and-Emulate): in questo caso il codice binario in memoria non viene necessariamente sostituito/riscritto. È la CPU fisica che, quando incontra l’istruzione critica mentre gira la VM (in <em>non-root mode</em>), ferma tutto e genera un evento hardware (<strong>VMExit</strong>). Il controllo passa al VMM che esegue l’emulazione e poi restituisce il controllo.</li>
+</ul>
+<p align="center"><img src="images/risoluzione_DBT_e_HYPERCALL.png" width="470"></p>
+
+<h4 id="full-virtualization-no-supporto-hw"><a class="header" href="#full-virtualization-no-supporto-hw">Full virtualization, no supporto hw</a></h4>
+<p>Nel caso di una CPU fisica che non supporta la virtualizzazione, in cui non tutte le istruzioni sensitive generano una trap, l’hypervisor di <strong>VMware</strong> introdusse tecniche efficienti di full-virtualization per Intel <code>x86</code>.</p>
+<p>Queste tecniche sono ad esempio la <strong>Dynamic Binary Traslation</strong>.</p>
+<p>Il codice binario del guest veniva riscritto dinamicamente dall’hypervisor prima di essere eseguito: sostituendo le istruzioni sensibili con un codice di emulazione</p>
+<p>Coprendo il gap della non virtualizzabilità di <code>x86</code>.</p>
+<p>Oggi con il supporto hardware VMware si è adattata perché è molto più performante.</p>
+<h4 id="dynamic-binary-traslation"><a class="header" href="#dynamic-binary-traslation">Dynamic Binary Traslation</a></h4>
+<p>All’avvio della VM, il VMM analizza a blocchi il codice eseguito dal guest SO.</p>
+<p>Ogni blocco, detto <strong>Basic Block</strong> è una breve <strong>sequenza di istruzioni sequenziali</strong> che terminano con una <strong>istruzione di salto</strong>.</p>
+<p align="center"><img src="images/basic_block.png" width="180"></p>
+
+<p>L’Hypervisor quindi va a scandire questi blocchi all’interno del binario del kernel e li analizza e riscrive eventuali istruzioni sensitive.</p>
+<p>Il salto finale viene sostituito con una chiamata all’hypervisor per mantenere la catena di traduzioni attiva:</p>
+<ul>
+<li>La CPU esegue il blocco tradotto (sicuro)</li>
+<li>Arriva all’ultima istruzione (salto modificato)</li>
+<li>Il controllo passa al VMM</li>
+<li>Il VMM controlla se il blocco a cui avrebbe saltato la CPU prima della modifica del salto sia già tradotto
+<ul>
+<li>Se <strong>si</strong>: fa saltare la CPU direttamente alla versione già tradotta e sicura</li>
+<li>Se <strong>no</strong>: traduce il nuovo blocco, lo salva in memoria cache, e poi fa saltare la CPU lì</li>
+</ul>
+</li>
+</ul>
+<p>In poche parole, il salto finale viene modificato per garantire che la CPU non esegua mai codice originale, ma rimbalzi sempre attraverso il VMM per ottenere il prossimo pezzo di codice tradotto e sicuro.</p>
+<p>Vediamo cosa come accade tutto ciò:</p>
+<p align="center"><img src="images/DBT_1.png" width="300"></p>
+
+<ul>
+<li>Codice grezzo che non è stato ancora tradotto dal VMM</li>
+</ul>
+<p align="center"><img src="images/DBT_2.png" width="400"></p>
+
+<ul>
+<li>Il VMM legge il basic block e lo modifica</li>
+</ul>
+<p align="center"><img src="images/DBT_3.png" width="400"></p>
+
+<ul>
+<li>Dopo la modifica nel basic block viene sostituita l’istruzione sensitive e viene modificato il salto finale per poter permettere al VMM di analizzare il basic block successivo</li>
+</ul>
+<p align="center"><img src="images/DBT_4.png" width="400"></p>
+
+<ul>
+<li>Il controllo viene ripristinato al guest SO così che possa eseguire il codice tradotto e sicuro</li>
+<li>Una volta terminata l’esecuzione del blocco l’istruzione di salto riporta il controllo al VMM per continuare con il meccanismo di Dynamic Binary Translation</li>
+</ul>
+<h4 id="para-virtualizzazione"><a class="header" href="#para-virtualizzazione">Para-virtualizzazione</a></h4>
+<p>Con questo approccio c’è la necessità di riscrivere il codice sorgente del guest SO in modo che questo cooperi con il VMM.</p>
+<p>Il guest SO è conscio del fatto di esser eseguito su di una macchina virtuale (VM).</p>
+<ul>
+<li>Le istruzioni sensitive nel guest SO sono sostituite da <strong>hypercalls</strong> che fanno riferimento a funzioni del VMM che emulano il comportamento delle istruzioni originarie.</li>
+</ul>
+<blockquote>
+<p>A differenza della full virtualization, si modifica il <strong>codice</strong> <strong>sorgente</strong> <strong>del</strong> <strong>guest</strong> <strong>SO</strong>, non il codice binario.</p>
+<p>La modifica è fatta dal <strong>programmatore</strong> e non dal VMM, quindi i sistemi che possono girare su Hypervisor, che sfruttano questa tecnica di virtualizzazione della CPU, devono essere costruiti ad hoc.</p>
+</blockquote>
+<p align="center"><img src="images/para_virt.png" width="500"></p>
+
+<p>Il guest SO così modificato <strong>non può eseguire sull’hardware fisico</strong>: può eseguire solo in combinazione con il <strong>VMM</strong>.</p>
+<p>Inoltre questo approccio non è utilizzabile per sistemi <strong>legacy</strong> oppure <strong>proprietari</strong>, come Windows.</p>
+<h4 id="supporto-hardware-per-la-full-virtualization-della-cpu"><a class="header" href="#supporto-hardware-per-la-full-virtualization-della-cpu">Supporto hardware per la full-virtualization della CPU</a></h4>
+<p>Le CPU Intel VT introducono:</p>
+<ul>
+<li>due modalità di esecuzione: <strong>VMX root</strong> e <strong>VMX non-root</strong>;</li>
+<li><strong>VMCS</strong> (VM Control Structure).</li>
+</ul>
+<p>Queste soluzioni sono implementate nell’hardware per evitare tutto l’overhead dovuto alla traduzione dinamica del codice binario e per permettere a qualsiasi guest SO di poter eseguire su una VM.</p>
+<p>Hanno come vantaggio:</p>
+<ul>
+<li>semplificano il codice del VMM, buona parte della virtualizzazione è fatta in hardware;</li>
+<li>evita il <strong>ring de-privileging</strong> del guest SO;</li>
+<li>maggiore <strong>efficienza del cambio di contesto</strong> tra VM e VMM;</li>
+<li>garantisce il meccanismo di trap per tutte le istruzioni critiche</li>
+</ul>
+<p>Quindi le principali novità sono:</p>
+<ul>
+<li>
+<p>Modalità di esecuzione (VMX)</p>
+<ul>
+<li><strong>VMX Root Mode</strong>: dove gira il VMM. Qui il software ha pieno controllo dell’hardware, esattamente come il kernel di un sistema operativo tradizionale.</li>
+<li><strong>VMX Non-Root Mode</strong>: dove gira il Guest SO. In questa modalità, il sistema operativo ospite può girare al suo livello di privilegio “naturale” senza dover essere de-privilegiato. Quindi viene eseguito con il massimo dei privilegi ma in VMX non-root mode.</li>
+</ul>
+</li>
+<li>
+<p>Passaggio tra Root mode de Non-Root mode</p>
+<p>Il passaggio tra queste due modalità è gestito direttamente dall’hardware tramite eventi specifici:</p>
+<ul>
+<li>
+<p><strong>VM Entry</strong>: il passaggio dal VMM al Guest SO. Avviene quando il VMM lancia o riprende l’esecuzione di una VM.</p>
+</li>
+<li>
+<p><strong>VM Exit</strong>: il passaggio inverso, dal Guest SO al VMM. Avviene automaticamente quando il Guest SO tenta di eseguire un’istruzione sensitive (Perché nonostante ha tutti i privilegi, si trova in VMX Non-Root mode).</p>
+<p>L’hardware intercetta l’istruzione e restituisce il controllo al VMM affichè possa gestirla.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>VMCS (Virtual Machiene Control structure)</strong></p>
+<p>Per gestire questi passaggi in modo efficiente, intel ha introdotto una struttura dati hardware chiamata <strong>VMCS</strong>. La VMCS agisce coem una “scheda cliente” per ogni VM e contiene:</p>
+<ul>
+<li><strong>Guest state</strong>: lo stato della CPU quando gira la VM. Viene caricato durante la <em>VM Entry</em> e salvato durante la <em>VM Exit</em>.</li>
+<li><strong>Host state</strong>: lo stato della CPU quando gira il VMM. Viene caricato durante la <em>VM Exit</em>.</li>
+<li><strong>Control Data</strong>: istruzioni per la CPU fisica su quali eventi devono causare un <em>VM Exit</em></li>
+</ul>
+</li>
+</ul>
+<p>Eventi che possono causare <strong>VM Exit</strong>:</p>
+<ul>
+<li><strong>Istruzioni sensitive</strong>
+<ul>
+<li>CPUID</li>
+<li>RDMSR. WRMSR</li>
+<li>INVLPG</li>
+<li>RDPMC, RDTSC</li>
+<li>HTL, MWAIT, PAUSE</li>
+<li>VMCALL: nuova istruzione per invocare il VMM</li>
+</ul>
+</li>
+<li><strong>Accessi a stato sensitive</strong>
+<ul>
+<li>MOV DRx: accessi ai debug register</li>
+<li>MOV CRx: accessi ai control register</li>
+<li>Task switch: accessi al CR3 (puntatore alla tabella delle pagine)</li>
+</ul>
+</li>
+<li><strong>Eccezioni ed eventi asincroni</strong>
+<ul>
+<li>Page fault, debug exceptions, interrupts, etc.</li>
+</ul>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="memoria_linux.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="def.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="memoria_linux.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="def.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

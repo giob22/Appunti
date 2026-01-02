@@ -1,0 +1,437 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Architettura di un SO - Teoria</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="latex-style-3e99905e.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-070e67e6.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-ec27ba43.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Teoria</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <script src="../javascript.js"></script>
+<h1 id="architettura-di-un-so"><a class="header" href="#architettura-di-un-so">Architettura di un SO</a></h1>
+<h2 id="funzionalità-di-un-so"><a class="header" href="#funzionalità-di-un-so">Funzionalità di un SO</a></h2>
+<ul>
+<li>
+<p>Virtualizzazione delle risorse hardware</p>
+<ul>
+<li>file system</li>
+<li>processi</li>
+<li>periferiche astratte</li>
+<li>…</li>
+</ul>
+<p>Sono tutti concetti che permette di ottenere una virtualizzazione e un’estensione delle risorse hardware della macchina fisica.</p>
+<p>Oltre a creare un’astrazione per la macchina fisica, il SO fornisce anche un API di sistema che permette alle applicazioni utente di operare sull’hardware delegando le operazioni a quest’ultimo che interagisce direttamente con l’hardware.</p>
+<p>Queste API garantiscono un accesso uniforme rispetto tutte le componenti hardware che possono essere anche molto eterogenee tra loro.</p>
+</li>
+<li>
+<p>Gestione e coordinamento</p>
+<p>Il SO ha il compito di arbitrare le richieste dei programmi utente</p>
+<ul>
+<li>meccanismi di protezione → per evitare azioni illecite da parte di processi malfunzionanti</li>
+<li>meccanismi per la comunicazione inter-processo</li>
+<li>gestore delle risorse → scheduling</li>
+</ul>
+</li>
+</ul>
+<p align="center"><img src="images/SO_come_VM.png" width="500"></p>
+
+<ul>
+<li>Tutti questi strati mi <strong>permettono di astrarre</strong> le risorse hardware le quali sono gestite direttamente dal Kernel, che fa da ultimo intermediario tra il livello software e quello hardware.</li>
+<li>Quindi tutti gli strati che si contrappongono tra l’hardware e i programmi di utilità definiscono una <strong>macchina</strong> <strong>virtuale</strong>.</li>
+<li>Tutti gli strati intermedi che definiscono un’astrazione potrebbero essere inclusi all’interno del Kernel, questo infatti dipende dall’architettura del SO.</li>
+</ul>
+<p>Ogni strato serve a nascondere la complessità dello strato sottostante e a fornire servizi più semplici e potenti allo strato superiore.</p>
+<h2 id="kernel"><a class="header" href="#kernel">Kernel</a></h2>
+<p>Il Kernel è quella parte del SO che risiede in memoria principale.</p>
+<p>Contiene funzionalità fondamentali del SO.</p>
+<p>A livello <strong>kernel</strong>, la macchina virtuale realizzata dal SO (dal punto di vista delle singole applicazioni utente):</p>
+<ul>
+<li>
+<p>possiede tante unità centrali quanti sono i processi attivi nel sistema (ovvero processori virtuali).</p>
+<p>Ogni processo ha l’illusione di avere per se un processore dedicato, indipendentemente dal numero reale di processori fisici;</p>
+</li>
+<li>
+<p>non possiede meccanismi di interruzione. I processi vedono un flusso di esecuzione continuo e non devono gestire le interruzioni hardware perché sono intercettate dal kernel che provvede alla gestione;</p>
+<p>questo è possibile per il context switch che viene fatto all’atto della sospensione del processo per la gestione da parte del SO delle interrupt. Nel momento in cui è terminata la ISR per gestire l’interrupt il processo torna ad eseguire sulla CPU partendo dallo stato in cui è stato sospeso.</p>
+<p>Quindi per il processo la gestione delle interruzioni è trasparente.</p>
+</li>
+<li>
+<p>possiede istruzioni di sincronizzazione e scambio di messaggi tra processi che operano su processori virtuali.</p>
+<p>Tali meccanismi di sincronizzazione e scambio di messaggi avvengono tramite l’utilizzo di syscalls.</p>
+</li>
+</ul>
+<h2 id="gestione-della-memoria"><a class="header" href="#gestione-della-memoria">Gestione della memoria</a></h2>
+<p>A livello della <strong>gestione della memoria</strong>, la macchina virtuale realizzata dal SO (dal punto di vista dei processi):</p>
+<ul>
+<li>
+<p>consente di far riferimento a <strong>spazi</strong> <strong>di</strong> <strong>indirizzamento</strong> <strong>virtuali</strong>.</p>
+<p>Questi creano un’astrazione per i processi, illudendo questi di avere a disposizione l’intera memoria centrale per se.</p>
+</li>
+<li>
+<p>gestisce la protezione, ovvero il gestore della memoria verifica che non ci siano interferenze tra i vari processi, quindi che lo spazio di indirizzamento del singolo processo sia isolato e non accessibili da altri processi.</p>
+<p>Quindi due processi potrebbero utilizzare due indirizzi virtuali uguali ma questi saranno mappati in indirizzi fisici distinti nel momento il cui i processi andranno ad accedere a questi.</p>
+</li>
+<li>
+<p>consente di rendere trasparente la posizione effettiva dei dati/istruzioni per i processi. Infatti i dati che un processo intende leggere e modificare possono risiedere temporaneamente in memoria di massa in casi particolari.</p>
+<p>Questi casi particolari corrispondono ad esempio alla saturazione della memoria centrale. In tali casi alcune pagine vengono swappate in una porzione della memoria secondaria utilizzata per mantenere pagine della memoria centrale che non vengono subito utilizzate.</p>
+</li>
+</ul>
+<h2 id="gestione-delle-periferiche"><a class="header" href="#gestione-delle-periferiche">Gestione delle periferiche</a></h2>
+<p>Al livello <strong>gestione delle periferiche</strong>, la macchina virtuale realizzata dal SO (dal punto di vista dei processi):</p>
+<ul>
+<li>
+<p>dispone di periferiche dedicate ai singoli processi.</p>
+<p>Illude quindi i processi di avere a disposizione tutte le risorse disponibili;</p>
+</li>
+<li>
+<p>maschera le caratteristiche fisiche delle periferiche.</p>
+<p>I processi non conoscono quali risorse compongono effettivamente l’hardware poiché il SO crea un’astrazione di queste rendendo il loro accesso uniforme.</p>
+<p>Quindi nel caso di un lettura o scrittura il processo che la richiede non sà effettivamente le caratteristiche fisiche dell’hardware su cui sta scrivendo o leggendo.</p>
+<p>A conoscere ciò sono i driver specifici che implementano effettivamente le operazioni di lettura e scrittura specifiche per il determinato hardware in questione.</p>
+</li>
+<li>
+<p>gestisce parzialmente i malfunzionamenti delle periferiche.</p>
+</li>
+</ul>
+<h2 id="file-system"><a class="header" href="#file-system">File system</a></h2>
+<p>Permette di trasformare un enorme contenitore di bit disordinati, memoria secondaria, in un archivio ordinato.</p>
+<p>Quindi gli strati superiori vedranno un’organizzazione ordinata della memoria.</p>
+<p>Al livello <strong>file system</strong>, la macchina virtuale realizzata dal SO (dal punto di vista del processo):</p>
+<ul>
+<li>
+<p>gestisce blocchi di informazioni su memoria di massa strutturati logicamente;</p>
+<p>Quindi delle sequenze di byte memorizzate in memoria di massa identifica le sequenze che rappresentano cartelle e file;</p>
+</li>
+<li>
+<p>ne controlla gli accessi;</p>
+<p>Per ogni accesso verifica se il processo richiedente ha i permessi necessari per leggere o scrivere su tale blocco di memoria.</p>
+<p>Questo perché ogni file ha associato dei metadati. Tra questi metadati ci sono le informazioni riguardanti i permessi di accesso da parte dei processi;</p>
+</li>
+<li>
+<p>ne gestisce l’organizzazione.</p>
+<p>Gestisce la geometria della memoria di massa e implementa i metodi che devono essere utilizzare per accedere correttamente ai dati.</p>
+</li>
+</ul>
+<h2 id="architettura-dei-sistemi-operativi"><a class="header" href="#architettura-dei-sistemi-operativi">Architettura dei sistemi operativi</a></h2>
+<p>Il SO è un programma di notevole <strong>complessità</strong> e <strong>dimensione</strong>. Infatti tutti i <strong>layer</strong> che abbiamo visto prima, necessari per garantire la virtualizzazione dell’hardware e una sua gestione efficiente, fanno <strong>parte</strong> <strong>del</strong> <strong>SO</strong>.</p>
+<p>É quindi fondamentale applicare, durante il suo progetto e la sua realizzazione, le più sofisticate <strong>tecniche proprie dell’ingegneria del software</strong>, al fine di garantire un risultato che goda di tutte le <strong>proprietà che garantiscano la qualità di un sistema software</strong>: correttezza, modularità, facilità di manutenzione, efficienza di esecuzione, etc.</p>
+<p>Per questo sono stati proposti, nel tempo, <strong>vari modelli strutturali</strong> cui fare riferimento <strong>per organizzare i componenti</strong> durante le fasi di progetto, realizzazione e test del sistema.</p>
+<h3 id="sistemi-operativi-monolitici"><a class="header" href="#sistemi-operativi-monolitici">sistemi operativi monolitici</a></h3>
+<p>I primi sistemi operativi erano costituiti da un solo programma (<strong>sistemi monolitici</strong>) senza una particolare suddivisione dello stesso in moduli.</p>
+<p>Il sistema operativo era <strong>costituito da un insieme di procedure di servizio</strong> a ciascuna delle quali corrispondeva una <strong>chiamata al sistema</strong>.</p>
+<p>Normalmente le procedure erano scritte in <strong>linguaggio</strong> <strong>assembler</strong> per consentire un più efficiente accesso alle risorse hardware della macchina.</p>
+<p>Questo tipo di approccio al progetto del sistema poteva essere <strong>adeguato soltanto nel caso di sistemi molto semplici</strong>, come nel caso dei primi sistemi operativi e, successivamente, come nel caso di semplici <strong>sistemi non multiprogrammati</strong>, per esempio il sistema operativo MS-DOS.</p>
+<p>Col crescere della complessità tipica dei moderni sistemi multiprogrammati questo approccio ha rapidamente mostrato tutti i propri limiti.</p>
+<h3 id="sistemi-operativi-modulari"><a class="header" href="#sistemi-operativi-modulari">sistemi operativi modulari</a></h3>
+<p>Un valido approccio utilizzato per affrontare la complessità di un sistema è quello di fare riferimento a <strong>tecniche di modularizzazione</strong> in modo tale da suddividere il sistema in componenti (moduli), <strong>ciascuno destinato a fornire una delle funzionalità del sistema</strong>.</p>
+<p>Realizzato usualmente in un <strong>linguaggio di alto livello seguendo i criteri tipici della programmazione strutturata</strong> (<strong>sistemi modulari</strong>).</p>
+<p>In base ai criteri della programmazione strutturata, ogni modulo è caratterizzato da una ben precisa interfaccia, che specifica la funzionalità offerta dal modulo, e un corpo contenente l’implementazione del modulo, non visibile all’esterno.</p>
+<p>In questo modo ogni modifica che veniva apportata ai moduli non influenzava il funzionamento degli altri, a meno che la modifica non era fatta sull’interfaccia offerta dal modulo.</p>
+<p>Il primo esempio di strutturazione di un sistema operativo fu quello di che si ottenne modificando la struttura dei primi sistemi monolitici in modo tale da identificare i vari moduli componenti e dettagliando con cura le rispettive interfacce.</p>
+<p align="center"><img src="images/interfaccia_modulo.png" width="300"></p>
+
+<p>I vari moduli furono distinti in due categorie:</p>
+<ul>
+<li>le procedure di servizio offerte dal sistema ai programmi applicativi tramite chiamate di sistema;</li>
+<li>le procedure di utilità, utilizzate dalle prime ma non direttamente visibili ai processi.</li>
+</ul>
+<p align="center"><img src="images/suddivisione_in_moduli.png" width="400"></p>
+
+<p>Ovviamente ogni chiamata di sistema provocava un cambio di contesto da modalità utente a modalità kernel.</p>
+<p>Questo tipo di struttura è anche quella adottata nel sistema Unix.</p>
+<p>In questo caso fanno parte del sistema:</p>
+<ul>
+<li>sia le tipiche <strong>componenti di un sistema operativo</strong>, invocate tramite le chiamate di sistema, eseguite in <strong>stato</strong> <strong>privilegiato</strong> e identificate globalmente con il termine <em>kernel</em></li>
+<li>sia <strong>l’insieme dei programmi di utilità del sistema</strong> costituiti dalla shell, dai compilatori, dai caricatori, dai linker e dalle librerie di sistema, eseguiti in stato non privilegiato come i normali programmi utente.</li>
+</ul>
+<p>Nonostante gli indubbi vantaggi indotti dall’uso di tecniche di modularità, la complessità dei sistemi operativi è andata progressivamente crescendo, richiedendo quindi ulteriori paradigmi di progetto in grado di affrontare in modo più idoneo la crescente complessità.</p>
+<h3 id="sistemi-operativi-a-livelli-gerarchici-di-astrazione"><a class="header" href="#sistemi-operativi-a-livelli-gerarchici-di-astrazione">sistemi operativi a livelli gerarchici di astrazione</a></h3>
+<p>Consistono in SO modulari, organizzati in una struttura gerarchica.</p>
+<p>Uno degli aspetti fondamentali della tecnica dell’organizzazione gerarchica consiste nel <strong>ridurre il numero di possibili interconnessioni</strong> fra i moduli di un sistema, semplificando quindi sia la fase di progetto sia quella di verifica.</p>
+<p>Ovvero si punta ad ottenere un’organizzazione in moduli che punti a diminuire le dipendenze tra questi e quindi aumentare il livello di coesione.</p>
+<p>Tale tecnica che permette questo tipo di organizzazione di un sistema operativo è possibile applicarla seguendo due possibili paradigmi complementari.</p>
+<ul>
+<li>
+<p>top-down, livelli di raffinamento successivi.</p>
+<p>Consiste nello scomporre il sistema software nelle sue funzionalità principali, astraendo i dettagli implementativi. Successivamente ciascuna di queste funzionalità veniva a sua volta scomposta in altre funzionalità che la comprendessero astraendo sempre i dettagli implementativi; e così via.</p>
+<p>Fino a che non si arrivi ad un livello di funzionalità elementare da cui può iniziare l’implementazione.</p>
+</li>
+<li>
+<p>bottom-up.</p>
+<p>Consiste nel partire dal basso, quindi a stretto contatto con l’hardware.</p>
+<p>Implementare delle funzionalità aggiuntive che non sono disponibili in hardware e da queste funzionalità si parte ad implementarne che le utilizzino.</p>
+<p>Quindi si arriva ad un livello che non è più necessario comunicare direttamente con l’hardware grazie alle funzionalità elementari che sono state implementate in principio.</p>
+<p>Questo quindi permette di implementare funzionalità che astraggono sempre di più il livello hardware.</p>
+</li>
+</ul>
+<p>Un utilizzo combinato di questi due paradigmi permette di realizzare <strong>sistemi operativi strutturati in moduli organizzati gerarchicamente in diversi livelli di astrazione</strong>, in modo tale che i <strong>moduli realizzati a un certo livello</strong> utilizzano esclusivamente le <strong>funzionalità offerte dai moduli di livello più basso</strong> e <strong>forniscano le loro funzionalità ai moduli</strong> di livello più alto.</p>
+<p>Possiamo intendere questa struttura come se ogni livello definisse una nuova macchina astratta, le cui funzionalità sfruttano quelle offerte dalla macchina astratta di livello inferiore.</p>
+<p align="center"><img src="images/sys_gerarchici.png" width="200"></p>
+
+<h3 id="sistemi-operativi-a-microkernel"><a class="header" href="#sistemi-operativi-a-microkernel">sistemi operativi a microkernel</a></h3>
+<p>La necessità di proteggere dall’acceso diretto l’hardware da parte dei programmi utente che avrebbero potuto causare dei danni irreparabili si è introdotto il concetto dei livelli di esecuzione:</p>
+<ul>
+<li>kernel mode</li>
+<li>user mode</li>
+</ul>
+<p>Questo però ha portato il sistema ad essere più difficilmente modificabile ed estensibile.</p>
+<p>Modifiche o estensioni potrebbero risultare necessarie in vari casi:</p>
+<ul>
+<li>si deve aggiungere un driver in seguito alla connessione di un nuovo dispositivo</li>
+<li>si intende modificare alcune scelte relative alla gestione di una o più risorse al fine di rendere il sistema più adatto ai requisiti imposti dai programmi applicativi specifici che andranno in esecuzione su questo.</li>
+</ul>
+<p>Per dare una soluzione a questo tipo di problemi è stata proposta una soluzione nota col nome di <strong>struttura</strong> <strong>a</strong> <strong>microkernel</strong>.</p>
+<p>Il microkernel implementa solo i <strong>meccanismi essenziali</strong> a discrezione del progettista.</p>
+<p>Tutte le <strong>strategie per la gestione</strong> delle risorse sono implementate all’esterno del kernel, da processi di sistema che girano in user mode.</p>
+<p>Quindi sono facilmente modificabili ed estensibili.</p>
+<ul>
+<li>Driver</li>
+<li>Memory management</li>
+<li>CPU scheduling</li>
+</ul>
+<p>Ovviamente è inevitabile che tutti questi programmi non abbiano la necessità di operare direttamente sulle risorse hardware, quindi si utilizzano comunque delle componenti del SO che girano in kernel mode per espletare alcune funzioni. → context switch</p>
+<p>Questa struttura permette di aumentano l’affidabilità e la sicurezza dei sistemi perché gli eventuali guasti non si propagano nel kernel, ma rimangono in user mode.</p>
+<p>I gestori delle risorse sono particolari processi di sistema, spesso indicati come <strong>server</strong> (file server, terminal server, printer server, …).</p>
+<p>Quando un processo applicativo deve usare una risorsa, deve interagire con il processo server gestori di quella risorsa attraverso i meccanismi di comunicazione forniti dal microkernel.</p>
+<p>La comunicazione interprocesso è la caratteristica svantaggiosa di questa struttura perché provoca una perdita delle performance.</p>
+<p>Il motivo principale è dovuto al maggior numero di context switch necessari per espletare un singolo servizio ad un processo client.</p>
+<p>Infatti utilizzando il comando <code>time</code> in UNIX, che misura il tempo che un processo trascorre in user-mode, in kernel-mode e l’attesa nel caso di operazioni di IO, si sono notate le perdite di performance.</p>
+<h2 id="esempio-di-architetture-modulari-linux"><a class="header" href="#esempio-di-architetture-modulari-linux">Esempio di architetture modulari: linux</a></h2>
+<p>Il kernel Linux è monolitico perché è un unico binario che viene caricato in memoria centrale.</p>
+<p>Nel tempo è stato introdotto il meccanismo dei moduli caricabili che ha permesso quindi di estendere le funzionalità del kernel senza la necessità che questo venga ricompilato ogni volta.</p>
+<p>Quindi possiamo dire che il kernel linux ha un’architettura monolitica e modulare perché implementa il meccanismo dei moduli caricabili che possono essere collegati e scollegati dal kernel a runtime.</p>
+<p>I comandi per caricare o scaricare un modulo dal kernel sono:</p>
+<ul>
+<li><code>insmod</code></li>
+<li><code>rmmod</code></li>
+</ul>
+<p>Il rischio che si corre con questa struttura è che i moduli che possono essere collegati al kernel girano nello stesso spazio di indirizzamento del kernel, quindi se questi hanno un bug grave possono mandare in crash l’intero sistema (kernel panic).</p>
+<p>In generale, il progetto del kernel linux ha cercato di prendere i vantaggi dei due mondi: monolitico e flessibilità modulare.</p>
+<h2 id="windows-acrchitecture"><a class="header" href="#windows-acrchitecture">Windows acrchitecture</a></h2>
+<p>Struttura modulare per renderlo più flessibile. Questo sistema è basato su un’architettura a microkernel ibrida.</p>
+<ul>
+<li>Non è puramente un’architettura a microkernel, anche se la maggior parte delle funzionalità sono eseguite all’esterno del microkernel.</li>
+<li>Tutti i moduli esterni sono caricati dinamicamente e quindi posso essere rimossi, aggiornati, o sostituiti senza riscrivere o ricompilare tutto il sistema.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+                            <a rel="next prefetch" href="scheduler.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+                    <a rel="next prefetch" href="scheduler.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

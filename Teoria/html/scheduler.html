@@ -1,0 +1,419 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Scheduler - Teoria</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="latex-style-3e99905e.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-070e67e6.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-ec27ba43.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Teoria</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <script src="../javascript.js"></script>
+<h1 id="scheduler"><a class="header" href="#scheduler">Scheduler</a></h1>
+<p>Con il termine <em>short term scheduler</em> si intende quella funzione del nucleo che ha il compito di gestire l’allocazione della CPU ai processi che si trovano nella coda dei processi pronti.</p>
+<p>In generale, lo <em>sheduler</em> è quella parte del SO preposta all’assegnazione di risorse a favore dei processi richiedenti.</p>
+<p>La selezione tra i processi richiedenti (coda dei relativi PCB) nella coda può avvenire mediante differenti criteri, a seconda <strong>dell’algoritmo di scheduling</strong> che implementa uno schedulatore.</p>
+<p>Questo è un compito fondamentale per tutti i sistemi multiprogrammati in cui c’è la necessità di un efficiente gestione delle risorse condivise disponibili per tutti i processi attivi e che eseguono in modo concorrente.</p>
+<p>Inoltre gli sheduler sono i componenti più caratterizzanti del sistema operativo, infatti da questa si possono identificare le caratteristiche e gli obiettivi per cui è stato progettato.</p>
+<p>Dal punto di vista dell’esecuzione dei processi abbiamo diversi scheduler ognuno che si occupa di svolgere un particolare compito:</p>
+<ul>
+<li><em>long term scheduling</em> o di job</li>
+<li><em>medium term scheduling</em> o di swap</li>
+<li><em>short term scheduling</em> o della CPU</li>
+</ul>
+<h2 id="scheduling-a-lungo-termine"><a class="header" href="#scheduling-a-lungo-termine">Scheduling a lungo termine</a></h2>
+<p>Con <strong>sheduling a lungo termine</strong> si intende quella funzione del sistema operativo che, in un sistema di tipo batch, sceglie tra tutti i programmi caricati in memoria di massa per essere eseguiti, quelli da trasferire in memoria centrale e da inserire nella coda dei processi pronti.</p>
+<p>Quindi controlla il <strong>grado di multiprogrammazione</strong> del sistema.</p>
+<p>Le sue scelte, in genere, vengono fatte in modo da equilibrare la presenza in memoria centrale di processi caratterizzati da prevalenza di operazioni di elaborazione (CPU bound) e di processi caratterizzati da prevalenza di operazioni di ingresso e uscita (I/O bound).</p>
+<p>In modo da distribuire il carico in modo ottimale su tutte le risorse disponibili.</p>
+<p>Troppi processi I/O bound → la coda dei processi pronti è sempre quasi vuota</p>
+<p>Troppi processi CPU bound → i dispositivi I/O sarebbero poco utilizzati</p>
+<p>I possibili criteri su cui si può basare la scelta dello scheduler a lungo termine sono:</p>
+<ul>
+<li>FIFO</li>
+<li>Priorità</li>
+<li>Tempo di esecuzione stimato</li>
+<li>Requisiti di I/O → processi I/O bound</li>
+<li>Tempo presunto di CPU → processi CPU-bound</li>
+</ul>
+<h2 id="scheduling-a-medio-termine"><a class="header" href="#scheduling-a-medio-termine">Scheduling a medio termine</a></h2>
+<p>Lo <strong>scheduling a medio termine</strong> rappresenta invece quella funzione del sistema operativo che ha il compito di trasferire temporaneamente processi dalla memoria centrale alla memoria di massa (<em>swap-out</em>) e viceversa (<em>swap-in</em>).</p>
+<p>Questa funzione è necessaria, in caso di RAM prossima alla saturazione, di liberare parte della memoria centrale necessaria ad altri processi già presenti o per rendere possibile il caricamento di nuovi processi.</p>
+<p>Il suo obiettivo è quello di <strong>migliorare</strong> <strong>l’efficienza</strong> nell’utilizzo della risorsa <strong>memoria</strong>.</p>
+<p>Se questa gestione dei trasferimenti di processi verso e da la memoria di massa non è fatta in modo efficiente si verificherebbero molte operazioni di I/O per spostare i processi tra le memorie.</p>
+<ul>
+<li>ad esempio nel caso in cui due processi si trovino a collaborare e quindi l’esecuzione dell’uno dipende dall’esecuzione dell’altro;</li>
+<li>supponiamo di avere implementato due processi che operano su una memoria condivisa secondo il paradigma produttori consumatori</li>
+<li>se il produttore venisse sempre swappato in memoria di massa, allora questo poi dovrà esser reintrodotto in memoria centrale per permette al consumatore di consumare la risorsa.</li>
+</ul>
+<hr>
+<p>Entrambe le funzioni di long term scheduling e medium term scheduling vengono eseguite dal sistema operativo con una frequenza nettamente inferiore a quella della short term scheduling.</p>
+<p>Quindi possono risultare meno costose in termini di tempo di esecuzione e quindi non inficiare molto sulle performance del sistema.</p>
+<p>Invece la funzione di short term sheduling è eseguita molto frequentemente, ad ogni context switch, in modo da rendere l’esecuzione di più processi fluida, dando l’impressione che siano eseguiti in parallelo all’utente.</p>
+<p>Quindi deve essere una funzione su cui porre l’attenzione per la ottimizzazione, poiché inficia molto sulle performance generali del sistema.</p>
+<p>Possiamo dire che tra gli scheduler è quello più caratterizzante del SO.</p>
+<p align="center"><img src="images/scheduler_lms.png" width="200"></p>
+
+<h2 id="processi-cpu-bound-e-io-bound"><a class="header" href="#processi-cpu-bound-e-io-bound">Processi CPU bound e I/O bound</a></h2>
+<ul>
+<li>Processi <strong>CPU-bound</strong>
+<ul>
+<li>poche chiamate di sistema</li>
+<li>tendono ad occupare la CPU per lunghi periodi (se il SO non li interrompe)</li>
+<li>tipico delle applicazioni batch, calcolo numerico</li>
+</ul>
+</li>
+</ul>
+<p align="center"><img src="images/cpu-bound.png" width="400"></p>
+
+<ul>
+<li>Processi <strong>I/O-bound</strong>
+<ul>
+<li>fanno frequenti chiamate di sistema</li>
+<li>usano brevemente la CPU, per poi mettersi subito in attesa di I/O</li>
+<li>tipico dei programmi <strong>interattivi</strong> (es. browser, editor di testo, …)</li>
+</ul>
+</li>
+</ul>
+<p align="center"><img src="images/IO-bound.png" width="400"></p>
+
+<h2 id="scheduler-a-breve-termine"><a class="header" href="#scheduler-a-breve-termine">Scheduler a breve termine</a></h2>
+<p>Lo scheduler a breve termine, conosciuto anche con il nome di <strong>dispatcher</strong>, è lo scheduler che viene attvato più frequentemente nel sistema.</p>
+<p>Ha il compito di <strong>scegliere a quale tra i processi pronti</strong> assegnare la CPU.</p>
+<p>Lo scheduler a breve termine viene invocato all’occorrenza di un evento che comporta la sospensione del processo in esecuzione.</p>
+<p>Tali eventi sono per esempio:</p>
+<ul>
+<li>interruzioni del Clock (timer)</li>
+<li>interruzioni di I/O</li>
+<li>system call</li>
+<li>segnali (ad esempio semafori su cui erano sospesi per la cooperazione)</li>
+</ul>
+<p>L’obiettivo dell’algoritmo del <strong>Dispatcher</strong> è quello di allocare il processore in maniera tale da ottimizzare uno o più aspetti del comportamento del sistema.</p>
+<p>I criteri più utilizzati sono:</p>
+<ul>
+<li>
+<p>User-oriented</p>
+<p>Si riferiscono ai comportamenti del sistema così come <strong>percepiti dall’utente o da un processo</strong>.</p>
+<p>→ Ad esempio il tempo di risposta.</p>
+</li>
+<li>
+<p>System-oriented</p>
+<p>L’obiettivo è quello di <strong>utilizzare in modo efficiente il processore</strong>.</p>
+<p>Quindi massimizzare l’utilizzo della risorsa processore.</p>
+<p>→ Ad esempio migliorare il throughput di esecuzione.</p>
+</li>
+</ul>
+<p>Ovviamente il comportamento del sistema comprende diverse caratteristiche possibili che possono essere ottimizzate.</p>
+<p>Ma molte di queste fanno in conflitto.</p>
+<p>Infatti enfatizzando le caratteristiche del sistema operativo che portano a massimizzare il thoughput del processore si attenuano le caratteristiche che si riferiscono alla percezione dell’utente o dei processi utente, come ad esempio il tempo di risposta.</p>
+<p>Quindi non esiste un algoritmo universale a cui aspirare per ottenere il meglio in tutti i campo possibili. Ma esistono i migliori algoritmi rispetto agli obiettivi di progetto scelti per la realizzazione del SO.</p>
+<h3 id="parametri-user-oriented"><a class="header" href="#parametri-user-oriented">Parametri User-oriented</a></h3>
+<ul>
+<li>
+<p><strong>Tempo di turnaround</strong>: <strong>intervallo</strong> di <strong>tempo</strong> che trascorre dall’istante in cui un processo è ammesso nel sistema all’istante della sua terminazione.</p>
+<p>Tiene conto del <strong>tempo effettivo di esecuzione</strong> e <strong>del tempo speso in attesa delle risorse</strong> (CPU inclusa).</p>
+</li>
+<li>
+<p><strong>Tempo di risposta</strong>: indica il tempo che trascorre dall’istante della ammissione nel sistema (quindi quando entra nella coda dei processi pronti per la prima volta) all’istante in cui fornisce la prima risposta.</p>
+</li>
+<li>
+<p><strong>Deadlines</strong>: nel caso in cui si possa specificare per ogni processo il termine di completamento (deadline), l’algoritmo dello scheduler a breve termine deve seguire una metrica che porta a <strong>massimizzare la percentuale scadenze raggiunte</strong>.</p>
+</li>
+<li>
+<p><strong>Tempo di servizio</strong>: è il tempo di esecuzione “puro” del processo, cioè quanto tempo serve al processo per terminare se avesse la CPU tutta per sé, senza interruzioni o attese.</p>
+</li>
+<li>
+<p><strong>Slowdown</strong> è il rapporto tra il <em>tempo di turnaround</em> e il <em>tempo di servizio</em>.</p>
+<p>Misura quanto un processo è stato rallentato dal sistema rispetto al tempo che avrebbe impiegato se fosse stato eseguito da solo, senza attese.</p>
+<p>Un valore pari ad <code>1</code> indica che il processo ha avuto esecuzione immediata (nessuna attesa).</p>
+</li>
+</ul>
+<h3 id="parametri-system-oriented"><a class="header" href="#parametri-system-oriented">Parametri System-oriented</a></h3>
+<ul>
+<li>
+<p><strong>Throughput</strong>: misura la <strong>produttività</strong> di un sistema in termini di <strong>numero di processi terminati per unità di tempo</strong>.</p>
+<p>Questo parametro <strong>dipende</strong> fortemente dalla <strong>lunghezza media di un processo</strong> ma è anche <strong>influenzato</strong> dalla particolare <strong>politica adottata per la schedulazione</strong>.</p>
+</li>
+<li>
+<p><strong>Utilizzo della CPU</strong>: rappresenta la percentuale di tempo per cui il processore risulta occupato.</p>
+<p>L’obiettivo è di massimizzare la percentuale d’uso della CPU nell’unità di tempo.</p>
+</li>
+<li>
+<p><strong>Fairness</strong>: misura quanto i processi attivi nel sistema, che quindi sono pronti ad eseguire o sono bloccati in attesa di un evento asincroni, sono <strong>trattati equamente in termini di schedulazione</strong>.</p>
+<p>Questo parametro esclude qualsiasi concetto di priorità dei processi all’interno del sistema.</p>
+<p>→ evita che ci siano situazioni di starvation per un processo.</p>
+</li>
+</ul>
+<h2 id="esiste-un-algoritmo-perfetto"><a class="header" href="#esiste-un-algoritmo-perfetto">Esiste un algoritmo perfetto?</a></h2>
+<ul>
+<li>Naturalmente NO!</li>
+</ul>
+<p>Ovviamente i parametri descritti che riguardano l’User-oriented e il System-oriented sono interdipendenti tra loro ma alcuni sono nettamente in contrasto.</p>
+<p>Ad esempio ottenere una politica <em>fair</em> non mi garantisce una massimizzazione dell’<em>utilizzo della CPU</em> o il <em>deadlines</em>.</p>
+<p>Mentre ottenere una politica che va verso la minimizzazione del <em>turnaround time</em> porta anche un miglioramento del <em>tempo di risposta</em>.</p>
+<blockquote>
+<p>Il progetto e l’implementazione di una politica di scheduling implica sempre un compromesso tra vari requisiti constrastanti.</p>
+<p>La scelta dovrà essere fatta tenendo conto “per cosa dovrà essere utilizzato il sistema”.</p>
+</blockquote>
+<h2 id="utilizzo-delle-priorità"><a class="header" href="#utilizzo-delle-priorità">Utilizzo delle priorità</a></h2>
+<p>Lo scheduler può scegliere i processi in base alla loro priorità.</p>
+<p>Le priorità assegnate ai processi possono essere:</p>
+<ul>
+<li><strong>Statiche</strong>, se non si modificano durante il periodo di vita del processo nel sistema.</li>
+<li><strong>Dinamiche</strong>, se durante il loro ciclo di vita i processi possono modificare la loro priorità in base ad alcuni parametri come: tempo di CPU o tempo di I/O.</li>
+</ul>
+<p>I processi sono tipicamente raggruppati in <strong>classi di priorità</strong></p>
+<ul>
+<li>L’algoritmo di scheduling dovrà scegliere un processo pronto che appartiene alla classe di priorità più alta.</li>
+</ul>
+<h2 id="starvation"><a class="header" href="#starvation">Starvation</a></h2>
+<p>L’utilizzo di un algoritmo di scheduling a priorità può indurre situazioni di <strong>attesa indefinita</strong> di processi a priorità più bassa (<strong>starvation</strong>).</p>
+<p>Per far fronte a queste situazioni si utilizzano schemi di priorità dinamiche.</p>
+<p>Come ad esempio, utilizzare un aumento graduale della priorità dei processi che si trovano in attesa nel sistema da lungo tempo → <strong>Aging</strong>.</p>
+<hr>
+<p>EPISODIO esemplificativo dei problemi che può causare la starvation:</p>
+<p>L’IBM 7094, un computer progettato per applicazioni scientifiche e tecnologia su larga scala, ha avuto il più eclatante problema di starvation.</p>
+<p>Questo computer è stato utilizzato dalla NASA e per operazioni militari ed è stato introdotto nel 1962 e ha terminato il suo servizio nel 1973.</p>
+<p>Quando è terminato il servizio gli utenti trovarono un processo a bassa priorità che fu ammesso nel sistema nel 1976 non è mai terminato perché nella coda dei processi pronti si presentavano ogni volta processi a priorità maggiore.</p>
+<p>In questi casi la soluzione è quella di implementare la tecnica di Aging che consiste nel aumentare gradualmente la priorità di un processo in attesa sulla coda dei processi pronti rispetto ad alcuni parametri, come il tempo di attesa per ottenere la risorsa CPU.</p>
+<h2 id="classificazione-relativa-al-momento-in-cui-interviene-lo-scheduling"><a class="header" href="#classificazione-relativa-al-momento-in-cui-interviene-lo-scheduling">Classificazione relativa al momento in cui interviene lo scheduling</a></h2>
+<p>Una prima classificazione fra gli algoritmi di scheduling è relativva alla scelta di quali siano gli eventi in seguito ai quali lo scheduler deve intervenire:</p>
+<ul>
+<li>
+<p>Si indicano come algoritmi di scheduling senza diritto di <em>revoca</em> (<em>non preemptive</em>) tutti quelli che prevedono l’intervento dello scheduler esclusivamente quando il processi in esecuzione libera spontaneamente la CPU, o perché termina la propria esecuzione o perché si sospende in attesa del verificarsi di un dato evento asincrono.</p>
+</li>
+<li>
+<p>Invece, vengono indicati come algoritmi con il diritto di <em>revoca</em> (<em>preemptive</em>) quelli che prevedono l’intervento dello scheduler anche per decidere di revocare la CPU al processo in esecuzione al fine di allocarla ad un altro processo in attesa sulla coda dei processi pronti.</p>
+<p>Per esempio a causa dell’arrivo di un segnale di interruzione che indica lo scadere del quanto di tempo assegnato al processo, oppure perché entra in coda dei processi pronti un processo ritenuto “urgente”.</p>
+<p>In entrambi i casi il processo in esecuzione viene forzato a rilasciare la risorsa CPU preventivamente e inserito nella coda dei processi pronti.</p>
+</li>
+</ul>
+<p>Gli algoritmi <em>non preeptive</em> sono sicuramente quelli più semplici e riducono il numero delle volte che lo scheduler deve intervenire e quindi il <strong>numero di cambi di contesto</strong> fra processi. → Richiedono un minor <em>overhead</em> di sistema.</p>
+<p>Allo stesso tempo sono anche quelli che non offrono una flessibilità in termini di strategie di scheduling.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="architettura_SO.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="deadlock.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="architettura_SO.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="deadlock.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

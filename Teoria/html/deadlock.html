@@ -1,0 +1,884 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Deadlock - Teoria</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="latex-style-3e99905e.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-070e67e6.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-ec27ba43.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Teoria</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <script src="../javascript.js"></script>
+<h1 id="deadlock"><a class="header" href="#deadlock">Deadlock</a></h1>
+<p>Deadlock è un fenomeno che può presentarsi nelle <strong>applicazioni concorrenti</strong> che porta a un blocco permanente di processi in <strong>competizione per risorse condivise</strong>.</p>
+<p>→ può portare a crash, situazioni di stallo, etc. (da evitare completamente)</p>
+<p>Nei sistemi operativi <strong>general-porpose</strong>, si ammette l’esistenza di deadlock → non si implementano tecniche per evitare il problema ma si rileva nel momento in cui si presenta e si cerca di risolverlo.</p>
+<h2 id="deadlock-definizione-e-generalità"><a class="header" href="#deadlock-definizione-e-generalità">Deadlock: definizione e generalità</a></h2>
+<p>Indica una situazione di <strong>blocco permanente</strong> di un gruppo di processi in competizione per le risorse di sistema (che sono limitate → motivo principale per cui si deve gestire la competizione).</p>
+<p>Deadlock è un problema complesso e di rilievo, che può provocare gravi malfunzionamenti.</p>
+<p>A seconda dello scopo per cui è progettato, un sistema operativo adotta una <strong>gestione</strong> diversa per controllare il deadlock.</p>
+<p>Ad esempio, per i sistemi <strong>real-time</strong> evitare il deadlock è fondamentale, quindi avranno una gestione più rigida che tende a prevenire tali fenomeni a differenza di altri tipi di sistemi operativi, come general-porpose, che potranno tendere a non rilevarli e risolverli a posteriori.</p>
+<hr>
+<p>Esempio: attraversamento di un incrocio</p>
+<p align="center"><img src="images/incrocio_deadlock.png" width="450"></p>
+
+<p>Sono presenti diversi quadranti identificati dalle lettere <code>a</code>, <code>b</code>, <code>c</code> e <code>d</code>; che possono rappresentare le risorse critiche.</p>
+<ul>
+<li>Ogni auto ha bisogno di attraversare due quadranti;</li>
+<li>Ogni auto rappresenta un processo di un sistema operativo.</li>
+</ul>
+<p>Ogni si inserisce nel rispettivo primo quadrante, ma per completare la curva deve ottenere l’accesso al quadrante alla loro destra (o sinistra) occupato da un’altra auto, e per quest’ultima vale lo stesso ragionamento.</p>
+<p>Facendo lo stesso ragionamento si crea un situazione di stallo (se nessun’auto indietreggia).</p>
+<hr>
+<p>Esempio: copia di un file</p>
+<ul>
+<li>un sistema ha 2 dischi esterni</li>
+<li><code>P1</code> e <code>P2</code> copiano un grosso file da un disco all’altro;</li>
+<li>si suppone sia necessaria la <strong>mutua esclusione</strong>.</li>
+</ul>
+<p>Quindi ciascun processo acquisisce uno dei due dischi per leggere e successivamente richiedono l’accesso all’altro.</p>
+<p>Ma l’altro disco si ritrova già acquisito. Quindi i due processi attendono a vicenda che l’altro rilasci la risorse.</p>
+<p align="center"><img src="images/esempio_dischi.png" width="350"></p>
+
+<p>→ si crea la cosiddetta <strong>attesa circolare</strong> che è la manifestazione del deadlock.</p>
+<hr>
+<h3 id="il-problema-del-deadlock"><a class="header" href="#il-problema-del-deadlock">Il problema del deadlock</a></h3>
+<p>Una condizione <strong>necessaria</strong> affinché nelle <strong>applicazioni concorrenti</strong> si verifichi un deadlock è che siano presenti almeno due semafori <strong>mutex</strong>, ovvero entrambi inizializzati ad 1.</p>
+<p>Quindi quando è presente la <strong>mutua esclusione</strong>.</p>
+<div style="display:flex; gap:20px;">
+  <!-- Colonna P1 -->
+<div style="border:2px solid #b7c0e3; background:#eef1ff; padding:15px; width:45%; border-radius:6px; color:#2b2b2b;">
+  <b>P₁</b><br><br>
+  wait (<span style="color:red;">mutex1</span>)<br>
+  &lt;inizio uso disco 1&gt;<br>
+  …<br><br>
+  
+<div style="border:2px dashed red; padding:6px; border-radius:4px; color:#2b2b2b;">
+    wait (<span style="color:green;">mutex2</span>)
+  </div>
+
+<p>&lt;inizio uso disco 2&gt;<br>
+…<br><br>
+signal (<span style="color:green;">mutex2</span>)<br>
+…<br>
+signal (<span style="color:red;">mutex1</span>)<br></p>
+</div>
+
+  <!-- Colonna P2 -->
+<div style="border:2px solid #d0d0d0; background:#f5f5f5; padding:15px; width:45%; border-radius:6px; color:#2b2b2b;">
+  <b>P₂</b><br><br>
+  wait (<span style="color:green;">mutex2</span>)<br>
+  &lt;inizio uso disco 2&gt;<br>
+  …<br><br>
+  
+<div style="border:2px dashed red; padding:6px; border-radius:4px; color:#2b2b2b;">
+    wait (<span style="color:red;">mutex1</span>)
+  </div>
+
+<p>&lt;inizio uso disco 1&gt;<br>
+…<br><br>
+signal (<span style="color:red;">mutex1</span>)<br>
+…<br>
+signal (<span style="color:green;">mutex2</span>)<br></p>
+</div>
+
+</div>
+
+<p>I due processi potrebbero sospendersi entrambi su le <code>wait()</code> evidenziate.</p>
+<p>Questo è un classico esempio di attesa circolare che si presenta se avviene la seguente sequenza di azioni:</p>
+<ul>
+<li><code>P1</code> esegue <code>wait(mutex1)</code> e acquisisce la prima risorsa critica;</li>
+<li><code>P2</code> esegue <code>wait(mutex2)</code> e acquisisce la seconda risorsa critica;</li>
+<li><code>P1</code> ha bisogno della seconda risorsa critica, quindi esegue <code>wait(mutex2)</code> e si blocca;</li>
+<li><code>P2</code> ha bisogno della prima risorse critica, quindi esegue <code>wait(mutex1)</code> e si blocca.</li>
+</ul>
+<p>Nel caso in cui l’esecuzione dei due processi segue questa sequenza, i due processi rimangono bloccati</p>
+<p>Questa situazione però <strong>non</strong> <strong>è</strong> <strong>detto</strong> che accada a ogni esecuzione dell’applicazione concorrente.</p>
+<p>→ <strong>non</strong> è un fenomeno <strong>deterministico</strong>, ovvero non significa che questo si manifesti ogni volta che si hanno le condizioni adatte.</p>
+<p>In alcuni casi il deadlock dipende da come i processi si alternano sulla CPU.</p>
+<p>Per questo motivo il deadlock può manifestarsi <strong>saltuariamente</strong>, in base alla <strong>velocità relativa di esecuzione dei processi</strong>.</p>
+<blockquote>
+<p>La velocità relativa di esecuzione dei processi è un modo per descrivere come i processi avanzano nel tempo l’uno rispetto l’altro, questo avanzamento non è deterministico perché durante l’esecuzione possono:</p>
+<ul>
+<li>essere interrotti dal kernel (preemption),</li>
+<li>essere sospesi in attesa di un operazione di I/O (la cui durata non è sempre la stessa),</li>
+<li>ricevere più o meno tempo di CPU in base alla politica di sheduling adottata,</li>
+<li>essere ritardati da cache miss.</li>
+</ul>
+</blockquote>
+<p>Come si potrebbe risolvere questa situazione?</p>
+<p>Un terzo dovrebbe gestire questa concorrenza, andando ad esempio a killare un processo in modo che questo liberi la risorsa detenuta a favore dell’altro.</p>
+<div align="center">
+<h2 id="deadlock--starvation"><a class="header" href="#deadlock--starvation"><strong>Deadlock ≠ Starvation</strong></a></h2>
+<table>
+<tr>
+<td align="center" style="border: none">
+<p><strong>attesa <span style="color:red">infinita</span></strong></p>
+</td>
+<td align="center" style="border: none">
+<p><strong>attesa <span style="color:red">indefinita</span></strong></p>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+<p>Deadlock e starvation sono due concetti totalmente diversi che possono essere confusi.</p>
+<ul>
+<li>
+<p>Con starvation identifichiamo una situazione di attesa <strong>indefinita</strong>. Tale fenomeno è molto legato al concetto di priorità.</p>
+</li>
+<li>
+<p>Con deadlock identifichiamo una situazione di attesa <strong>infinita</strong>, in nessun modo i processi possono uscire da questa situazione, al contrario della starvation. Tale fenomeno è molto legato al concetto di mutua esclusione.</p>
+</li>
+</ul>
+<h2 id="grafo-di-assegnazione-delle-risorse"><a class="header" href="#grafo-di-assegnazione-delle-risorse">Grafo di assegnazione delle risorse</a></h2>
+<p>Il grafo si assegnazione delle risorse serve a modellare in modo formale lo stato delle risorse e dei processi di un sistema, per poter <strong>capire se esiste il rischio di deadlock</strong>.</p>
+<p>Tramite questa formalizzazione possiamo implementare algoritmi in grado di rilevare una possibile manifestazione di deadlock tra i processi in esecuzione.</p>
+<p>Un grafo è un insieme di vertici (o nodi) <em>V</em> e un insieme di archi <em>E</em>.</p>
+<ul>
+<li>
+<p>V è partizionato in <strong>due tipi</strong>:</p>
+<ul>
+<li><em>P</em> = {P1, P2, …, Pn} è l’insieme costituito da tutti i <strong>processi</strong> nel sistema.</li>
+<li><em>R</em> = {R1, R2, …, Rn} è l’insieme costituito da tutti i tipi di <strong>risorse</strong> nel sistema.</li>
+</ul>
+</li>
+<li>
+<p><strong>Arco di richiesta</strong> (arco orientato) Pi → Rj, Pi chiede l’accesso a Rj.</p>
+</li>
+<li>
+<p><strong>Arco di assegnazione</strong> (arco orientato) Rj → Pi, Rj è assegnata al processo Pi.</p>
+</li>
+</ul>
+<p>Ogni risorsa può avere più istanze.</p>
+<p align="center"><img src="images/def_grafo.png" width="300"></p>
+
+<p>Una condizione <strong>sufficiente</strong> per la possibile (perché dipende sempre dalla velocità relativa di esecuzione) manifestazione di un deadlock è un <strong>ciclo</strong> nel grafo di assegnazione.</p>
+<p align="center"><img src="images/grafo_deadlock.png" width="300"></p>
+
+<p>In questo caso <code>P1</code> richiede <code>Ra</code> la cui unica istanza è detenuta da <code>P2</code> che richiede a sua volta <code>Rb</code> la cui unica istanza è detenuta da <code>P1</code>.</p>
+<p>Nel momento in cui è presente un ciclo del genere possiamo essere <strong>sicuri</strong> che tra questi processi è <strong>possibile</strong> che avvenga una situazione di deadlock.</p>
+<p>Invece possiamo considerare che <strong>si verifica</strong> il deadlock se i processi partono da una condizione iniziale in cui hanno già in possesso le rispettive risorse e facciano una richiesta per l’altra, quando nessuno dei due processi ha terminato.</p>
+<p>Ovviamente nel caso in cui le risorse avessero più istanze non ci sarebbe un problema, perché i due processi accederebbero a istanze diverse e quindi non si violerebbe la <strong>mutua esclusione</strong>.</p>
+<p align="center"><img src="images/grafo_nodeadolock.png" width="300"></p>
+
+<p>→ Questo <strong>non</strong> significa che avere più istanze <strong>risolva</strong> il problema, perché basta che si aggiungano altri processi al grafo con una particolare configurazione che la situazione di deadlock potrebbe accadere.</p>
+<p>OSSERVAZIONI:</p>
+<ul>
+<li>
+<p>Un ciclo è una condizione sufficiente per la possibile condizione di deadlock.</p>
+<p>→ Se il grafo <strong>non contiene cicli</strong> ⟹ non si verificano situazioni di stallo</p>
+</li>
+<li>
+<p>Se il grafo <strong>contiene un ciclo</strong> ⟹ si potrebbe verificare una situazione di stallo, la cui possibilità diminuisce con il numero di istanze per ogni risorsa.</p>
+<p>Quindi la possibilità che ci sia un deadlock esiste ma non è detto che si verifica, perché tutto dipende anche dalla velocità relativa di esecuzione di ogni processo.</p>
+</li>
+</ul>
+<p>Un caso che possiamo considerare UTOPICO è quando ogni risorsa ha tante istanze quanti siano i processi che potenzialmente possano richiederla → impossibile proprio perché non sappiamo il numero di processi che potenzialmente è troppo elevato e le risorse sono limitate.</p>
+<p>Linux cosa fa? Quando rileva un deadlock tenta di <strong>eliminare</strong> (a posteriori) questa condizione andando a terminare uno dei processi scatenanti, la cui scelta dipende da delle metriche.</p>
+<p>Quindi accetta che questa situazione può verificarsi e nel momento in cui è tale risolve il problema mediante una sua politica di gestione.</p>
+<h2 id="metodi-per-la-gestione-dei-deadlock"><a class="header" href="#metodi-per-la-gestione-dei-deadlock">Metodi per la gestione dei deadlock</a></h2>
+<p>Esistono diversi approcci per gestire la situazione di deadlock che consistono principalmente in prevenirli (a priori) o rilevarli (a posteriori).</p>
+<ol>
+<li>
+<p>Prevenzione dei deadlock (<strong>PREVENTION</strong>):</p>
+<p>rendere <strong>impossibile</strong> il verificarsi delle <strong>condizioni di deadlock</strong>, ma al costo di un basso utilizzo delle risorse.</p>
+<p>Questo approccio tenta di annullare le condizioni che possono causare un deadlock → evitano che si creino dei cicli nel grafo di assegnazione delle risorse.</p>
+<p>Ma nel fare questo <strong>limitano l’utilizzo delle risorse non sfruttandole a pieno</strong>, quindi rallentando il sistema.</p>
+</li>
+<li>
+<p>Evitare i deadlock (<strong>AVOIDANCE</strong>):</p>
+<p>le condizioni per il deadlock sono consentite, quindi si ammette l’esistenza delle condizioni tali per cui esso può avvenire, me il sistema <strong>evita di entrare</strong> in uno stato di deadlock.</p>
+<p>Evita la condizione <strong>analizzando ogni richiesta</strong> di risorse prima di concederla, e <strong>accettandola solo</strong> se non porta il sistema in uno “<strong>stato non sicuro</strong>”.</p>
+</li>
+<li>
+<p>Rilevazione del deadlock (<strong>DETECTION</strong>):</p>
+<p>Si permette al sistema di entrare in uno stato di deadlock, per poi risolvere il problema (<strong>ripristino il sistema</strong>).</p>
+<p>Quindi si ammette che ci possa esser la condizione di deadlock, non si fa nulla per evitarla, ma nel momento in cui questa si verifica il sistema tenta di tornare in uno stato sicuro.</p>
+<p>Ovvero si gestisce il deadlock solo dopo che questo si verifica.</p>
+</li>
+</ol>
+<p>La maggioranza dei sistemi operativi general-porpose, inclusi UNIX e Windows, <strong>non dispone di una soluzione generale ed efficiente</strong> al problema del deadlock.</p>
+<p>Poiché tutte le politiche di gestione elencate hanno grandi problemi per cui non possono essere adottati.</p>
+<p>NOTA: se creo due processi e faccio in modo che questi vadino in deadlock, il sistema operativo non fa nulla. Sarà un problema demandato al programmatore offrire una soluzione alla specifica situazione.</p>
+<h2 id="condizioni-per-il-deadlock"><a class="header" href="#condizioni-per-il-deadlock">Condizioni per il deadlock</a></h2>
+<p>Le condizioni <strong>necessarie</strong> sono:</p>
+<ul>
+<li>
+<p><strong>Mutua esclusione</strong> → un processo per alla volta può usare la risorsa.</p>
+</li>
+<li>
+<p><strong>Impossibilità di prelazione</strong> → una risorsa può esser rilasciata <strong>solo volontariamente</strong> dal processo che la possiede, al termine della sua esecuzione.</p>
+<p>Quindi non esistono casi in cui a un processo venga prelazionata una risorsa a favore di un altro che la richiede.</p>
+</li>
+<li>
+<p><strong>Possesso e attesa</strong> → un processo che possiede almeno una risorsa, <strong>attende di acquisire ulteriori risorse</strong> già possedute da altri processi.</p>
+</li>
+</ul>
+<p>Invece le condizioni <strong>necessarie e sufficienti</strong> sono (tutte quelle necessarie + attesa circolare):</p>
+<ul>
+<li><strong>Mutua esclusione</strong></li>
+<li><strong>Impossibilità di prelazione</strong></li>
+<li><strong>Possesso e attesa</strong></li>
+<li><strong>Attesa circolare</strong> → che abbiamo visto essere una <strong>condizione necessaria e sufficiente</strong>.</li>
+</ul>
+<p>Affinché ci sia attesa circolare devono necessariamente esser verificate tutte le condizioni necessarie. Quindi possiamo dire che se è presente un’attesa circolare allora automaticamente è presente una condizione di deadlock.</p>
+<p>(Attesa circolare è una conseguenza di un ciclo nel grafo di assegnazione, ma non è detto che si verifichi)</p>
+<p>Attesa circolare è la condizione che si verifica nel momento in cui</p>
+<ul>
+<li>
+<p>esiste un insieme {P0, P1, P2, …, Pn} di processi in attesa, tali che:</p>
+<ul>
+<li>P0 è in attesa per una risorsa che è posseduta da P1</li>
+<li>P1 è in attesa per una risorsa che è posseduta da P2</li>
+<li>…</li>
+<li>Pn-1 è in attesa per una risorsa che è posseduta da Pn</li>
+<li>Pn è in attesa per una risorsa che è posseduta da P0</li>
+</ul>
+<p>Ovvero quando nel grafo di assegnazione si crea un ciclo di attesa perché non ci sono abbastanza istanze di risorse disponibili per cui, almeno uno, di questi processi non ha bisogno di attendere.</p>
+</li>
+</ul>
+<p align="center"><img src="images/attesa_circolare.png" width="600"></p>
+
+<h2 id="deadlock-prevention"><a class="header" href="#deadlock-prevention">Deadlock PREVENTION</a></h2>
+<p>Nella deadlock <strong>prevention</strong>, si evita il deadlock <strong>invalidando</strong> una delle quattro condizioni necessarie e sufficienti.</p>
+<p>Svantaggi nell’utilizzo di questo tipo di gestione del deadlock:</p>
+<ol>
+<li>mancato uso di risorse che sono disponibili;</li>
+<li>esecuzione rallentata dei processi. → la politica di gestione costringe a processi ad attendere anche quando non è necessario</li>
+<li>non è possibile alcun tipo di cooperazione tra processi</li>
+</ol>
+<h3 id="mutua-esclusione"><a class="header" href="#mutua-esclusione">Mutua esclusione</a></h3>
+<p>La mutua esclusione è imposta dalle caratteristiche della risorsa e spesso non è rimovibile a meno che non si serializzi l’esecuzione dei processi, quindi non si necessita di un mutex.</p>
+<p>In questo caso però peggiorano molto le performance perché non si sfrutta più la concorrenza tra i processi.</p>
+<ul>
+<li>
+<p>Può esse rilassata in alcuni casi di risorse condivisibili</p>
+<p>come, ad esempio, le risorse read-only.</p>
+</li>
+<li>
+<p>Comporta costi maggiori → il sistema deve garantire che una risorsa critica (che potrebbe generare inconsistenze) non sia accessibile da più processi che ne fanno richiesta.</p>
+<p>Quindi che la risorsa è posseduta da un solo processo per volta.</p>
+</li>
+</ul>
+<h3 id="possesso-e-attesa"><a class="header" href="#possesso-e-attesa">Possesso e attesa</a></h3>
+<p>Eliminando questa condizione si forza un processo a <strong>richiedere una risorsa solo quando non ne possiede altre</strong> (es. all’avvio richiede tutte le risorse necessarie alla sue esecuzione).</p>
+<p>In questo caso si deve implementare una sorta di dichiarazione per ogni processo delle risorse che utilizza.</p>
+<p>Tale dichiarazione deve contenere tutte le risorse necessarie che verranno bloccate per tutta l’esecuzione del processo. Quindi si può capire che è molto inefficiente come soluzione perché le risorse vengono bloccate per tutta l’esecuzione anche se il processo le utilizza in una piccola parte.</p>
+<p>→ Approccio soggetto a <strong>starvation</strong>, perché potrebbe esistere un processo che è sempre in esecuzione e utilizza una risorsa che non potrà mai essere utilizzata da altri processi.</p>
+<p align="center"><img src="images/rimozione_possesso_e_attesa.png" width="600"></p>
+
+<ul>
+<li>In questo caso se P1 non termina mai → P2 non potrà mai terminare la propria esecuzione.</li>
+</ul>
+<h3 id="impossibilità-di-prelazione"><a class="header" href="#impossibilità-di-prelazione">Impossibilità di prelazione</a></h3>
+<p>Rilassando il vincolo di impossibilità di prelazione se un processo già possiede alcune risorse, e ne richiede un’altra che non gli può esser allocata immediatamente, allora <strong>rilascia tutte le risorse possedute</strong>.</p>
+<p>Quindi non si mette in attesa per la singola risorsa che richiede, mantenendo il possesso di quelle già allocate, ma libera tutte le risorse e si mette in attesa.</p>
+<p>Tale processo quindi non si metterà in attesa per la sola risorsa in più richiesta ma anche per tutte le altre che possedeva e che ha rilasciato.</p>
+<p>→ il processo verrà eseguito nuovamente solo quando può riottenere il possesso sia delle <strong>vecchie che delle nuove risorse</strong>.</p>
+<!-- @todo inserisci un immagine o una gif esemplificativa -->
+<h3 id="attesa-circolare"><a class="header" href="#attesa-circolare">Attesa circolare</a></h3>
+<p>Si stabilisce a priori un <strong>ordinamento totale</strong> tra tutte le risorse.</p>
+<p>E si richiede che ogni processo richieda le risorse seguendo l’ordine prestabilito.</p>
+<p>Quindi se un processo ha bisogno di utilizzare un certo numero di risorse deve richiedere l’accesso a queste nell’ordine prestabilito nonostante tale ordine non sia quello delle operazioni che effettua su queste.</p>
+<p>Nell’esempio successivo P2 chiede l’accesso prima a “disco 1” poi a “disco 2” nonostante operi inizialmente solo su “disco 2”.</p>
+<p>→ provoca una perdita delle performance perché un processo potrebbe possedere una risorsa per un tempo che è molto superiore rispetto al tempo effettivo nel quale opera su tale risorsa.</p>
+<p>ESEMPIO:</p>
+<p>Ordine imposto:</p>
+<ol>
+<li>disco 1</li>
+<li>disco 2</li>
+</ol>
+<div style="display:flex; gap:20px;">
+  <!-- Colonna P1 -->
+<div style="border:2px solid #b7c0e3; background:#eef1ff; padding:15px; width:45%; border-radius:6px; color:#2b2b2b;">
+  <b>P₁</b><br><br>
+  …<br><br>
+  
+<div style="border:2px dashed red; padding:6px; border-radius:4px; color:#2b2b2b;">
+  wait (<span style="color:red;">mutex1</span>)<br>
+  &lt;inizio uso disco 1&gt;
+  </div>
+
+  …<br><br>
+  wait (<span style="color:green;">mutex2</span>)
+<p>&lt;inizio uso disco 2&gt;<br>
+…</p>
+</div>
+
+  <!-- Colonna P2 -->
+<div style="border:2px solid #d0d0d0; background:#f5f5f5; padding:15px; width:45%; border-radius:6px; color:#2b2b2b;">
+  <b>P₂</b><br><br>
+  …<br><br>
+  
+<div style="border:2px dashed red; padding:6px; border-radius:4px; color:#2b2b2b;">
+  wait (<span style="color:red;">mutex1</span>)
+  <br>
+  wait (<span style="color:green;">mutex2</span>)<br>
+  </div>
+
+  &lt;inizio uso disco 2&gt;<br>
+<p>…<br></p>
+<p>&lt;inizio uso disco 1&gt;<br>
+…<br><br></p>
+</div>
+
+</div>
+
+<ul>
+<li>
+<p>In questo caso, supponendo che P2 faccia per <strong>primo</strong> la prima richiesta delle risorse:</p>
+<ul>
+<li>P1 è <strong>impossibilitato a usare “disco 1”</strong> anche se P2 sta usando “disco 2”.</li>
+<li>Si è imposto un ordine di acquisizione delle risorse (a discapito dell’efficienza).</li>
+</ul>
+</li>
+</ul>
+<p>Questo tipo di approccio per la gestione PREVENTION non permette l’implementazione di una cooperazione (come anche gli altri approcci) tra processi.</p>
+<p>→ implementando il problema produttori consumatori otteniamo che i produttori producono sempre fino a che non terminano. Solo dopo la terminazione dei produttori i consumatori potranno accedere ai dati prodotti.
+→ comportamento non richiesto per l’implementazione.</p>
+<h2 id="deadlock-avoidance"><a class="header" href="#deadlock-avoidance">Deadlock AVOIDANCE</a></h2>
+<p>Nella gestione AVOIDANCE il sistema decide <strong>a tempo di esecuzione</strong> se una richiesta di una risorsa può portare a un deadlock (<strong>prevenzione dinamica</strong>).</p>
+<ul>
+<li><strong>nessun vincolo a priori</strong> delle risorse</li>
+<li>se lo stato attuale delle risorse è <strong>rischioso</strong>, un algoritmo <strong>rifiuta la richiesta</strong> di allocazione</li>
+</ul>
+<p>Quindi si accetta la possibilità di incorrere in un deadlock, non eliminando le condizione necessarie, ma si cerca di evitarlo valutando lo stato in cui si trova il sistema ogni volta che viene effettuata una richiesta (a <em>run-time</em>).</p>
+<p>Quindi istante per istante, possedendo <strong>la storia precedente del grafo delle assegnazioni delle risorse</strong>, un algoritmo valuta se <strong>successivamente</strong> a una certa richiesta da parte di un processo porta l’applicazione a un deadlock.</p>
+<p>Quindi l’algoritmo deve essere in grado di fare una <strong>sorta di predizione sull’andamento dell’esecuzione</strong> dei processi negli istanti successivi a una qualsiasi richiesta per una risorsa.</p>
+<p>Quindi possiamo considerarla come una prevenzione, che <strong>non è più statica</strong> come per la gestione PREVENTION, ma <strong>dinamica</strong>.</p>
+<p>Anche questa come soluzione al deadlock è molto complicata perché richiede diverse assunzioni: come quella di riuscire a prevedere le eventuali richieste di un processo se questo non le dichiara a priori.</p>
+<p align="center"><img src="images/avoidance_esempio.png" width="500"></p>
+
+<p>La memoria totale è <code>200 kb</code>.</p>
+<ul>
+<li>
+<p>P2 non avrà accesso alla risorsa nel momento in cui la richiede perché il processo P1 è già in esecuzione e possiede già una istanza della stessa risorsa.</p>
+<p>Però il motivo per cui viene rifiutata la richiesta di P2 è perché guardando la storia di P1 si nota che affinché questo possa terminare dovrà ottenere un’altra istanza della risorsa.</p>
+<p>Nel momento in cui richiederà un’altra istanza della risorsa non ci sarà più spazio per l’istanza richiesta da P2</p>
+<ul>
+<li>
+<p>Caso in cui avviene il deadlock →  P2 riceva la risorsa (supponendo che successivamente ne richieda un’altra da <code>80 kb</code>).</p>
+<p>→ Quindi la memoria in possesso sarà <code>80 + 70 = 150kb</code>.</p>
+<p>→ Il processo P1 si sospende perché ne richiede <code>70kb</code> e allo stesso modo si sospende P2 perché ne richiede, come detto, <code>80kb</code>.</p>
+<p>→ Entrambi i processi sono sospesi in attesa che l’altro rilasci la risorsa: deadlock.</p>
+</li>
+</ul>
+<p>Nell’esempio un algoritmo ha valutato questa situazione conoscendo la storia di allocazione dei processi.</p>
+</li>
+</ul>
+<p>Quindi è necessario supporre che per ogni processo si deve dichiarare la <strong>storia di allocazione</strong>, altrimenti non di possono fare previsioni sull’andamento dell’esecuzione.</p>
+<p>Questo produce un <strong>overhead</strong> elevato sullo sheduler e in generale sul kernel. Ma da una soluzione per non entrare nel deadlock.</p>
+<p>Linux implementa ciò? No perché non si conosce a priori la storia di allocazione di ogni processo → è impossibile prevedere un deadlock in questo modo.</p>
+<div style="border:3px solid #202092ff; background:#eef1ff; padding:12px; border-radius:6px; color:#555555">
+  <b style="color:#d40000;">Presupposto</b>: queste tecniche richiedono di
+  <span style="color:#d40000;">conoscere in anticipo</span>
+  tutte le richieste che un processo può fare nell’arco della sua esecuzione.
+</div>
+
+<p>Questa è un assunzione molto pesante, un caso più semplice di utilizzo è quello che: ogni processo <strong>dichiara</strong> il <strong>numero massimo</strong> di istanze di risorse di cui può avere bisogno.</p>
+<p>→ Tali istanze però potrebbero non esser utilizzate subito e quindi tolte ad altri processi che potrebbero sfruttarle immediatamente.</p>
+<h3 id="approcci"><a class="header" href="#approcci">Approcci</a></h3>
+<p>Abbiamo due diversi approcci per questo tipo di gestione:</p>
+<ol>
+<li>
+<p><strong>Process initiation Denial</strong>: all’avvio di un nuovo processo (rifiuto l’esecuzione del processo)</p>
+<p>Non si avvia un processo se le sue richieste potrebbero portare ad un deadlock</p>
+</li>
+<li>
+<p><strong>Resource Allocation Denial</strong>: al momento di una richiesta di allocare una risorsa. (il processo esegue ma possono essere vietate le richieste nonostante la disponibilità corrente è valida)</p>
+<p>Si consente l’avvio, ma le richieste di allocazione possono essere rifiutate se possono portare a deadlock.</p>
+</li>
+</ol>
+<hr>
+<p>Entrambi questi approcci si basano sulla costruzione di diverse strutture algebriche:</p>
+<p>sia <em>n</em> = numero di processi,</p>
+<p>e <em>m</em> = numero di tipi di risorse</p>
+<ul>
+<li>
+<p><strong>Resource</strong> = <em>R</em> = (R1, …, Rm)</p>
+<p>Risorse totali nel sistema. Ri p il numero di istanze presenti nel sistema per la risorsa i-esima.</p>
+</li>
+<li>
+<p><strong>Available</strong> = <em>V</em> = (V1, …, Vm)</p>
+<p>Numero di istanze per ogni risorsa non allocate ad alcun processo. Vi rappresenta il # di istanze della risorsa Ri non ancora allocate.</p>
+</li>
+<li>
+<p><strong>Claim</strong> = <em>C</em> = matrice <em>n x m</em></p>
+<p>Cij = richiesta del processo Pi per la risorsa Rj</p>
+</li>
+<li>
+<p><strong>Allocation</strong> = <em>A</em> = matrice <em>n x m</em></p>
+<p>Aij = allocazione corrente al processo Pi della risorsa Rj</p>
+</li>
+</ul>
+<hr>
+<h3 id="process-initiation-denial"><a class="header" href="#process-initiation-denial">Process Initiation Denial</a></h3>
+<ul>
+<li>
+<p>La matrice <em>C</em> (di richiesta) indica <strong>il numero massimo di richieste</strong> per ogni processo (righe), di una certa risorsa (colonne).</p>
+</li>
+<li>
+<p>Deve essere fornita prima dell’avvio dei processi</p>
+<p>Quindi questa matrice verrà aggiornata e ricalcolata ogni volta che un processo termina o inizia la sua esecuzione.</p>
+</li>
+</ul>
+<p align="center"><img src="images/c.png" width="300"></p>
+
+<p>Un processo Pn+1 viene eseguito solo se:</p>
+<p align="center" id="legge_numero_richieste_massimo"><img src="images/numero_richieste_massimo.png" width="300"></p>
+
+<p>Cioè un processo viene eseguito se il <strong>numero massimo di richieste di tutti i processi</strong> (sommatoria) <strong>più quelle del nuovo processo</strong> (Cij) per la risorse j-esima è minore del numero di istanze della richiesta Rj.</p>
+<p>Questo deve esser calcolato per ogni tipo di risorsa → per ogni colonna di <em>C</em>.</p>
+<p>ESEMPIO:</p>
+<p align="center"><img src="images/esempio_process_initiation_denial.png" width="600"></p>
+
+<p>In questo esempio P1 non viene eseguito fin tanto che P2 non termina la sua esecuzione (almeno).</p>
+<p>Il motivo per cui non viene eseguito è proprio il <a href="#legge_numero_richieste_massimo">vincolo</a> imposto da process initiation denial:</p>
+<ul>
+<li>
+<p>nel momento in cui P1 tenta di esser eseguito.</p>
+<p>Per MB di memoria:<br>100 (R1) &gt;= 70 (C11) + 70 (C21) + 0 (C31) = 140 ⟹  non verificato</p>
+<p>Per la porta seriale:<br>1 (R2) &gt;= 1 (C12) + 1 (C22) + 0 (C32) = 2 ⟹  non verificato</p>
+</li>
+</ul>
+<h3 id="resource-allocation-denial"><a class="header" href="#resource-allocation-denial">Resource Allocation Denial</a></h3>
+<p>Tale approccio viene chiamato anche <strong>algoritmo del banchiere</strong></p>
+<p>→ viene eseguito ad ogni tentativo di allocazione;</p>
+<ul>
+<li>se l’allocazione può portare ad uno stato “non-sicuro” viene rifiutata.</li>
+</ul>
+<p>L’algoritmo fa in modo che lo stato del sistema (risorse e processi) <strong>non sia mai uno stato non sicuro</strong></p>
+<p align="center"><img src="images/stato_sistema.png" width="300"></p>
+
+<p>La <strong>strategia</strong> consiste nel trovare una sequenza di esecuzione <em>safe</em>.<br>La sicurezza di uno stato dipende dalle risorse disponibili, e dalle richieste di tutti i processi nel sistema.</p>
+<p align="center"><img src="images/esempio_stato_non_safe.png" width="550"></p>
+
+<p>Quindi l’obiettivo è fare in modo di determinare una sequenza di esecuzione che non faccia mai entrare lo stato del sistema nella porzione del piano <em>unsafe</em>.</p>
+<p>ESEMPIO:</p>
+<p align="center"><img src="images/esempio_unsafe.png" width="500"></p>
+
+<p>In questo esempio si può vedere la sequenza delle operazioni di richiesta e rilascio delle risorse R1 e R2 per i processi P1 e P2.<br>Si nota subito che questa configurazione <strong>potrebbe</strong> portare ad uno stato non sicuro (deadlock) a run-time (dipende dalla velocità relativa di esecuzione).</p>
+<p>Infatti non è detto che possa esserci un deadlock, perché come vediamo l’algoritmo del banchiere ha come risultato due sequenze sicure per lo stato iniziale.<br>→ quindi lo stato iniziale è uno stato sicuro, ciò significa che l’esecuzione potrebbe arrivare a terminare senza il manifestarsi di <strong>deadlock</strong> (se viene seguita una delle sequenze sicure).</p>
+<p align="center"><img src="images/esempio_spazio_stato.png" width="600"></p>
+
+<ul>
+<li>Il modo in cui sono stati eseguiti i due processi hanno portato lo stato ad essere <strong>non sicuro</strong>, in questo caso è inevitabile il deadlock.</li>
+<li>Entrambi i processi resteranno in attesa l’uno dell’altro.</li>
+</ul>
+<h4 id="sequenza-sicura"><a class="header" href="#sequenza-sicura">Sequenza sicura</a></h4>
+<div style="border:3px solid #202092ff; background:#eef1ff; padding:12px; border-radius:6px; color:#555555">
+Il sistema è in uno <b style="color:#d40000;"> stato sicuro</b> se, partendo da questo stato, <b style="color:#d40000;">esiste un sequenza sicura</b> di esecuzione di tutti i processi nel sistema.
+</div>
+
+<p>Tale sequenza è una sequenza di <strong>esecuzione “ipotetica”</strong> dei processi nel sistema che porta al processo richiedente di una risorsa a terminare la propria esecuzione. (es. Pa, Pb, Pc, …)</p>
+<p>(che porta a tutti i processi del sistema a terminare)</p>
+<p>Affinché uno stato sia sicuro è sufficiente che esista almeno una sequenza sicura.</p>
+<p>L’algoritmo del banchiere prevede proprio di trovare la sequenza sicura che verifichi lo stato corrente, se al processo che ha richiesto una risorsa la ottiene.</p>
+<p>Se esiste almeno una sequenza sicura,<br>tale che il processo richiedente possa terminare dopo una serie di terminazioneùi di altri processi.</p>
+<p>(tale che tutti i processi del sistema possano terminare dopo una serie finita di terminazioni di altri processi)</p>
+<p>→ Allora lo stato <strong>è</strong> <strong>sicuro</strong> e la richiesta viene accettata.</p>
+<p>→ Altrimenti se <strong>non esiste</strong> lo stato non sarà sicuro e quindi la richiesta <strong>viene rifiutata</strong>;
+il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel momento in cui la sua richiesta porti in uno stato sicuro.</p>
+<h4 id="workflow"><a class="header" href="#workflow">workflow</a></h4>
+<ul>
+<li>
+<p>Si parte da uno stato che si suppone esser sicuro.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/1.png" width="500"></p>
+
+</li>
+<li>
+<p>Un processo Pa fa una richiesta di istanze di risorsa.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/2.png" width="500"></p>
+
+</li>
+<li>
+<p>Dopo tale richiesta si verifica che lo stato sia sicuro, supponendo che la richiesta sia stata accettata.</p>
+</li>
+</ul>
+<p>→ come avviene tale verifica:</p>
+<ul>
+<li>
+<p>si tenta di trovare una sequenza sicura partendo dallo stato in cui la richiesta di Pa sia stata accettata.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/3.png" width="500"></p>
+
+</li>
+<li>
+<p>si considera <strong>ogni processo Pi</strong> in esecuzione che necessita dello stesso tipo di risorse (Pa,Pb,Pc);</p>
+</li>
+<li>
+<p>si verifica se il processo Pi possa terminare, con <strong>le risorse disponibili rimanenti</strong>, considerando che la richiesta di Pa sia stata accettata.</p>
+<p>Quindi si suppone di assegnare al processo Pi tutte le risorse del suo <strong>claim</strong>, se disponibili.<br>Se c’è disponibilità si suppone che il processo termini e rilasci le risorse possedute;</p>
+</li>
+</ul>
+<div style="
+    width: 100%;
+    max-width: 750px;          /* larghezza massima, simile alla colonna di testo */
+    margin: 0 auto;            /* centra il blocco */
+    overflow-x: auto;          /* scroll orizzontale se le img non ci stanno */
+    overflow-y: hidden;
+    white-space: nowrap;       /* tutte le immagini sulla stessa riga */
+    padding-bottom: 10px;
+  ">
+  <img src="images/esempio_resource_allocation_denial/4.png" style="width: 500px; display: inline-block; margin-right: 20px;">
+  <img src="images/esempio_resource_allocation_denial/5.png" style="width: 500px; display: inline-block; margin-right: 20px;">
+  <img src="images/esempio_resource_allocation_denial/6.png" style="width: 500px; display: inline-block; margin-right: 20px;">
+</div>
+
+<ul>
+<li>
+<p>se il processo i-esimo riesce a terminare allora potrà essere aggiunto alla <strong>sequenza sicura</strong>; altrimenti si passa al prossimo processo.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/7.png" width="500"></p>
+
+<ul>
+<li>Pc è in grado di terminare quindi viene aggiunto alla sequenza sicura di esecuzione.</li>
+<li>Si suppone che dopo la sua terminazione <strong>rilasci</strong> tutte le risorse possedute.<br>→ in modo da permettere ad altri processi di terminare.</li>
+</ul>
+<p align="center"><img src="images/esempio_resource_allocation_denial/8.png" width="500"></p>
+
+<ul>
+<li>Pa riesce a terminare, viene aggiunto alla sequenza sicura.</li>
+</ul>
+<p align="center"><img src="images/esempio_resource_allocation_denial/9.png" width="500"></p>
+
+<ul>
+<li>Anche Pb riesce a terminare.<br>→ Si è trovato una sequenza sicura di esecuzione in cui tutti i processi terminano a valle dell’allocazione di risorse a Pa.</li>
+</ul>
+</li>
+</ul>
+<p>Si itera questo procedimento fin quando:</p>
+<ul>
+<li>il prossimo processo a far parte della sequenza sicura è il processo richiedente, Pa.</li>
+<li>A questo punto <strong>termina l’algoritmo con una sequenza sicura di esecuzione</strong>.</li>
+</ul>
+<p>⟹ la richiesta viene accettata perché lo <strong>stato</strong>, dopo l’allocazione delle risorse al processo Pa, è <strong>sicuro</strong>.</p>
+<p align="center"><img src="images/esempio_resource_allocation_denial/10.png" width="500"></p>
+
+<p>oppure</p>
+<ul>
+<li>se per un’iterazione <strong>non</strong> si trova alcun processo in <strong>grado</strong> <strong>di</strong> <strong>terminare</strong> <strong>completamente</strong>, supponendo di assegnargli tutte le risorse del <strong>claim</strong> (<strong>se disponibili</strong>).</li>
+<li>Allora il risultato dell’algoritmo è che non esiste una sequenza sicura.</li>
+</ul>
+<p>⟹ la richiesta di Pa viene <strong>rifiutata</strong> perché lo stato successivo se la richiesta fosse accettata sarebbe <strong>non sicuro</strong>.<br>Il processo rimane in attesa fin quando la propria richiesta non porti in uno stato sicuro.</p>
+<h4 id="caratteristiche-di-una-sequenza-sicura"><a class="header" href="#caratteristiche-di-una-sequenza-sicura">caratteristiche di una sequenza sicura</a></h4>
+<p>La sequenza sicura (P1, P2, …, Pn) è un ordine di esecuzione dei processi, tale che:</p>
+<ul>
+<li>
+<p>include <strong>tutti i processi attualmente attivi</strong> nel sistema;</p>
+</li>
+<li>
+<p>ogni processo Pi esegue <strong>completamente</strong>, dopo che tutti i processi precedenti Pj, j &lt; i, abbiano a loro volta <strong>eseguito per intero</strong> e nell’ordine della sequenza;</p>
+</li>
+<li>
+<p>Ogni processo Pi ottiene tutte le risorse del suo <strong>claim</strong>, e le <strong>rilascia</strong> <strong>tutte</strong> al termine della sua esecuzione;</p>
+</li>
+<li>
+<p>ogni processo Pi usa una <strong>quantità di risorse non superiore</strong> alla somma di:</p>
+<ul>
+<li>risorse <strong>disponibili</strong> nello stato S</li>
+<li>risorse <strong>rilasciate</strong> dei processi <strong>precedenti</strong> nella sequenza, Pj con j &lt; i</li>
+</ul>
+</li>
+</ul>
+<h4 id="considerazioni"><a class="header" href="#considerazioni">considerazioni</a></h4>
+<p>Per un corretto funzionamento è necessario che l’algoritmo sia sempre <strong>eseguito</strong> <strong>ad</strong> <strong>ogni</strong> <strong>tentativo</strong> <strong>di</strong> <strong>allocazione</strong> di risorse.</p>
+<p>In ogni momento in cui lo stato cambia, si verifica se esiste almeno una sequenza sicura.</p>
+<p>Intuitivamente, l’algoritmo garantisce sempre che <strong>esista almeno una exit strategy</strong> che evita il deadlock.</p>
+<p>Questa sequenza sicuro non è detto che sia l’ordine effettivo con cui eseguiranno i processi.</p>
+<h4 id="problematiche"><a class="header" href="#problematiche">problematiche:</a></h4>
+<ul>
+<li>
+<p>è richiesto che sia <strong>noto</strong> <strong>preventivamente</strong> il numero <strong>massimo</strong> di risorse che ogni processo utilizzerà;</p>
+</li>
+<li>
+<p>i processi che vengono analizzati dell’algoritmo devono essere indipendenti (non è prevista la sincronizzazione).</p>
+<p>Altrimenti il problema si complicherebbe eccessivamente<br>→ si dovrebbe tener conto che un processo possa terminare solo se termini prima un altro processo;</p>
+</li>
+<li>
+<p>deve esser presente un numero predeterminato e costante di risorse da allocare;</p>
+</li>
+<li>
+<p>Tutti i processi devono rilasciare le risorse possedute prima di terminare.</p>
+</li>
+</ul>
+<h2 id="deadlock-detection"><a class="header" href="#deadlock-detection">Deadlock DETECTION</a></h2>
+<ul>
+<li>
+<p>Non vincola le richieste alle risorse, consente il verificarsi del deadlock.</p>
+</li>
+<li>
+<p>Il sistema esegue un algoritmo <strong>per il rilevamento dell’attesa circolare</strong>:</p>
+<ul>
+<li>periodicamente;</li>
+<li>ad ogni richiesta;</li>
+<li>quando il grado di uso della CPU è basso.</li>
+</ul>
+</li>
+<li>
+<p>In caso affermativo, il sistema applica un algoritmo di <strong>ripristino</strong> (recovery).</p>
+</li>
+</ul>
+<p>La strategia di detection sfrutta il <strong>grafo di attesa</strong>, che è un grafo costruito da quello di assegnazione delle risorse.</p>
+<p>Tale grafo rappresenta l’attesa che un processo ha rispetto un altro processo.</p>
+<ul>
+<li>
+<p>Ogni nodo è un processo.</p>
+</li>
+<li>
+<p>Gli archi indicano che un processo è in attesa che un altro processo rilasci la propria risorsa.</p>
+</li>
+<li>
+<p>Periodicamente viene aggiornato e chiamato l’algoritmo per la <strong>ricerca di eventuali cicli di attesa</strong>.</p>
+<ul>
+<li>Tale algoritmo richiede un numero di operazioni dell’ordine di \(n^2\) , dove <em>n</em> è il numero di vertici (processi).</li>
+</ul>
+</li>
+</ul>
+<p align="center"><img src="images/grafo_attesa.png" width="400"></p>
+
+<p>Strategie di ripristino:</p>
+<ul>
+<li>si <strong>uccidono tutti i processi</strong> in uno stato di deadlock</li>
+<li>si esegue un <strong>checkpoint</strong> di uno stato precedente al deadlock e si fanno <strong>ripartire i processi</strong></li>
+<li>si <strong>uccide un processo alla volta</strong> fino a quando il deadlock non esiste più</li>
+<li>si <strong>prelazionano le risorse</strong> ai processi bloccati fino a quando il deadlock non esiste più</li>
+</ul>
+<p>Nel caso in cui la strategia prevede l’aborto di un processo in esecuzione, si possono utilizzare diverse metriche per decidere quale tra quelli interessati:</p>
+<ul>
+<li>minor tempo di CPU consumato fino a quel momento</li>
+<li>minor numero di linee di output prodotte finora</li>
+<li>maggior tempo stimato per la terminazione</li>
+<li>minor numero di risorse allocate finora</li>
+<li>minore priorità</li>
+</ul>
+<p align="center"><img src="images/ricapitolazione.png" width="500"></p>
+
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="scheduler.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="gestione_della_memoria.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="scheduler.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="gestione_della_memoria.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
