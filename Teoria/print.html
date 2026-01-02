@@ -17,7 +17,7 @@
         <link rel="shortcut icon" href="favicon-8114d1fc.png">
         <link rel="stylesheet" href="css/variables-8adf115d.css">
         <link rel="stylesheet" href="css/general-2459343d.css">
-        <link rel="stylesheet" href="css/chrome-cc69e1fb.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
         <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
@@ -26,7 +26,7 @@
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
         <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-56612340.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
 
@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-070e67e6.js";
+            window.path_to_searchindex_js = "searchindex-dfd27220.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-3a561045.js"></script>
+        <script src="toc-ec27ba43.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1725,14 +1725,14 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>→ bisogna scegliere una <strong>dimensione di pagina</strong> che abbia un buon <strong>compromesso</strong> tra i due valori.<br>→ Il compromesso è tra <strong>frammentazione e performance</strong>. Perché aumentato il numero di pagine riduco la frammentazione ma diminuisco le performance poiché il SO deve gestire un grande numero di pagine; invece diminuendo il numero di pagine aumento la frammentazione interna media per ogni pagina.</p>
 <h3 id="validità-delle-pagine-virtuali"><a class="header" href="#validità-delle-pagine-virtuali">Validità delle pagine virtuali</a></h3>
 <p>Raramente un processo usa tutto il suo spazio di indirizzamento virtuale.<br>→ quantità di memoria usata tipicamente da una applicazione desktop si aggira intorno: ~\(100\)MB. (single process)</p>
-<p>Lo spazio virtuale che un processo potenzialmente può utilizzare è pari all’intero spazio di indirizzamento: se ho <code>16bit</code> per indirizzo → \(4\)GB</p>
+<p>Lo spazio virtuale che un processo potenzialmente può utilizzare è pari all’intero spazio di indirizzamento: se ho <code>32bit</code> per indirizzo → \(4\)GB</p>
 <p align="center"><img src="images/spazio_processi.png" width="300"></p>
 
 <p>In realtà alcune delle pagine all’interno dello spazio virtuale allocato, non sono veramente utilizzate.</p>
 <p>→ tra i bit di controllo possiamo aggiungere un <em>validity bit</em>.</p>
 <p>Quindi il SO può marcare le pagine <strong>virtuali in uso</strong> usando tale bit nella tabella delle pagine.</p>
 <blockquote>
-<p>il bit di validità so riferisce alle pagine virtuali → infatti ogni entry point della tabella delle pagine identifica una pagina virtuale.</p>
+<p>il bit di validità si riferisce alle pagine virtuali → infatti ogni entry point della tabella delle pagine identifica una pagina virtuale.</p>
 </blockquote>
 <p>Il bit di validità viene attivato nel momento in cui la pagina è <strong>allocata</strong> dal processo (es. tramite <code>malloc()</code>).</p>
 <p align="center"><img src="images/bit_validita.png" width="400"></p>
@@ -1758,13 +1758,13 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p align="center"><img src="images/contex_switch.png" width="500"></p>
 
 <ul>
-<li>La TLB viene popolata a <strong>run-time</strong> → inizialmente saranno presenti solo page fault che porsano al SO a ricaricare le pagine in memoria principale.</li>
+<li>La TLB viene popolata a <strong>run-time</strong> → inizialmente saranno presenti solo page fault che portano al SO a ricaricare le pagine in memoria principale.</li>
 </ul>
 <p>Oltre al bit di validità è presente un ulteriore bit di controllo: il <em>dirty bit</em>.</p>
 <p>Questo dirty bit è legato al fatto che la pagina <strong>è stata scritta</strong> durante la sua permanenza in memoria fisica.</p>
 <p>Quando un processo <strong>scrive</strong> in una pagina fisica, la MMU setta automaticamente il dirty bit a \(1\).<br>Questo bit indica che il contenuto della pagina <strong>non coincide più</strong> con la copia originale presente su disco. → tale informazione ha un implicazione durante lo <strong>swap-out</strong>.</p>
 <ul>
-<li>Se il dirty bit = 1, significa che la oagina contiene modifiche <strong>che devono essere salvate nello swap</strong>, altrimenti andrebbero perse.</li>
+<li>Se il dirty bit = 1, significa che la pagina contiene modifiche <strong>che devono essere salvate nello swap</strong>, altrimenti andrebbero perse.</li>
 <li>Se il dirty bit = 0, significa che la pagina <strong>non è stata modificata</strong> e che <strong>esiste già una copia valida</strong> della pagina su disco (es. nell’eseguibile del processo, è stata già salvata precedentemente).</li>
 </ul>
 <p>Per il meccanismo di coerenza caching, si deve garantire la coerenza tra memoria grande e memoria piccola.</p>
@@ -1823,7 +1823,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Nella paginazione gerarchica, il “numero di pagina” nell’indirizzo virtuale viene <strong>a sua volta suddiviso in più parti</strong> (tante quante sono i livelli di gerarchia).</p>
 <p align="center"><img src="images/esempio_gerarchia.png" width="400"></p>
 
-<h3 id="tabelle-delle-pagine-basate-su-hash"><a class="header" href="#tabelle-delle-pagine-basate-su-hash">Tabelle delle pagine basate su hash</a></h3>
+<h4 id="tabelle-delle-pagine-basate-su-hash"><a class="header" href="#tabelle-delle-pagine-basate-su-hash">Tabelle delle pagine basate su hash</a></h4>
 <p>Le righe della tabella delle pagine sono organizzate utilizzando una <strong>lista concatenata (linked list)</strong>.</p>
 <ul>
 <li>Si memorizzano esclusivamente le righe per le pagine valide.</li>
@@ -1842,7 +1842,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li>Dopo aver individuato la lista concatenata si cerca all’interno di questa il numero di pagina che identifica la pagina fisica in cui è mappata la pagina virtuale.</li>
 </ul>
 <p>Ovviamente in questo approccio la lunghezza delle liste concatenate è contenuto rispetto al caso in cui abbiamo solo una lista concatenata di tutte le pagine associate ad un processo.</p>
-<h3 id="tabella-delle-pagine-invertita"><a class="header" href="#tabella-delle-pagine-invertita">Tabella delle pagine invertita</a></h3>
+<h4 id="tabella-delle-pagine-invertita"><a class="header" href="#tabella-delle-pagine-invertita">Tabella delle pagine invertita</a></h4>
 <p>Negli schemi precedenti esiste <strong>una tabella distinta per ogni processo</strong>.</p>
 <p>In questo approccio, <strong>tabella delle pagine invertita</strong>, si hanno queste caratteristiche:</p>
 <ul>
