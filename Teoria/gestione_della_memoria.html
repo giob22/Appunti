@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-dfd27220.js";
+            window.path_to_searchindex_js = "searchindex-90b5cfaa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ec27ba43.js"></script>
@@ -762,13 +762,13 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <ol>
 <li>La MMU accede alla tabella di primo livello e usando \(p_1\) (<strong>accesso a memoria</strong>) ottiene l’indirizzo base della tabella di secondo livello.</li>
 <li>La MMU accede alla tabella di secondo livello e usando \(p_2\) (<strong>accesso a memoria</strong>) ottiene il numero di frame corrispondente.</li>
-<li>Infine, la MMU accede alla memoria principale nel frame trovaro e utilizza \(offset\) (<strong>accesso a memoria</strong>) per recuperare la casella desiderata.</li>
+<li>Infine, la MMU accede alla memoria principale nel frame trovato e utilizza \(offset\) (<strong>accesso a memoria</strong>) per recuperare la casella desiderata.</li>
 </ol>
 <p>Il motivo dell’aumento del tempo per attraversare la tabella è che la MMU ha bisogno di fare molti <strong>più accessi a memoria fisica</strong> per tradurre un <strong>singolo</strong> <strong>indirizzo</strong> <strong>virtuale</strong>.</p>
 <p>Nel caso di paginazione semplice (ad un livello) il numero di accessi totali per operare la traduzione di un indirizzo virtuale è pari a 2.</p>
 <ol>
 <li>Accesso alla page table</li>
-<li>accesso alla memoria fisica</li>
+<li>Accesso alla memoria fisica</li>
 </ol>
 <hr>
 <p align="center"><img src="images/tabella_gerarchica.png" width="500"></p>
@@ -827,7 +827,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Infatti l’ultima operazione è quella di inserire l’offset nella parte dell’indirizzo virtuale in cui è presente il numero di pagina e il PID.</p>
 </li>
 </ul>
-<p>In questo approccio risparmiamo la numerosità delle pagine, oltre al fatto che queste non sono più sparse nella memoria fisica. → si può sfruttare il principio di località.</p>
+<p>In questo approccio risparmiamo la numerosità delle <em>page tables</em>, oltre al fatto che queste non sono più sparse nella memoria fisica. → si può sfruttare il principio di località.</p>
 <h3 id="segmentazione-paginata"><a class="header" href="#segmentazione-paginata">Segmentazione paginata</a></h3>
 <p>Utilizzata in Linux.</p>
 <p align="center"><img src="images/segmentazione_paginata.png" width="500"></p>
@@ -845,7 +845,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Quando il processore utilizza un indirizzo virtuale <code>x = &lt;sg, sc&gt;</code>, <code>sg</code> identifica un segmento all’interno della tabella dei segmenti.<br>Una volta ottenuto l’indirizzo base della tabella delle pagine per il segmento identificato precedentemente, viene utilizzata l’altra parte dell’indirizzo virtuale <code>sc</code> per identificare la pagine fisica.</p>
 <p>→ si utilizza <code>sc</code> come offset rispetto l’indirizzo base della tabella delle pagine.</p>
 <p>A questo punto, ottenuta l’indirizzo base della pagina fisica, si somma a questo l’offset <code>of</code> per ottenere l’indirizzo fisico a cui il processo fa riferimento.</p>
-<p>Ovviamente durante tutto questo processo si devono verificare le condizione che non causino inconsistenze tra i processi, come le condizione di limite con <code>STBL</code> e <code>PTLR</code>.</p>
+<p>Ovviamente durante tutto questo processo si devono verificare le condizione che non causino inconsistenze tra i processi, come le condizione di limite con <code>STLR</code> e <code>PTLR</code>.</p>
 <blockquote>
 <p>Quindi nella tabella dei segmenti individuo l’<em>entry point</em> che fa riferimento alla tabella delle pagine per quel segmento.</p>
 </blockquote>
