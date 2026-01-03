@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-90b5cfaa.js";
+            window.path_to_searchindex_js = "searchindex-ec90dfab.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ec27ba43.js"></script>
@@ -1909,7 +1909,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li>Paginazione: la memoria è suddivisa in piccole unità chiamate <em>pagine</em> che possono essere mappate in memoria fisica.</li>
 <li>Segmentazione: è una tecnica più vecchia, ma non più utilizzata in modo prevalente nelle versioni moderne, ma offre diversi vantaggi rispetto la paginazione che si intendono sfruttare.</li>
 </ul>
-<p>Una delle caratteristiche di Linux è la sua <strong>portabilità</strong>, ossia capacità di girare su più architetture diverse. Tale gestione della memoria infatti è fatta per essere compatibile con diverse piattaforme hardware, rendendo il sistema operativo glessibile e adattabile a veri tipi di dispositivi</p>
+<p>Una delle caratteristiche di Linux è la sua <strong>portabilità</strong>, ossia capacità di girare su più architetture diverse. Tale gestione della memoria infatti è fatta per essere compatibile con diverse piattaforme hardware, rendendo il sistema operativo flessibile e adattabile a veri tipi di dispositivi</p>
 <p>Infatti tale gestione della memoria è supportata anche per sistemi con grandi quantità di memoria (NUMA) e multi-processore (SMP).</p>
 <p>Linux sfrutta la paginazione gerarchica per mantenere le tabelle delle pagine. Questa gerarchia solitamente è su 4 livelli, infatti ogni indirizzo virtuale (o lineare) è suddiviso logicamente in campi ognuno dei quali identificano un offset per la tabella della pagine di un livello.</p>
 <p>ESEMPIO DI TRADUZIONE DI UN INDIRIZZO VIRTUALE:</p>
@@ -1917,7 +1917,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 
 <p>Ogni pagina ha una dimensione fissata che può esser modificata all’atto della compilazione del kernel.</p>
 <p>Tipicamente, le due dimensioni possibili in <code>x86</code> sono <code>4KB</code> e <code>4MB</code>. Per Linux di default ogni pagina ha una dimensione di <code>4KB</code>.</p>
-<p>Per riferirci alla prima tabella delle pagine che si trova al livello più basso sfruttiamo l’indirizzo virtuale mantenuto all’interno del <em>controll register</em>, che per <code>x86</code> è il register 3.</p>
+<p>Per riferirci alla prima tabella delle pagine che si trova al livello più basso sfruttiamo l’indirizzo virtuale mantenuto all’interno del <em>control register</em>, che per <code>x86</code> è il register 3.</p>
 <p>Questo registro viene popolato all’atto del <strong>context switch</strong>, ogni processo ha associata la propria gerarchia di tabelle di pagine. Essendo una caratteristica direttamente legata al processo, tale indirizzo è contenuto all’interno del descrittore, che in Linux è chiamato <code>task_struct</code>.</p>
 <h2 id="spazio-di-indirizzamento-virtuale"><a class="header" href="#spazio-di-indirizzamento-virtuale">Spazio di indirizzamento virtuale</a></h2>
 <p>Le nuove versioni di Linux <strong>non si avvalgono del processore per la segmentazione</strong>, ovvero non utilizzano il <strong>meccanismo di segmentazione</strong> fisico implementato dentro la <strong>MMU</strong>.</p>
@@ -1929,7 +1929,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p align="center"><img src="images/segmentazione_paginata_1.png" width="500"></p>
 
 <!-- @todo capisci perché non è portabile -->
-<p>Viene quindi utilizzata una paginzazione segmentata in cui la segmentazione è implementata via software. In modo da sfruttare i vantaggi di questa.</p>
+<p>Viene quindi utilizzata una paginazione segmentata in cui la segmentazione è implementata via software: in modo da sfruttare i vantaggi di questa.</p>
 <p>La memoria è organizzata in <strong>Virtual Memory Areas</strong> (<em><strong>VMA</strong></em>) che consiste nell’unità di virtualizzazione della memoria.</p>
 <p>Ogni VMA rappresenta un <strong>blocco contiguo</strong> di <strong>memoria</strong> <strong>virtuale</strong> e corrisponde ad un segmento.</p>
 <p>Quindi possiamo avere VMA, <strong>ovvero pagine virtuali contigue</strong>, contenenti codice, stack, librerie, … .</p>
@@ -1952,7 +1952,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 
 <ul>
 <li><code>vm_file</code> si riferisce al file presente in memoria di massa, quindi non è contenuto nelle VMA anonime.</li>
-<li>All’interno della <code>mm_struct</code>, che rappresenta l’intera memoria virtuale, è presente anche il puntatore alla <strong>page table</strong> che il processo in questione: <code>gpd</code>.</li>
+<li>All’interno della <code>mm_struct</code>, che rappresenta l’intera memoria virtuale, è presente anche il puntatore alla <strong>page table</strong> del processo in questione: <code>pgd</code>.</li>
 </ul>
 <p>ESEMPIO DI SPAZIO VIRTUALE DI UN PROCESSO IN LINUX</p>
 <p align="center"><img src="images/Spazio_virtuale_VMA.png" width="400"></p>
