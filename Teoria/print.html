@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ec90dfab.js";
+            window.path_to_searchindex_js = "searchindex-65da1b08.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-ec27ba43.js"></script>
+        <script src="toc-8e52c6ba.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -177,8 +177,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <script src="../javascript.js"></script>
-<h1 id="architettura-di-un-so"><a class="header" href="#architettura-di-un-so">Architettura di un SO</a></h1>
+                        <h1 id="architettura-di-un-so"><a class="header" href="#architettura-di-un-so">Architettura di un SO</a></h1>
 <h2 id="funzionalità-di-un-so"><a class="header" href="#funzionalità-di-un-so">Funzionalità di un SO</a></h2>
 <ul>
 <li>
@@ -1981,6 +1980,24 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <p>Lo stesso non si può dire per le pagine fisiche che corrispondono allo <strong>heap</strong> del processo.</p>
 <!-- @todo continua... slide 149 -->
 <p>// TODO: continua.</p>
+<div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
+<h1 id="abi"><a class="header" href="#abi">ABI</a></h1>
+<p>La <strong>Application Binary Interface</strong> (<strong>ABI</strong>) è un insieme di convenzioni tra applicazioni utente e SO.</p>
+<p>Il kernel ne garantisce la stabilità ad ogni versione.</p>
+<p>Stabilisce il modo con cui avviene il passaggio dei parametri all’atto della chiamata del <code>syscall_handler</code>. Infatti i parametri non vengono passati tramite lo stack lato user o direttamente lo stack lato kernel, perché:</p>
+<ol>
+<li>il kernel non può accedere allo spazio utente direttamente, per questioni di sicurezza.</li>
+<li>il processo user non può scrivere direttamente nello stack kernel, il suo accesso è negato se non si trova in kernel mode</li>
+</ol>
+<p>Quindi il passaggio avviene tramite i registri del processore.</p>
+<ul>
+<li>Velocissimi: non richiedono accessi alla memoria</li>
+<li>Isolati: quando avviene il salto nel kernel, i valori sono già lì, pronti pre essere letti senza rischi di modifiche esterne o errori di memoria</li>
+</ul>
+<p>I registri sono limitati, ma questo non porta grosse problematiche perché è molto difficile che una chiamata di sistema possa richiedere molti parametri di ingresso da sforare la quantità di registri general-porpose disponibili.</p>
+<p>Il motivo di ciò è principalmente dovuto al testing delle syscall, tanti parametri significa grande superficie di attacco. Quindi nel caso di tanti parametri i casi di testing crescono esponenzialmente.</p>
+<p>Nell’ipotesi di molti parametri di ingresso si potrebbe utilizzare come parametro un puntatore ad una struttura che deve essere letta dal kernel mediante la funzione <code>copy_from_user</code>, altrimenti potrebbero generarsi risultati non desiderati.</p>
+<p>Ad esempio se non si facesse una copia dei dati e successivamente un controllo su questi, ma si facesse unicamente il controllo:<br>il processo utente chiedere di leggere un file normale, a cui ha accesso, il kernel controlla che effettivamente ha il permesso di farlo accedendo tramite il puntatore alla memoria; se prima che il kernel esegua la procedura per la lettura un thread malevolo acceda all’area di memoria in cui è contenuta la struttura, in user space, potrebbe modifica il file da leggere inserendo invece un file non ordinario ma contenente informazioni critiche.</p>
 <div style="break-before: page; page-break-before: always;"></div><script src="../javascript.js"></script>
 <h1 id="virtualizzazione"><a class="header" href="#virtualizzazione">Virtualizzazione</a></h1>
 <p>Una macchina <strong>virtuale (VM)</strong> è una emulazione (mediante tecniche sw/hw) di una macchina reale.</p>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>DEF - Teoria</title>
+        <title>ABI - Teoria</title>
 
 
         <!-- Custom HTML head -->
@@ -177,55 +177,35 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <script src="../javascript.js"></script>
-<h1 id="definizioni-utili"><a class="header" href="#definizioni-utili">Definizioni utili</a></h1>
+<h1 id="abi"><a class="header" href="#abi">ABI</a></h1>
+<p>La <strong>Application Binary Interface</strong> (<strong>ABI</strong>) è un insieme di convenzioni tra applicazioni utente e SO.</p>
+<p>Il kernel ne garantisce la stabilità ad ogni versione.</p>
+<p>Stabilisce il modo con cui avviene il passaggio dei parametri all’atto della chiamata del <code>syscall_handler</code>. Infatti i parametri non vengono passati tramite lo stack lato user o direttamente lo stack lato kernel, perché:</p>
+<ol>
+<li>il kernel non può accedere allo spazio utente direttamente, per questioni di sicurezza.</li>
+<li>il processo user non può scrivere direttamente nello stack kernel, il suo accesso è negato se non si trova in kernel mode</li>
+</ol>
+<p>Quindi il passaggio avviene tramite i registri del processore.</p>
 <ul>
-<li>
-<p><em><strong>Processo</strong></em>:</p>
-<p>Unità base di esecuzione del SO, descrive <strong>l’attività dell’elaboratore relative alla specifica esecuzione di un codice</strong>.</p>
-<p>è un’entità dinamica che consiste in: programma da eseguire + stato di esecuzione.</p>
-<p>Possiamo avere più processi relativi all’esecuzione di più istanze dello stesso programma.</p>
-</li>
-<li>
-<p><em><strong>Programma</strong></em></p>
-<p>Sequenza statica di esecuzione, corrisponde alla codifica in un linguaggio di programmazione comprensibile all’elaboratore, in modo che questo possa essere eseguito.</p>
-</li>
-<li>
-<p><em><strong>Immagine di un processo</strong></em></p>
-<p>L’immagine di un processo consiste nell’insieme del codice, area dati globale, stack, heap e il descrittore. Ovvero tutte quelle componenti necessarie all’esecuzione in un contesto di sistema operativo multiprogrammato.</p>
-<ul>
-<li>Stack</li>
-<li>Heap</li>
-<li>Area dati globali</li>
-<li>Codice → rientrante</li>
-<li>PCB</li>
-<li>Stack del kernel → utilizzato dal kernel quando il processo esegue in kernel mode</li>
+<li>Velocissimi: non richiedono accessi alla memoria</li>
+<li>Isolati: quando avviene il salto nel kernel, i valori sono già lì, pronti pre essere letti senza rischi di modifiche esterne o errori di memoria</li>
 </ul>
-</li>
-<li>
-<p><em><strong>Spazio di indirizzamento</strong></em></p>
-<p>L’immagine del processo e le risorse da esso possedute costituiscono il suo spazio di indirizzamento.</p>
-</li>
-<li>
-<p><em><strong>Thread</strong></em></p>
-<p>Flusso di controllo sequenziale di un processo eseguito in maniera concorrente a questo.</p>
-<p>A differenza di un processo non possiede delle risorse private alla sua esecuzione ma le condivide con altri thread dello stesso processo e il processo stesso.</p>
-<p>Quello che appartiene ad un thread - processo leggero - sono:</p>
-<ul>
-<li>insieme di registri</li>
-<li>stack</li>
-</ul>
-<p>Tutte le altre aree di memoria fanno parte dello spazio di indirizzamento del processo, quindi condivise.</p>
-</li>
-</ul>
+<p>I registri sono limitati, ma questo non porta grosse problematiche perché è molto difficile che una chiamata di sistema possa richiedere molti parametri di ingresso da sforare la quantità di registri general-porpose disponibili.</p>
+<p>Il motivo di ciò è principalmente dovuto al testing delle syscall, tanti parametri significa grande superficie di attacco. Quindi nel caso di tanti parametri i casi di testing crescono esponenzialmente.</p>
+<p>Nell’ipotesi di molti parametri di ingresso si potrebbe utilizzare come parametro un puntatore ad una struttura che deve essere letta dal kernel mediante la funzione <code>copy_from_user</code>, altrimenti potrebbero generarsi risultati non desiderati.</p>
+<p>Ad esempio se non si facesse una copia dei dati e successivamente un controllo su questi, ma si facesse unicamente il controllo:<br>il processo utente chiedere di leggere un file normale, a cui ha accesso, il kernel controlla che effettivamente ha il permesso di farlo accedendo tramite il puntatore alla memoria; se prima che il kernel esegua la procedura per la lettura un thread malevolo acceda all’area di memoria in cui è contenuta la struttura, in user space, potrebbe modifica il file da leggere inserendo invece un file non ordinario ma contenente informazioni critiche.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="virtualizzazione.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="memoria_linux.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
+                            <a rel="next prefetch" href="virtualizzazione.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -233,10 +213,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="virtualizzazione.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="memoria_linux.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
+                    <a rel="next prefetch" href="virtualizzazione.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
             </nav>
 
         </div>
