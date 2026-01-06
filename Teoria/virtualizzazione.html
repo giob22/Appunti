@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-65da1b08.js";
+            window.path_to_searchindex_js = "searchindex-a95a4438.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-8e52c6ba.js"></script>
@@ -189,9 +189,9 @@
 <li>Affidabilità</li>
 <li>Sicurezza</li>
 </ul>
-<p>Per ottenere queste qualità sarebbe necessario isolare ogni applicazione in modo che una di queste vada in crash le altre non sarebbero influenzate.</p>
+<p>Per ottenere queste qualità sarebbe necessario isolare ogni applicazione in modo che se una di queste vada in crash le altre non sarebbero influenzate.</p>
 <p>Senza VM, il problema sarebbe che per ottenere questo isolamento usando solo hardware fisico, bisognerebbe comprare una macchina fisica per ogni singolo servizio.</p>
-<p>Utilizzare tante macchine fisiche quanti sono i servizi oltre ad essere molto costoso è anche uno spreco di energia e spazio.</p>
+<p>Utilizzare tante macchine fisiche quanti sono i servizi è, oltre ad essere molto costoso, anche uno spreco di energia e spazio.</p>
 <p>Utilizzando invece diverse VM, una per ogni servizio da eseguire, possiamo ottenere la caratteristica di isolamento e inoltre si riducono enormemente gli spazi e il costo necessario.</p>
 <blockquote>
 <p>Questa operazione è detta <strong>consolidation</strong>, ovvero raggruppare più macchine virtuali su un unico server fisico per ottimizzare l’uso delle risorse.</p>
@@ -207,7 +207,7 @@
 <p>Applicazioni <strong>legacy</strong>, basare su SO obsoleti e non più supportati, possono essere eseguite su macchine moderne.</p>
 <p>Quindi questo eviterebbe il problema di continuare ad utilizzare macchine legacy unicamente per la loro compatibilità con l’applicazione che è in esecuzione su esse.</p>
 <h3 id="virtualizzazione-e-cloud-computing"><a class="header" href="#virtualizzazione-e-cloud-computing">Virtualizzazione e cloud computing</a></h3>
-<p>Il <strong>cloud computing</strong> permette lo outsourcing (spostare) di VM in centri di calcolo privati o di terze parti (<strong>pat-per-use</strong>).</p>
+<p>Il <strong>cloud computing</strong> permette lo outsourcing (spostare) di VM in centri di calcolo privati o di terze parti (<strong>pay-per-use</strong>).</p>
 <p>Quindi invece di eseguire le macchine virtuali sui propri server in azienda, il Cloud Computing permette di spostare la loro esecuzione in centri di calcolo. → Non si paga più per l’hardware ma per l’utilizzo di risorse.</p>
 <p>Questo riduce il costo della manutenzione e gestione dei server fisici per le aziende.</p>
 <h3 id="affidabilità-e-sicurezza"><a class="header" href="#affidabilità-e-sicurezza">Affidabilità e sicurezza</a></h3>
@@ -229,14 +229,14 @@
 <li>…</li>
 </ul>
 <p>“Container (Fine slide)”</p>
-<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è quello di emulare completamente l’intera architettura virtuale su un’architettura fisica del tutto diversa.</p>
+<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è di emulare completamente l’intera architettura virtuale su un’architettura fisica del tutto diversa.</p>
 <p>Posso emulare un’architettura <code>arm</code> su una intel <code>x86</code> senza problemi, per il tipo di astrazione offerta da un VMM.</p>
 <p align="center"><img src="images/confronto_SO_VMM.png" width="500"></p>
 
 <h2 id="architetture-principali-di-una-hypervisor"><a class="header" href="#architetture-principali-di-una-hypervisor">Architetture principali di una hypervisor</a></h2>
 <ul>
-<li>TIPO 1</li>
-<li>TIPO 2</li>
+<li>TIPO 1 → <strong>bare-metal virtualization</strong> o <strong>server virtualization</strong></li>
+<li>TIPO 2 → <strong>hosted hypervisor</strong></li>
 </ul>
 <ol>
 <li>
@@ -250,7 +250,7 @@
 <li>
 <p>Il VMM esegue su un SO tradizionale (es. Windows), viene detta <strong>hosted hypervisor</strong>.</p>
 <p>Per comunicare con l’hardware il sistema operativo <strong>guest</strong> deve passare per l’hypervisor che a sua volta deve passare per il sistema operativo <strong>host</strong>.</p>
-<p>L’hypervisor è considerato per il SO host come un qualsiasi altro processo in esecuzione.</p>
+<p>L’hypervisor è considerato, per il SO host, come un qualsiasi altro processo in esecuzione.</p>
 <p>Questo utilizzo facilita l’integrazione tra sistemi operativi, ad esempio, posso copiare file facilmente dal desktop dell’host dentro la macchina virtuale guest.</p>
 <p>Ha come svantaggio le performance perché ogni richiesta della VM deve attraversare due strati: l’Hypervisor e poi il sistema operativo host.</p>
 <p>Consiste nell’architettura che utilizziamo con VMware Workstation/Fusion, Oracle VM VirtualBox.</p>
@@ -389,7 +389,7 @@
 <p>Oggi con il supporto hardware VMware si è adattata perché è molto più performante.</p>
 <h4 id="dynamic-binary-traslation"><a class="header" href="#dynamic-binary-traslation">Dynamic Binary Traslation</a></h4>
 <p>All’avvio della VM, il VMM analizza a blocchi il codice eseguito dal guest SO.</p>
-<p>Ogni blocco, detto <strong>Basic Block</strong> è una breve <strong>sequenza di istruzioni sequenziali</strong> che terminano con una <strong>istruzione di salto</strong>.</p>
+<p>Ogni blocco, detto <strong>Basic Block</strong>, è una breve <strong>sequenza di istruzioni sequenziali</strong> che terminano con una <strong>istruzione di salto</strong>.</p>
 <p align="center"><img src="images/basic_block.png" width="180"></p>
 
 <p>L’Hypervisor quindi va a scandire questi blocchi all’interno del binario del kernel e li analizza e riscrive eventuali istruzioni sensitive.</p>
@@ -420,7 +420,7 @@
 <p align="center"><img src="images/DBT_3.png" width="400"></p>
 
 <ul>
-<li>Dopo la modifica nel basic block viene sostituita l’istruzione sensitive e viene modificato il salto finale per poter permettere al VMM di analizzare il basic block successivo</li>
+<li>Dopo la modifica, nel basic block, viene sostituita l’istruzione sensitive e viene modificato il salto finale per poter permettere al VMM di analizzare il basic block successivo</li>
 </ul>
 <p align="center"><img src="images/DBT_4.png" width="400"></p>
 
