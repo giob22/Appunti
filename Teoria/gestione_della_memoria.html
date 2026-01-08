@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-09a7a865.js";
+            window.path_to_searchindex_js = "searchindex-937d9d99.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-8e52c6ba.js"></script>
@@ -261,7 +261,7 @@ location of code : 0x1095afe50
 </ul>
 <h2 id="tecniche-di-gestione-della-memoria"><a class="header" href="#tecniche-di-gestione-della-memoria">Tecniche di gestione della memoria</a></h2>
 <hr>
-<p>Rilocazione significa allocare l’immagine del processo nella memoria principale, può avvenire in diversi modi.</p>
+<p>Rilocazione significa allocare l’immagine del processo nella memoria principale; può avvenire in diversi modi.</p>
 <p>Questa rilocazione può essere statica o dinamica.</p>
 <hr>
 <p>Nei primi sistemi, il posizionamento del codice e dati è <strong>fisso</strong>. → con asim abbimo inserito in posizioni fisse il codice e i dati.<br>Il processo è caricato in RAM tutto insieme come un <strong>unico blocco</strong> (allocazione contigua).</p>
@@ -274,7 +274,7 @@ location of code : 0x1095afe50
 
 <p>Ulteriori evoluzioni hw hanno permesso di <strong>caricare</strong> l’immagine del processo (o un suo segmento) <strong>non più per intero</strong>, ma in <strong>piccole porzioni (pagine)</strong> ( caricamento a domanda) <strong>sparpagliate</strong> in memoria fisica (allocazione non contigua).</p>
 <p>Quindi è stata introdotta l’allocazione di tipo <strong>non contigua</strong> grazie allo sviluppo dell’hardware MMU.</p>
-<p>Che vantaggio mi da l’accolazione di tipo non contigua?<br>→ uso efficiente dell’area di memoria in termini di <strong>flessibilità e dinamicità</strong>; i processi non devono essere necessariamente allocati in un blocco contiguo di memoria.<br>→ attenua il <strong>problema della frammentazione</strong>, perché non ho bisogno di trovare una area di memoria di dimensione tale da contenere interamente l’immagine del processo. Ci sono due tipi principali di frammentazione:</p>
+<p>Che vantaggio mi da l’allocazione di tipo non contigua?<br>→ uso efficiente dell’area di memoria in termini di <strong>flessibilità e dinamicità</strong>; i processi non devono essere necessariamente allocati in un blocco contiguo di memoria.<br>→ attenua il <strong>problema della frammentazione</strong>, perché non ho bisogno di trovare una area di memoria di dimensione tale da contenere interamente l’immagine del processo. Ci sono due tipi principali di frammentazione:</p>
 <ul>
 <li>frammentazione interna: si verifica quando la memoria allocata per il processo <strong>è più grande di quella effettivamente necessaria</strong>.</li>
 <li>frammentazione esterna: si verifica quando ci sono <strong>molti piccoli spazi liberi sparsi</strong> nella memoria fisica, ma <strong>nessuno</strong> di questi <strong>è abbastanza grande da ospitare un nuovo processo</strong>.</li>
@@ -293,7 +293,7 @@ location of code : 0x1095afe50
 <p>L’associazione di <strong>istruzioni e dati</strong> ad indirizzi di memoria (fisica) si può compiere in ognuna delle sequenti fasi:</p>
 <ul>
 <li>
-<p><strong>compilazione</strong>: se nella fase di compilazione si conosce dove il processo risiederà nella memoria, allora può <strong>inserire direttamente gli indirizzi fisici nel codice oggetto</strong>.</p>
+<p><strong>compilazione</strong>: se nella fase di compilazione si conosce dove il processo risiederà nella memoria, allora il compilatore può <strong>inserire direttamente gli indirizzi fisici nel codice oggetto</strong>.</p>
 <p>→ si genera così <strong>codice assoluto</strong>: gli indirizzi nel codice oggetto sono indirizzi fisici reali della RAM. Quindi codice e dati saranno allocati sempre in tali posizioni ad ogni esecuzione.</p>
 <p>→ potrebbe essere un problema se il SO decidesse di caricare il programma in un’altra zona della memoria. Sarebbe necessaria una ricompilazione perché tutti gli indirizzi sarebbero <strong>sbagliati</strong>.</p>
 <p>Quindi in questo caso gli indirizzi sarebbero fissati per sempre (fino ad una successiva ricompilazione)<br>→ nessuna <strong>flessibilità</strong>;</p>
@@ -333,9 +333,9 @@ location of code : 0x1095afe50
 <p>Questi indirizzi non potranno esser cambiato al meno che il codice non venga ricompilato oppure ricaricato.</p>
 <h3 id="dinamica"><a class="header" href="#dinamica">dinamica</a></h3>
 <p>Con questo approccio, dinamico, l’indirizzo di codice/dati nella immagine (<em>virtuale</em>) <strong>non corrisponde</strong> alla loro posizione effettiva in RAM (<em>indirizzo fisico</em>).</p>
-<p>L’effettiva posizione dello spazio di indirizzamento del processo è <strong>scelta da SO</strong>, al caricamento iniziale del processo, o anche durante la sua esecuzione.</p>
+<p>L’effettiva posizione dello spazio di indirizzamento del processo è <strong>scelta dal SO</strong>, al caricamento iniziale del processo, o anche durante la sua esecuzione.</p>
 <p>→ richiede un supporto hardware che permetta a tempo di esecuzione di tradurre gli indirizzi virtuali in indirizzi fisici.</p>
-<p>Infatti la rilocazione di tipo dinamico si introduce un distinzione fondamentale:</p>
+<p>Infatti con la rilocazione di tipo dinamico si introduce una distinzione fondamentale:</p>
 <ul>
 <li>
 <p><strong>Indirizzo virtuale</strong>:</p>
@@ -346,10 +346,10 @@ location of code : 0x1095afe50
 <p>indirizzo visto dall’unità di memoria, <strong>posizione effettiva</strong> del dato/istruzione.</p>
 </li>
 </ul>
-<p>Quando otteniamo <strong>segmentation fault</strong> significa che l’indirizzo virtuale che stiamo utilizzando, erroneamente, non è associato ad un indirizzo fisico facente parte dell’immagine del processo nella memoria fisica → l’indirizzo fisico che stiamo deferenziando non è mappato nella memoria virtuale.<br>→ la traduzione da indirizzo virtuale a indirizzo fisico ha dato questo problema.</p>
+<p>Quando otteniamo <strong>segmentation fault</strong> significa che l’indirizzo virtuale che stiamo utilizzando, erroneamente, non è associato ad un indirizzo fisico facente parte dell’immagine del processo nella memoria fisica → l’indirizzo virtuale che il processo sta deferenziando non è mappato nella memoria fisica.<br>→ la traduzione, a run-time, dal indirizzo virtuale a indirizzo fisico ha risolto questo problema.</p>
 <p>Vedremo che il fault può essere <strong>ripristinabile</strong>, perché il segmento/pagina non sono in memoria fisica ma sono swappati in memoria di massa. → ci troviamo nella situazione di un caricamento a domanda.</p>
 <p>Il processore vede solo indirizzi logici (virtuali)<br>→ <strong>tradotti dall’hardware</strong> che ha la visibilità della memoria fisica, ovvero MMU.<br>MMU rende trasparente l’accesso del processore agli indirizzi fisici.</p>
-<p>Se non fosse così il processore <strong>sarebbe più performante</strong> (vedrebbe direttamente gli indirizzi fisici), ma perderei tutta la parte di virtualizzazione.</p>
+<p>Se non sarebbe necessaria una traduzione, il processore <strong>sarebbe più performante</strong> (vedrebbe direttamente gli indirizzi fisici), ma perderei tutta la parte di virtualizzazione → ovvero si perde la proprietà di isolamento che il SO deve garantire per ogni processo.</p>
 <p>Infatti come abbiamo visto, aprendo il file eseguibile od oggetto, non sono presenti indirizzi fisici ma unicamente indirizzi virtuali che solitamente partono tutti da <code>0x0</code>.</p>
 <p align="center"><img src="images/rilocazione_dinamica.png" width="550"></p>
 
@@ -416,7 +416,7 @@ location of code : 0x1095afe50
 <p align="center"><img src="images/approcci_spazio_virtuale.png" width="500"></p>
 
 <p>Nell’approccio segmentato l’immagine del processo è suddivisa in <strong>porzioni logiche</strong> (segmenti) gestite in modo separato ed indipendente dal sistema operativo.<br>Ogni segmento può avere una dimensione variabile, in base alla struttura logica del programma (codice, heap, stack, dati).</p>
-<p><strong>Vantaggio principale</strong>:<br>La segmentazione facilita la condivisione di aree di memoria fisica tra più processi, mappandole in segmenti distinti del loro spazio di indirizzamento.\</p>
+<p><strong>Vantaggio principale</strong>:<br>La segmentazione facilita la condivisione di aree di memoria fisica tra più processi, mappando in questa area da condividere distinti segmenti della memoria virtuale propri di un processo.\</p>
 <ul>
 <li>→ Esempio:<br>il segmento di codice (text) di un programma è di sola lettura.<br>Più processi che eseguono lo stesso programma possono <strong>condividere la stessa copia fisica</strong> del codice, mappandola nel proprio spazio di indirizzamento virtuale all’interno del segmento dedicato all’area testo.</li>
 </ul>
@@ -511,7 +511,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>→ Se hanno una entry in comune significa che i due processi possono accedere alla stessa area di memoria fisica.<br>Quindi stanno effettivamente condividendo la copia del segmento di memoria. Questo permette di allocare una sola copia del segmento in memoria.</p>
 <p align="center"><img src="images/condivisione_segmento.png" width="500"></p>
 
-<h4 id="allocazione"><a class="header" href="#allocazione">allocazione</a></h4>
+<h2 id="allocazione"><a class="header" href="#allocazione">allocazione</a></h2>
 <p>Uno spazio/segmento di memoria virtuale può essere <strong>collocato in memoria fisica</strong> in due possibili modi:</p>
 <ul>
 <li>
