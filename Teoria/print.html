@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e01c2fab.js";
+            window.path_to_searchindex_js = "searchindex-09a7a865.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-8e52c6ba.js"></script>
@@ -1219,7 +1219,7 @@ il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel mom
 <p>Il sistema operativo, come per il processore, attraverso l’utilizzo dei <strong>PCB</strong> garantisce il principio di <strong>isolamento</strong> tra processi, ovvero è necessario assicurarsi che l’esecuzione di uno non interferisca con quella di un altro.<br>Quindi fisicamente i processi non devono accedere ad aree di memoria fisiche in cui è contenuta l’immagine di un altro processo.</p>
 <p align="center"><img src="images/immagine_allocata_in_RAM.png" width="500"></p>
 
-<p>L’immagine del processo è descritta all’interno del PCB dello specifico processo.<br>In questa struttura sono contenute anche informazioni <strong>su dove si trovano</strong> le diverse parti dell’immagine <strong>in memoria centrale</strong>.</p>
+<p>L’immagine del processo è descritta all’interno del PCB dello specifico processo.<br>In questa struttura sono contenute anche informazioni <strong>su dove si trovano</strong> le diverse parti dell’immagine <strong>in memoria centrale</strong>, tramite il puntatore alla struttura che permette di tradurre un indirizzo logico in un indirizzo fisico.</p>
 <p>I processi non accedono mai direttamente alla memoria principale tramite degli indirizzi.<br>Lavorano invece su una propria <strong>memoria virtuale</strong> (riservata), esso non utilizza indirizzi di memoria fisici ma bensì <strong>virtuali</strong>.</p>
 <p>Tali <strong>indirizzi virtuali</strong> hanno senso solo nella visione della memoria del processo → non corrispondono a veri e propri indirizzi della memoria principale.</p>
 <hr>
