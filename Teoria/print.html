@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-937d9d99.js";
+            window.path_to_searchindex_js = "searchindex-84830dd4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-8e52c6ba.js"></script>
@@ -2051,7 +2051,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li>…</li>
 </ul>
 <p>“Container (Fine slide)”</p>
-<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è di emulare completamente l’intera architettura virtuale su un’architettura fisica del tutto diversa.</p>
+<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è di emulare completamente l’intera architettura su un’architettura fisica del tutto diversa.</p>
 <p>Posso emulare un’architettura <code>arm</code> su una intel <code>x86</code> senza problemi, per il tipo di astrazione offerta da un VMM.</p>
 <p align="center"><img src="images/confronto_SO_VMM.png" width="500"></p>
 
@@ -2112,10 +2112,10 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </ul>
 <p align="center"><img src="images/virtual_mode.png" width="500"></p>
 
-<p>Per permettere al guest SO di operare in kernel mode, un primo meccanismo che si può sfruttare è quello delle trap: nel momento in cui il guest esegue delle istruzioni privilegiate/critiche, allora la CPU virtuale genera una <strong>trap</strong>.</p>
+<p>Per permettere al guest SO di operare in kernel mode, un primo meccanismo che si può sfruttare è quello delle trap: nel momento in cui il guest esegue delle istruzioni privilegiate/critiche, allora la CPU fisica genera una <strong>trap</strong>.</p>
 <p>Questo meccanismo è detto: <strong>TRAP-AND-EMULATE</strong>.</p>
 <p>Questa trap viene intercettata dall’hypervisor, elabora il tipo di istruzione che ha generato quella trap ed emula l’istruzione privilegiata associata.</p>
-<p>Tutte le istruzioni sensitive non possono eseguire direttamente, ma devono passare per l’hypervisor, e vengono a scatenare una trap → passa il controllo (de-privilegin) all’hypervisor che emula/simula l’effetto dell’istruzione.</p>
+<p>Tutte le istruzioni sensitive non possono eseguire direttamente, ma devono passare per l’hypervisor, devono scatenare una trap → passa il controllo (de-privileging) all’hypervisor che emula/simula l’effetto dell’istruzione.</p>
 <p align="center"><img src="images/intercettazione_trap.png" width="500"></p>
 
 <p>Nel caso di CPU intel questa cosa avviene in maniera diversa, perché in queste CPU esistono diversi livelli di privilegio, classificati in Ring.</p>
@@ -2228,7 +2228,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </li>
 </ul>
 <p>In poche parole, il salto finale viene modificato per garantire che la CPU non esegua mai codice originale, ma rimbalzi sempre attraverso il VMM per ottenere il prossimo pezzo di codice tradotto e sicuro.</p>
-<p>Vediamo cosa come accade tutto ciò:</p>
+<p>Vediamo come accade tutto ciò:</p>
 <p align="center"><img src="images/DBT_1.png" width="300"></p>
 
 <ul>
@@ -2301,8 +2301,8 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </ul>
 </li>
 <li>
-<p><strong>VMCS (Virtual Machiene Control structure)</strong></p>
-<p>Per gestire questi passaggi in modo efficiente, intel ha introdotto una struttura dati hardware chiamata <strong>VMCS</strong>. La VMCS agisce coem una “scheda cliente” per ogni VM e contiene:</p>
+<p><strong>VMCS (Virtual Machine Control Structure)</strong></p>
+<p>Per gestire questi passaggi in modo efficiente, intel ha introdotto una struttura dati hardware chiamata <strong>VMCS</strong>. La VMCS agisce come una “scheda cliente” per ogni VM e contiene:</p>
 <ul>
 <li><strong>Guest state</strong>: lo stato della CPU quando gira la VM. Viene caricato durante la <em>VM Entry</em> e salvato durante la <em>VM Exit</em>.</li>
 <li><strong>Host state</strong>: lo stato della CPU quando gira il VMM. Viene caricato durante la <em>VM Exit</em>.</li>
