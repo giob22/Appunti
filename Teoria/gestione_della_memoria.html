@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3fb8eee3.js";
+            window.path_to_searchindex_js = "searchindex-44571e61.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-8e52c6ba.js"></script>
@@ -629,10 +629,9 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>Ovviamente quando si tenta di operare su una pagina l’MMU verifica che il programma non violi i permessi presenti su tale.<br>→ in caso di violazione solleva un <strong>page fault</strong>.</p>
 <p align="center"><img src="images/permessi_page_table.png" width="500"></p>
 
-<p>La tabella delle pagine è in <strong>memoria principale</strong>.<br>La MMU usa 2 registri utilizzarla:</p>
+<p>La tabella delle pagine è in <strong>memoria principale</strong>.<br>La MMU usa 2 registri per accedervi:</p>
 <ul>
-<li><strong>PTBR</strong> (Page-Table Base Register):
-indirizzo fisico della tabella delle pagine in memoria fisica.</li>
+<li><strong>PTBR</strong> (Page-Table Base Register):<br>indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li><strong>PTLR</strong> (Page-Table Length Register):<br>dimensione della tabella delle pagine.</li>
 </ul>
 <p>Questi due valori sono contenuti all’interno del PCB di ogni processo e vengono caricati in tali registri ogni volta che avviene un <strong>context switch</strong>.</p>
