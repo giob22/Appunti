@@ -277,13 +277,40 @@ Una giunzione è il punto di contatto fisico tra due conduttori realizzati con m
 
 incertezza del conteggio rispetto al valore misurato.
 
+## incertezza aggiuntiva nella misura diretta di periodo
+
+L'espressione che otteniamo calcolando unicamente la legge della propagazione dell'incertezza con approccio deterministico non tiene conto di tutti i contributi di incertezza.
+
+Dobbiamo tener conto di altri fattori che limitano l'accuratezza della misurazione.
+
+Ovvero all'incertezza rispetto la durata della finestra di Gate essendo questa calcolata tramite l'impiego della valutazione degli zero crossing del segnale in ingresso.
+
+Infatti il segnale in ingresso, quello incognito, rispetto al segnale di clock è più soggetto a rumori esterni che potrebbero anticipare o ritardare la valutazione dello zero crossing.
+
+Questo contributo è meno spiccato nel caso di una misurazione diretta della frequenza perché in questo caso la durata del tempo di Gate definita dal segnale di clock, che abbiamo visto avere una stabilità elevata.
+
+Quindi il contributo che dovremmo aggiungere quantifica l'incertezza dovuto al ritardo o all'anticipo della valutazione dello zero crossing per realizzare la finestra di Gate.
+
+Incertezza dovuto alla stima del punto di zero crossing che sono due, quindi supponendo che la natura del rumore che produce questa incertezza sia la stessa moltiplico per 2 l'incertezza sul singolo punto di zero crossing.
+
+Il contributo d'incertezza a questo punto di può esprimere per il singolo punto:
+
+$$t_e = \frac{V_{rms}^{\text{(noise)}}}{A2 \pi f_0}$$
+
+Dove:
+
+- $A$ è l'ampiezza del segnale
+- $f_0$ la frequenza del segnale
+
+Da qui possimo notare che maggiore è la frequenza del segnale e l'ampiezza, minore sarà il contributo d incertezza dovuto alla valutazione del punto di zero crossing.
+
 ## problema nell'utilizzo di un voltmetro nelle termocoppie se non si considerano le leggi delle termocoppie
 
 Nel momento in cui colleghi i puntali di un voltmetro ai terminali della termocoppia, non ho più un circuito a due materiali, ma abbiamo creato altre due giunzioni parassite nei punti di contatto.
 
 I punti di contatto tra i puntali del voltmetro e i terminali della termocoppia.
 
-Quindi all'atto della misura della tensione introduciamo nuovi metalli nel circuito, creando giunzioni indesiderate che, per effetto Seebeck, generano tensioni proprie. Se leggessimo il display il valore sarebbe alterato dal fatto che abbiamo aggiunto due giunzioni che non abbiamo considerato.
+Quindi all'atto della misura della tensione introduciamo nuovi metalli nel circuito, creando giunzioni indesiderate che, per effetto Seebeck, generano tensioni proprie. Se leggessimo il display il valore sarebbe alterato dal fatto che abbiamo aggiunto due giunzioni che non abbiamo considerato nella valutazione del coefficiente di Seebeck differenziale.
 
 Quindi il valore di tensione che otteniamo non è effettivamente quello corretto da utilizzare nella relazione della termocoppia.
 
@@ -299,7 +326,7 @@ Quindi il valore di tensione che otteniamo non è effettivamente quello corretto
   
   la giunzione è racchiusa nella guaina ma separata elettricamente da essa tramite isolanti.
 
-## temperatura di riferimento sulla giunzione fredda
+## temperatura di riferimento sulla giunzione fredda deve esser nota
 
 Il motivo per cui è fondamentale mantenere o conoscere con precisione la temperatura della giunzione di riferimento (giunzione fredda) risiede nella natura stessa del sensore: la termocoppia è, di fatto, un sensore di differenza di temperatura. 
 
@@ -346,6 +373,111 @@ Se conosco la temperatura di riferimento, ovvero la temperatura della giunzione 
 Per valutare la temperatura della giunzione calda sommo alla tensione di Seebeck che ho ottenuto, quella relativa alla differenza di temperatura ($x°-25°$), la tensione che otterrei se la differenza di tensione fosse tra ($25° - 0°$), valore contenuto nella tabella.
 
 Quindi ottengo una valore di tensione che corrisponde alla differenza di temperatura $x° - 0°$. Dalla tabella quindi posso vedere questa tensione a quale temperatura della giunzione calda corrisponde. 
+
+## linearizzazione della relazione caratteristica delle termocoppie
+
+L'effetto Seebeck, come abbiamo visto, non è lineare, il motivo sta nel fatto che il coefficiente di Seebeck, che dipende dal materiale del metallo o del semiconduttore, non è costante ma varia a seconda della temperatura.
+
+Esistono quindi diversi modi per linearizzare la relazione tra tensione e differenza di temperatura.
+
+Tutti questi metodi si basano sull'utilizzo di coefficienti di linearizzazione sulla tensione misurata.
+
+$$T = a_0 + a_1V + a_2V^2 + ... + a_nV^n$$
+
+Questo polinomio è il risultato di un interpolazione.
+
+Questa equazione permette di approssimare il comportamento della termocoppia ad un comportamento lineare.
+
+Molte termocoppie possono esser utilizzate con multimetri digitali, che mostrano direttamente il valore della temperatura, poiché implementano la tabella della termocoppia specifica.
+
+## come collegare il voltmetro alla termocoppia
+
+Per collegare il voltmetro alla termocoppia senza che questo possa alterare la misura della tensione perché aggiungerebbe delle giunzioni che non sono considerate nel coefficiente di Seeback differenziale.
+
+Quindi essendo i puntali del voltmetro fisicamente in contatto con la termocoppia definiscono delle giunzioni che quindi potrebbero generare a loro volta una tensione di Seebeck.
+
+Sfruttiamo quindi la legge delle termocoppie sui materiali intermedi nelle giunzioni, ovvero la legge che ci permette di inserire un conduttore, che in questo caso è il nostro voltmetro, tra due giunzioni di riferimento senza alterare la misura della tensione.
+
+A patto che le giunzioni di riferimento, quindi le giunzioni fredde, si trovino alla stessa identica temperatura.
+
+## pro e contro dell'utilizzo delle termocoppie
+
+- pro 
+  
+  - Ampio intervallo di temperatura misurabile
+  - Robuste
+  - tempo di risposta rapido, essendo queste molto sensibili alle variazioni della temperatura, poiché sono piccole e hanno una capacità termica molto bassa. Quindi rispondono velocemente alle variazioni della temperatura, soprattutto se si utilizza una giunzione esposta.
+  - sono sensori attivi, ovvero non hanno bisogno di una alimentazione per funzionare; questo quindi significa che non c'è il pericolo dell'auto-surriscaldamento.
+
+- contro
+
+  - Non lineari in ampi intervalli di temperature
+  - necessitò di una temperatura di riferimento
+  - segnale debole: generano tensioni estremamente piccole, nell'ordine dei microvolt, che richiedono un'elettronica di condizionamento molto sensibile.
+  - suscettibili al rumore: a causa del segnale debole, sono facilmente influenzabili da disturbi elettrici e di campi magnetici esterni.
+  - suscettibilità alla corrosione: i metalli che la compongono, in certi ambienti, possono corrodersi nel tempo, deteriorando la precisione
+  - precisione limitata: per le proprietà dei metalli e degli errori di misura nella valutazione della temperatura della giunzione di riferimento
+
+## valore $V_{rms}$
+
+Il valore $V_{rms}$ corrisponde al valore dell'ampiezza di un segnale di tensione continuo che posto ai capi di una resistenza produrrebbe gli stessi effetti termici prodotto dal segnale di tensione alternato, sulla stessa resistenza e per lo stesso intervallo di tempo.
+
+## architettura tipica dei voltmetri in regime alternato
+
+Per realizzare il voltmetro in alternata si utilizzano blocchi di pre-condizionamento a monte di un voltmetro digitale in continua.
+
+Tali blocchi  di pre-condizionamento estraggono dal segnale una componente continua significativa.
+
+## voltmetri a vero valore efficace
+
+La misura si basa sul valutare una corrente I, proporzionale alla tensione di cui si desidera valutare il valore efficace. $V_{rms}$, è fatta circolare in una resistenza di valore noto, il cui riscaldamento per effetto Joule determina la variazione di temperatura della giunzione calda di una termocoppia.
+
+Si instaura quindi una tensione di Seebeck ai capi della termocoppia.
+
+La potenza istantanea dissipata dalla resistenza è pari a $\frac{v^2(t)}{R}$.
+
+La temperatura della giunzione dipende dalla potenza media dissipata sulla resistenza.
+
+
+$$\frac{V^2_{rms}}{R} = K(T_2 - T_1)$$
+
+Differenza di temperatura che viene generata dalla potenza dissipata sulla resistenza sulle giunzioni della termocoppia.
+
+## ADC
+
+Sta per Analog to Digital Converter. Consiste nel dispositivo che traduce il segnale elettrico in una sequenza di numeri comprensibili a un computer.
+
+Il suo compito è associare a un determinato livello d tensione un preciso codice digitale.
+
+Quindi di campionare, quantizzare e codificare i livelli di quantizzazione a cui sono approssimati i valori misurati del segnale.
+
+## valutazione delle resistenze nei circuiti SAMPLE and HOLD
+
+- $R_{IN}$
+  - grande: per evitare che il circuito assorba troppa corrente dall'ingresso.
+
+    Quindi per evitare che il segnale in ingresso perturbi il funzionamento del sistema
+
+  - piccola: per far in modo che la tensione sul condensatore possa seguire in modo più affidabile le variazioni del segnale in ingresso.
+
+    Quindi che la costante di tempo associata alla dinamica del condensatore sia molto piccola
+
+- $R_{OUT}$
+  - grande: per evitare effetti di non idealità come l'effetto Droop, ovvero che il condensatore si scarichi durante la fase di hold per effetto di correnti parassite.
+  - piccola: per far in modo che in uscita la tensione $V_{o}$ rispecchi la tensione $V_{c}$.
+
+    Quindi per evitare che ci sia assorbimento, dovuto dal partitore di tensione.
+
+
+## risoluzione 
+
+è il più piccolo intervallo tra due valori distinti che il dispositivo è in grado di distinguere.
+
+
+## cosa è un bin
+
+
+
 
 
 # Da vedere
