@@ -474,6 +474,35 @@ Quindi di campionare, quantizzare e codificare i livelli di quantizzazione a cui
 è il più piccolo intervallo tra due valori distinti che il dispositivo è in grado di distinguere.
 
 
+## Caratteristiche dinamiche degli ADC
+
+(la maggior parte sono sul quaderno, qui è spiegato in dettaglio il SNR)
+
+SNR è una misura del rumore a banda larga introdotto nel segnale dall'intera catena di misura. 
+
+SNR confronta l'ampiezza dell'onda sinusoidale in ingresso con la somma di tutte le altre frequenze, ad eccezione di quelle che rappresentano le armoniche della fondamentale.
+
+
+Consiste quindi in un rapporto tra il segnale e il rumore a banda larga introdotto dall'intera catena di misura.
+
+Utilizziamo i decibel per rappresentare rapporti che vogliamo essere elevati. Quindi quando le grandezze a rapporto devono esser molto diverse tra loro, o molto simili.
+
+Il rapporto segnale rumore è ottimo quando ci troviamo almeno sui 60-70dB.
+
+Total harmonic distortion è il rapporto tra la somma delle armoniche e la fondamentale.
+
+In ingresso devo dare un segnale sinusoidale a frequenza nota. In modo che posso distinguere la fondamentale dalle armoniche.
+
+In particolare è pari al rapporto tra la somma in valore efficace delle armoniche fratto il valore efficace della fondamentale.
+
+Indica quanto le armoniche sono prevalenti rispetto la fondamentale.
+
+Quindi indica quanto un sistema introduce armoniche indesiderate. Infatti tali armoniche, se inseriamo in ingresso un segnale sinusoidale, non dovrebbero esser presenti.
+
+Quindi ci permette di avere un idea sulla non linearità del sistema, perché questo introduce armoniche che non sono presenti nel segnale in ingresso.
+
+E ci dà un indice su quanto queste armoniche sono prevalenti rispetto la fondamentale.
+
 ## cosa è un bin
 
 
