@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-937d9d99.js";
+            window.path_to_searchindex_js = "searchindex-b851e300.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-8e52c6ba.js"></script>
@@ -1220,7 +1220,7 @@ il processo si mette in <strong>attesa</strong> e verrà riattivato solo nel mom
 <p align="center"><img src="images/immagine_allocata_in_RAM.png" width="500"></p>
 
 <p>L’immagine del processo è descritta all’interno del PCB dello specifico processo.<br>In questa struttura sono contenute anche informazioni <strong>su dove si trovano</strong> le diverse parti dell’immagine <strong>in memoria centrale</strong>, tramite il puntatore alla struttura che permette di tradurre un indirizzo logico in un indirizzo fisico.</p>
-<p>I processi non accedono mai direttamente alla memoria principale tramite degli indirizzi.<br>Lavorano invece su una propria <strong>memoria virtuale</strong> (riservata), esso non utilizza indirizzi di memoria fisici ma bensì <strong>virtuali</strong>.</p>
+<p>I processi non accedono mai direttamente alla memoria principale tramite degli indirizzi.<br>Lavorano invece su una propria <strong>memoria virtuale</strong> (riservata); esso non utilizza indirizzi di memoria fisici ma bensì <strong>virtuali</strong>.</p>
 <p>Tali <strong>indirizzi virtuali</strong> hanno senso solo nella visione della memoria del processo → non corrispondono a veri e propri indirizzi della memoria principale.</p>
 <hr>
 <p>ESEMPIO:</p>
@@ -1263,7 +1263,7 @@ location of code : 0x1095afe50
 </li>
 <li>
 <p><strong>Rilocazione</strong>:</p>
-<p>La rilocazione è un meccanismo che permette di caricare l’immagine di un processo in memoria principale.</p>
+<p>La rilocazione è il meccanismo attraverso il quale vengono assegnati indirizzi di memoria fisica a dati e codice.</p>
 <p>Esistono due principali tipi di rilocazione:</p>
 <ul>
 <li>statica: gli indirizzi vengono definiti al momento della compilazione o caricamento del programma e non possono essere cambiati.</li>
@@ -1272,6 +1272,7 @@ location of code : 0x1095afe50
 </li>
 <li>
 <p><strong>Organizzazione dello spazio virtuale</strong></p>
+<p>Specifica il modo con cui vengono trattate le diverse parti dell’immagine di un processo.</p>
 <ul>
 <li>spazio virtuale unico: tutta la memoria di un processo è trattata come un’unica area.</li>
 <li>spazio virtuale segmentato: la memoria del processo è suddivisa in <strong>segmenti</strong> (ad esempio, codice, dati, stack) che vengono gestiti separatamente.</li>
@@ -1287,10 +1288,10 @@ location of code : 0x1095afe50
 </li>
 <li>
 <p><strong>Caricamento</strong></p>
-<p>Il caricamento riguarda come i processi vengono caricati in memoria:</p>
+<p>Il caricamento riguarda come le immagini dei processi vengono caricate in memoria:</p>
 <ul>
-<li>tutto insieme: il processo viene caricato tutto in una volta nella memoria.</li>
-<li>a domanda: solo le parti del processo necessarie vengono caricate in memoria, quando l’esecuzione ne richiede l’accesso.</li>
+<li>tutto insieme: l’immagine viene caricato tutto in una volta nella memoria.</li>
+<li>a domanda: solo le parti dell’immagine del processo necessarie vengono caricate in memoria, quando l’esecuzione ne richiede l’accesso.</li>
 </ul>
 </li>
 </ul>
@@ -1307,7 +1308,7 @@ location of code : 0x1095afe50
 <p>Con il supporto dei compilatori, la memoria del processo è divisa in blocchi (segmenti) che possono essere <strong>gestiti in maniera separata e indipendente dal SO</strong>.<br>Ad esempio il SO protegge il segmento dedicato al codice dando il permesso di sola lettura all’area di memoria a cui sarà destinato.</p>
 <p align="center"><img src="images/evoluzione_hw.png" width="600"></p>
 
-<p>Ulteriori evoluzioni hw hanno permesso di <strong>caricare</strong> l’immagine del processo (o un suo segmento) <strong>non più per intero</strong>, ma in <strong>piccole porzioni (pagine)</strong> ( caricamento a domanda) <strong>sparpagliate</strong> in memoria fisica (allocazione non contigua).</p>
+<p>Ulteriori evoluzioni hw hanno permesso di <strong>caricare</strong> l’immagine del processo (o un suo segmento) <strong>non più per intero</strong>, ma in <strong>piccole porzioni , pagine,</strong> (caricamento a domanda) <strong>sparpagliate</strong> in memoria fisica (allocazione non contigua).</p>
 <p>Quindi è stata introdotta l’allocazione di tipo <strong>non contigua</strong> grazie allo sviluppo dell’hardware MMU.</p>
 <p>Che vantaggio mi da l’allocazione di tipo non contigua?<br>→ uso efficiente dell’area di memoria in termini di <strong>flessibilità e dinamicità</strong>; i processi non devono essere necessariamente allocati in un blocco contiguo di memoria.<br>→ attenua il <strong>problema della frammentazione</strong>, perché non ho bisogno di trovare una area di memoria di dimensione tale da contenere interamente l’immagine del processo. Ci sono due tipi principali di frammentazione:</p>
 <ul>
@@ -1324,7 +1325,7 @@ location of code : 0x1095afe50
 </ul>
 <!-- @todo aggiungi paginazione e segmentazione con paginazione -->
 <h2 id="rilocazione"><a class="header" href="#rilocazione">Rilocazione</a></h2>
-<p>Modalità di allocazione dei dati e del codice di un processo in memoria fisica.</p>
+<p>Modalità con cui si associa a codice e dati indirizzi di memoria fisica.</p>
 <p>L’associazione di <strong>istruzioni e dati</strong> ad indirizzi di memoria (fisica) si può compiere in ognuna delle sequenti fasi:</p>
 <ul>
 <li>
@@ -1362,10 +1363,10 @@ location of code : 0x1095afe50
 <p align="center"><img src="images/rilocazione_statica.png" width="550"></p>
 
 <p>Il problema di questo tipo di rilocazione si presenta nel <strong>context switch</strong>: il processo quando viene prelazionato e inserito nella coda dei processi pronti oppure swappato<br>→nel momento della sua successiva esecuzione deve trovarsi sempre nella stessa area di memoria, altrimenti tutti gli indirizzi fisici su cui lavora sarebbero sbagliati.<br>Questo è un grande <strong>onere computazionale</strong> affidato al sistema operativo.</p>
-<p>Quindi con una rilocazione statica è il compilatore o il caricatore ad inserire degli indirizzi fisici all’interno rispettivamente del codice oggetto o del codice eseguibile.</p>
+<p>Quindi con una rilocazione statica è il compilatore o il caricatore ad associare codice e dati a indirizzi fisici.</p>
 <p align="center"><img src="images/rilocazione_statica_1.png" width="600"></p>
 
-<p>Questi indirizzi non potranno esser cambiato al meno che il codice non venga ricompilato oppure ricaricato.</p>
+<p>Questi indirizzi non potranno esser cambiati a meno che il codice non venga ricompilato oppure ricaricato.</p>
 <h3 id="dinamica"><a class="header" href="#dinamica">dinamica</a></h3>
 <p>Con questo approccio, dinamico, l’indirizzo di codice/dati nella immagine (<em>virtuale</em>) <strong>non corrisponde</strong> alla loro posizione effettiva in RAM (<em>indirizzo fisico</em>).</p>
 <p>L’effettiva posizione dello spazio di indirizzamento del processo è <strong>scelta dal SO</strong>, al caricamento iniziale del processo, o anche durante la sua esecuzione.</p>
@@ -1381,7 +1382,7 @@ location of code : 0x1095afe50
 <p>indirizzo visto dall’unità di memoria, <strong>posizione effettiva</strong> del dato/istruzione.</p>
 </li>
 </ul>
-<p>Quando otteniamo <strong>segmentation fault</strong> significa che l’indirizzo virtuale che stiamo utilizzando, erroneamente, non è associato ad un indirizzo fisico facente parte dell’immagine del processo nella memoria fisica → l’indirizzo virtuale che il processo sta deferenziando non è mappato nella memoria fisica.<br>→ la traduzione, a run-time, dal indirizzo virtuale a indirizzo fisico ha risolto questo problema.</p>
+<p>Quando otteniamo <strong>segmentation fault</strong> significa che l’indirizzo virtuale che stiamo utilizzando, erroneamente, non è associato ad un indirizzo fisico facente parte dell’immagine del processo nella memoria fisica → l’indirizzo virtuale che il processo sta deferenziando non è mappato nella memoria fisica.</p>
 <p>Vedremo che il fault può essere <strong>ripristinabile</strong>, perché il segmento/pagina non sono in memoria fisica ma sono swappati in memoria di massa. → ci troviamo nella situazione di un caricamento a domanda.</p>
 <p>Il processore vede solo indirizzi logici (virtuali)<br>→ <strong>tradotti dall’hardware</strong> che ha la visibilità della memoria fisica, ovvero MMU.<br>MMU rende trasparente l’accesso del processore agli indirizzi fisici.</p>
 <p>Se non sarebbe necessaria una traduzione, il processore <strong>sarebbe più performante</strong> (vedrebbe direttamente gli indirizzi fisici), ma perderei tutta la parte di virtualizzazione → ovvero si perde la proprietà di isolamento che il SO deve garantire per ogni processo.</p>
@@ -1395,7 +1396,7 @@ location of code : 0x1095afe50
 <li>il processo potrà poi essere ri-caricato in un’<strong>area</strong> di <strong>memoria</strong> <strong>differente</strong>, in base alla situazione attuale della memoria.</li>
 </ul>
 <h4 id="mmu-memory-management-unit"><a class="header" href="#mmu-memory-management-unit">MMU (Memory Management Unit)</a></h4>
-<p>MMU è un componente hardware della CPU che ha il compito di rendere <strong>trasparente l’accesso al processore</strong> alla memoria fisica tramite una traduzione di <strong>indirizzi virtuali</strong> (utilizzati dal processore) <strong>in indirizzi fisici</strong>.</p>
+<p>MMU è un componente hardware della CPU che ha il compito di rendere <strong>trasparente l’accesso del processore</strong> alla memoria fisica tramite una traduzione di <strong>indirizzi virtuali</strong> (utilizzati dal processore) <strong>in indirizzi fisici</strong>.</p>
 <p>ESEMPIO DI RILOCAZIONE DINAMICA:</p>
 <p>Caso basilare (obsoleto):</p>
 <ul>
@@ -1423,7 +1424,7 @@ location of code : 0x1095afe50
 <li>
 <p>Nel <strong>caricamento unico</strong> (tutto insieme)</p>
 <ul>
-<li>Il loader carica tutta l’immagine del programma in memoria RAM.</li>
+<li>Il loader carica tutta l’immagine del processo in memoria RAM.</li>
 </ul>
 <p>Questo è un approccio tipico dei vecchi sistemi o microcontrollori.</p>
 </li>
@@ -1450,8 +1451,8 @@ location of code : 0x1095afe50
 </ul>
 <p align="center"><img src="images/approcci_spazio_virtuale.png" width="500"></p>
 
-<p>Nell’approccio segmentato l’immagine del processo è suddivisa in <strong>porzioni logiche</strong> (segmenti) gestite in modo separato ed indipendente dal sistema operativo.<br>Ogni segmento può avere una dimensione variabile, in base alla struttura logica del programma (codice, heap, stack, dati).</p>
-<p><strong>Vantaggio principale</strong>:<br>La segmentazione facilita la condivisione di aree di memoria fisica tra più processi, mappando in questa area da condividere distinti segmenti della memoria virtuale propri di un processo.\</p>
+<p>Nell’approccio segmentato l’immagine del processo è suddivisa in <strong>porzioni logiche</strong> (segmenti) gestite in <strong>modo separato ed indipendente dal sistema operativo</strong>.<br>Ogni segmento può avere una dimensione variabile, in base alla struttura logica del programma (codice, heap, stack, dati).</p>
+<p><strong>Vantaggio principale</strong>:<br>La segmentazione facilita la condivisione di aree di memoria fisica tra più processi, mappando in questa area da condividere distinti segmenti della memoria virtuale propri di un processo.</p>
 <ul>
 <li>→ Esempio:<br>il segmento di codice (text) di un programma è di sola lettura.<br>Più processi che eseguono lo stesso programma possono <strong>condividere la stessa copia fisica</strong> del codice, mappandola nel proprio spazio di indirizzamento virtuale all’interno del segmento dedicato all’area testo.</li>
 </ul>
@@ -1463,7 +1464,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <hr>
 <h4 id="vantaggi-della-segmentazione"><a class="header" href="#vantaggi-della-segmentazione">vantaggi della segmentazione</a></h4>
 <ul>
-<li><strong>Protezione</strong> dei segmenti;<br>permette una <strong>granularità fine</strong> nella gestione dei permessi sullo spazio di indirizzamento.<br>Ad ogni segmento può avere <strong>permessi diversi</strong> (lettura, scrittura, esecuzione).</li>
+<li><strong>Protezione</strong> dei segmenti;<br>permette una <strong>granularità a livello dei segmenti</strong> nella gestione dei permessi sullo spazio di indirizzamento.<br>Ogni segmento può avere <strong>permessi diversi</strong> (lettura, scrittura, esecuzione).</li>
 </ul>
 </div>
 
@@ -1487,7 +1488,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 </ul>
 <p align="center"><img src="images/info_indirizzi_virtuali.png" width="600"></p>
 
-<p>L’<strong>MMU</strong> è il componente su cui si basa anche la segmentazione.</p>
+<p>L’<strong>MMU</strong> è il componente su cui si basa anche la segmentazione, per la gestione dei permessi, per la condivisione di aree di memoria (testo) e per la traduzione degli indirizzi virtuali in indirizzi fisici.</p>
 <ul>
 <li>Traduce gli indirizzi virtuali dalla forma (<em>segmento</em>, <em>offset</em>) in indirizzi fisici.</li>
 <li>Nel caso di <strong>pochi segmenti</strong>, è sufficiente avere nella MMU più coppie di registri base/limite: uno per ogni segmento.</li>
@@ -1533,7 +1534,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p align="center"><img src="images/contex_ST.png" width="600"></p>
 
 <h4 id="protezione"><a class="header" href="#protezione">protezione</a></h4>
-<p>Ogni segmento può avere diversi <strong>permessi di accesso</strong> specificati da bit di controllo contenuti nella segment table.</p>
+<p>Ogni segmento può avere diversi <strong>permessi di accesso</strong> specificati da bit di controllo contenuti nelle entry della segment table.</p>
 <ul>
 <li>Ogni riga della segment table di un processo contiene per ogni entry anche una sequenza di <strong>bit di controllo</strong> per gestire i permessi sull’area di memoria in cui è mappato il segmento.</li>
 <li>MMU produce una <strong>exception</strong> se il programma non rispetta i permessi.</li>
@@ -1543,7 +1544,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <h4 id="condivisione"><a class="header" href="#condivisione">condivisione</a></h4>
 <p>La segmentazione consente la <strong>condivisione dei segmenti</strong> tra più processi, allocando in memoria fisica una sola copia del segmento.</p>
 <p>Abbiamo due processi con le rispettive tabelle dei segmenti.</p>
-<p>→ Se hanno una entry in comune significa che i due processi possono accedere alla stessa area di memoria fisica.<br>Quindi stanno effettivamente condividendo la copia del segmento di memoria. Questo permette di allocare una sola copia del segmento in memoria.</p>
+<p>→ Se hanno una entry in comune significa che i due processi possono accedere alla stessa area di memoria fisica.<br>Quindi stanno effettivamente condividendo la  stessa copia del segmento di memoria. Questo permette di allocare una sola copia del segmento in memoria.</p>
 <p align="center"><img src="images/condivisione_segmento.png" width="500"></p>
 
 <h2 id="allocazione"><a class="header" href="#allocazione">allocazione</a></h2>
@@ -1557,7 +1558,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>allocazione <strong>non contigua</strong> (<strong>paginazione</strong>)</p>
 </li>
 </ul>
-<h5 id="allocazione-contigua"><a class="header" href="#allocazione-contigua">allocazione contigua</a></h5>
+<h3 id="allocazione-contigua"><a class="header" href="#allocazione-contigua">allocazione contigua</a></h3>
 <ul>
 <li>
 <p>Il SO colloca il proprio blocco di memoria virtuale, e quelli dei processi, in intervalli <strong>non-sovrapposti</strong> della memoria fisica</p>
@@ -1586,9 +1587,9 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <li>→ non si sfrutta a pieno la quantità di memoria totale a disposizione.</li>
 </ul>
 <p>Dualmente gli schemi a partizione di dimensione fissa soffrono del problema della frammentazione interna.</p>
-<p><strong>Frammentazione interna</strong>: è un concetto relativo al singolo segmento, in particolare è legato alla dimensione di questo.</p>
-<p>Se i segmenti hanno una dimensione fissa, non è detto che l’immagine di un processo sia un multiplo di questa dimensione. Quindi tale immagine potrebbe occupare un numero di segmenti, ma non tutte le word di questi segmenti avranno un significato.</p>
-<p>Ovvero siamo sprecando una porzione dell’ultimo segmento in cui è contenuta l’immagine del processo.</p>
+<p><strong>Frammentazione interna</strong>: è un concetto relativo alla paginazione, in particolare è legato alla dimensione di ogni pagina.</p>
+<p>Le pagine hanno una dimensione fissa, non è detto che l’immagine di un processo sia un multiplo di questa dimensione. Quindi tale immagine potrebbe occupare un numero di pagine, ma non tutte le word di queste avranno un significato.</p>
+<p>Ovvero siamo sprecando una porzione dell’ultima pagina in cui è contenuta l’immagine del processo.</p>
 <p align="center"><img src="images/frammentazione_interna.png" width="550"></p>
 
 <h2 id="paginazione"><a class="header" href="#paginazione">Paginazione</a></h2>
@@ -1608,7 +1609,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 </li>
 <li>
 <p>introduce la frammentazione interna.</p>
-<p>A causa del fatto che lo spazio virtuale è suddiviso e quindi caricato in memoria fisica all’interno di blocchi di dimensione <strong>fissa</strong>.</p>
+<p>A causa del fatto che lo spazio virtuale è caricato in memoria fisica all’interno di blocchi di dimensione <strong>fissa</strong>.</p>
 </li>
 </ul>
 <p align="center"><img src="images/associazione_pag_vir_fis.png" width="500"></p>
@@ -1626,7 +1627,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>Cosa accade nel momento in cui si verifica una frammentazione interna:</p>
 <ul>
 <li>spazio di memoria perso per un blocco assegnato ma non utilizzato a pieno</li>
-<li>si verifica se la dimensione del processo non è un multiplo esatto della dimensione dei blocchi</li>
+<li>si verifica se la dimensione dell’immagine del processo non è un multiplo esatto della dimensione dei blocchi</li>
 </ul>
 <p>Questo fenomeno è tanto <strong>più trascurabile</strong> quanto <strong>più piccola è assegnata la dimensione</strong> di ogni pagina.</p>
 <blockquote>
@@ -1640,7 +1641,7 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>La paginazione, inoltre, non è solo una tecnica di allocazione non contigua, ma anche una tecnica per la <strong>gestione della memoria virtuale</strong>. In altre parole, la paginazione permette di creare uno spazio virtuale più grande della memoria fisica, se la gestione del caricamento delle pagine è della tipologia: <strong>a domanda</strong>.</p>
 <p>Un indirizzo virtuale contiene la <strong>coppia</strong>:</p>
 <ul>
-<li><strong>numero di pagina (p)</strong>:<br>identifica una pagina nella memoria fisica → nel contesto di un processo.</li>
+<li><strong>numero di pagina (p)</strong>:<br>identifica una pagina nella memoria virtuale → nel contesto di un processo.</li>
 <li><strong>scostamento di pagina(d)</strong>:<br>indica la posizione dell’indirizzo all’interno della pagina.</li>
 </ul>
 <p><strong>A differenza della segmentazione</strong>, non sono due valori separati, ma sono contenuti entrambi in un <strong>unico valore</strong>.<br>→ Nel constesto della CPU, ovvero questa vede un unico indirizzo le cui informazioni non le tratta separatamente.</p>
@@ -1663,10 +1664,9 @@ A <b>tempo di compilazione</b>, si configura lo spazio virtuale segmentato.
 <p>Ovviamente quando si tenta di operare su una pagina l’MMU verifica che il programma non violi i permessi presenti su tale.<br>→ in caso di violazione solleva un <strong>page fault</strong>.</p>
 <p align="center"><img src="images/permessi_page_table.png" width="500"></p>
 
-<p>La tabella delle pagine è in <strong>memoria principale</strong>.<br>La MMU usa 2 registri utilizzarla:</p>
+<p>La tabella delle pagine è in <strong>memoria principale</strong>.<br>La MMU usa 2 registri per accedervi:</p>
 <ul>
-<li><strong>PTBR</strong> (Page-Table Base Register):
-indirizzo fisico della tabella delle pagine in memoria fisica.</li>
+<li><strong>PTBR</strong> (Page-Table Base Register):<br>indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li><strong>PTLR</strong> (Page-Table Length Register):<br>dimensione della tabella delle pagine.</li>
 </ul>
 <p>Questi due valori sono contenuti all’interno del PCB di ogni processo e vengono caricati in tali registri ogni volta che avviene un <strong>context switch</strong>.</p>
@@ -1748,7 +1748,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <ul>
 <li>Il SO non termina subito il processo se la pagina appartiene al suo spazio di indirizzamento, infatti viene eseguita l’ISR per gestire il page fault che cerca di allocarla dalla memoria secondaria.
 <ul>
-<li>Il SO termina il processo solo le il risultato del page fault handler non mappa la pagina virtuale in una pagina fisica → perché non è stata trovata nella memoria secondaria.</li>
+<li>Il SO termina il processo solo se il risultato del page fault handler non mappa la pagina virtuale in una pagina fisica → perché non è stata trovata nella memoria secondaria.</li>
 <li>Oppure se l’operazione che il processo tenta di fare su tale area non è valida secondo i permessi descritti su questa.</li>
 </ul>
 </li>
@@ -2051,8 +2051,9 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 <li>…</li>
 </ul>
 <p>“Container (Fine slide)”</p>
-<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è di emulare completamente l’intera architettura virtuale su un’architettura fisica del tutto diversa.</p>
+<p>L’astrazione offerta dal SO non è in senso stretto, perché quello che fa effettivamente un virtual machine monitor è di emulare completamente l’intera architettura su un’architettura fisica del tutto diversa.</p>
 <p>Posso emulare un’architettura <code>arm</code> su una intel <code>x86</code> senza problemi, per il tipo di astrazione offerta da un VMM.</p>
+<p>Invece con l’astrazione di hardware offerta dal sistema operativo non posso eseguire codice <code>arm</code> su un processore <code>x86</code>.</p>
 <p align="center"><img src="images/confronto_SO_VMM.png" width="500"></p>
 
 <h2 id="architetture-principali-di-una-hypervisor"><a class="header" href="#architetture-principali-di-una-hypervisor">Architetture principali di una hypervisor</a></h2>
@@ -2112,10 +2113,10 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </ul>
 <p align="center"><img src="images/virtual_mode.png" width="500"></p>
 
-<p>Per permettere al guest SO di operare in kernel mode, un primo meccanismo che si può sfruttare è quello delle trap: nel momento in cui il guest esegue delle istruzioni privilegiate/critiche, allora la CPU virtuale genera una <strong>trap</strong>.</p>
+<p>Per permettere al guest SO di operare in kernel mode, un primo meccanismo che si può sfruttare è quello delle trap: nel momento in cui il guest esegue delle istruzioni privilegiate/critiche, allora la CPU fisica genera una <strong>trap</strong>.</p>
 <p>Questo meccanismo è detto: <strong>TRAP-AND-EMULATE</strong>.</p>
 <p>Questa trap viene intercettata dall’hypervisor, elabora il tipo di istruzione che ha generato quella trap ed emula l’istruzione privilegiata associata.</p>
-<p>Tutte le istruzioni sensitive non possono eseguire direttamente, ma devono passare per l’hypervisor, e vengono a scatenare una trap → passa il controllo (de-privilegin) all’hypervisor che emula/simula l’effetto dell’istruzione.</p>
+<p>Tutte le istruzioni sensitive non possono eseguire direttamente, ma devono passare per l’hypervisor, devono scatenare una trap → passa il controllo (de-privileging) all’hypervisor che emula/simula l’effetto dell’istruzione.</p>
 <p align="center"><img src="images/intercettazione_trap.png" width="500"></p>
 
 <p>Nel caso di CPU intel questa cosa avviene in maniera diversa, perché in queste CPU esistono diversi livelli di privilegio, classificati in Ring.</p>
@@ -2228,7 +2229,7 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </li>
 </ul>
 <p>In poche parole, il salto finale viene modificato per garantire che la CPU non esegua mai codice originale, ma rimbalzi sempre attraverso il VMM per ottenere il prossimo pezzo di codice tradotto e sicuro.</p>
-<p>Vediamo cosa come accade tutto ciò:</p>
+<p>Vediamo come accade tutto ciò:</p>
 <p align="center"><img src="images/DBT_1.png" width="300"></p>
 
 <ul>
@@ -2301,8 +2302,8 @@ indirizzo fisico della tabella delle pagine in memoria fisica.</li>
 </ul>
 </li>
 <li>
-<p><strong>VMCS (Virtual Machiene Control structure)</strong></p>
-<p>Per gestire questi passaggi in modo efficiente, intel ha introdotto una struttura dati hardware chiamata <strong>VMCS</strong>. La VMCS agisce coem una “scheda cliente” per ogni VM e contiene:</p>
+<p><strong>VMCS (Virtual Machine Control Structure)</strong></p>
+<p>Per gestire questi passaggi in modo efficiente, intel ha introdotto una struttura dati hardware chiamata <strong>VMCS</strong>. La VMCS agisce come una “scheda cliente” per ogni VM e contiene:</p>
 <ul>
 <li><strong>Guest state</strong>: lo stato della CPU quando gira la VM. Viene caricato durante la <em>VM Entry</em> e salvato durante la <em>VM Exit</em>.</li>
 <li><strong>Host state</strong>: lo stato della CPU quando gira il VMM. Viene caricato durante la <em>VM Exit</em>.</li>

@@ -139,3 +139,16 @@ function createBackButton(){
     Menu.prepend(FontAwasomeLink);
     Menu.prepend(style);
 }
+
+// Crea un nuovo elemento link
+var link = document.querySelector("link[rel~='icon']");
+
+// Se non esiste già una favicon, ne creiamo una nuova
+if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+// Imposta l'URL dell'immagine (quello che hai fornito tu)
+link.href = 'https://avatars.githubusercontent.com/u/98953109?v=4';
