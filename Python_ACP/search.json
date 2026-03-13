@@ -1,0 +1,522 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ACP",
+    "section": "",
+    "text": "Appunti ACP",
+    "crumbs": [
+      "Appunti ACP"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione1.html",
+    "href": "capitoli/lezione1.html",
+    "title": "1  Introduzione a Python",
+    "section": "",
+    "text": "1.1 Compilatori vs Interpreti\nProgrammi scritti in linguaggio di alto livello devono essere tradotti in linguaggio macchina per essere eseguiti. Ci sono due tipi di approcci alla traduzione del codice.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduzione a Python</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione1.html#compilatori-vs-interpreti",
+    "href": "capitoli/lezione1.html#compilatori-vs-interpreti",
+    "title": "1  Introduzione a Python",
+    "section": "",
+    "text": "Compilatori: traducono programmi scritti in linguaggio di alto livello in un programma separato, scritto in linguaggio macchina.\nUn programma scritto in linguaggio macchina può essere eseguito in qualunque altro momento, non è necessaria una seconda ricompilazione.\nIl risultato finale è un file eseguibile composta da linguaggio macchina, comprensibile direttamente dal processore.\ninterpretati*: traducono ed eseguono le istruzioni di un programma scritto in linguaggio di alto livello.\nIl codice viene letto ed eseguito riga per riga da un altro programma chiamato interprete proprio mentre il software è in funzione.\nNon viene realizzato un programma separato scritto in linguaggio macchina.\n\n\n1.1.1 Come funziona Python\n\n\n\nimmagine1\n\n\n\n\n1.1.2 Interprete Python\nL’implementazione di riferimento dell’interprete Python è CPython, che è scritto sia in C che in Python stesso.\nNon converte il codice sorgente in istruzioni in linguaggio macchina ma trasforma l’intero codice in qualcosa chiamato byte code.\n\nAll’interno dell’interprete Python avviene comunque una compilazione, ma tale compilazione non converte l’intero codice in linguaggio macchina o assembly come avviene in linguaggi compilati come C/C++.\n\n\nN.B: byte code è istruzioni assembly non sono la stessa cosa.\n\nIl byte code viene generato all’interno di una virtual machine e per una virtual machine.\nIl linguaggio assembly viene creato per una specifica CPU\n\n\nQuando il compilatore Python legge il codice, lo traduce in byte code. Questo byte code è progettato per essere letto da un software chiamato Python Virtual Machine (PVM)\nIl compilatore Python\n\nLegge le istruzioni del programma scritto in Python\nVerifica se le istruzioni sono formattate correttamente, cioè verifica la struttura sintattica di ogni riga del programma.\n\nSe ci sono errori, la traduzione viene immediatamente interrotta e viene visualizzato un messaggio di errore.\nSe non ci sono errori, il compilatore traduce le istruzioni di alto livello nel linguaggio intermedio equivalente che è il byte code.\n\n\nIl byte code viene fornito al vero e proprio interprete Python, la cosiddetta Python Virtual Machine (PVM)\n\nLa PVM converte il byte code Python in istruzioni a livello macchina o in codice binario equivalente.\nSe si verifica un errore in questa fase di interpretazione, la conversione si arresta mostrando un messaggio di errore.\n\n\nL’interprete Python può esser utilizzato in due modalità:\n\nInteractive mode: scrivere le istruzioni Python ed eseguirle una alla volta.\nScript mode: scrivere tutte le istruzioni e salvarle in uno script Python da eseguire in un secondo momento.\n\n\n\n1.1.3 Interactive mode\nQuando eseguiamo Python in interactive mode, utilizziamo un prompt dei comandi:\n\nL’interprete rimane in attesa di istruzioni Python da scrivere.\nIl prompt dei comandi riappare dopo l’esecuzione dell’istruzione precedente.\nSe l’istruzione non è corretta saranno mostrati eventuali messaggi di errore.\n\nQuesta modalità è un buon modo per iniziare a capire Python.\n\n\n1.1.4 Script mode\nDobbiamo utilizzare la script mode per eseguire un intero programma Python. Quindi dobbiamo salvare l’insieme delle istruzioni Python in un file con estensione .py (raccomandato ma non necessario) es eseguire da terminale il file Python invocando l’interprete:\npython filename.py\nL’interprete Python valuterà passo passo tutte le istruzioni scritte nello script.\nIn questa modalità vengono forniti i classici meccanismi per ottenere argomenti da linea di comando e/o redirezione di I/O.\nPython possiede anche un meccanismo per consentire ai programmi Python di agire sia da script che da modulo da importare es essere usato da latri programmi Python.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduzione a Python</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione1.html#byte-code",
+    "href": "capitoli/lezione1.html#byte-code",
+    "title": "1  Introduzione a Python",
+    "section": "1.2 Byte code",
+    "text": "1.2 Byte code\nI file file.pyc sono file byte code compilati che vengono generati dall’interprete Python quando uno script Python viene importato o eseguito.\nTali file possono esser eseguiti direttamente dall’interprete, senza la necessitò di ricompilare il codice sorgente a ogni esecuzione dello script. In tal modo possiamo ottenere tempi di esecuzione degli script più rapidi.\nPer ottenere direttamente il file .pyc a partire da un file .py possiamo eseguire:\npython -m compileall filename.py\nAlternativamente, per poter leggere effettivamente il contenuto del file .pyc dobbiamo usare un altro stratagemma, il file è binario quindi non possiamo leggerlo direttamente.\nUtilizziamo un codice Python che mi permette di disassemblare il codice per ottenere il byte code.\n\nimport dis\n\ndef main():\n    print(\"Hello\")\n\nif __name__ == \"__main__\":\n    main()\ndis.dis(main)\n\nHello\n  3           RESUME                   0\n\n  4           LOAD_GLOBAL              1 (print + NULL)\n              LOAD_CONST               0 ('Hello')\n              CALL                     1\n              POP_TOP\n              LOAD_CONST               1 (None)\n              RETURN_VALUE",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduzione a Python</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione1.html#programmi-python",
+    "href": "capitoli/lezione1.html#programmi-python",
+    "title": "1  Introduzione a Python",
+    "section": "1.3 Programmi Python",
+    "text": "1.3 Programmi Python\nUn programma Python è una sequenza di definizioni e comandi.\n\nLe definizioni sono valutate.\nI comandi sono eseguiti dall’interprete Python in una shell (terminal)\n\nI comandi (statements) istruiscono l’interprete a fare qualcosa. Tali comandi possono essere digitati direttamente all’interno di una shell oppure immagazzinati in un file che viene letto dalla shell per esser valutato.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduzione a Python</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione1.html#tipi-scalari-e-non-scalari-stringhe",
+    "href": "capitoli/lezione1.html#tipi-scalari-e-non-scalari-stringhe",
+    "title": "1  Introduzione a Python",
+    "section": "1.4 Tipi scalari e non scalari, Stringhe",
+    "text": "1.4 Tipi scalari e non scalari, Stringhe\n\n1.4.1 Oggetti python\nI programmi Python manipolano cosiddetti data objects. Tutto in Python viene considerato come un oggetto.\nGli oggetti hanno un tipo che definisce il genere di cose che il programma può fare su di essi. Il tipo viene inferito a tempo di esecuzione.\nInferire i tipi a tempo di esecuzione è sia un vantaggio, ma anche uno svantaggio poiché non posso conoscere a priori la validità delle interazioni di tale variabile.\nSe proviamo a sommare una variabile con un’altra aventi un tipo per cui non è definita la somma, allora potremmo accorgerci di questo errore unicamente a tempo di esecuzione, se durante l’esecuzione l’interprete Python si trova ad eseguire quella specifica funzione.\nI tipi possono essere:\n\nscalari (tipi atomici, non possono essere divisi come int, float)\nnon scalari (hanno una struttura interna che può essere acceduta)\n\nInoltre esistono delle notazioni per informare l’interprete che un nume di variabile è utilizzato per solo un tipo di interazione.\nQuindi staticamente stiamo imponendo che tale nome deve riferirsi ad una variabile di uno specifico tipo.\nTutti gli oggetti, oltre ad avere un proprio tipo specificato, sono anche Object, meccanismo simile al polimorfismo di Java anche se questo non è implementato in Python.\n\n\n1.4.2 Tipi scalari\n\nint - interi\nfloat - numeri reali\nbool - booleani\nNoneType - tipo speciale e assume un solo valore, None\n\nPossiamo utilizzare type() per vedere il tipo di un oggetto.\nType casting:\nPossiamo convertire un oggetto di un tipo in un oggetto di altro tipo utilizzando delle apposite funzioni:\n\nfloat(3) converte l’intero in un float\nint(4.5) tronca il float in un intero\n\n\n\n1.4.3 Stringhe\nSono degli oggetti che possono contenere lettere, caratteri speciali, spazi, numeri, etc.\nSono definite utilizzando doppio apice (quotation marks) o singolo apice (single quotes).\nInoltre è possibile concatenare stringhe ed eseguire operazioni su stringhe come definito nella documentazione Python.\n\nhi = \"hello world\"\n\nhi2 = 'hello world again'\n\nname = \"pippo\"\n\ngreet = hi + name\n\ngreeting = hi + \" \" + name\n\nsilly = hi + \" \" + name * 3\n\nprint(hi)\nprint(hi2)\nprint(greet)\nprint(greeting)\nprint(silly)\n\nhello world\nhello world again\nhello worldpippo\nhello world pippo\nhello world pippopippopippo\n\n\nPossiamo pensare alle stringhe come una sequenza case-sensitive di caratteri.\nSono implementati inoltre le varie comparazioni tra stringhe attraverso gli operatori ==, &lt;, &gt;, etc.\nlen() è una funzione utilizzata per ottenere la lunghezza di una stringa passata come primo parametro\n\ns = \"abc\"\n\nl = len(s)\n\nprint(l)\n\n3\n\n\nLe parentesi quadre ci permettono di accedere in maniera indicizzata ad una stringa.\n\ns = \"abc\"\n\nprint(s[0])\nprint(s[1])\nprint(s[2])\n# print(s[3]) // errore\nprint(s[-1])\nprint(s[-2])\nprint(s[-3])\n\na\nb\nc\nc\nb\na\n\n\nCon gli indici negativi posso partire a valutare la stringa partendo dall’ultimo carattere.\nPossiamo affettare le stringhe (slice) utilizzando la notazione [start:end:step].\nOmettendo step l’interprete utilizza quello di default, ovvero 1.\nPossiamo anche utilizzare solo la notazione :: per ottenere l’intera stringa.\n\ns = \"abcdefgh\"\n\nprint(s[3:6]) # prende i caratteri da 3 a 5\nprint(s[3:6:2]) # prende i caratteri da 3 a 5 saltando di 2\nprint(s[::]) # prende tutti i caratteri\nprint(s[::-1]) # prende tutti i caratteri ma inverte la stringa \nprint(s[4:1:-2]) # prende i caratteri da 4 a 2 con passo -2\n\ndef\ndf\nabcdefgh\nhgfedcba\nec\n\n\nLe stringhe sono “immutabili” → non possono essere modificate.\nPer modificare una stringa, dobbiamo necessariamente assegnare alla variabile una nuova stringa.\nQuindi la variabile non punterà più alla vecchia porzione di memoria in cui è contenuto la stringa.\nEd è compito dell’interprete gestire le stringhe memorizzate che sono orfane, ovvero per cui non è presente un puntatore.\nQuindi sarà presente un Garbadge Collector che periodicamente marca come allocabili tutte le aree di memoria contenenti variabili immutabili per cui non si ha più un riferimento.\n\ns = \"Hello\"\n\n# s[0] = 'y' # errore \n\ns = 'y' + s[1:]\n\nprint(s)\n\nyello\n\n\nIn questo scritp la variabile s viene legata ad un nuovo oggetto stringa mentre il vecchio verrà eliminato dalla memoria dal Garbadge Collector",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduzione a Python</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione2.html",
+    "href": "capitoli/lezione2.html",
+    "title": "2  Funzioni",
+    "section": "",
+    "text": "2.1 Visibilità (scope) di una variabile\nIl break esce dal ciclo, saltando la valutazione delle espressioni rimanenti nel blocco di codice.\nLe funzioni permettono di scrivere codice riusabile.\nLe funzioni non vengono eseguite nel programma finché non vengono chiamate o invocate.\nCaratteristiche di una funzione:\nI parametri formali sono legati al valore di un parametro effettivo.\nViene creato un nuovo scope/frame/environment quando si entra in una funzione.\ndef f(x):\n    x = x+1\n    print(f'f(x) = {x}')\n    return x\n\nx = 3\nz = f(x)\nprint(z)\n\nf(x) = 4\n4\nGli argomenti di una funzione possono essere di qualsiasi tipo, anche una funzione.\nEsempio di funzione mapping su un array:\ndef map(array, fn):\n    for i in range(len(array)):\n        array[i] = fn(array[i])\n    \ndef doppio(x):\n    return x*2\ndef incremento(x):\n    return x+1\n\narray = [1,2,0,3]\n\nprint(f\"{array} con id= \", hex(id(array)))\nmap(array, doppio)\nprint(f\"{array} con id= \", hex(id(array)))\nmap(array, incremento)\nprint(f\"{array} con id= \", hex(id(array)))\n\ndef saluta():\n    print(\"ciao\")\n\ndef azione(f):\n    f()\n\nazione(saluta)\n\n[1, 2, 0, 3] con id=  0x7f4618216940\n[2, 4, 0, 6] con id=  0x7f4618216940\n[3, 5, 1, 7] con id=  0x7f4618216940\nciao\nDentro una funzione, possiamo accedere ad una variabile definita al fuori della funzione.\nNonostante possiamo accedervi non possiamo modificare il suo valore attraverso un’operazione di assegnazione. In tal caso stiamo creando una nuova variabile locale.\nSe volessimo la possibilità di modificare la variabile che si trova nello scope globale all’interno dello scope di una funzione allora dobbiamo utilizzare la direttiva global (non è una buona pratica).\ndef f_a():\n    print(\"[f_a] x: \", x)\n\ndef f_b(x):\n    print(\"[f_b] prima della modifica: x = \", x)\n    x = x+1 # adesso x è una variabile locale alla funzione, la modifica non viene vista all'esterno\n    print(\"[f_b] dopo la modifica: x = \", x)\n     \ndef f_c():\n    global x\n    print(\"[f_c] prima della modifica: x = \",x)\n    x = x + 1\n    print(\"[f_c] dopo la modifica: x = \", x)\n\n# cosa non posso fare\ndef f_d():\n    x += 1 # l'interprete crea una nuova variabile prima di leggere quella globale\n            # quindi verrà alzata un'eccezione\n    \n\nx = 0\n\nprint(\"x = \",x)\nf_a()\nprint(\"dopo [f_a] x = \",x)\nf_b(x)\nprint(\"dopo [f_b] x = \",x)\nf_c()\nprint(\"dopo [f_c] x = \",x)\nf_d()\nprint(\"dopo [f_d] x = \",x)\n\nx =  0\n[f_a] x:  0\ndopo [f_a] x =  0\n[f_b] prima della modifica: x =  0\n[f_b] dopo la modifica: x =  1\ndopo [f_b] x =  0\n[f_c] prima della modifica: x =  0\n[f_c] dopo la modifica: x =  1\ndopo [f_c] x =  1\n\n\n\n---------------------------------------------------------------------------\nUnboundLocalError                         Traceback (most recent call last)\nCell In[5], line 30\n     28 f_c()\n     29 print(\"dopo [f_c] x = \",x)\n---&gt; 30 f_d()\n     31 print(\"dopo [f_d] x = \",x)\n\nCell In[5], line 17, in f_d()\n     16 def f_d():\n---&gt; 17     x += 1\n\nUnboundLocalError: cannot access local variable 'x' where it is not associated with a value",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Funzioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione2.html#visibilità-scope-di-una-variabile",
+    "href": "capitoli/lezione2.html#visibilità-scope-di-una-variabile",
+    "title": "2  Funzioni",
+    "section": "",
+    "text": "Lo scope è il mapping tra i nomi e gli oggetti",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Funzioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione2.html#passaggio-dei-parametri",
+    "href": "capitoli/lezione2.html#passaggio-dei-parametri",
+    "title": "2  Funzioni",
+    "section": "2.2 Passaggio dei parametri",
+    "text": "2.2 Passaggio dei parametri\nTutti i parametri in Python sono passati per riferimento.\nCiò quindi significa che si cambia il valore di una parametro all’interno di una funzione ì, la modifica si riflette anche nella funzione chiamante.\n\nN.B:\n\nSe si ri-assegna la variabile all’interno dello scope locale la modifica rimane locale.\nBisogna usare la direttiva global all’interno dello scope locale per far riflettere la modifica nel chiamante.\n\n\n\ndef funzione1(y):\n    print(\"valore della y: \", y)\n    \n    y = y +2 # adesso è diventata una variabile locale\n\ndef funzione2():\n    global y # adesso sto lavorando sullo stesso oggetto dello scope globale\n    print(f\"valore della y: {y}\")\n    y += 1\n    print(f\"[scope locale] y: {y}\")\n\n\ny = 0 # variabile globale\nprint(f\"[scope globale] y: {y}\")\nfunzione1(y)\nfunzione2()\nprint(f\"[scope globale] y: {y}\")\n\n\n[scope globale] y: 0\nvalore della y:  0\nvalore della y: 0\n[scope locale] y: 1\n[scope globale] y: 1\n\n\n\nÈ da fare attenzione che non è possibile passare una variabile come parametro e poi utilizzare la direttiva global\n\n\ndef pippo(t):\n    global t",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Funzioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html",
+    "href": "capitoli/lezione3.html",
+    "title": "3  Funzioni: continuo",
+    "section": "",
+    "text": "3.1 Scope\nLe funzioni permettono di scrivere codice riusabile. Non vengono eseguite nel programma finché non vengono chiamate o invocate.\nCaratteristiche di una funzione:\nDentro una funzione possiamo accedere ad una variabile definita al di fouri della funzione stessa, nello scope esterno.\nDentro una funzione non possiamo modificare una variabile definita al di fouri della funzione, a meno che non definiamo tale variabile global all’interno della funzione. (NON è buona pratica)\ndef f(y):\n    print(y)\n    print(x)\n    print(x+1)\n\nx = 5\nf(x)\nprint(x)\n\n5\n5\n6\n5",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#passaggio-dei-parametri-in-python",
+    "href": "capitoli/lezione3.html#passaggio-dei-parametri-in-python",
+    "title": "3  Funzioni: continuo",
+    "section": "3.2 Passaggio dei parametri in Python",
+    "text": "3.2 Passaggio dei parametri in Python\nIn Python non esiste un passaggio né per valore né per riferimento, tutti gli argomenti sono passati perassegnazione (riferimento all’oggetto).\n\nSe l’oggetto è mutabile (come una lista o un dizionario), è possibile modificarlo all’interno di una funzione e la modifica sarà visibile a livello globale\nSe l’oggetto è immutabile (come int, str, tuple), è necessario utilizzare global o racchiuderlo in un contenitore mutabile.\n\n\nN.B:\n\nSe si ri-assegna (re-bind) la variabile all’interno dello scope locale la modifica rimane locale.\nBisogna usare la direttava global all’interno dello scope locale per far riflettere la modifica nel chiamante\n\n\nATTENZIONE: anche se l’oggetto potrebbe essere mutabile fare il re-bind comporta comunque la creazione di una variabile locale. Quindi la modifica non si rifletterà affatto nel chiamante.\nVediamo come esempio un array, che è un oggetto mutabile ma potremmo avere degli errori:\n\ndef met1():\n    array = [1,1,1]\n    print(f\"[dentro met1] {array}\")\n\ndef met2():\n    array[:] = [2,2,2]\n\ndef met3():\n    array.append(3)\n\narray = [0,0,0]\n\nprint(array)\nmet1()\nprint(f\"[met1] {array}\") # non c'è modifica\nmet2()\nprint(f\"[met2] {array}\")\nmet3()\nprint(f\"[met3] {array}\")\n\n[0, 0, 0]\n[dentro met1] [1, 1, 1]\n[met1] [0, 0, 0]\n[met2] [2, 2, 2]\n[met3] [2, 2, 2, 3]\n\n\nQuando faccio il re-bind sto effettivamente creando un nuovo puntatore ad oggetto nello stack e il nuovo oggetto nello heap.\n\ndef metodo():\n    array = [1,1,1]\n    print(f\"[local scope] {array} \\tid: {hex(id(array))}\")\n\narray = [0,0,0]\nprint(f\"[global scope] {array} \\tid: {hex(id(array))}\")\n\nmetodo()\n\n[global scope] [0, 0, 0]    id: 0x7fa279bb0a80\n[local scope] [1, 1, 1]     id: 0x7fa279bb2900\n\n\nSe utilizzo global la funzione lavoro nel proprio scope locale con la stessa variabile dello scope globale. Infatti anche se facessimo il re-bind non avremo problemi, cambia il riferimento anche della variabile globale.\n\ndef fun():\n    global x\n    x = x + 1 # re-bind\n    print(f\"[fun scope] x: {x} \\tid: {hex(id(x))}\")\n\nx = 0\nprint(f\"[global scope] x: {x} \\tid: {hex(id(x))}\")\nprint(5*\"-\"+\"DOPO LA CHIAMATA\"+5*\"-\")\nfun()\nprint(f\"[global scope] x: {x} \\tid: {hex(id(x))}\")\n\n[global scope] x: 0     id: 0x7fa29cb78b90\n-----DOPO LA CHIAMATA-----\n[fun scope] x: 1    id: 0x7fa29cb78bb0\n[global scope] x: 1     id: 0x7fa29cb78bb0",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#gil",
+    "href": "capitoli/lezione3.html#gil",
+    "title": "3  Funzioni: continuo",
+    "section": "3.3 GIL",
+    "text": "3.3 GIL\nIl GIL (Global Interpreter Lock) è un mutex che impedisce a più thread di eseguire il bytecode di Python contemporaneamente.\nQuindi questo significa che nonostante a livello utente avremmo più thread, questi non vengono eseguiti in parallelo ma vengono eseguiti esclusivamente in concorrenza; nonostante possano esser eseguiti su un architettura multiprocessore.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#modalità-di-esecuzione",
+    "href": "capitoli/lezione3.html#modalità-di-esecuzione",
+    "title": "3  Funzioni: continuo",
+    "section": "4.1 Modalità di esecuzione",
+    "text": "4.1 Modalità di esecuzione\nPossiamo eseguire i moduli principalmente in due modalità:\n\nModulo\nScript\n\nNella modalità script, il modulo viene lanciato dato direttamente all’interprete Python da command line, mentre nella modalità modulo questo è caricato tramite il comando import [modulo] oppure from [modulo] import [fn].\nQuando un modulo viene importato, tutte le dichiarazioni e le definizioni saranno eseguite.\nPer richiamare una funzione di un modulo è necessario digitare il nome del modulo seguito dal punto.\n\nimport math\n\nprint(math.e)\n\n2.718281828459045\n\n\nSe la funzione del modulo è stata importata individualmente con from, il nome del modulo e il punto possono essere omessi:\n\nfrom math import e\n\nprint(e)\n\n2.718281828459045\n\n\nÈ molto utilizzato il meccanismo di alias per rinominare il nome di un modulo, rendendolo il codice molto più leggibile.\n\nimport math as m\n\nDurante l’esecuzione di un’applicazione Python è possibile distinguere i moduli che vengono importati e quelli che vengono eseguiti come script attraverso la variabile globale, builtin, __name__.\nTale variabile assumerà:\n\n\"__main__\" se è stata utilizzata dal modulo che è stato eseguito in modalità script.\n\"[nome_del_modulo]\" se è stata utilizzata dal modulo che è stato importato in un altro.\n\n\nprint(__name__)\n\n__main__",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#installare-un-modulo-di-terze-parti-pip",
+    "href": "capitoli/lezione3.html#installare-un-modulo-di-terze-parti-pip",
+    "title": "3  Funzioni: continuo",
+    "section": "4.2 Installare un modulo di terze parti: pip",
+    "text": "4.2 Installare un modulo di terze parti: pip\npip è il package manager di default che viene utilizzato per installare moduli in Python. Dalla versione Python 3.4, pip è incluso di default nell’installer.\nÈ possibile invocare l’installazione di un package tramite pip che installerà il package e tutte le dipendenze dal Python Package Index",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#funzione-main-e-i-moduli",
+    "href": "capitoli/lezione3.html#funzione-main-e-i-moduli",
+    "title": "3  Funzioni: continuo",
+    "section": "4.3 Funzione main e i moduli",
+    "text": "4.3 Funzione main e i moduli\nGeneralmente la funzione main() è il punto di ingresso principale di un programma. Tuttavia, essendo Python un linguaggio interpretato, l’interprete esegue il codice fin dalla prima riga di un codice sorgente, a prescindere dal fatto che ci sia o meno la definizione di una funzione main().\nPer implementare un main possiamo quindi sfruttare la variabile built-in __name__ che valuta il nome del modulo corrente.\n\nmodulo importato = nome_del_modulo\nmodulo eseguito come programma principale = __main__",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#ricerca-dei-moduli",
+    "href": "capitoli/lezione3.html#ricerca-dei-moduli",
+    "title": "3  Funzioni: continuo",
+    "section": "4.4 Ricerca dei moduli",
+    "text": "4.4 Ricerca dei moduli\nQuando importiamo un modulo, l’interprete cerca tutti i moduli in determinati percorsi finché non trova il modulo non viene trovato.\nL’ordine seguito per la ricerca è il seguente:\n\ndirectory corrente\nl’elenco delle directory nella variabile di ambiente PYTHONPATH\npercorso predefinito dipendente dall’istallazione\n\nLa variabile di ambiente PYTHONPATH è un elenco di directory.\nLa direcotory corrente, la variabile di ambiente PYTHONPATH e il default path sono tutte informazioni memorizzate nella variabile sys.path:\n\nimport sys\n\nprint(sys.path)\n\n['/usr/lib64/python314.zip', '/usr/lib64/python3.14', '/usr/lib64/python3.14/lib-dynload', '', '/home/giobpc/.local/lib/python3.14/site-packages', '/usr/lib64/python3.14/site-packages', '/usr/lib/python3.14/site-packages']",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#moduli-standard",
+    "href": "capitoli/lezione3.html#moduli-standard",
+    "title": "3  Funzioni: continuo",
+    "section": "4.5 Moduli standard",
+    "text": "4.5 Moduli standard\nIn Python esiste una libreria standard di moduli: la Python Library Reference.\nQuesti moduli contengono operazioni che non fanno parte del nucleo principale del linguaggio Python;\\ sono però comunque integrati, sia per motivi di efficienza che per fornire accesso alle primitive del sistema operativo, come system call\nAlcuni moduli vengono importati solo se si utilizza un determinato sistema operativo.\nUn modulo di libreria importate è sys.\n\n4.5.1 dir()\nLa funzione dir() restituisce un elenco di nomi (variabili e funzioni) definiti dal modulo passato come argomento. Se non specifichiamo alcun modulo viene considerato il modulo corrente.\n\nimport math\n\nprint(dir(math))\n\n['__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'cbrt', 'ceil', 'comb', 'copysign', 'cos', 'cosh', 'degrees', 'dist', 'e', 'erf', 'erfc', 'exp', 'exp2', 'expm1', 'fabs', 'factorial', 'floor', 'fma', 'fmod', 'frexp', 'fsum', 'gamma', 'gcd', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'isqrt', 'lcm', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'modf', 'nan', 'nextafter', 'perm', 'pi', 'pow', 'prod', 'radians', 'remainder', 'sin', 'sinh', 'sqrt', 'sumprod', 'tan', 'tanh', 'tau', 'trunc', 'ulp']\n\n\n\nprint(dir())\n\n['In', 'Out', '_', '__', '___', '__builtin__', '__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__', '__vsc_ipynb_file__', '_dh', '_i', '_i1', '_i10', '_i11', '_i12', '_i13', '_i14', '_i15', '_i16', '_i17', '_i18', '_i19', '_i2', '_i20', '_i21', '_i22', '_i23', '_i24', '_i3', '_i4', '_i5', '_i6', '_i7', '_i8', '_i9', '_ih', '_ii', '_iii', '_oh', 'acos', 'acosh', 'array', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'cbrt', 'ceil', 'comb', 'copysign', 'cos', 'cosh', 'degrees', 'dist', 'e', 'erf', 'erfc', 'exit', 'exp', 'exp2', 'expm1', 'f', 'fabs', 'factorial', 'floor', 'fma', 'fmod', 'frexp', 'fsum', 'fun', 'gamma', 'gcd', 'get_ipython', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'isqrt', 'lcm', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'm', 'math', 'met1', 'met2', 'met3', 'metodo', 'modf', 'nan', 'nextafter', 'open', 'perm', 'pi', 'pow', 'prod', 'quit', 'radians', 'remainder', 'sin', 'sinh', 'sqrt', 'sumprod', 'sys', 'tan', 'tanh', 'tau', 'trunc', 'ulp', 'x']",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#package",
+    "href": "capitoli/lezione3.html#package",
+    "title": "3  Funzioni: continuo",
+    "section": "4.6 Package",
+    "text": "4.6 Package\nI Package sono raccolte organizzate di moduli, moduli all’interno di moduli.\nTali moduli sono memorizzati in directory, con ogni directory che contiene un file __init__.py\n\nil file __init__.py istruisce l’interprete Python di trattare la directory come se fosse un package\ntale file può essere semplicemente un file vuoto ma può anche eseguire codice di inizializzazione per il package o impostare la variabile __all__\n\nOgni sottodirectory della directory principale del pacchetto è considerata un sottopacchetto.\nUna package e un qualsiasi suo sottopacchetto può essere importato.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#import-di-un-package",
+    "href": "capitoli/lezione3.html#import-di-un-package",
+    "title": "3  Funzioni: continuo",
+    "section": "4.7 Import di un package",
+    "text": "4.7 Import di un package\nA volte si vuole importare tutto ciò che si trova all’interno di un package o di un sottopackage. In questo caso si può usare questo comando:\n\nfrom math import *\n\nQuesto carica tutti i nomi dei moduli contenuti nella variabile __all__, a sua volta contenuta nel dile __init__.py della cartella del pacchetto.\nSe la variabile __all__ non è definita, l’import tramite l’operatore * da un package di default agirà come seguito:\n\nNessuna importazione automatica dei sottomoduli: Python non importerà tutti i sottomoduli presenti nel package. Questa scelta è fatta appositamente per evitare problemi legati alle performance.\nImportazione del solo package base: si assicurerà di importare tutto il package principale e importerà solamente i nomi definiti a quel livello. Ovvero unicamente i nomi definiti nel file __init__.py\nSottomoduli esclusi: Eventuali sottomoduli non saranno importati, a meno che non siano esplicitamente importati da __init__.py. Questo significa che l’unico modo in cui un altro file .py presente nella cartella diventi accessibile usando l’operatore * è aver scritto un comando di importazione manuale direttamente dentro il file di inizializzazione",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione3.html#riferimenti-intra-package",
+    "href": "capitoli/lezione3.html#riferimenti-intra-package",
+    "title": "3  Funzioni: continuo",
+    "section": "4.8 Riferimenti Intra-package",
+    "text": "4.8 Riferimenti Intra-package\nQuando i package sono strutturati in sottopackage, si possono usare le importazioni assolute per fare riferimento ai sottomoduli dei package “fratelli”.\nÈ anche possibile scrivere importazioni relative, con la forma di dichiarazione from module import name.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Funzioni: continuo</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html",
+    "href": "capitoli/lezione4.html",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "",
+    "text": "4.1 tuple\nÈ una sequenza ordinata di elementi che possono essere eterogenei od omogenei tra loro.\nNon è possibile cambiare i valori degli elementi (la tupla è immutabile). Significa che fare una modifica in-place genera un’eccezione.\nLe tuple sono allocate tramite parentesi tonde.\nI vantaggi principali che si hanno con l’utilizzo delle tuple sono:\nt = () # tupla vuota\nt = (2,\"mit\",3)\nt = (\"ciao\",) # singletone, è necessaria l'extra virgola\nt = (1,2,3) + (4,5,6)\nlen(t) # ritorna il numero di elementi nella tupla\nt = t[0:2] # slice\nt[0] = 4 # ERRORE\n\n\n---------------------------------------------------------------------------\nTypeError                                 Traceback (most recent call last)\nCell In[1], line 7\n      5 len(t) # ritorna il numero di elementi nella tupla\n      6 t = t[0:2] # slice\n----&gt; 7 t[0] = 4 # ERRORE\n\nTypeError: 'tuple' object does not support item assignment\nAttenzione: per creare una tupla contenente un singolo elemento è necessario aggiungere una virgola extra. Ciò è necessario per permettere all’interprete di riconoscere una tupla da un normale litteral.\nt = (2)\nv = (2,)\n\nprint(f\"tipo di t: {type(t)}\\ntipo di v: {type(v)}\")\nSolitamente le tuple sono utilizzate per eseguire uno swap tra valori di variabili. Infatti utilizzarle per questo scopo rende lo swap molto più conciso ed elegante.\nx = 5\ny = 0\n\nprint(f\"[Prima dello swap]\\nx: {x}\\ny: {y}\")\n\n(x,y) = (y,x)\n\nprint(f\"[Dopo dello swap]\\nx: {x}\\ny: {y}\")",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#tuple",
+    "href": "capitoli/lezione4.html#tuple",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "",
+    "text": "sicurezza: sono immutabili, generano eccezioni a run-time\nallocazione: la loro allocazione è gestita in modo più semplice, ma genera più overhead perché ogni volta che ridefinisci una tupla questa viene deallocata e riallocata.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#ritorno-più-valori-dalle-funzioni",
+    "href": "capitoli/lezione4.html#ritorno-più-valori-dalle-funzioni",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.2 Ritorno più valori dalle funzioni",
+    "text": "4.2 Ritorno più valori dalle funzioni\nPossono esser utilizzate anche per ritornare più di un valore da una funzione.\n\ndef divisione_e_resto(x,y):\n    quoziente = x // y # divisione tra interi\n    resto = x % y\n\n    return (quoziente ,resto)\n\nq,r = divisione_e_resto(7,2)\n\nprint(f\"7/2 = {q} con resto di {r}\")\n\nÈ possibile iterare sulle tuple, essendo oggetti iterable.\n\ndef get_data(aTuple):\n    nums = ()\n    words = ()\n    for t in aTuple:\n        nums = nums + (t[0],)\n        \n        if t[1] not in words:\n            words = words + (t[1],)\n        min_n = min(nums)\n        max_n = max(nums)\n        unique_words = len(words)\n    return (min_n, max_n, unique_words)\n    \ntupla1 = ((1,\"ciao\"), (4, \"hello\"), (0, \"hello\"))\n\nmi, ma, u = get_data(tupla1)\n\nprint(mi,ma,u)\n\nL’operatore in è fondamentale e ci permette di semplificare di molto il codice.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#liste",
+    "href": "capitoli/lezione4.html#liste",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.3 Liste",
+    "text": "4.3 Liste\nÈ una sequenza ordinata di informazioni, accessibili tramite un indice. Una lista è denotata da parentesi quadre [].\nUna lista contiene elementi:\n\nomogenei: di solito\neterogenei: ovvero diversi tipi, non è molto comune\n\nA differenza di una tupla, gli elementi di una lista possono cambiare\n\nUna lista è mutabile\n\nQuindi questo significa che l’allocazione meno dispendiosa in termini di overhead perché non rialloco l’intera lista ma solo la parte necessaria. Invece potrebbe essere più complessa la sua implementazione.\n\na_list = []\nL = [2,3,\"a\",1]\nlen (L)\nprint(L[0])\nL[0] = \"ciao\"\nprint(L[0])\nlista = L[2:3]\nprint(lista)\n\nLe liste come le tuple sono oggetti iterable, ovvero posso iterare su queste utilizzando l’operatore in.\n\nl = [1,4,\"ciao\",'hello']\n\nfor elem in l:\n    print(elem)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#operatore-in",
+    "href": "capitoli/lezione4.html#operatore-in",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.4 Operatore in",
+    "text": "4.4 Operatore in\nin è un operatore potentissimo che ci permette di semplificare di molto il codice ma alcune volte lo rende meno capibile.\nInfatti, oltre a permetterci di iterare su un intero oggetto iterable, possiamo anche utilizzarlo per verificare che un oggetto contenitore contenga effettivamente un determinato elemento.\n\nl = [2,4,\"giovanni\", 4]\n\nfor i in l:\n    print(i)\n\nif \"giovanni\" in l:\n    print(\"giovanni è in lista\")",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#list-comprehension",
+    "href": "capitoli/lezione4.html#list-comprehension",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.5 List comprehension",
+    "text": "4.5 List comprehension\nLe list comprehension forniscono un modo consiso per creare liste in Python. La sintassi generale è:\n\\[\\text{\\textit{expression} \\texttt{for} \\textit{item} \\texttt{in} \\textit{iterable}}\\]\nDove:\n\nexpression: definisce il contenuto di ciascun elemento nella lista risultate\nitem: rappresenta l’elemento corrente su cui viene eseguita l’iterazione\niterable: l’insieme o la sequenza su cui si itera\n\n\nfruits = [\"banana\", \"pera\", \"mela\", \"mango\", \"kiwi\"]\nnewlist = []\n\nfor x in fruits:\n    if \"a\" in x:\n        newlist.append(x)\nprint(newlist)\n\nnewlist1 = [x for x in fruits if \"a\" in x]\n\nprint(newlist1)\n\n['banana', 'pera', 'mela', 'mango']\n['banana', 'pera', 'mela', 'mango']",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#operazioni-sulle-liste",
+    "href": "capitoli/lezione4.html#operazioni-sulle-liste",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.6 Operazioni sulle liste",
+    "text": "4.6 Operazioni sulle liste\nAggiungere elementi alla fine della lista con L.append(element).\nDopo la chiamata ad append la lista muterà.\n\n4.6.1 Operatore punto\nTutto in Python è un oggetto, le liste non fanno eccezione. Quindi significa che queste avranno dei dati, metodi che possiamo utilizzare tramite l’operatore ..",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#extend",
+    "href": "capitoli/lezione4.html#extend",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.7 extend",
+    "text": "4.7 extend\nPer combinare più liste si usa il concatenamento.\nSe utilizzassimo l’operatore + otteniamo una nuova lista che è la concatenazione delle liste operando. È possibile, però, mutare direttamente una lista utilizzando il metodo extend(some_list).\n\nlista1 = [1,2,3]\nlista2 = [3,4,5]\n\nlista3 = lista1 + lista2\n\nprint(f\"lista3: {lista3}, con id: {hex(id(lista3))}\")\n\nprint(f\"lista1: {lista1}, con id: {hex(id(lista1))}\")\nprint(f\"lista2: {lista2}, con id: {hex(id(lista2))}\")\n\nprint(\"AFTER EXTEND\")\nlista1.extend(lista2)\nprint(f\"lista1: {lista1}, con id: {hex(id(lista1))}\")",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#remove",
+    "href": "capitoli/lezione4.html#remove",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.8 remove",
+    "text": "4.8 remove\nÈ possibile cancellare un elemento ad uno specifico indice con del(l[1]).\nPer rimuovere un elemento alla fine della lista è possibile usare l.pop(), che ritorna l’elemento rimosso.\nPer rimuovere uno specifico elemento è possibile usare l.remove(element).\n\ncerca l’elemento e lo rimuove\nse l’elemento è presente più volte, rimuove la prima occorrenza\nse l’elemento non è nella lista, ritorna un errore\n\n\nl = [1,2,3,4,5,6,7,8,9,10]\nprint(l)\ndel(l[1])\nprint(l)\np = l.pop()\nprint(f\"{l}, elemento calcellato: {p}\")\nl.remove(9)\nprint(l)\n# ottengo un errore se tento di cancellare nuovamente 9\n# perché non è presente una sua occorrenza\nl.remove(9)\nprint(l)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#conversione-di-liste",
+    "href": "capitoli/lezione4.html#conversione-di-liste",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.9 Conversione di liste",
+    "text": "4.9 Conversione di liste\nPosso convertire una stringa in lista e viceversa e una tupla in lista e viceversa.\n\n# string → list\ns = \"ciao\"\nl = list(s)\nprint(l, f\" type: {type(l)}\")\n# list → string\np = \"\".join(l)\nprint(p , f\" type: {type(p)}\")\nprova = \"hello world\"\np = prova.split(\"ll\")\nprint(p , f\" type: {type(p)}\")\n\n# list → tuple\nl = [1,2,3]\nt = tuple(l)\nprint(t, f\" type: {type(t)}\")\nl = list(t)\nprint(l, f\" type: {type(l)}\")\n\n['c', 'i', 'a', 'o']  type: &lt;class 'list'&gt;\nciao  type: &lt;class 'str'&gt;\n['he', 'o world']  type: &lt;class 'list'&gt;\n(1, 2, 3)  type: &lt;class 'tuple'&gt;\n[1, 2, 3]  type: &lt;class 'list'&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#altre-operazioni-sulle-liste",
+    "href": "capitoli/lezione4.html#altre-operazioni-sulle-liste",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.10 Altre operazioni sulle liste",
+    "text": "4.10 Altre operazioni sulle liste\nAltre operazioni molto utili sono quelle che ci permettono di ordinare, invertire, etc.\n\nl = [3,6,2,5,6,8,9,0]\nprint(l)\nl.sort()\nprint(l)\nl.sort(reverse=True)\nprint(l)\nlista_ordinata = sorted(l)\nprint(lista_ordinata)\n\nt = (1,5,4,7,2,64)\nres = sorted(t) #ATTENZIONE: il tipo di ritorno è una lista\nprint(f\"siamo partiti da {t}, type: {type(t)}\\ne arriviamo a {res}, type: {type(res)}\")\n\n[3, 6, 2, 5, 6, 8, 9, 0]\n[0, 2, 3, 5, 6, 6, 8, 9]\n[9, 8, 6, 6, 5, 3, 2, 0]\n[0, 2, 3, 5, 6, 6, 8, 9]\nsiamo partiti da (1, 5, 4, 7, 2, 64), type: &lt;class 'tuple'&gt;\ne arriviamo a [1, 2, 4, 5, 7, 64], type: &lt;class 'list'&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#alias",
+    "href": "capitoli/lezione4.html#alias",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.11 Alias",
+    "text": "4.11 Alias\n\nl = [1,2,3]\nl1 = l\nprint(f\"{l}: {hex(id(l))}\\n{l1}: {hex(id(l1))}\")\nl.append(2)\nprint(f\"{l}: {hex(id(l))}\\n{l1}: {hex(id(l1))}\")\n\n[1, 2, 3]: 0x7f4876c18bc0\n[1, 2, 3]: 0x7f4876c18bc0\n[1, 2, 3, 2]: 0x7f4876c18bc0\n[1, 2, 3, 2]: 0x7f4876c18bc0\n\n\nHa degli effetti collaterali perché con l’assegnazioni stiamo in realtà copiando il riferimento, quindi entrambe le variabili fanno riferimento allo stesso oggetto nello heap.\nPer realizzare una deep copy dobbiamo utilizzare [:]\n\nl = [1,2,3,4]\nl1 = l[:]\nprint(f\"{l}: {hex(id(l))}\\n{l1}: {hex(id(l1))}\")\nl.append(2)\nprint(f\"{l}: {hex(id(l))}\\n{l1}: {hex(id(l1))}\")\n\n[1, 2, 3, 4]: 0x7f4876bd2900\n[1, 2, 3, 4]: 0x7f4876c3df40\n[1, 2, 3, 4, 2]: 0x7f4876bd2900\n[1, 2, 3, 4]: 0x7f4876c3df40",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#mutazioni-e-interazione-su-liste",
+    "href": "capitoli/lezione4.html#mutazioni-e-interazione-su-liste",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.12 Mutazioni e interazione su liste",
+    "text": "4.12 Mutazioni e interazione su liste\nEvitare la modifica di una lista mentre iteriamo sugli elementi, perché l’iterazione continuerà su una lista che si sta modificando.\nLa soluzione migliore è quella di utilizzare una deep copy della lista su cui vogliamo eliminare alcuni elementi.\nPerché Python utilizza un contatore interno per tenere traccia dell’indice corrente nel ciclo. I cambiamenti mutano la lunghezza della lista ma Python non aggiorna tale contatore.\nOvvero una volta che eliminiamo l’elemento corrente dovremmo evitare di incrementare il contatore perché l’elemento successivo si è spostato nell’elemento corrente. L’interprete Python non tiene conto di questa evenienza, quindi potremmo incappare in errori.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#dizionari",
+    "href": "capitoli/lezione4.html#dizionari",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.13 Dizionari",
+    "text": "4.13 Dizionari\nFinora, possiamo memorizzare informazioni mantenendo liste separate che sono scomode e hanno bisogno di convenzioni riguardanti il posizionamento dei dati.\nQuesto approccio genera delle confusioni non trascurabili perché per ogni elemento devo conoscere l’indice associato e devo far in modo che alla stessa posizione per ogni lista siano presenti informazioni in riferimento alla stessa entità.\nI dizionari sono il tipo di dato utili per indicizzare elementi di interesse direttamente, utilizzando non per forza gli interi.\nMemorizza una coppia {key: value}\n\nmy_dict = {}\ngrades = {\"Anna\": 33, \"Giovanni\": \"D\", \"Luca\": 30}\n\nprint(grades[\"Giovanni\"])\n\n# se la chiave non esiste ritorna un errore\n\nprint(grades[\"peppe\"])\n\nD\n\n\n\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\nCell In[16], line 8\n      4 print(grades[\"Giovanni\"])\n      6 # se la chiave non esiste ritorna un errore\n----&gt; 8 print(grades[\"peppe\"])\n\nKeyError: 'peppe'",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#lookup",
+    "href": "capitoli/lezione4.html#lookup",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.14 lookup",
+    "text": "4.14 lookup\nL’operazione di lookup è simile ad indicizzare liste.\nCerca la chiave (key) e ritorna il valore associato alla chiave inserita.\nSe la chiave non esiste, ritorna un errore: KeyError\n\ndizionario = {\"Anna\": 4, \"Michele\": 5, \"Piero\": 1}\n\ndizionario[\"Giorgio\"]\n\n\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\nCell In[1], line 3\n      1 dizionario = {\"Anna\": 4, \"Michele\": 5, \"Piero\": 1}\n----&gt; 3 dizionario[\"Giorgio\"]\n\nKeyError: 'Giorgio'",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#operazioni-su-dizionari",
+    "href": "capitoli/lezione4.html#operazioni-su-dizionari",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.15 Operazioni su dizionari",
+    "text": "4.15 Operazioni su dizionari\n\nAggiungere una entry\nTest se la chiave è nel dizionario\nCancellare una entry\n\n\nraccolta = {} # dict vuoto\n\nraccolta[\"giovanni\"] = \"A\"\nprint(raccolta)\n\nprint(\"giovanni\" in raccolta)\nprint(\"giobanni\" in raccolta)\n\ndel(raccolta[\"giovanni\"])\nprint(raccolta)\n\n{'giovanni': 'A'}\nTrue\nFalse\n{}",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#chiavi-e-valori-di-dizionario",
+    "href": "capitoli/lezione4.html#chiavi-e-valori-di-dizionario",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.16 Chiavi e valori di dizionario",
+    "text": "4.16 Chiavi e valori di dizionario\n\nValori\n\nPossono essere di qualunque tipo (immutabile e mutabile)\nPossono essere duplicati\n\nChiavi\n\nDevono essere uniche\nTipo hashable: int, float, str, tuple (con restrizioni), bool. Devono essere in particolare degli oggetti hashable\nN.B: le tuple possono essere inserite come key solo se tutte gli elemente al loro interno solo a loro volta immutabili.\nOvvero le tuple possono essere immutabili ma non hashable\n\n\nNon c’è ordinamento né per le chiavi né per i valori.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione4.html#liste-vs-dizionari",
+    "href": "capitoli/lezione4.html#liste-vs-dizionari",
+    "title": "4  Tuple, Liste, Dizionari",
+    "section": "4.17 Liste vs Dizionari",
+    "text": "4.17 Liste vs Dizionari\nLista:\n\nSequenza ordinata di elementi\nLa ricerca degli elemenete è fatta attraverso un indice intero.\nGli indici hanno un ordinamento\n\nDizionario:\n\nAssocia chiavi con valori\nLa ricerca di un elemento è fatta attraverso un altro elemento → key\nNessun ordinamento è garantito\nLe chiavi possono essere di qualunque tipo immutabile e in particolare hashable\n\n\ntupla = (1,2,3) # tutti elementi hashable\nprint(hash(tupla))\na = 2\nprint(hash(a))\ns = \"giovanni\"\nprint(hash(s))\n\ntupla_non_hashable = (1,2,[1,2])\n\nprint(hash(tupla_non_hashable))\n\n529344067295497451\n2\n1232673335284502892\n\n\n\n---------------------------------------------------------------------------\nTypeError                                 Traceback (most recent call last)\nCell In[18], line 10\n      6 print(hash(s))\n      8 tupla_non_hashable = (1,2,[1,2])\n---&gt; 10 print(hash(tupla_non_hashable))\n\nTypeError: unhashable type: 'list'\n\n\n\n\n4.17.1 Esempio dizionario: Analizzatore di occorrenze in un testo\n\nCreare una frequency dictionary che mappa str:int\nTrovare la parola più frequente e quante volte occorre nel testo\n\nUsare una lista nel caso in cui ci siano più parole con stessa frequenza\nRitoranere una tupla (list, int) per (words_list, highest_freq)\n\nTrovare la parola che occorre almeno X volte\n\nLasciare che l’utente specifichi la soglia X\nRitornare una lista di tuple, ogni tupla sia del tipo (list, int)\nIDEA: Dal dizionario del testo, trova la parola più frequente, cancellala, ripeti. Funziona perché stiamo mutanto il dizionario testo\n\n\n\ntext = \" Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse dictum ante vitae imperdiet euismod eros tellus hendrerit sapien quis tincidunt turpis leo vel ligula Nam sed nulla ut eros porta volutpat Duis pulvinar elementum rutrum Nullam sollicitudin bibendum placerat Donec a sollicitudin mauris id bibendum massa Pellentesque at felis eu ipsum efficitur eleifend in eget ex Suspendisse potenti Sed libero dui porttitor sed vulputate lacinia facilisis ac augue Pellentesque in sapien nec libero dapibus consequat et vel sem Duis ac urna vel nulla condimentum pellentesque Nulla vitae metus vel purus pretium efficitur Integer interdum diam eget tellus rhoncus pharetra Cras lacinia ullamcorper enim ut molestie mi pellentesque et Curabitur ultricies sapien lectus eget dapibus lacus malesuada at Vivamus eu sollicitudin metus Sed viverra condimentum justo in consectetur risus interdum at Nulla volutpat rhoncus eros sed posuere erat venenatis maximus Fusce sed odio eu leo consectetur mattis ac in nunc Ut non diam lorem In porttitor placerat purus Ut eu imperdiet ex Morbi luctus velit sed condimentum scelerisque justo nisi volutpat magna at varius lorem nulla vitae ipsum Aenean iaculis diam quis lacus fermentum quis porttitor nunc venenatis Etiam a urna nisi Quisque eu feugiat sapien Suspendisse in imperdiet tellus Etiam fermentum lobortis ex at posuere felis faucibus sed Aenean et risus venenatis mollis lorem id pellentesque mauris Suspendisse potenti Sed commodo fringilla nulla quis laoreet ligula pharetra at Nulla facilisi Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc quis pharetra quam Morbi maximus dui sit amet mollis congue risus orci aliquam ipsum eu commodo nisi sapien sed massa Suspendisse at consequat ligula Curabitur blandit consequat massa quis facilisis arcu lacinia vitae Suspendisse potenti Quisque aliquam ut tellus et feugiat Ut bibendum venenatis consequat Phasellus sit amet nibh risus Mauris vel lectus nec elit vestibulum pharetra Cras pharetra tortor a justo suscipit quis pharetra arcu iaculis Mauris arcu elit pulvinar ut congue in iaculis vitae neque Pellentesque sit amet dui auctor euismod leo varius sagittis sem Curabitur varius dolor vel ipsum ullamcorper gravida Fusce ipsum elit posuere eu neque et consequat blandit urna Etiam et risus faucibus luctus nisl vitae ornare turpis Etiam scelerisque ac diam semper commodo Quisque et sagittis dolor et malesuada mauris Duis a facilisis ex Curabitur luctus eget turpis sit amet sodales Cras vitae urna mi Phasellus aliquet ipsum eget est dignissim quis eleifend nisi finibus\"\n\ndef frequency_dict(testo):\n    testo = testo.split()\n    dict_occ = {}\n    for word in testo:\n        if word in dict_occ:\n            dict_occ[word] += 1\n        else:\n            dict_occ[word] = 1\n    return dict_occ\n\ndef most_common_words(dict_occ):\n    values = dict_occ.values()\n    print(len(values))\n    best = max(values)\n    words = []\n    for k in dict_occ:\n        if dict_occ[k] == best:\n            words.append(k)\n    return (words, best)\n\ndef words_often(dict_occ, minTimes):\n    result = []\n    done = False\n    while not done:\n        temp = most_common_words(dict_occ)\n        if temp[1] &gt;= minTimes:\n            result.append(temp)\n            for w in temp[0]:\n                del(dict_occ[w])\n        if len(dict_occ.keys()) == 0:\n            done = True\n    return result\n\n\ndict_occ = frequency_dict(text)\nprint(dict_occ)\nprint(most_common_words(dict_occ))\nprint(words_often(dict_occ, 0))\n\n{'Lorem': 1, 'ipsum': 8, 'dolor': 3, 'sit': 5, 'amet': 5, 'consectetur': 3, 'adipiscing': 1, 'elit': 4, 'Suspendisse': 6, 'dictum': 1, 'ante': 2, 'vitae': 7, 'imperdiet': 3, 'euismod': 2, 'eros': 3, 'tellus': 4, 'hendrerit': 1, 'sapien': 5, 'quis': 8, 'tincidunt': 1, 'turpis': 3, 'leo': 3, 'vel': 6, 'ligula': 3, 'Nam': 1, 'sed': 7, 'nulla': 4, 'ut': 4, 'porta': 1, 'volutpat': 3, 'Duis': 3, 'pulvinar': 2, 'elementum': 1, 'rutrum': 1, 'Nullam': 1, 'sollicitudin': 3, 'bibendum': 3, 'placerat': 2, 'Donec': 1, 'a': 4, 'mauris': 3, 'id': 2, 'massa': 3, 'Pellentesque': 3, 'at': 7, 'felis': 2, 'eu': 7, 'efficitur': 2, 'eleifend': 2, 'in': 7, 'eget': 5, 'ex': 4, 'potenti': 3, 'Sed': 3, 'libero': 2, 'dui': 3, 'porttitor': 3, 'vulputate': 1, 'lacinia': 3, 'facilisis': 3, 'ac': 4, 'augue': 1, 'nec': 2, 'dapibus': 2, 'consequat': 5, 'et': 9, 'sem': 2, 'urna': 4, 'condimentum': 3, 'pellentesque': 3, 'Nulla': 3, 'metus': 2, 'purus': 2, 'pretium': 1, 'Integer': 1, 'interdum': 2, 'diam': 4, 'rhoncus': 2, 'pharetra': 6, 'Cras': 3, 'ullamcorper': 2, 'enim': 1, 'molestie': 1, 'mi': 2, 'Curabitur': 4, 'ultricies': 1, 'lectus': 2, 'lacus': 2, 'malesuada': 2, 'Vivamus': 1, 'viverra': 1, 'justo': 3, 'risus': 5, 'posuere': 4, 'erat': 1, 'venenatis': 4, 'maximus': 2, 'Fusce': 2, 'odio': 1, 'mattis': 1, 'nunc': 2, 'Ut': 3, 'non': 1, 'lorem': 3, 'In': 1, 'Morbi': 2, 'luctus': 4, 'velit': 1, 'scelerisque': 2, 'nisi': 4, 'magna': 1, 'varius': 3, 'Aenean': 2, 'iaculis': 3, 'fermentum': 2, 'Etiam': 4, 'Quisque': 3, 'feugiat': 2, 'lobortis': 1, 'faucibus': 3, 'mollis': 2, 'commodo': 3, 'fringilla': 1, 'laoreet': 1, 'facilisi': 1, 'Vestibulum': 1, 'primis': 1, 'orci': 2, 'ultrices': 1, 'cubilia': 1, 'curae;': 1, 'Nunc': 1, 'quam': 1, 'congue': 2, 'aliquam': 2, 'blandit': 2, 'arcu': 3, 'Phasellus': 2, 'nibh': 1, 'Mauris': 2, 'vestibulum': 1, 'tortor': 1, 'suscipit': 1, 'neque': 2, 'auctor': 1, 'sagittis': 2, 'gravida': 1, 'nisl': 1, 'ornare': 1, 'semper': 1, 'sodales': 1, 'aliquet': 1, 'est': 1, 'dignissim': 1, 'finibus': 1}\n155\n(['et'], 9)\n155\n154\n152\n147\n144\n138\n123\n90\n52\n[(['et'], 9), (['ipsum', 'quis'], 8), (['vitae', 'sed', 'at', 'eu', 'in'], 7), (['Suspendisse', 'vel', 'pharetra'], 6), (['sit', 'amet', 'sapien', 'eget', 'consequat', 'risus'], 5), (['elit', 'tellus', 'nulla', 'ut', 'a', 'ex', 'ac', 'urna', 'diam', 'Curabitur', 'posuere', 'venenatis', 'luctus', 'nisi', 'Etiam'], 4), (['dolor', 'consectetur', 'imperdiet', 'eros', 'turpis', 'leo', 'ligula', 'volutpat', 'Duis', 'sollicitudin', 'bibendum', 'mauris', 'massa', 'Pellentesque', 'potenti', 'Sed', 'dui', 'porttitor', 'lacinia', 'facilisis', 'condimentum', 'pellentesque', 'Nulla', 'Cras', 'justo', 'Ut', 'lorem', 'varius', 'iaculis', 'Quisque', 'faucibus', 'commodo', 'arcu'], 3), (['ante', 'euismod', 'pulvinar', 'placerat', 'id', 'felis', 'efficitur', 'eleifend', 'libero', 'nec', 'dapibus', 'sem', 'metus', 'purus', 'interdum', 'rhoncus', 'ullamcorper', 'mi', 'lectus', 'lacus', 'malesuada', 'maximus', 'Fusce', 'nunc', 'Morbi', 'scelerisque', 'Aenean', 'fermentum', 'feugiat', 'mollis', 'orci', 'congue', 'aliquam', 'blandit', 'Phasellus', 'Mauris', 'neque', 'sagittis'], 2), (['Lorem', 'adipiscing', 'dictum', 'hendrerit', 'tincidunt', 'Nam', 'porta', 'elementum', 'rutrum', 'Nullam', 'Donec', 'vulputate', 'augue', 'pretium', 'Integer', 'enim', 'molestie', 'ultricies', 'Vivamus', 'viverra', 'erat', 'odio', 'mattis', 'non', 'In', 'velit', 'magna', 'lobortis', 'fringilla', 'laoreet', 'facilisi', 'Vestibulum', 'primis', 'ultrices', 'cubilia', 'curae;', 'Nunc', 'quam', 'nibh', 'vestibulum', 'tortor', 'suscipit', 'auctor', 'gravida', 'nisl', 'ornare', 'semper', 'sodales', 'aliquet', 'est', 'dignissim', 'finibus'], 1)]",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tuple, Liste, Dizionari</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html",
+    "href": "capitoli/lezione5.html",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "",
+    "text": "5.1 Passaggio di parametri\nTutto in Python è un oggetto. Possiamo interagire con gli oggetti attraverso dei riferimenti.\nTutti i parametri in Python sono passati per riferimento.\nQuando passiamo un parametro ad una funzione, il riferimento contenuto nel parametro attuale è copiato all’interno del parametro formale.\nUtilizzare tale riferimento significa avere accesso direttamente all’oggetto in memoria.\ndef fun(x):\n    print(\"Inside fun: x=\", x, \"ref_x=\", id(x))\nx = 7\nfun(x)\nprint(\"Outside fun: x=\", x, \"ref_x=\", id(x)) \n\nInside fun: x= 7 ref_x= 140228276227184\nOutside fun: x= 7 ref_x= 140228276227184\nNel caso in cui il parametro fosse un oggetto mutabile, ogni modifica al parametro all’interno della funzione, si riflette anche sul chiamante.\ndef fun(mylist):\n    mylist.append([1,2,3,4])\n    print (\"Inside fun: val=\",  mylist, \"ref=\", id(mylist))\nmylist = [10,20,30]\nfun( mylist )\nprint (\"Outside fun: val=\", mylist, \"ref=\", id(mylist))\n\nInside fun: val= [10, 20, 30, [1, 2, 3, 4]] ref= 140227671125312\nOutside fun: val= [10, 20, 30, [1, 2, 3, 4]] ref= 140227671125312\nOvviamente questa modifica si rifletterà a meno che il riferimento contenuto del parametro formale della funzione non venga sovrascritto. In tal caso il parametro diventa locale alla funzione.\nPertanto, ogni modifica all’interno della funzione, non si riflette sul chiamante.\ndef fun(mylist):\n    mylist = [1,2,3,4]\n    print (\"Inside fun: val=\",  mylist, \"ref=\", id(mylist))\nmylist = [10,20,30]\nfun( mylist )\nprint (\"Outside fun: val=\", mylist, \"ref=\", id(mylist))\n\nInside fun: val= [1, 2, 3, 4] ref= 140227671212608\nOutside fun: val= [10, 20, 30] ref= 140227671123200\nNel caso in cui il parametro sia un oggetto immutabile, anche se la funzione dispone del riferimento all’oggetto, non gli sarà possibile apportare modifiche che si riflettano nel chiamante.\nPerché le modifiche che potremmo fare sono quelle in-place che significano creare un nuovo oggetto.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#argomenti-a-lunghezza-variabile-args",
+    "href": "capitoli/lezione5.html#argomenti-a-lunghezza-variabile-args",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "5.2 Argomenti a lunghezza variabile: *args",
+    "text": "5.2 Argomenti a lunghezza variabile: *args\nLa sintassi *args può essere utilizzata nella definizione della funzione Python per passare alla funzione un numero variabile di argomenti.\nLa funzione riceverà una tupla di argomenti, la quale può essere iterate per recuperare tutti gli argomenti.\n\ndef fun(*args):\n    for arg in args:\n        print(arg)\n\n\nfun()\n\nfun(\"giovanni\",22,1,[\"matteo\", \"caspita\"])\n\ngiovanni\n22\n1\n['matteo', 'caspita']",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#keyword-arguments",
+    "href": "capitoli/lezione5.html#keyword-arguments",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "5.3 Keyword arguments",
+    "text": "5.3 Keyword arguments\nI keywords arguments permettono al chiamante di una funzione di passare alla funzione gli argomenti basandosi sul nome, e non sulla posizione.\nLa sintassi da utilizzare è del tipo key = value\n\ndef fun(name, surname, country):\n    print(name,surname,country)\n\nfun(country=\"italy\", name=\"giovanni\", surname=\"fragola\")\n\ngiovanni fragola italy",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#kwargs",
+    "href": "capitoli/lezione5.html#kwargs",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "5.4 **kwargs",
+    "text": "5.4 **kwargs\nLa sintassi **kwargs può essere utilizzata nella definizione delle funzioni Python per passare alla funzione un numero variabile di keyword arguments.\nLa funzione riceverà un dizionario di argomenti (kwargs nell’esempio), il quale può essere iterato per recuperare tutti gli argomenti.\n\ndef fun(**kwargs):\n    for key, value in kwargs.items():\n        print(f\"{key:&lt;10}{value}\")\n\nfun(day=8, month=5, year=2006)\n\nfun(name=\"giovanni\", surname=\"fragola\", email=\"giovanni.fragola.fragola\")\n\n\nday       8\nmonth     5\nyear      2006\nname      giovanni\nsurname   fragola\nemail     giovanni.fragola.fragola",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#argomenti-di-default",
+    "href": "capitoli/lezione5.html#argomenti-di-default",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "5.5 Argomenti di default",
+    "text": "5.5 Argomenti di default\nPython permette di definire dei valori di default per gli argomenti di una funzione.\nI valori di default di un argomento sono utilizzati quando nella chiamata alla funzione non è specificato un valore per quell’argomento.\nQuesto permette di invocare una funzione con meno parametri rispetta alla quantità presente nella sua definizione.\n\ndef fun(username, password=\"changename\", days=20):\n    print(username, password, days)\n\nfun(\"giovanni\", \"password\", 90)\n\nfun(\"giovanni\")\n\ngiovanni password 90\ngiovanni changename 20\n\n\n\nGli argomenti con parametri di default devono essere specificati dopo quelli obbligatori.\n\n\n# ERORRE\ndef fun(username, password=\"prova\", days):\n    print(days, username, password)\n\n\n  Cell In[22], line 2\n    def fun(username, password=\"prova\", days):\n                                        ^\nSyntaxError: parameter without a default follows parameter with a default",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#unpacking-argument-list",
+    "href": "capitoli/lezione5.html#unpacking-argument-list",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "5.6 Unpacking argument list",
+    "text": "5.6 Unpacking argument list\nLa sintassi *args utilizzata per i variable-lenght arguments può essere anche utilizzata per operazioni di unpacking degli argomenti.\n\nGli argomenti sono già inseriti in una lista o tupla ma devono essere utilizzati in una funzione che richiede argomenti utilizzati in maniera separata.\n\n\nl = list(range(3,7))\nprint(l)\narg = [3,7]\nl = list(range(*arg))\nprint(l)\n\nt = tuple(range(3,7))\nprint(t)\narg = (3,7)\nt = tuple(range(*arg))\nprint(t)\n\n[3, 4, 5, 6]\n[3, 4, 5, 6]\n(3, 4, 5, 6)\n(3, 4, 5, 6)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#listruzione-with",
+    "href": "capitoli/lezione5.html#listruzione-with",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "6.1 L’istruzione with",
+    "text": "6.1 L’istruzione with\nLe applicazioni acquisiscono risorse e dovremmo rilasciare le risorse non appena non sono più necessarie (sono limitate).\nwith quando viene utilizzata per acquisire una risorsa e utilizzarla.\nAlla fine dello scope di with viene chiamato implicitamente il metodo close dell’oggetto risorsa per rilasciare la risorsa.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#open-e-write",
+    "href": "capitoli/lezione5.html#open-e-write",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "6.2 open e write",
+    "text": "6.2 open e write\nLa funzione open apre un file e lo associa ad un oggetto file.\nL’argomento mode specifica la modalità di apertura del file, indicando se aprire un file per la lettura del file, per la scrittura nel file o per entrambi.\nCon la modalità w, Python crea il file nella cartella corrente se questo non esiste.\nDurante la lettura dal file è possibile iterare sull’oggetto file grazie al costrutto for\n\nfor line in file\n\nDove leggiamo una riga alla volta del file e la restituisce come stringa.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#readlines-e-seek",
+    "href": "capitoli/lezione5.html#readlines-e-seek",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "6.3 readlines e seek",
+    "text": "6.3 readlines e seek\nEsiste anche il metodo readlines() che può essere utilizzato per leggere un intero file di testo.\nIl metodo restituisce ogni riga del file come una stringa in una lista di stringhe\n\nATTENZIONE: Utilizzare readlines per file di grandi dimensioni può essere un’operazione che richiede molto tempo, e in tale tempo non possiamo utilizzare la lista di stringhe che viene restituita.\n\nIl metodo seek() ci permette di posizionare il puntatore alla riga corrente.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#modulo-os-per-la-gestione-file",
+    "href": "capitoli/lezione5.html#modulo-os-per-la-gestione-file",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "6.4 Modulo os per la gestione file",
+    "text": "6.4 Modulo os per la gestione file\nIl modulo os in Python consente di utilizzare funzionalità dipendenti dal sistema operativo in maniera semplice.\nPer la gestione dei file possiamo utilizzare le funzioni di rimozione e rinomina.\n\nimport os\n\nos.remove(\"...\")\nos.rename(\"file.txt\", \"FILE.txt\")",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#formattazione-delloutput",
+    "href": "capitoli/lezione5.html#formattazione-delloutput",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "6.5 Formattazione dell’output",
+    "text": "6.5 Formattazione dell’output\nFinora abbiamo visto 3 modi per scrivere valori su file\n\nDichiarazioni di espressione\nFunzione print()\nUso del metodo write() sugli oggetti\n\nPer avere un controllo maggiore sulla formattazione dell’output rispetto alla semplice stampa di valori separati da spazi esistono diversi modi in Python.\nÈ possibile utilizzare i cosiddetti formatted string literals. Per utilizzarli:\n\nIniziare una stringa con f o F prima del single quote o double quote\nAll’interno di questa stringa, si può scrivere un’espressione Python tra i caratteri {expression} che può fare riferimento a variabili o a valori letterali.\n\n\ntable = {'jack': 435, 'Gigi': 3645, 'giovanni': 55}\n\nfor name, number in table.items():\n    print(f\"{name:10} ==&gt; {number:10d}\")\n\njack       ==&gt;        435\nGigi       ==&gt;       3645\ngiovanni   ==&gt;         55\n\n\nPassando un intero dopo :, il campo sarà largo un numero minimo di caratteri. Questo è utile per allineare le colonne",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#altri-tipi-di-eccezione",
+    "href": "capitoli/lezione5.html#altri-tipi-di-eccezione",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "7.1 Altri tipi di eccezione",
+    "text": "7.1 Altri tipi di eccezione\n\nelse\n\nil body di questo ramo è eseguito quando l’esecuzione del blocco try associato completa senza interruzioni\n\nfinally\n\nil body di questo ramo è sempre eseguito dopo il blocco try,else e except, anche se si sollevino altri errori o si esegue un break,continue o return.\nÈ utile per invocare codice di clean-up che dovrebbero essere eseguito a prescindere da quello che è accaduto.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#cosa-fare-con-le-eccezioni",
+    "href": "capitoli/lezione5.html#cosa-fare-con-le-eccezioni",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "7.2 Cosa fare con le eccezioni?",
+    "text": "7.2 Cosa fare con le eccezioni?\n\nFallire in maniera silente:\n\nSostituire i valori di default oppure continuare e basta\nma l’utente finale non sarà avvisato con nessun warning\n\nRitornare un valore di “errore”:\n\nIl problema è scegliere il valore di errore adatto\nPotremmo complicare di molto il codice\n\nFermare l’esecuzione, segnalare una condizione di errore:\n\nIn Python: raise an exception (analogo di throw in Java)\nraise Exception(\"descriptive string)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione5.html#istruzione-raise",
+    "href": "capitoli/lezione5.html#istruzione-raise",
+    "title": "5  Passaggio parametri, *args, **kwargs",
+    "section": "7.3 Istruzione raise",
+    "text": "7.3 Istruzione raise\nUsato per sollevare un’eccezione quando non siamo capaci di fornire un risultato coerente con la specifica di una funzione.\n\nraise ValueError(\"Something is wrong\")\n\n\n---------------------------------------------------------------------------\nValueError                                Traceback (most recent call last)\nCell In[4], line 1\n----&gt; 1 raise ValueError(\"Something is wrong\")\n\nValueError: Something is wrong",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
+    ]
+  }
+]
