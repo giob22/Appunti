@@ -488,5 +488,215 @@
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
     ]
+  },
+  {
+    "objectID": "capitoli/lezione6.html",
+    "href": "capitoli/lezione6.html",
+    "title": "6  Eccezioni",
+    "section": "",
+    "text": "6.1 Altri tipi di eccezione\nTipi di eccezioni che abbiamo incontrato e che incontriamo comunemente alla prime armi sono:\nCosa accade quando una funzione esegue del codice che produce codizioni non attese?\nViene sollevata un’eccezione (exception).\nLe eccezioni sono anche esse degli oggetti che ereditano da un unica classe padre, dopo Object, BaseException.\nIl codice Python può fornire handlers per le eccezioni:\nLe eccezioni sono:\nÈ raccomandato avere separate le clausole except per gestire un tipo particolare di eccezione.\nI blocchi except devono essere posizionati dal più specifico al più generico, in base alla gerarchia delle eccezioni.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Eccezioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione6.html#altri-tipi-di-eccezione",
+    "href": "capitoli/lezione6.html#altri-tipi-di-eccezione",
+    "title": "6  Eccezioni",
+    "section": "",
+    "text": "else\n\nil body di questo ramo è eseguito quando l’esecuzione del blocco try associato completa senza interruzioni\n\nfinally\n\nil body di questo ramo è sempre eseguito dopo il blocco try,else e except, anche se si sollevino altri errori o si esegue un break,continue o return.\nÈ utile per invocare codice di clean-up che dovrebbero essere eseguito a prescindere da quello che è accaduto.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Eccezioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione6.html#cosa-fare-con-le-eccezioni",
+    "href": "capitoli/lezione6.html#cosa-fare-con-le-eccezioni",
+    "title": "6  Eccezioni",
+    "section": "6.2 Cosa fare con le eccezioni?",
+    "text": "6.2 Cosa fare con le eccezioni?\n\nFallire in maniera silente:\n\nSostituire i valori di default oppure continuare e basta\nma l’utente finale non sarà avvisato con nessun warning\n\nRitornare un valore di “errore”:\n\nIl problema è scegliere il valore di errore adatto\nPotremmo complicare di molto il codice\n\nFermare l’esecuzione, segnalare una condizione di errore:\n\nIn Python: raise an exception (analogo di throw in Java)\nraise Exception(\"descriptive string)",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Eccezioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione6.html#istruzione-raise",
+    "href": "capitoli/lezione6.html#istruzione-raise",
+    "title": "6  Eccezioni",
+    "section": "6.3 Istruzione raise",
+    "text": "6.3 Istruzione raise\nUsato per sollevare un’eccezione quando non siamo capaci di fornire un risultato coerente con la specifica di una funzione.\n\nraise ValueError(\"Something is wrong\")\n\n\n---------------------------------------------------------------------------\nValueError                                Traceback (most recent call last)\nCell In[11], line 1\n----&gt; 1 raise ValueError(\"Something is wrong\")\n\nValueError: Something is wrong\n\n\n\nQuesto è il metodo corretto quando non siamo capaci di fornire un risultato coerente con la specifica della funzione.\nDeve essere utilizzato al posto di ritornare un “valore speciale” che identifica un errore nell’esecuzione del codice.\n\n\n6.3.1 Esempio: sollevare una eccezione:\n\ndef get_ratios(L1, L2):\n    \"\"\" Assumes: L1 and L2 are lists of equal length of numbers\n    Returns: a list containing L1[i]/L2[i] \"\"\"\n    ratios = []\n    for index in range(len(L1)):\n        try:\n            ratios.append(L1[index]/L2[index])\n        except ZeroDivisionError:\n            ratios.append(float('nan')) #nan = not a number\n        except:\n            raise ValueError('get_ratios called with bad arg')\n    return ratios\n\nl1 = [1,0,1]\nl2 = [2,1,0]\n\nget_ratios(l1,l2)\nget_ratios(\"ciao\",\"mondo\")\n\n[0.5, 0.0, nan]\n\n\n\n\n6.3.1.1 Esempio: gestione delle eccezioni\nAssumiamo di avere una lista che descrive uno studente e voti presi degli esami\n\nOgni elemento è una lista composta da due parti\n\nuna lista che include nome e cognome di uno studente\nuna lista dei voti degli esercizi\n\n\nE vogliamo creare una nuova lista con nome, cognome, voti e media\n\ntest_grades = [[['peter', 'parker'], [10.0, 5.0, 85.0]],\n[['bruce', 'wayne'], [10.0, 8.0, 74.0]],\n[['captain', 'america'], [8.0,10.0,96.0]],\n[['deadpool'], []]]\n\n[[['peter', 'parker'], [10.0, 5.0, 85.0]], [['bruce', 'wayne'], [10.0, 8.0, 74.0]], [['captain', 'america'], [8.0, 10.0, 96.0]], [['deadpool'], []]]\n\n\nIn questo caso se uno studente ha zero voti dovremmo ottenere un errore e gestirlo perché ad un certo punto avremo:\nsum(grades)/len(grades), ma len(grades) == 0\\(\\rightarrow\\)True\n\n# ritorna le statistiche per soggetto\ndef get_stats(class_list):\n    new_stats = []\n    for elt in class_list:\n        new_stats.append([elt[0], elt[1], avg(elt[1])])\n    return new_stats\n# calcola la media dei punteggi\ndef avg(grades):\n    return sum(grades)/len(grades)\n\nAbbiamo principalmente due modalità per la gestione delle eccezioni:\n\ngestione dell’eccezione diretta\ngestione dell’eccezione indiretta\n\nVediamo prima il caso di gestione dell’eccezione diretta:\n\ndef avg(grades):\n    try:\n        return sum(grades)/len(grades)\n    except ZeroDivisionError:\n        print(\"warning: no grades data\")\n        #return 0.0 # altrimenti ritornerebbe None\nprint(get_stats(test_grades))\n\nwarning: no grades data\n[[['peter', 'parker'], [10.0, 5.0, 85.0], 33.333333333333336], [['bruce', 'wayne'], [10.0, 8.0, 74.0], 30.666666666666668], [['captain', 'america'], [8.0, 10.0, 96.0], 38.0], [['deadpool'], [], None]]\n\n\nInvece se utilizzassimo una gestione dell’eccezione indiretta avremo:\n\ndef avg(grades):\n    try:\n        return sum(grades)/len(grades)\n    except ZeroDivisionError as e:\n        raise e\nprint(get_stats(test_grades))\n\n\n---------------------------------------------------------------------------\nZeroDivisionError                         Traceback (most recent call last)\nCell In[7], line 6\n      4     except ZeroDivisionError as e:\n      5         raise e\n----&gt; 6 print(get_stats(test_grades))\n\nCell In[3], line 5, in get_stats(class_list)\n      3 new_stats = []\n      4 for elt in class_list:\n----&gt; 5     new_stats.append([elt[0], elt[1], avg(elt[1])])\n      6 return new_stats\n\nCell In[7], line 5, in avg(grades)\n      3     return sum(grades)/len(grades)\n      4 except ZeroDivisionError as e:\n----&gt; 5     raise e\n\nCell In[7], line 3, in avg(grades)\n      1 def avg(grades):\n      2     try:\n----&gt; 3         return sum(grades)/len(grades)\n      4     except ZeroDivisionError as e:\n      5         raise e\n\nZeroDivisionError: division by zero\n\n\n\nIn questa modalità decidiamo di risollevare l’eccezione intercettata tramite il costrutto as.\nDelegando di fatto la gestione dell’eccezione al chiamante.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Eccezioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione6.html#python-e-throws",
+    "href": "capitoli/lezione6.html#python-e-throws",
+    "title": "6  Eccezioni",
+    "section": "6.4 Python e throws",
+    "text": "6.4 Python e throws\nIn Python non esiste la direttiva throws, che permetteva in Java di specificare se un metodo potesse sollevare o meno una certa eccezione.\nIn Python è possibile specificare questo solo nella documentazione (docstrings).\nL’alternativa sarebbe quella di utilizzare dei decorator per annotare il codice specificando il comportamento per specificare l’eccezione.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Eccezioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione6.html#asserzioni-in-python",
+    "href": "capitoli/lezione6.html#asserzioni-in-python",
+    "title": "6  Eccezioni",
+    "section": "6.5 Asserzioni in Python",
+    "text": "6.5 Asserzioni in Python\nVogliamo essere sicuri che certe assunzioni su una particolare condizione siano come attese.\nSe una certa condizione non risulta vera, Python consente, attraverso assert, di sollevare un’eccezione di tipo AssertionError.\n\n\nNOTA BENE: nel linguaggio C, assert termina il processo corrente. In Python, il programmatore dovrà gestire esplicitamente la terminazione (eventuale) del processo in cui è fallita un’asserzione.\n\n\nL’utilizzo di asserzioni è un buon esempio di defensive programming.\n\ndef avg(grades):\n    assert len(grades) != 0, 'no grades data'\n    return sum(grades)/len(grades)\n\nprint(get_stats(test_grades))\n\n\n---------------------------------------------------------------------------\nAssertionError                            Traceback (most recent call last)\nCell In[8], line 5\n      2     assert len(grades) != 0, 'no grades data'\n      3     return sum(grades)/len(grades)\n----&gt; 5 print(get_stats(test_grades))\n\nCell In[3], line 5, in get_stats(class_list)\n      3 new_stats = []\n      4 for elt in class_list:\n----&gt; 5     new_stats.append([elt[0], elt[1], avg(elt[1])])\n      6 return new_stats\n\nCell In[8], line 2, in avg(grades)\n      1 def avg(grades):\n----&gt; 2     assert len(grades) != 0, 'no grades data'\n      3     return sum(grades)/len(grades)\n\nAssertionError: no grades data\n\n\n\n\n6.5.1 Asserzioni per programmazione difensiva\n\nLe asserzioni non consentono al programmatore di controllare la risposta a condizione inattese.\nAssicurano di terminare l’esecuzione non appena la condizione nell’asserzione fallisce.\nTipicamente sono usate per controllare gli input di una funzione, ma possono essere usate anche per altri motivi.\nPossono facilitare la ricerca di bug\n\n\n\n6.5.2 Dove usare le asserzioni?\n\nL’obiettivo è trovare bug il prima possibile ed eliminarli quando si palesano\nPer il testing\nSollevare exceptions se l’utente fornisce valori errati in input\nUsare le assertions per:\n\nControllare tipi dei paramentri/valori\nControllare se esistono invarianti (regole che definiscono l’integrità dei dati) su strutture dati\nControllare il rispetto di vincoli sui valori di ritorno\nControllare violazioni di vincoli su funzioni",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Eccezioni</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html",
+    "href": "capitoli/lezione7.html",
+    "title": "7  OOP",
+    "section": "",
+    "text": "7.1 Oggetti\nIn Python tutto è un oggetto e ogni oggetto è un’istanza di una classe, e ha:\nTutte queste caratteristiche servono a descrivere un’astrazione dell’entità che la classe sta rappresentantando di cui un oggetto è una sua realizzazione.\nPython ci permette di creare nuovi oggetti di qualsiasi tipo, manipolarli e distruggerli.\nLa distruzione può essere sia eslpicita che implicita:\nGli oggetti sono astrazioni di dati che includono:",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#oggetti",
+    "href": "capitoli/lezione7.html#oggetti",
+    "title": "7  OOP",
+    "section": "",
+    "text": "Una rappresentazione interna:\n\nattraverso attributi dati membro\n\nUna interfaccia per l’interazione con l’oggetto\n\nattraverso i metodi membro\ni quali definiscono il comportamento dell’oggetto, ma nascondono l’implementazione (information hiding)",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#implementazione-di-una-classe",
+    "href": "capitoli/lezione7.html#implementazione-di-una-classe",
+    "title": "7  OOP",
+    "section": "7.2 Implementazione di una classe",
+    "text": "7.2 Implementazione di una classe\n\nclass Coordinate(object):\n    # define attributes here\n    pass\n\nLa parola object significa che Coordinate è un oggetto Python ed eredita tutti i suoi attributi.\n\nCoordinate è una sottoclasse di object.\nobject è una superclasse di Coordinate.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#attributi-e-attributi-procedurali",
+    "href": "capitoli/lezione7.html#attributi-e-attributi-procedurali",
+    "title": "7  OOP",
+    "section": "7.3 Attributi e attributi procedurali",
+    "text": "7.3 Attributi e attributi procedurali\nDati e procedure appartengono alla classe.\n\nAttributi dati:\n\nSono altri oggetti che descrivono la struttura interna della classe\n\nAttributi procedurali (metodi)\n\nFunzioni che possono essere utilizzate solo nel contesto della classe\nPermettono di interagire con l’oggetto istanza della classe definita",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#come-creare-unistanza-di-una-classe",
+    "href": "capitoli/lezione7.html#come-creare-unistanza-di-una-classe",
+    "title": "7  OOP",
+    "section": "7.4 Come creare un’istanza di una classe",
+    "text": "7.4 Come creare un’istanza di una classe\nLa definizione di un oggetto prevede l’uso di un costruttore come in tutti i linguaggi OOP.\nIn Python, per creare una nuova istanza della classe si utilizza __new__(Class)\n\nÈ un metodo statico che prende come primo argomento la classe di cui è stata richiesta un’istanza.\nIl valore di ritorno di __new__() è l’istanza del nuovo oggetto.\n\n\nclass Coordinate(object):\n    def __init__(self,x):\n        self.x = x\n\n\norigine = Coordinate.__new__(Coordinate)\n# print(origine.x) Errore\n\nif isinstance(origine, Coordinate):\n    print(\"origine è una coordinata\")\n    origine.__init__(3)\n    print(f\"x: {origine.x}\")\n\norigine è una coordinata\nx: 3\n\n\nQuindi __new__ è il costruttore di una classe, che può essere ridefinito a piacimento, mentre __init__ mi permette di inizializzare l’oggetto della classe.\n\n__new__ permette di modificare l’allocazione in memoria degli oggetti di una classe.\n\n__new__ si occupa di fabbricare la scatola\n__init__ si occupa di cosa è contenuto nella scatola\n\n\nLe implementazioni tipiche di un costruttore creano una nuova istanza della classe invocando il metodo __new__() della superclasse, usando super().__new__(cls, [...]).\nPossiamo realizzare un’istanza di una classe utilizzando direttamente il metodo __init__ poiché questo implicitamente richiama il metodo __new__ ridefinito dalla classe stessa o quella della super classe.\n\nLa parola chiave self rappresenta l’istanza della classe e lega gli attributi con gli argomenti dati (analogia con il puntatore this in Java/C++).\n__new__() è pensato principalmente per consentire alle sottoclassi di tipi immutabili di personalizzare la creazione di istanze, ovvero la loro allocazione in memoria.\n\n\n\n7.4.1 Attributi statici:\n\nclass Robot:\n    popolazione = 0\n\n\nprint(Robot.popolazione)\n\n0\n\n\nÈ possibile omettere le classi da cui eredita la classe che stiamo creando, essa implicitamente eredita dalla classe object.\n\nInvece di utilizzare esplicitamente il metodo __init__ possiamo utilizzare il nome stesso della classe per inizializzare un oggetto: essa richiama direttamente il metodo __init__ il quale a sua volta richiama il metodo __new__.\n\nr = Coordinate(3)\n\nprint(r.x)\n\n3\n\n\nCome possiamo vedere non è possibile implementare alcuna sorta di information hiding poiché tutti gli attributi di una classe possono esser direttamente acceduti avendo a disposizione l’oggetto della classe.\nQuindi non è necessario implementare i metodi getter e setter anche se è comunque una buona pratica farlo.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#metodo-__del__",
+    "href": "capitoli/lezione7.html#metodo-__del__",
+    "title": "7  OOP",
+    "section": "7.5 Metodo __del__()",
+    "text": "7.5 Metodo __del__()\n__del()__ è il distruttore o finalizzatore di una classe.\nEsso viene invocato quando l’istanza sta per essere distrutta.\n\nSe una classe base ha un metodo __del__() allora esso deve esser chiamato esplicitamente se la classe figlia ridefinisce il comportamento di __del__().\nNormalmente non è necessario ridefinire il comportamento di tale metodo\n\nQuesto metodo viene chiamato implicitamente se definito nel momento in cui non esistono più riferimenti validi all’oggetto. Viene utilizzato il metodo del Reference Counting, ovvero non appena il contatore dei riferimenti scende a zero, Python si accorge che l’oggetto è inutile e invoca __del__() prima di liberare memoria, se il metodo è definito.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#metodi-di-classe",
+    "href": "capitoli/lezione7.html#metodi-di-classe",
+    "title": "7  OOP",
+    "section": "7.6 Metodi di classe",
+    "text": "7.6 Metodi di classe\nSono attributi procedurali, ovvero funzioni che possono essere utilizzate solo nel contesto della classe in cui sono definiti.\n\nPython, di default, passa sempre un oggetto come primo parametro alla chiamata di un metodo.\n\nPer convenzione si utilizza il parametro self come nome del primo parametro di tutti i metodi di una classe.\n\nL’operatore . è utilizzato per accedere agli attributi di una classe\n\nUn attributo dato di un oggetto\nUn metodo di un oggetto\n\n\nEccetto per self e la notazione ., i metodi di una classe si comportano semplicemente come funzioni.\n\nclass Coordinate(object):\n    def init (self, x, y):\n        self.x = x\n        self.y = y\n    def distance(self, other):\n        x_diff_sq = (self.x-other.x)**2\n        y_diff_sq = (self.y-other.y)**2\n        return (x_diff_sq + y_diff_sq)**0.5\n\n\n7.6.1 Come utilizzare un metodo:\nEsistono principalmente due modi per utilizzare un metodo, uno convenzionale e un equivalente (sconsigliato)\n\nclass Coordinate(object):\n    def __init__ (self, x, y):\n        self.x = x\n        self.y = y\n    def distance(self, other):\n        x_diff_sq = (self.x-other.x)**2\n        y_diff_sq = (self.y-other.y)**2\n        return (x_diff_sq + y_diff_sq)**0.5\n\nc = Coordinate(3,4)\nzero = Coordinate(0,0)\n\n# CONVENZIONALE\nprint(c.distance(zero))\n\n# EQUIVALENTE\nprint(Coordinate.distance(c,zero))\n\n5.0\n5.0",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#metodo-__str__",
+    "href": "capitoli/lezione7.html#metodo-__str__",
+    "title": "7  OOP",
+    "section": "7.7 Metodo __str__",
+    "text": "7.7 Metodo __str__\nDi Default la print di un oggetto restituisce una rappresentazione non informative\nDobbiamo ridefinire il metodo __str__ per una classe se vogliamo fornire info diverse\nPython chiama __str__ quando invochiamo la print su un oggetto istanza di una classe\n\nclass Coordinate(object):\n    def __init__ (self, x, y):\n        self.x = x\n        self.y = y\n    def distance(self, other):\n        x_diff_sq = (self.x-other.x)**2\n        y_diff_sq = (self.y-other.y)**2\n        return (x_diff_sq + y_diff_sq)**0.5\n\nc = Coordinate(1,2)\nprint(c)\n\nclass Coordinate(object):\n    def __init__ (self, x, y):\n        self.x = x\n        self.y = y\n    def distance(self, other):\n        x_diff_sq = (self.x-other.x)**2\n        y_diff_sq = (self.y-other.y)**2\n        return (x_diff_sq + y_diff_sq)**0.5\n    def __str__(self):\n        return f\"&lt;{self.x},{self.y}&gt;\"\nc = Coordinate(1,2)\nprint(c)\n\n&lt;__main__.Coordinate object at 0x7f9c1eef1400&gt;\n&lt;1,2&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#tipi-e-classi",
+    "href": "capitoli/lezione7.html#tipi-e-classi",
+    "title": "7  OOP",
+    "section": "7.8 Tipi e Classi",
+    "text": "7.8 Tipi e Classi\nPossiamo verificare il tipo di un oggetto utilizzando il metodo isinstance() mentre possiamo ottenere il tipo di un oggetto utilizzando la funzione type()\n\nx = 3\nprint(type(x))\n\nif isinstance(x, int):\n    print(\"È un intero\")\n\n&lt;class 'int'&gt;\nÈ un intero",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#operatori-speciali",
+    "href": "capitoli/lezione7.html#operatori-speciali",
+    "title": "7  OOP",
+    "section": "7.9 Operatori speciali",
+    "text": "7.9 Operatori speciali\nCome per la funzione __str__ possiamo fare l’override di questi operatori nel contesto della definizione di una classe\n\n\n\nAttributo procedurale\nOperatore\n\n\n\n\n__add__(self, other)\nself + other\n\n\n__sub__(self,other)\nself - other\n\n\n__eq__(self, other)\nself == other\n\n\n__lt__(self, other)\nself &lt; other\n\n\n__len__(self)\nlen(self)\n\n\netc\n…",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#metodi-getter-e-setter",
+    "href": "capitoli/lezione7.html#metodi-getter-e-setter",
+    "title": "7  OOP",
+    "section": "7.10 Metodi getter e setter",
+    "text": "7.10 Metodi getter e setter\ngetters e setters devono esser utilizzati al di fuori della classe per accedere ai dati membro (information hiding).",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#information-hiding-in-python",
+    "href": "capitoli/lezione7.html#information-hiding-in-python",
+    "title": "7  OOP",
+    "section": "7.11 Information hiding in Python",
+    "text": "7.11 Information hiding in Python\nPython non è un buon linguaggio di programmazione per l’information hiding!!\n\nConsente di accedere ai dati all’esterno di una definizione di classe\nConsente di scrivere i dati dall’esterno di una definizione di classe\nConsente di creare dati membro per un oggetto dall’esterno di una definizione di classe\n\nNessuno di questi esempi rientra nei buoni modi di programmare considerando l’information hiding.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#ereditarietà-multipla",
+    "href": "capitoli/lezione7.html#ereditarietà-multipla",
+    "title": "7  OOP",
+    "section": "8.1 Ereditarietà multipla",
+    "text": "8.1 Ereditarietà multipla\n\nclass A:\n    def m(self):\n        print(\"m of A called\")\nclass B(A):\n    def m(self):\n        print(\"m of B called\")\nclass C(A):\n    def m(self):\n        print(\"m of C called\")\nclass D(C,B):\n    pass\n\nAbbiamo parlato di ereditarietà, o più specificamente di ereditarietà singola. In questo caso una classe eredita da una sola classe.\nL’ereditarietà multipla, invece, è una caratteristica in cui una classe può ereditare attributi e metodi da più di una classe genitore.\nL’ereditarietà multipla comporta un elevato livello di complessità e ambiguità in situazioni come il problema del diamante (diamond problem).",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#il-problema-del-diamante-o-il-diamante-mortale",
+    "href": "capitoli/lezione7.html#il-problema-del-diamante-o-il-diamante-mortale",
+    "title": "7  OOP",
+    "section": "8.2 Il problema del diamante o il “diamante mortale”",
+    "text": "8.2 Il problema del diamante o il “diamante mortale”\nIl problema del diamante è il termine generalmente usato per indicare un’ambiguità che si presenta quando:\n\nDue classi B e C ereditano da una superclasse A\nUn’altra classe D eredita sia da B che da C\nSe c’è un metodo m in A per il quale B o C (o addirittura entrambi) hanno fatto un override, e se D non fa l’override di questo metodo, allora quale versione del metodo eredita D?\n\n\nclass A:\n    def m(self):\n        print(\"m of A called\")\nclass B(A):\n    def m(self):\n        print(\"m of B called\")\nclass C(A):\n    def m(self):\n        print(\"m of C called\")\nclass D(B,C):\n    pass\n\na = A()\nb = B()\nc = C()\nd = D()\n\nprint(\"Call m on object A: \")\na.m()\nprint(\"Call m on object B: \")\nb.m()\nprint(\"Call m on object C: \")\nc.m()\nprint(\"Call m on object D: \")\nd.m()\n\nCall m on object A: \nm of A called\nCall m on object B: \nm of B called\nCall m on object C: \nm of C called\nCall m on object D: \nm of B called",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
+  },
+  {
+    "objectID": "capitoli/lezione7.html#variabili-statiche-di-una-classe",
+    "href": "capitoli/lezione7.html#variabili-statiche-di-una-classe",
+    "title": "7  OOP",
+    "section": "8.3 Variabili statiche di una classe",
+    "text": "8.3 Variabili statiche di una classe\nLe variabili statiche in Python sono dette anche variabili di classe, e i loro valori sono condivisi tra tutte le istanze (oggetti) di una classe.\nPossono essere modificate dalla classe stessa invece che attraverso un’istanza di tale classe.\nCaratteristiche: - Allocate in memoria una volta sola - Create al di fuori dei metodi, ma all’interno di una classe - Si può accedere alle variabili statiche attraverso una classe, ma non direttamente con un’istanza (pericoloso per la scrittura) - Il comportamento delle variabili statiche non cambia al variare dell’oggetto\n\nclass oggetto:\n    variabile_statica = 23\n\n    def __int__(self):\n        pass\n\no = oggetto()\n\nprint(o.variabile_statica)\nprint(oggetto.variabile_statica)\n# problema della scrittura\n\no.variabile_statica = 0\n\nprint(o.variabile_statica)\nprint(oggetto.variabile_statica)\n\n\n\n23\n23\n0\n23\n\n\nQuando l’interprete Python ha eseguito o.variabili_statica non ha considerato la variabile statica effettiva ma ha creato un nuovo attributo dato all’interno della classe.\nIl motivo è che, quando chiedi a Python istanza.nome_variabile, lui segue un ordine preciso:\n\nCerca dentro l’istanza (nel suo dizionario dict).\nSe non la trova, cerca nella classe (variabili statiche).\nSe non la trova, cerca nelle classi base (ereditarietà).\n\nIl problema è che nella scrittura Python ha cercato dentro l’istanza, non ha trovato nulla, allora ha creato una nuova variabile di istanza.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>OOP</span>"
+    ]
   }
 ]

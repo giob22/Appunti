@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.34">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>7&nbsp; OOP – ACP</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../capitoli/lezione6.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-73db7b5a953198da8f17fc5313e632aa.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-44ee0976171e9be92e6ebe9be850cd66.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitoli/lezione7.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OOP</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">ACP</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appunti ACP</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione a Python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Funzioni</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Funzioni: continuo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tuple, Liste, Dizionari</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Passaggio parametri, <code>*args</code>, <code>**kwargs</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Eccezioni</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione7.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OOP</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#oggetti" id="toc-oggetti" class="nav-link active" data-scroll-target="#oggetti"><span class="header-section-number">7.1</span> Oggetti</a></li>
+  <li><a href="#implementazione-di-una-classe" id="toc-implementazione-di-una-classe" class="nav-link" data-scroll-target="#implementazione-di-una-classe"><span class="header-section-number">7.2</span> Implementazione di una classe</a></li>
+  <li><a href="#attributi-e-attributi-procedurali" id="toc-attributi-e-attributi-procedurali" class="nav-link" data-scroll-target="#attributi-e-attributi-procedurali"><span class="header-section-number">7.3</span> Attributi e attributi procedurali</a></li>
+  <li><a href="#come-creare-unistanza-di-una-classe" id="toc-come-creare-unistanza-di-una-classe" class="nav-link" data-scroll-target="#come-creare-unistanza-di-una-classe"><span class="header-section-number">7.4</span> Come creare un’istanza di una classe</a>
+  <ul class="collapse">
+  <li><a href="#attributi-statici" id="toc-attributi-statici" class="nav-link" data-scroll-target="#attributi-statici"><span class="header-section-number">7.4.1</span> Attributi statici:</a></li>
+  </ul></li>
+  <li><a href="#metodo-__del__" id="toc-metodo-__del__" class="nav-link" data-scroll-target="#metodo-__del__"><span class="header-section-number">7.5</span> Metodo <code>__del__()</code></a></li>
+  <li><a href="#metodi-di-classe" id="toc-metodi-di-classe" class="nav-link" data-scroll-target="#metodi-di-classe"><span class="header-section-number">7.6</span> Metodi di classe</a>
+  <ul class="collapse">
+  <li><a href="#come-utilizzare-un-metodo" id="toc-come-utilizzare-un-metodo" class="nav-link" data-scroll-target="#come-utilizzare-un-metodo"><span class="header-section-number">7.6.1</span> Come utilizzare un metodo:</a></li>
+  </ul></li>
+  <li><a href="#metodo-__str__" id="toc-metodo-__str__" class="nav-link" data-scroll-target="#metodo-__str__"><span class="header-section-number">7.7</span> Metodo <code>__str__</code></a></li>
+  <li><a href="#tipi-e-classi" id="toc-tipi-e-classi" class="nav-link" data-scroll-target="#tipi-e-classi"><span class="header-section-number">7.8</span> Tipi e Classi</a></li>
+  <li><a href="#operatori-speciali" id="toc-operatori-speciali" class="nav-link" data-scroll-target="#operatori-speciali"><span class="header-section-number">7.9</span> Operatori speciali</a></li>
+  <li><a href="#metodi-getter-e-setter" id="toc-metodi-getter-e-setter" class="nav-link" data-scroll-target="#metodi-getter-e-setter"><span class="header-section-number">7.10</span> Metodi <em>getter</em> e <em>setter</em></a></li>
+  <li><a href="#information-hiding-in-python" id="toc-information-hiding-in-python" class="nav-link" data-scroll-target="#information-hiding-in-python"><span class="header-section-number">7.11</span> <em>Information hiding</em> in Python</a></li>
+  <li><a href="#ereditarietà-in-python" id="toc-ereditarietà-in-python" class="nav-link" data-scroll-target="#ereditarietà-in-python"><span class="header-section-number">8</span> Ereditarietà in Python</a>
+  <ul class="collapse">
+  <li><a href="#override" id="toc-override" class="nav-link" data-scroll-target="#override"><span class="header-section-number">8.0.1</span> <em>Override</em></a></li>
+  <li><a href="#ereditarietà-multipla" id="toc-ereditarietà-multipla" class="nav-link" data-scroll-target="#ereditarietà-multipla"><span class="header-section-number">8.1</span> Ereditarietà multipla</a></li>
+  <li><a href="#il-problema-del-diamante-o-il-diamante-mortale" id="toc-il-problema-del-diamante-o-il-diamante-mortale" class="nav-link" data-scroll-target="#il-problema-del-diamante-o-il-diamante-mortale"><span class="header-section-number">8.2</span> Il problema del diamante o il “diamante mortale”</a></li>
+  <li><a href="#variabili-statiche-di-una-classe" id="toc-variabili-statiche-di-una-classe" class="nav-link" data-scroll-target="#variabili-statiche-di-una-classe"><span class="header-section-number">8.3</span> Variabili statiche di una classe</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OOP</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In Python tutto è un oggetto e ogni oggetto è <strong>un’istanza di una classe</strong>, e ha:</p>
+<ul>
+<li>Un <strong>tipo</strong> (la classe)</li>
+<li>Una <strong>rappresentazione dei dati</strong> interna</li>
+<li>Un insieme di procedure per <strong>l’interazione</strong> con altri oggetti</li>
+</ul>
+<p>Tutte queste caratteristiche servono a descrivere un’astrazione dell’entità che la classe sta rappresentantando di cui un oggetto è una sua realizzazione.</p>
+<p>Python ci permette di <strong>creare nuovi oggetti</strong> di qualsiasi tipo, manipolarli e distruggerli.</p>
+<p>La distruzione può essere sia eslpicita che implicita:</p>
+<ul>
+<li>Esplicitamente: usando <code>del</code> oppure implicitamente “dimenticandoci” di loro.</li>
+<li>Python effettuerà un <em>reclaim</em> degli oggetti distrutti o inaccessibili attraverso un sistema di “<strong>garbage collection</strong>”
+<ul>
+<li><blockquote class="blockquote">
+<p>il modulo <code>gc</code> ci permette di modificare alcuni parametri del sistema <strong>garbace collection</strong>, come ad esempio disabilitarlo o regolarne la frequenza.</p>
+</blockquote></li>
+</ul></li>
+</ul>
+<section id="oggetti" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="oggetti"><span class="header-section-number">7.1</span> Oggetti</h2>
+<p>Gli oggetti sono astrazioni di dati che includono:</p>
+<ul>
+<li>Una rappresentazione interna:
+<ul>
+<li>attraverso attributi dati membro</li>
+</ul></li>
+<li>Una interfaccia per l’interazione con l’oggetto
+<ul>
+<li>attraverso i metodi membro</li>
+<li>i quali definiscono il comportamento dell’oggetto, ma nascondono l’implementazione (<em>information hiding</em>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="implementazione-di-una-classe" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="implementazione-di-una-classe"><span class="header-section-number">7.2</span> Implementazione di una classe</h2>
+<div id="e8d0b019" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># define attributes here</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>La parola <code>object</code> significa che <code>Coordinate</code> è un oggetto Python ed <strong>eredita</strong> tutti i suoi attributi.</p>
+<ul>
+<li><code>Coordinate</code> è una sottoclasse di <code>object</code>.</li>
+<li><code>object</code> è una superclasse di <code>Coordinate</code>.</li>
+</ul>
+</section>
+<section id="attributi-e-attributi-procedurali" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="attributi-e-attributi-procedurali"><span class="header-section-number">7.3</span> Attributi e attributi procedurali</h2>
+<p>Dati e procedure appartengono alla classe.</p>
+<ul>
+<li><strong>Attributi dati</strong>:
+<ul>
+<li>Sono altri oggetti che descrivono la struttura interna della classe</li>
+</ul></li>
+<li><strong>Attributi procedurali (metodi)</strong>
+<ul>
+<li>Funzioni che possono essere utilizzate solo nel contesto della classe</li>
+<li>Permettono di interagire con l’oggetto istanza della classe definita</li>
+</ul></li>
+</ul>
+</section>
+<section id="come-creare-unistanza-di-una-classe" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="come-creare-unistanza-di-una-classe"><span class="header-section-number">7.4</span> Come creare un’istanza di una classe</h2>
+<p>La definizione di un oggetto prevede l’uso di un <strong>costruttore</strong> come in tutti i linguaggi <strong>OOP</strong>.</p>
+<p>In Python, per creare una nuova istanza della classe si utilizza <code>__new__(Class)</code></p>
+<ul>
+<li>È un metodo <strong>statico</strong> che prende come primo argomento la classe di cui è stata richiesta un’istanza.</li>
+<li>Il valore di ritorno di <code>__new__()</code> è l’istanza del <strong>nuovo oggetto</strong>.</li>
+</ul>
+<div id="845bd5f5" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>,x):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>origine <span class="op">=</span> Coordinate.<span class="fu">__new__</span>(Coordinate)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print(origine.x) Errore</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">isinstance</span>(origine, Coordinate):</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"origine è una coordinata"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    origine.<span class="fu">__init__</span>(<span class="dv">3</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"x: </span><span class="sc">{</span>origine<span class="sc">.</span>x<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>origine è una coordinata
+x: 3</code></pre>
+</div>
+</div>
+<p>Quindi <code>__new__</code> è il costruttore di una classe, che può essere ridefinito a piacimento, mentre <code>__init__</code> mi permette di inizializzare l’oggetto della classe.</p>
+<blockquote class="blockquote">
+<p><code>__new__</code> permette di modificare l’allocazione in memoria degli oggetti di una classe.</p>
+<ul>
+<li><code>__new__</code> si occupa di fabbricare la scatola</li>
+<li><code>__init__</code> si occupa di cosa è contenuto nella scatola</li>
+</ul>
+</blockquote>
+<p>Le implementazioni tipiche di un costruttore creano una nuova istanza della classe <strong>invocando il metodo</strong> <code>__new__()</code> <strong>della superclasse</strong>, usando <code>super().__new__(cls, [...])</code>.</p>
+<p>Possiamo realizzare un’istanza di una classe utilizzando direttamente il metodo <code>__init__</code> poiché questo implicitamente richiama il metodo <code>__new__</code> ridefinito dalla classe stessa o quella della super classe.</p>
+<ul>
+<li>La parola chiave <code>self</code> rappresenta l’istanza della classe e lega gli attributi con gli argomenti dati (analogia con il puntatore <code>this</code> in Java/C++).</li>
+<li><code>__new__()</code> è pensato principalmente per consentire alle sottoclassi di tipi immutabili di <strong>personalizzare la creazione di istanze</strong>, ovvero la loro allocazione in memoria.</li>
+</ul>
+<hr>
+<section id="attributi-statici" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="attributi-statici"><span class="header-section-number">7.4.1</span> Attributi statici:</h3>
+<div id="340989d7" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Robot:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    popolazione <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Robot.popolazione)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0</code></pre>
+</div>
+</div>
+<p>È possibile omettere le classi da cui eredita la classe che stiamo creando, essa implicitamente eredita dalla classe <code>object</code>.</p>
+<hr>
+<p>Invece di utilizzare esplicitamente il metodo <code>__init__</code> possiamo utilizzare il nome stesso della classe per inizializzare un oggetto: essa richiama direttamente il metodo <code>__init__</code> il quale a sua volta richiama il metodo <code>__new__</code>.</p>
+<div id="ddc19f23" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> Coordinate(<span class="dv">3</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3</code></pre>
+</div>
+</div>
+<p>Come possiamo vedere non è possibile implementare alcuna sorta di <em>information hiding</em> poiché tutti gli attributi di una classe possono esser direttamente acceduti avendo a disposizione l’oggetto della classe.</p>
+<p>Quindi non è necessario implementare i metodi <code>getter</code> e <code>setter</code> anche se è comunque una <strong>buona pratica farlo</strong>.</p>
+</section>
+</section>
+<section id="metodo-__del__" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="metodo-__del__"><span class="header-section-number">7.5</span> Metodo <code>__del__()</code></h2>
+<p><code>__del()__</code> è il <strong>distruttore</strong> o <strong>finalizzatore</strong> di una classe.</p>
+<p>Esso viene invocato quando l’istanza sta per essere distrutta.</p>
+<ul>
+<li>Se una classe base ha un metodo <code>__del__()</code> allora esso deve esser chiamato esplicitamente se la classe figlia ridefinisce il comportamento di <code>__del__()</code>.</li>
+<li>Normalmente non è necessario ridefinire il comportamento di tale metodo</li>
+</ul>
+<p>Questo metodo viene chiamato implicitamente se definito nel momento in cui non esistono più riferimenti validi all’oggetto. Viene utilizzato il metodo del <strong>Reference Counting</strong>, ovvero non appena il contatore dei riferimenti scende a zero, Python si accorge che l’oggetto è inutile e invoca <code>__del__()</code> prima di liberare memoria, se il metodo è definito.</p>
+</section>
+<section id="metodi-di-classe" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="metodi-di-classe"><span class="header-section-number">7.6</span> Metodi di classe</h2>
+<p>Sono <em>attributi procedurali</em>, ovvero <strong>funzioni che possono essere utilizzate solo nel contesto della classe in cui sono definiti</strong>.</p>
+<ul>
+<li>Python, di default, passa sempre un oggetto come primo parametro alla chiamata di un metodo.
+<ul>
+<li>Per convenzione si utilizza il parametro <code>self</code> come nome del primo parametro di tutti i metodi di una classe.</li>
+</ul></li>
+<li><strong>L’operatore</strong> <code>.</code> è utilizzato per accedere agli attributi di una classe
+<ul>
+<li>Un attributo dato di un oggetto</li>
+<li>Un metodo di un oggetto</li>
+</ul></li>
+</ul>
+<p>Eccetto per <code>self</code> e la notazione <code>.</code>, i metodi di una classe si comportano semplicemente come funzioni.</p>
+<div id="e2ab71ff" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, x, y):</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.y <span class="op">=</span> y</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> distance(<span class="va">self</span>, other):</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        x_diff_sq <span class="op">=</span> (<span class="va">self</span>.x<span class="op">-</span>other.x)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        y_diff_sq <span class="op">=</span> (<span class="va">self</span>.y<span class="op">-</span>other.y)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (x_diff_sq <span class="op">+</span> y_diff_sq)<span class="op">**</span><span class="fl">0.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="come-utilizzare-un-metodo" class="level3" data-number="7.6.1">
+<h3 data-number="7.6.1" class="anchored" data-anchor-id="come-utilizzare-un-metodo"><span class="header-section-number">7.6.1</span> Come utilizzare un metodo:</h3>
+<p>Esistono principalmente due modi per utilizzare un metodo, uno <strong>convenzionale</strong> e un <strong>equivalente</strong> (sconsigliato)</p>
+<div id="cec9d546" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.y <span class="op">=</span> y</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> distance(<span class="va">self</span>, other):</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        x_diff_sq <span class="op">=</span> (<span class="va">self</span>.x<span class="op">-</span>other.x)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        y_diff_sq <span class="op">=</span> (<span class="va">self</span>.y<span class="op">-</span>other.y)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (x_diff_sq <span class="op">+</span> y_diff_sq)<span class="op">**</span><span class="fl">0.5</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Coordinate(<span class="dv">3</span>,<span class="dv">4</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>zero <span class="op">=</span> Coordinate(<span class="dv">0</span>,<span class="dv">0</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># CONVENZIONALE</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(c.distance(zero))</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># EQUIVALENTE</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Coordinate.distance(c,zero))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.0
+5.0</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="metodo-__str__" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="metodo-__str__"><span class="header-section-number">7.7</span> Metodo <code>__str__</code></h2>
+<p>Di Default la <code>print</code> di un oggetto restituisce una rappresentazione <strong>non informative</strong></p>
+<p>Dobbiamo ridefinire il <strong>metodo</strong> <code>__str__</code> per una classe se vogliamo fornire info diverse</p>
+<p>Python chiama <code>__str__</code> quando invochiamo la <code>print</code> su un oggetto istanza di una classe</p>
+<div id="312a3c8d" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.y <span class="op">=</span> y</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> distance(<span class="va">self</span>, other):</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        x_diff_sq <span class="op">=</span> (<span class="va">self</span>.x<span class="op">-</span>other.x)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        y_diff_sq <span class="op">=</span> (<span class="va">self</span>.y<span class="op">-</span>other.y)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (x_diff_sq <span class="op">+</span> y_diff_sq)<span class="op">**</span><span class="fl">0.5</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Coordinate(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(c)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.y <span class="op">=</span> y</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> distance(<span class="va">self</span>, other):</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        x_diff_sq <span class="op">=</span> (<span class="va">self</span>.x<span class="op">-</span>other.x)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        y_diff_sq <span class="op">=</span> (<span class="va">self</span>.y<span class="op">-</span>other.y)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (x_diff_sq <span class="op">+</span> y_diff_sq)<span class="op">**</span><span class="fl">0.5</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__str__</span>(<span class="va">self</span>):</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"&lt;</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>x<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>y<span class="sc">}</span><span class="ss">&gt;"</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Coordinate(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;__main__.Coordinate object at 0x7f9c1eef1400&gt;
+&lt;1,2&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="tipi-e-classi" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="tipi-e-classi"><span class="header-section-number">7.8</span> Tipi e Classi</h2>
+<p>Possiamo verificare il tipo di un oggetto utilizzando il metodo <code>isinstance()</code> mentre possiamo ottenere il tipo di un oggetto utilizzando la funzione <code>type()</code></p>
+<div id="8333ada5" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(x))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">isinstance</span>(x, <span class="bu">int</span>):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"È un intero"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'int'&gt;
+È un intero</code></pre>
+</div>
+</div>
+</section>
+<section id="operatori-speciali" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="operatori-speciali"><span class="header-section-number">7.9</span> Operatori speciali</h2>
+<p>Come per la funzione <code>__str__</code> possiamo fare l’<em>override</em> di questi operatori nel contesto della definizione di una classe</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Attributo procedurale</th>
+<th style="text-align: left;">Operatore</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>__add__(self, other)</code></td>
+<td style="text-align: left;"><code>self + other</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>__sub__(self,other)</code></td>
+<td style="text-align: left;"><code>self - other</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>__eq__(self, other)</code></td>
+<td style="text-align: left;"><code>self == other</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>__lt__(self, other)</code></td>
+<td style="text-align: left;"><code>self &lt; other</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>__len__(self)</code></td>
+<td style="text-align: left;"><code>len(self)</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">etc</td>
+<td style="text-align: left;">…</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="metodi-getter-e-setter" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="metodi-getter-e-setter"><span class="header-section-number">7.10</span> Metodi <em>getter</em> e <em>setter</em></h2>
+<p><strong>getters</strong> e <strong>setters</strong> devono esser utilizzati al di fuori della classe per accedere ai dati membro (<em>information hiding</em>).</p>
+</section>
+<section id="information-hiding-in-python" class="level2" data-number="7.11">
+<h2 data-number="7.11" class="anchored" data-anchor-id="information-hiding-in-python"><span class="header-section-number">7.11</span> <em>Information hiding</em> in Python</h2>
+<p>Python <strong>non è un buon linguaggio di programmazione per l’information hiding!!</strong></p>
+<ul>
+<li>Consente di accedere ai dati all’esterno di una definizione di classe</li>
+<li>Consente di scrivere i dati dall’esterno di una definizione di classe</li>
+<li>Consente di <strong>creare dati membro</strong> per un oggetto dall’esterno di una definizione di classe</li>
+</ul>
+<p>Nessuno di questi esempi rientra nei <strong>buoni modi di programmare considerando l’<em>information hiding</em></strong>.</p>
+</section>
+<section id="ereditarietà-in-python" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Ereditarietà in Python</h1>
+<ul>
+<li>Class padre (superclass)</li>
+<li>Class figlia (subclass)
+<ul>
+<li>eredita tutti i dati e metodi membro della classe padre</li>
+<li>aggiunge più info</li>
+<li>aggiunge più comportamenti</li>
+<li>sovrascrive comportamenti</li>
+</ul></li>
+<li>Python <strong>supporta anche l’ereditarietà multipla</strong></li>
+</ul>
+<p><img src="img/ereditarieta.png" class="img-fluid"></p>
+<div id="34ac7bc4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Animal(<span class="bu">object</span>):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, age):</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.age <span class="op">=</span> age</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.name <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_age(<span class="va">self</span>):</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.age</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_name(<span class="va">self</span>):</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.name</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> set_age(<span class="va">self</span>, newage):</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.age <span class="op">=</span> newage</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> set_name(<span class="va">self</span>, newname<span class="op">=</span><span class="st">""</span>):</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.name <span class="op">=</span> newname</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="bu">str</span> (<span class="va">self</span>):</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"animal:"</span><span class="op">+</span><span class="bu">str</span>(<span class="va">self</span>.name)<span class="op">+</span><span class="st">":"</span><span class="op">+</span><span class="bu">str</span>(<span class="va">self</span>.age)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>La classe <code>Animal</code> eredita dalla classe base <code>object</code>.</li>
+<li>La classe <code>object</code> implementa tutte le operazioni di base in Python, come il binding di variabili, etc</li>
+</ul>
+<p>Una classe che eredita da un’altra classe ha la possibilità di modificare alcuni comportamenti o aggiungere nuove funzionalità:</p>
+<div id="6de94da7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Cat(Animal):</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> speak(<span class="va">self</span>): <span class="co"># nuova funzionalità</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"meow"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__str__</span>(<span class="va">self</span>): <span class="co"># ridefinizione</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"cat:"</span><span class="op">+</span><span class="bu">str</span>(<span class="va">self</span>.name)<span class="op">+</span><span class="st">":"</span><span class="op">+</span><span class="bu">str</span>(<span class="va">self</span>.age)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Il metodo <code>__init__</code> non è mancante, viene riutilizzato quello fornito dalla classe padre (<code>Animal</code>)</p>
+<section id="override" class="level3" data-number="8.0.1">
+<h3 data-number="8.0.1" class="anchored" data-anchor-id="override"><span class="header-section-number">8.0.1</span> <em>Override</em></h3>
+<p>Una sottoclasse può avere dei metodi con lo stesso nome di quelli forniti dalla superclasse. Quando si invoca tale metodo allora:</p>
+<ul>
+<li>si cerca dapprima il nome del metodo nella definizione di classe corrente</li>
+<li>se il metodo non viene trovato, si cerca il metodo <strong>risalendo la gerarchia</strong></li>
+<li>si usa il primo metodo trovato risalendo la gerarchia</li>
+</ul>
+</section>
+<section id="ereditarietà-multipla" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="ereditarietà-multipla"><span class="header-section-number">8.1</span> Ereditarietà multipla</h2>
+<div id="cfb2f742" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A:</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of A called"</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> B(A):</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of B called"</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> C(A):</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of C called"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> D(C,B):</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Abbiamo parlato di ereditarietà, o più specificamente di ereditarietà singola. In questo caso una classe eredita da una sola classe.</p>
+<p><strong>L’ereditarietà multipla</strong>, invece, è una caratteristica in cui una classe <strong>può ereditare attributi e metodi da più di una classe genitore</strong>.</p>
+<p>L’ereditarietà multipla comporta un <strong>elevato livello di complessità e ambiguità</strong> in situazioni come il <strong>problema del diamante</strong> (<em>diamond problem</em>).</p>
+</section>
+<section id="il-problema-del-diamante-o-il-diamante-mortale" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="il-problema-del-diamante-o-il-diamante-mortale"><span class="header-section-number">8.2</span> Il problema del diamante o il “diamante mortale”</h2>
+<p>Il problema del diamante è il termine generalmente usato per <strong>indicare un’ambiguità</strong> che si presenta quando:</p>
+<ul>
+<li>Due classi <code>B</code> e <code>C</code> ereditano da una superclasse <code>A</code></li>
+<li>Un’altra classe <code>D</code> eredita sia da <code>B</code> che da <code>C</code></li>
+<li>Se c’è un metodo <code>m</code> in <code>A</code> per il quale <code>B</code> o <code>C</code> (o addirittura entrambi) hanno fatto un <em>override</em>, e se <code>D</code> non fa l’<em>override</em> di questo metodo, allora quale versione del metodo eredita <code>D</code>?</li>
+</ul>
+<div id="ce705f9b" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A:</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of A called"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> B(A):</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of B called"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> C(A):</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of C called"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> D(B,C):</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> A()</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> B()</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> C()</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> D()</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Call m on object A: "</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>a.m()</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Call m on object B: "</span>)</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>b.m()</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Call m on object C: "</span>)</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>c.m()</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Call m on object D: "</span>)</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>d.m()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call m on object A: 
+m of A called
+Call m on object B: 
+m of B called
+Call m on object C: 
+m of C called
+Call m on object D: 
+m of B called</code></pre>
+</div>
+</div>
+</section>
+<section id="variabili-statiche-di-una-classe" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="variabili-statiche-di-una-classe"><span class="header-section-number">8.3</span> Variabili statiche di una classe</h2>
+<p>Le variabili statiche in Python sono dette anche variabili di classe, e i loro valori sono condivisi tra tutte le istanze (oggetti) di una classe.</p>
+<p>Possono essere <strong>modificate dalla classe stessa</strong> invece che attraverso un’istanza di tale classe.</p>
+<p><strong>Caratteristiche</strong>: - Allocate in memoria una volta sola - Create al di fuori dei metodi, ma all’interno di una classe - Si può accedere alle variabili statiche attraverso una classe, ma non direttamente con un’istanza (pericoloso per la scrittura) - Il comportamento delle variabili statiche non cambia al variare dell’oggetto</p>
+<div id="230589d7" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> oggetto:</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    variabile_statica <span class="op">=</span> <span class="dv">23</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__int__</span>(<span class="va">self</span>):</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>o <span class="op">=</span> oggetto()</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(o.variabile_statica)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(oggetto.variabile_statica)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># problema della scrittura</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>o.variabile_statica <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(o.variabile_statica)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(oggetto.variabile_statica)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>23
+23
+0
+23</code></pre>
+</div>
+</div>
+<p>Quando l’interprete Python ha eseguito <code>o.variabili_statica</code> non ha considerato la variabile statica effettiva ma ha creato un nuovo attributo dato all’interno della classe.</p>
+<p>Il motivo è che, quando chiedi a Python <code>istanza.nome_variabile</code>, lui segue un ordine preciso:</p>
+<ol type="1">
+<li>Cerca dentro l’istanza (nel suo dizionario <strong>dict</strong>).</li>
+<li>Se non la trova, cerca nella classe (variabili statiche).</li>
+<li>Se non la trova, cerca nelle classi base (ereditarietà).</li>
+</ol>
+<p>Il problema è che nella scrittura Python ha cercato dentro l’istanza, non ha trovato nulla, allora ha creato una nuova <strong>variabile di istanza</strong>.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../capitoli/lezione6.html" class="pagination-link" aria-label="Eccezioni">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Eccezioni</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
