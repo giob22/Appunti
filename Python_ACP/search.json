@@ -488,35 +488,5 @@
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
     ]
-  },
-  {
-    "objectID": "capitoli/lezione5.html#altri-tipi-di-eccezione",
-    "href": "capitoli/lezione5.html#altri-tipi-di-eccezione",
-    "title": "5  Passaggio parametri, *args, **kwargs",
-    "section": "7.1 Altri tipi di eccezione",
-    "text": "7.1 Altri tipi di eccezione\n\nelse\n\nil body di questo ramo è eseguito quando l’esecuzione del blocco try associato completa senza interruzioni\n\nfinally\n\nil body di questo ramo è sempre eseguito dopo il blocco try,else e except, anche se si sollevino altri errori o si esegue un break,continue o return.\nÈ utile per invocare codice di clean-up che dovrebbero essere eseguito a prescindere da quello che è accaduto.",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
-    ]
-  },
-  {
-    "objectID": "capitoli/lezione5.html#cosa-fare-con-le-eccezioni",
-    "href": "capitoli/lezione5.html#cosa-fare-con-le-eccezioni",
-    "title": "5  Passaggio parametri, *args, **kwargs",
-    "section": "7.2 Cosa fare con le eccezioni?",
-    "text": "7.2 Cosa fare con le eccezioni?\n\nFallire in maniera silente:\n\nSostituire i valori di default oppure continuare e basta\nma l’utente finale non sarà avvisato con nessun warning\n\nRitornare un valore di “errore”:\n\nIl problema è scegliere il valore di errore adatto\nPotremmo complicare di molto il codice\n\nFermare l’esecuzione, segnalare una condizione di errore:\n\nIn Python: raise an exception (analogo di throw in Java)\nraise Exception(\"descriptive string)",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
-    ]
-  },
-  {
-    "objectID": "capitoli/lezione5.html#istruzione-raise",
-    "href": "capitoli/lezione5.html#istruzione-raise",
-    "title": "5  Passaggio parametri, *args, **kwargs",
-    "section": "7.3 Istruzione raise",
-    "text": "7.3 Istruzione raise\nUsato per sollevare un’eccezione quando non siamo capaci di fornire un risultato coerente con la specifica di una funzione.\n\nraise ValueError(\"Something is wrong\")\n\n\n---------------------------------------------------------------------------\nValueError                                Traceback (most recent call last)\nCell In[4], line 1\n----&gt; 1 raise ValueError(\"Something is wrong\")\n\nValueError: Something is wrong",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Passaggio parametri, `*args`, `**kwargs`</span>"
-    ]
   }
 ]

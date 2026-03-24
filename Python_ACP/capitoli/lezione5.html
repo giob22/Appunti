@@ -204,12 +204,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#modulo-os-per-la-gestione-file" id="toc-modulo-os-per-la-gestione-file" class="nav-link" data-scroll-target="#modulo-os-per-la-gestione-file"><span class="header-section-number">6.4</span> Modulo <code>os</code> per la gestione file</a></li>
   <li><a href="#formattazione-delloutput" id="toc-formattazione-delloutput" class="nav-link" data-scroll-target="#formattazione-delloutput"><span class="header-section-number">6.5</span> Formattazione dell’output</a></li>
   </ul></li>
-  <li><a href="#eccezioni" id="toc-eccezioni" class="nav-link" data-scroll-target="#eccezioni"><span class="header-section-number">7</span> Eccezioni</a>
-  <ul class="collapse">
-  <li><a href="#altri-tipi-di-eccezione" id="toc-altri-tipi-di-eccezione" class="nav-link" data-scroll-target="#altri-tipi-di-eccezione"><span class="header-section-number">7.1</span> Altri tipi di eccezione</a></li>
-  <li><a href="#cosa-fare-con-le-eccezioni" id="toc-cosa-fare-con-le-eccezioni" class="nav-link" data-scroll-target="#cosa-fare-con-le-eccezioni"><span class="header-section-number">7.2</span> Cosa fare con le eccezioni?</a></li>
-  <li><a href="#istruzione-raise" id="toc-istruzione-raise" class="nav-link" data-scroll-target="#istruzione-raise"><span class="header-section-number">7.3</span> Istruzione <code>raise</code></a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -493,114 +487,6 @@ giovanni   ==&gt;         55</code></pre>
 </div>
 </div>
 <p>Passando un intero dopo <code>:</code>, il campo sarà largo un numero minimo di caratteri. Questo è utile per allineare le colonne</p>
-</section>
-</section>
-<section id="eccezioni" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Eccezioni</h1>
-<p>Tipi di eccezioni che abbiamo incontrato e che incontriamo comunemente alla prime armi sono:</p>
-<ul>
-<li><code>IndexError</code></li>
-<li><code>NameError</code></li>
-<li><code>TypeError</code></li>
-<li><code>SyntaxError</code></li>
-</ul>
-<p>Cosa accade quando una funzione esegue del codice che produce codizioni non attese?</p>
-<p>Viene sollevata un’eccezione (<strong>exception</strong>).</p>
-<p>Le eccezioni sono anche esse degli oggetti che ereditano da un unica classe padre, dopo <code>Object</code>, <code>BaseException</code>.</p>
-<ul>
-<li>SyntaxError: Python can’t parse program</li>
-<li>NameError: local or global name not found</li>
-<li>AttributeError: attribute reference fails</li>
-<li>TypeError: operand doesn’t have correct type</li>
-<li>ValueError: operand type okay, but value is illegal</li>
-<li>IOError: IO system reports malfunction</li>
-</ul>
-<p><img src="img/gerarchia_eccezioni.png" class="img-fluid"></p>
-<p>Il codice Python può fornire <strong>handlers</strong> per le eccezioni:</p>
-<div id="da89285f" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> <span class="bu">int</span>(<span class="bu">input</span>(<span class="st">"tell me one number"</span>))</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> <span class="bu">int</span>(<span class="bu">input</span>(<span class="st">"tell me another number"</span>))</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(a<span class="op">/</span>b)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span>:</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"scem, non si può fà"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>scem, non si può fà</code></pre>
-</div>
-</div>
-<p>Le eccezioni sono:</p>
-<ul>
-<li><strong>sollevate</strong> da qualunque istruzione nel body del blocco <code>try</code></li>
-<li><strong>gestite</strong> dalle istruzioni nel blocco <code>except</code> e l’esecuzione continua nel body dell’istruzione <code>except</code></li>
-</ul>
-<p>È raccomandato avere separate le clausole <code>except</code> per gestire un tipo particolare di eccezione.</p>
-<p>I blocchi <code>except</code> devono essere posizionati dal <strong>più specifico al più generico</strong>, in base alla gerarchia delle eccezioni.</p>
-<div id="80a14bf9" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> <span class="bu">int</span>(<span class="bu">input</span>(<span class="st">"Tell me one number: "</span>))</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> <span class="bu">int</span>(<span class="bu">input</span>(<span class="st">"Tell me another number: "</span>))</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"a/b = "</span>, a<span class="op">/</span>b)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"a+b = "</span>, a<span class="op">+</span>b)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ValueError</span>:</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Could not convert to a number"</span>)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ZeroDivisionError</span>:</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Can't divide by zero"</span>)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span>:</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Something went very wrong"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Could not convert to a number</code></pre>
-</div>
-</div>
-<section id="altri-tipi-di-eccezione" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="altri-tipi-di-eccezione"><span class="header-section-number">7.1</span> Altri tipi di eccezione</h2>
-<ul>
-<li><code>else</code>
-<ul>
-<li>il body di questo ramo è eseguito quando l’esecuzione del blocco <code>try</code> associato <strong>completa senza interruzioni</strong></li>
-</ul></li>
-<li><code>finally</code>
-<ul>
-<li>il body di questo ramo è <strong>sempre eseguito</strong> dopo il blocco <code>try</code>,<code>else</code> e <code>except</code>, anche se si sollevino altri errori o si esegue un <code>break</code>,<code>continue</code> o <code>return</code>.</li>
-<li>È utile per invocare codice di <strong><em>clean-up</em></strong> che dovrebbero essere eseguito a prescindere da quello che è accaduto.</li>
-</ul></li>
-</ul>
-</section>
-<section id="cosa-fare-con-le-eccezioni" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="cosa-fare-con-le-eccezioni"><span class="header-section-number">7.2</span> Cosa fare con le eccezioni?</h2>
-<ul>
-<li><strong>Fallire in maniera silente</strong>:
-<ul>
-<li>Sostituire i valori di default oppure continuare e basta</li>
-<li>ma l’utente finale non sarà avvisato con nessun warning</li>
-</ul></li>
-<li>Ritornare un valore di “errore”:
-<ul>
-<li>Il problema è scegliere il valore di errore adatto</li>
-<li>Potremmo complicare di molto il codice</li>
-</ul></li>
-<li>Fermare l’esecuzione, <strong>segnalare una condizione di errore</strong>:
-<ul>
-<li>In Python: <strong>raise an exception</strong> (analogo di <code>throw</code> in Java)</li>
-<li><code>raise Exception("descriptive string)</code></li>
-</ul></li>
-</ul>
-</section>
-<section id="istruzione-raise" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="istruzione-raise"><span class="header-section-number">7.3</span> Istruzione <code>raise</code></h2>
-<p>Usato per <strong>sollevare un’eccezione</strong> quando non siamo capaci di fornire un risultato coerente con la specifica di una funzione.</p>
-<div id="27859fd0" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Something is wrong"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[4]</span><span class="ansi-green-fg">, line 1</span>
-<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">1</span> <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">ValueError</span>(<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Something is wrong</span><span class="ansi-yellow-fg">"</span>)
-
-<span class="ansi-red-fg">ValueError</span>: Something is wrong</pre>
-</div>
-</div>
-</div>
 
 
 </section>
