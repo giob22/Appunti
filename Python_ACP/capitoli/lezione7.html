@@ -697,7 +697,7 @@ m of B called</code></pre>
 <p>Quando l’interprete Python ha eseguito <code>o.variabili_statica</code> non ha considerato la variabile statica effettiva ma ha creato un nuovo attributo dato all’interno della classe.</p>
 <p>Il motivo è che, quando chiedi a Python <code>istanza.nome_variabile</code>, lui segue un ordine preciso:</p>
 <ol type="1">
-<li>Cerca dentro l’istanza (nel suo dizionario <strong>dict</strong>).</li>
+<li>Cerca dentro l’istanza (nel suo dizionario <code>__dict__</code>).</li>
 <li>Se non la trova, cerca nella classe (variabili statiche).</li>
 <li>Se non la trova, cerca nelle classi base (ereditarietà).</li>
 </ol>
