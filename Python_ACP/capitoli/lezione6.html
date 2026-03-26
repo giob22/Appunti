@@ -510,7 +510,8 @@ window.Quarto = {
 <p>Se una certa condizione non risulta vera, Python consente, attraverso <code>assert</code>, di sollevare un’eccezione di tipo <code>AssertionError</code>.</p>
 <ul>
 <li><blockquote class="blockquote">
-<p>NOTA BENE: nel linguaggio <code>C</code>, <code>assert</code> termina il processo corrente. In Python, il programmatore dovrà gestire esplicitamente la terminazione (eventuale) del processo in cui è fallita un’asserzione.</p>
+<p>NOTA BENE: nel linguaggio <code>C</code>/<code>C++</code>/<code>Java</code>, <code>assert</code> termina in ogni caso il processo corrente</p>
+<p>In Python, se il programmatore tenta di gestire l’eccezione <code>AssertionError</code> esplicitamente, il processo corrente non terminerà automaticamente!</p>
 </blockquote></li>
 </ul>
 <p>L’utilizzo di asserzioni è un buon esempio di <strong>defensive programming</strong>.</p>

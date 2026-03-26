@@ -225,6 +225,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ereditarietà-multipla" id="toc-ereditarietà-multipla" class="nav-link" data-scroll-target="#ereditarietà-multipla"><span class="header-section-number">8.1</span> Ereditarietà multipla</a></li>
   <li><a href="#il-problema-del-diamante-o-il-diamante-mortale" id="toc-il-problema-del-diamante-o-il-diamante-mortale" class="nav-link" data-scroll-target="#il-problema-del-diamante-o-il-diamante-mortale"><span class="header-section-number">8.2</span> Il problema del diamante o il “diamante mortale”</a></li>
   <li><a href="#variabili-statiche-di-una-classe" id="toc-variabili-statiche-di-una-classe" class="nav-link" data-scroll-target="#variabili-statiche-di-una-classe"><span class="header-section-number">8.3</span> Variabili statiche di una classe</a></li>
+  <li><a href="#decoratori" id="toc-decoratori" class="nav-link" data-scroll-target="#decoratori"><span class="header-section-number">8.4</span> Decoratori</a></li>
+  <li><a href="#metodi-statici" id="toc-metodi-statici" class="nav-link" data-scroll-target="#metodi-statici"><span class="header-section-number">8.5</span> Metodi statici</a></li>
+  <li><a href="#overloading-degli-operatori" id="toc-overloading-degli-operatori" class="nav-link" data-scroll-target="#overloading-degli-operatori"><span class="header-section-number">8.6</span> Overloading degli operatori</a></li>
+  <li><a href="#eccezioni-ed-ereditarietà" id="toc-eccezioni-ed-ereditarietà" class="nav-link" data-scroll-target="#eccezioni-ed-ereditarietà"><span class="header-section-number">8.7</span> Eccezioni ed ereditarietà</a></li>
+  <li><a href="#polimorfismo" id="toc-polimorfismo" class="nav-link" data-scroll-target="#polimorfismo"><span class="header-section-number">8.8</span> Polimorfismo</a></li>
+  <li><a href="#classi-astratte-e-interfacce" id="toc-classi-astratte-e-interfacce" class="nav-link" data-scroll-target="#classi-astratte-e-interfacce"><span class="header-section-number">8.9</span> Classi astratte e interfacce</a></li>
+  <li><a href="#classi-astratte" id="toc-classi-astratte" class="nav-link" data-scroll-target="#classi-astratte"><span class="header-section-number">8.10</span> Classi astratte</a></li>
+  <li><a href="#modulo-abc" id="toc-modulo-abc" class="nav-link" data-scroll-target="#modulo-abc"><span class="header-section-number">8.11</span> Modulo <code>abc</code></a></li>
+  <li><a href="#abc.abstractmethod" id="toc-abc.abstractmethod" class="nav-link" data-scroll-target="#abc.abstractmethod"><span class="header-section-number">8.12</span> <code>@abc.abstractmethod</code></a></li>
+  <li><a href="#interfacce" id="toc-interfacce" class="nav-link" data-scroll-target="#interfacce"><span class="header-section-number">8.13</span> Interfacce</a>
+  <ul class="collapse">
+  <li><a href="#interfacce-informali" id="toc-interfacce-informali" class="nav-link" data-scroll-target="#interfacce-informali"><span class="header-section-number">8.13.1</span> Interfacce <em>informali</em></a></li>
+  <li><a href="#interfacce-formali" id="toc-interfacce-formali" class="nav-link" data-scroll-target="#interfacce-formali"><span class="header-section-number">8.13.2</span> Interfacce <em>formali</em></a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -286,7 +300,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="implementazione-di-una-classe" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="implementazione-di-una-classe"><span class="header-section-number">7.2</span> Implementazione di una classe</h2>
-<div id="e8d0b019" class="cell">
+<div id="e8d0b019" class="cell" data-execution_count="46">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># define attributes here</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -320,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>È un metodo <strong>statico</strong> che prende come primo argomento la classe di cui è stata richiesta un’istanza.</li>
 <li>Il valore di ritorno di <code>__new__()</code> è l’istanza del <strong>nuovo oggetto</strong>.</li>
 </ul>
-<div id="845bd5f5" class="cell" data-execution_count="10">
+<div id="845bd5f5" class="cell" data-execution_count="47">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>,x):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
@@ -355,7 +369,7 @@ x: 3</code></pre>
 <hr>
 <section id="attributi-statici" class="level3" data-number="7.4.1">
 <h3 data-number="7.4.1" class="anchored" data-anchor-id="attributi-statici"><span class="header-section-number">7.4.1</span> Attributi statici:</h3>
-<div id="340989d7" class="cell" data-execution_count="11">
+<div id="340989d7" class="cell" data-execution_count="48">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Robot:</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    popolazione <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -368,7 +382,7 @@ x: 3</code></pre>
 <p>È possibile omettere le classi da cui eredita la classe che stiamo creando, essa implicitamente eredita dalla classe <code>object</code>.</p>
 <hr>
 <p>Invece di utilizzare esplicitamente il metodo <code>__init__</code> possiamo utilizzare il nome stesso della classe per inizializzare un oggetto: essa richiama direttamente il metodo <code>__init__</code> il quale a sua volta richiama il metodo <code>__new__</code>.</p>
-<div id="ddc19f23" class="cell" data-execution_count="12">
+<div id="ddc19f23" class="cell" data-execution_count="49">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> Coordinate(<span class="dv">3</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -405,7 +419,7 @@ x: 3</code></pre>
 </ul></li>
 </ul>
 <p>Eccetto per <code>self</code> e la notazione <code>.</code>, i metodi di una classe si comportano semplicemente come funzioni.</p>
-<div id="e2ab71ff" class="cell">
+<div id="e2ab71ff" class="cell" data-execution_count="50">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, x, y):</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
@@ -418,7 +432,7 @@ x: 3</code></pre>
 <section id="come-utilizzare-un-metodo" class="level3" data-number="7.6.1">
 <h3 data-number="7.6.1" class="anchored" data-anchor-id="come-utilizzare-un-metodo"><span class="header-section-number">7.6.1</span> Come utilizzare un metodo:</h3>
 <p>Esistono principalmente due modi per utilizzare un metodo, uno <strong>convenzionale</strong> e un <strong>equivalente</strong> (sconsigliato)</p>
-<div id="cec9d546" class="cell" data-execution_count="21">
+<div id="cec9d546" class="cell" data-execution_count="51">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
@@ -448,7 +462,7 @@ x: 3</code></pre>
 <p>Di Default la <code>print</code> di un oggetto restituisce una rappresentazione <strong>non informative</strong></p>
 <p>Dobbiamo ridefinire il <strong>metodo</strong> <code>__str__</code> per una classe se vogliamo fornire info diverse</p>
 <p>Python chiama <code>__str__</code> quando invochiamo la <code>print</code> su un oggetto istanza di una classe</p>
-<div id="312a3c8d" class="cell" data-execution_count="23">
+<div id="312a3c8d" class="cell" data-execution_count="52">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
@@ -474,7 +488,7 @@ x: 3</code></pre>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Coordinate(<span class="dv">1</span>,<span class="dv">2</span>)</span>
 <span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;__main__.Coordinate object at 0x7f9c1eef1400&gt;
+<pre><code>&lt;__main__.Coordinate object at 0x7f75b4d42900&gt;
 &lt;1,2&gt;</code></pre>
 </div>
 </div>
@@ -482,7 +496,7 @@ x: 3</code></pre>
 <section id="tipi-e-classi" class="level2" data-number="7.8">
 <h2 data-number="7.8" class="anchored" data-anchor-id="tipi-e-classi"><span class="header-section-number">7.8</span> Tipi e Classi</h2>
 <p>Possiamo verificare il tipo di un oggetto utilizzando il metodo <code>isinstance()</code> mentre possiamo ottenere il tipo di un oggetto utilizzando la funzione <code>type()</code></p>
-<div id="8333ada5" class="cell" data-execution_count="24">
+<div id="8333ada5" class="cell" data-execution_count="53">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(x))</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -560,7 +574,7 @@ x: 3</code></pre>
 <li>Python <strong>supporta anche l’ereditarietà multipla</strong></li>
 </ul>
 <p><img src="img/ereditarieta.png" class="img-fluid"></p>
-<div id="34ac7bc4" class="cell">
+<div id="34ac7bc4" class="cell" data-execution_count="54">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Animal(<span class="bu">object</span>):</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, age):</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.age <span class="op">=</span> age</span>
@@ -581,7 +595,7 @@ x: 3</code></pre>
 <li>La classe <code>object</code> implementa tutte le operazioni di base in Python, come il binding di variabili, etc</li>
 </ul>
 <p>Una classe che eredita da un’altra classe ha la possibilità di modificare alcuni comportamenti o aggiungere nuove funzionalità:</p>
-<div id="6de94da7" class="cell">
+<div id="6de94da7" class="cell" data-execution_count="55">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Cat(Animal):</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> speak(<span class="va">self</span>): <span class="co"># nuova funzionalità</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"meow"</span>)</span>
@@ -600,7 +614,7 @@ x: 3</code></pre>
 </section>
 <section id="ereditarietà-multipla" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="ereditarietà-multipla"><span class="header-section-number">8.1</span> Ereditarietà multipla</h2>
-<div id="cfb2f742" class="cell">
+<div id="cfb2f742" class="cell" data-execution_count="56">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A:</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of A called"</span>)</span>
@@ -625,7 +639,7 @@ x: 3</code></pre>
 <li>Un’altra classe <code>D</code> eredita sia da <code>B</code> che da <code>C</code></li>
 <li>Se c’è un metodo <code>m</code> in <code>A</code> per il quale <code>B</code> o <code>C</code> (o addirittura entrambi) hanno fatto un <em>override</em>, e se <code>D</code> non fa l’<em>override</em> di questo metodo, allora quale versione del metodo eredita <code>D</code>?</li>
 </ul>
-<div id="ce705f9b" class="cell" data-execution_count="2">
+<div id="ce705f9b" class="cell" data-execution_count="57">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A:</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of A called"</span>)</span>
@@ -668,7 +682,7 @@ m of B called</code></pre>
 <p>Le variabili statiche in Python sono dette anche variabili di classe, e i loro valori sono condivisi tra tutte le istanze (oggetti) di una classe.</p>
 <p>Possono essere <strong>modificate dalla classe stessa</strong> invece che attraverso un’istanza di tale classe.</p>
 <p><strong>Caratteristiche</strong>: - Allocate in memoria una volta sola - Create al di fuori dei metodi, ma all’interno di una classe - Si può accedere alle variabili statiche attraverso una classe, ma non direttamente con un’istanza (pericoloso per la scrittura) - Il comportamento delle variabili statiche non cambia al variare dell’oggetto</p>
-<div id="230589d7" class="cell" data-execution_count="4">
+<div id="230589d7" class="cell" data-execution_count="58">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> oggetto:</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    variabile_statica <span class="op">=</span> <span class="dv">23</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -702,8 +716,481 @@ m of B called</code></pre>
 <li>Se non la trova, cerca nelle classi base (ereditarietà).</li>
 </ol>
 <p>Il problema è che nella scrittura Python ha cercato dentro l’istanza, non ha trovato nulla, allora ha creato una nuova <strong>variabile di istanza</strong>.</p>
+</section>
+<section id="decoratori" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="decoratori"><span class="header-section-number">8.4</span> Decoratori</h2>
+<p>I <strong>decoratori</strong> sono uno strumento molto potente e utile in Python, poiché consentono ai programmatori di <strong>modificare il comportamento di una funzione o di una classe</strong>.</p>
+<p>I decoratori permettono di fare il <strong><em>wrap</em></strong> di un’altra funzione per estendere il comportamento della funzione <em>wrapped</em>, senza modificarla in modo permanente.</p>
+<p>Nei decoratori, le funzioni vengono prese come argomento in un’altra funzione e poi richiamate all’interno della funzione <em>wrapper</em>.</p>
+<div id="9301fc39" class="cell" data-execution_count="59">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> functools</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># definiamo il decoratore</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logger_wrapper(funzione_originale):</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># @functools.wraps(funzione_originale) serve a preservare il nome e la docstring della funzione originale</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">@functools.wraps</span>(funzione_originale)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Inizio dell'esecuzione di: '</span><span class="sc">{</span>funzione_originale<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Argomenti passati: args=</span><span class="sc">{</span>args<span class="sc">}</span><span class="ss">, kwargs=</span><span class="sc">{</span>kwargs<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        risultato <span class="op">=</span> funzione_originale(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Esecuzione della funzione, ha avuto come risultato: </span><span class="sc">{</span>risultato<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"-"</span><span class="op">*</span><span class="dv">20</span>)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> risultato</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wrapper</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="at">@logger_wrapper</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> somma(a,b):</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''Questa funzione ritorna la somma tra i numeri in ingresso'''</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a<span class="op">+</span>b</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> somma(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Inizio dell'esecuzione di: 'somma'
+Argomenti passati: args=(1, 2), kwargs={}
+Esecuzione della funzione, ha avuto come risultato: 3
+--------------------
+3</code></pre>
+</div>
+</div>
+<p><strong>Fasi</strong> di un decoratore di questo genere:</p>
+<ul>
+<li>Python legge e memorizza in memoria la definizione della funzione decoratore</li>
+<li>Python incontra il simbolo <code>@</code> subito sopra la definizione di una funzione bersaglio</li>
+<li>L’interprete prende immediatamente la funzione <code>somma</code> e la dà come argomento a <code>logger_decorator</code></li>
+<li>Il decoratore si attiva, definisce al suo interno la nuova funzione <code>wrapper</code> che ingloba la chiamata alla funzione originale, e restituisce questo <code>wrapper</code></li>
+<li><strong>Importante</strong>: Python prende il nome originale <code>somma</code> e lo <strong>riassegna</strong> alla funziona <code>wrapper</code>. Da questo momento in poi, la funzione originale è letteralmente intrappolata all’interno dell’involucro.</li>
+</ul>
+<p><strong>Workflow</strong> a runtime:</p>
+<ul>
+<li>Chiamata alla funzione <code>somma(1,2)</code>. Python in realtà dirotta la chiamata al <code>wrapper(1,2)</code> generato durante la lettura.</li>
+<li>Viene eseguito <code>wrapper(1,2)</code>. In cui è presente una chiamata alla funzione originale passandole gli argomenti.</li>
+<li>La funzione originale compie il suo lavoro e restituisce il risultato</li>
+<li><code>wrapper</code> riprende il controllo. Esegue il codice conclusivo e infine restituisce il risultato finale, quello che avrebbe dovuto restituire <code>somma</code>.</li>
+</ul>
+</section>
+<section id="metodi-statici" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="metodi-statici"><span class="header-section-number">8.5</span> Metodi statici</h2>
+<p>I <strong>metodi statici</strong> in Python sono metodi di una classe che possono essere invocati anche senza aver istanziato un oggetto di quella classe.</p>
+<p>Tali metodi <strong>non ricevono <code>self</code> come primo argomento</strong>.</p>
+<p><strong>Caratteristiche</strong>:</p>
+<ul>
+<li>definiti all’interno della classe, come altri metodi non statici, ma senza parametro <code>self</code>;</li>
+<li>la definizione deve essere preceduta dal decoratore <code>@staticmethod</code>;</li>
+<li>possono essere invocati direttamente sulla classe o su un oggetto della classe;</li>
+<li>solitamente utilizzati per gestire aspetti non legati alle singole istanze di una classe.</li>
+</ul>
+<div id="0e9222dc" class="cell" data-execution_count="60">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rabbit:</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    tag <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.rid <span class="op">=</span> Rabbit.tag</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        Rabbit.tag <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">@staticmethod</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_tag():</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Rabbit.tag</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Rabbit.get_tag())</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> Rabbit()</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a.get_tag())</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> Rabbit()</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(b.get_tag())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0
+1
+2</code></pre>
+</div>
+</div>
+</section>
+<section id="overloading-degli-operatori" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="overloading-degli-operatori"><span class="header-section-number">8.6</span> Overloading degli operatori</h2>
+<div id="6fe09e5a" class="cell" data-execution_count="61">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> numero:</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x):</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.value <span class="op">=</span> x</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__add__</span>(<span class="va">self</span>, other):</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.value <span class="op">+</span> other.value <span class="op">+</span> <span class="dv">100</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__str__</span>(<span class="va">self</span>):</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.value.<span class="fu">__str__</span>()</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__eq__</span>(<span class="va">self</span>, other):</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> (<span class="va">self</span>.value <span class="op">!=</span> other.value)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>:</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="st">"impossibile confrontare i due valori"</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> numero(<span class="dv">1</span>)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> numero(<span class="dv">2</span>)</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"la somma di due 'numero', ad esempio </span><span class="sc">{</span>a<span class="sc">}</span><span class="ss"> + </span><span class="sc">{</span>b<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>(a <span class="op">+</span> b)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Verifico se </span><span class="sc">{</span>a<span class="sc">}</span><span class="ss"> e </span><span class="sc">{</span>b<span class="sc">}</span><span class="ss"> sono 'numero' uguali</span><span class="ch">\n</span><span class="ss"> </span><span class="sc">{</span>a<span class="sc">}</span><span class="ss"> == </span><span class="sc">{</span>b<span class="sc">}</span><span class="ss"> → </span><span class="sc">{</span>a <span class="op">==</span> b<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>la somma di due 'numero', ad esempio 1 + 2 = 103
+Verifico se 1 e 2 sono 'numero' uguali
+ 1 == 2 → True</code></pre>
+</div>
+</div>
+<div id="ce9dcab3" class="cell" data-execution_count="62">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rabbit(Animal):</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    tag <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, age, parent1<span class="op">=</span><span class="va">None</span>, parent2<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        Animal. init (<span class="va">self</span>, age)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.parent1 <span class="op">=</span> parent1</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.parent2 <span class="op">=</span> parent2</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.rid <span class="op">=</span> Rabbit.tag</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        Rabbit.tag <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_rid(<span class="va">self</span>):</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">str</span>(<span class="va">self</span>.rid).zfill(<span class="dv">3</span>)</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_parent1(<span class="va">self</span>):</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.parent1</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_parent2(<span class="va">self</span>):</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.parent2</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__eq__</span>(<span class="va">self</span>, other):</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        parents_same <span class="op">=</span> <span class="va">self</span>.parent1.rid <span class="op">==</span> other.parent1.rid <span class="op">\</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="kw">and</span> <span class="va">self</span>.parent2.rid <span class="op">==</span> other.parent2.rid</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>        parents_opposite <span class="op">=</span> <span class="va">self</span>.parent2.rid <span class="op">==</span> other.parent1.rid <span class="op">\</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="kw">and</span> <span class="va">self</span>.parent1.rid <span class="op">==</span> other.parent2.rid</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> parents_opposite <span class="kw">or</span> parents_same</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>NOTA: non possiamo confrontare direttamente <code>self.parent1 == other.parent1</code> proprio perché questa comparazione richiamerebbe la funzione <code>__eq__</code> dei <code>parent</code> che sono loro stesso <code>Rabit</code>.</p>
+<p>Quindi entreremo in un loop di confronti finché non si arriva alla radice della gerarchia, ovvero un <code>Rabbit</code> che non possiede genitori per cui sarà sollevata un’eccezione del tipo <code>AttributeError</code>.</p>
+</section>
+<section id="eccezioni-ed-ereditarietà" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="eccezioni-ed-ereditarietà"><span class="header-section-number">8.7</span> Eccezioni ed ereditarietà</h2>
+<p>Ogni eccezione è un oggetto della classe <code>BaseException</code> o un oggetto di una classe che eredita da tale classe base.</p>
+<p>Le classi di eccezione che ereditano direttamente o indirettamente dalla classe base <code>BaseException</code>, sono definite nel modulo <code>exceptions</code>.</p>
+<p>Python definisce quattro sottoclassi della classe base <code>BaseException</code>:</p>
+<ol type="1">
+<li><p><code>SystemExit</code> termina l’esecuzione del programma e quando non rilevato non produce un traceback come altri tipi di eccezione.</p>
+<p>Solitamente non indica un errore ma è un comando di uscita, infatti potrebbe indicare che il programma ha terminato la propria esecuzione (correttamente) e quindi può terminare.</p></li>
+<li><p><code>KeyboardException</code> quando l’utente digita <code>Ctrl + C</code></p></li>
+<li><p><code>GeneratorExit</code> si verifica quando un generatore viene chiuso.</p></li>
+<li><p><code>Exception</code> è la classe base per le eccezioni più comuni.</p></li>
+</ol>
+<div id="42633884" class="cell" data-execution_count="63">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ValidationError(<span class="pp">Exception</span>):</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, message, errors):</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(message)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.errors <span class="op">=</span> errors</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="cf">raise</span> ValidationError(<span class="st">"ciao"</span>,<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValidationError</span>                           Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[63]</span><span class="ansi-green-fg">, line 7</span>
+<span class="ansi-green-fg">      3</span>         <span style="color:rgb(0,135,0)">super</span>().<span class="ansi-blue-fg">__init__</span>(message)
+<span class="ansi-green-fg">      5</span>         <span style="color:rgb(0,135,0)">self</span>.errors = errors
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">7</span> <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> ValidationError(<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">ciao</span><span class="ansi-yellow-fg">"</span>,<span class="ansi-green-fg">1</span>)
+
+<span class="ansi-red-fg">ValidationError</span>: ciao</pre>
+</div>
+</div>
+</div>
+</section>
+<section id="polimorfismo" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="polimorfismo"><span class="header-section-number">8.8</span> Polimorfismo</h2>
+<p>Il polimorfismo consente alle <strong>sottoclassi</strong> o anche alle classi qualsiasi (in Python) di avere metodi con gli stessi nomi dei metodi delle loro superclassi e invocare il metodo opportuno a <strong>run-time</strong>.</p>
+<p>Python esegue il controllo dei tipi a tempo di esecuzione, a differenza dei linguaggi tipizzati staticamente che lo eseguono a tempo di compilazione.</p>
+<p>Questo quindi significa che posso fare questo:</p>
+<div id="0d2ae712" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Papera:</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> suono(<span class="va">self</span>):</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"qua qua"</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Macchina:</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> suono(<span class="va">self</span>):</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"brum brum"</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> [Papera(), Macchina()]</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> l:</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(x.suono())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>qua qua
+brum brum</code></pre>
+</div>
+</div>
+<p>Un caso particolare di <em>tipizzazione dinamica</em> in cui si utilizzano tecniche caratteristiche del polimorfismo, tra le quali il <strong>late binding</strong> e il <strong>dynamic dispatch</strong>.</p>
+<p>Nella tipizzazione normale, l’idoneità è determinata dal solo tipo di oggetto</p>
+<p>Con il <em>duck typing</em> (utilizzato da Python) si controlla la presenza di metodi e proprietà per determinare l’idoneità dell’oggetto in questione piuttosto che il suo tipo effettivo.</p>
+</section>
+<section id="classi-astratte-e-interfacce" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="classi-astratte-e-interfacce"><span class="header-section-number">8.9</span> Classi astratte e interfacce</h2>
+</section>
+<section id="classi-astratte" class="level2" data-number="8.10">
+<h2 data-number="8.10" class="anchored" data-anchor-id="classi-astratte"><span class="header-section-number">8.10</span> Classi astratte</h2>
+<p>Un <strong>metodo astratto</strong> è un metodo che ha una dichiarazione ma non ha un’implementazione.</p>
+<p>Una classe che contiene uno o più metodi astratti è chiamata <strong>classe astratta</strong></p>
+<p>Una classe astratta può essere considerata come un modello per altre classi.</p>
+<ul>
+<li>Consente di creare un insieme di metodi che devono essere implementati all’interno di ogni classe figlia costruita dalla classe astratta.</li>
+</ul>
+<p><strong>Le classi astratte non possono essere istanziate direttamente</strong>.</p>
+<ul>
+<li>Hanno bisogno di <strong>sottoclassi che forniscano implementazione per i metodi astratti</strong>.</li>
+</ul>
+<p>Le classi astratte che hanno solo metodi astratti sono chiamate <strong>interfacce</strong>.</p>
+</section>
+<section id="modulo-abc" class="level2" data-number="8.11">
+<h2 data-number="8.11" class="anchored" data-anchor-id="modulo-abc"><span class="header-section-number">8.11</span> Modulo <code>abc</code></h2>
+<p>Il modulo <code>abc</code> fornisce l’infrastruttura per la definizione di <strong>Abstract Base Class</strong> (ABC) in Python.</p>
+<p>L’obiettivo del modulo <code>abc</code> è di <strong>impedire che una classe venga istanziata</strong> se non ha implementato determinati metodi fondamentali (decorati con <code>@abstractmethod</code>)</p>
+<p>Python usa delle <em>metaclassi</em> per <strong>definire il tipo di una classe</strong>.</p>
+<ul>
+<li>Una metaclasse è una classe che consente ad altre classi di essere istanziate come oggetto della metaclasse stessa.</li>
+</ul>
+<p>Il modulo <code>abc</code> fornisce:</p>
+<ul>
+<li>una metaclasse <code>ABCMeta</code> per definire le <em>Abstract Base Class</em>;</li>
+<li>una classe ausiliaria <code>ABC</code> per definire alternativamente le <em>Abstract Base Class</em> attraverso il meccanismo dell’ereditarietà.</li>
+</ul>
+<div id="593cab5c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> abc <span class="im">import</span> ABC, abstractmethod</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Animal(ABC):</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">@abstractmethod</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> doAction(<span class="va">self</span>):</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> nonabstract_method(<span class="va">self</span>):</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Human(Animal):</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> doAction(<span class="va">self</span>):</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"I can walk and run"</span>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Snake(Animal):</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> doAction(<span class="va">self</span>):</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"I can crawl"</span>)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Dog(Animal):</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> doAction(<span class="va">self</span>):</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"I can bark"</span>)</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Lion(Animal):</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> doAction(<span class="va">self</span>):</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"I can roar"</span>) </span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> Human()</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>R.doAction()</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> Snake()</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>K.doAction()</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> Dog()</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>R.doAction()</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> Lion()</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>K.doAction()</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> persona(Animal):</span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> persona()</span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>P.doAction()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>I can walk and run
+I can crawl
+I can bark
+I can roar</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[39]</span><span class="ansi-green-fg">, line 33</span>
+<span class="ansi-green-fg">     30</span> <span style="font-weight:bold;color:rgb(0,135,0)">class</span><span style="color:rgb(188,188,188)"> </span><span class="ansi-blue-fg ansi-bold">persona</span>(Animal):
+<span class="ansi-green-fg">     31</span>     <span style="font-weight:bold;color:rgb(0,135,0)">pass</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">33</span> P = <span class="ansi-yellow-bg">persona</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">     34</span> P.doAction()
+
+<span class="ansi-red-fg">TypeError</span>: Can't instantiate abstract class persona without an implementation for abstract method 'doAction'</pre>
+</div>
+</div>
+</div>
+</section>
+<section id="abc.abstractmethod" class="level2" data-number="8.12">
+<h2 data-number="8.12" class="anchored" data-anchor-id="abc.abstractmethod"><span class="header-section-number">8.12</span> <code>@abc.abstractmethod</code></h2>
+<p><code>@abc.abstractmethod</code> è il decoratore che permette di specificare che un <strong>metodo è astratto</strong>.</p>
+<p>L’uso di questo decoratore richiede che la <strong>metaclasse</strong> della classe <strong>sia</strong> <code>ABCMeta</code> o che derivi da essa (es. <code>ABC</code>).</p>
+<p>Una classe che ha una metaclasse derivata da <code>ABCMeta</code> non può essere istanziata a meno che tutti i suoi metodi astratti e le sue proprietà non vengano sovrascritti.</p>
+<p>Ecco cosa fa effettivamente il decoratore <code>@abstractmethod</code> implementato in <code>abc</code>:</p>
+<div id="28b4b819" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> abstractmethod(funcobj):</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""A decorator indicating abstract methods.</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Requires that the metaclass is ABCMeta or derived from it.  A</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">    class that has a metaclass derived from ABCMeta cannot be</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">    instantiated unless all of its abstract methods are overridden.</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">    The abstract methods can be called using any of the normal</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co">    'super' call mechanisms.  abstractmethod() may be used to declare</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">    abstract methods for properties and descriptors.</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Usage:</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co">        class C(metaclass=ABCMeta):</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="co">            @abstractmethod</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="co">            def my_abstract_method(self, arg1, arg2, argN):</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="co">                ...</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    funcobj.__isabstractmethod__ <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> funcobj</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Mentre il blocco che solleva <code>TypeError</code> non si trova nel codice Python, ma <strong>è implementato direttamente in C all’interno dell’interprete Python <code>CPython</code></strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> PyObject <span class="op">*</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>object_new<span class="op">(</span>PyTypeObject <span class="op">*</span>type<span class="op">,</span> PyObject <span class="op">*</span>args<span class="op">,</span> PyObject <span class="op">*</span>kwds<span class="op">)</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>excess_args<span class="op">(</span>args<span class="op">,</span> kwds<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>type<span class="op">-&gt;</span>tp_new <span class="op">!=</span> object_new<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>            PyErr_SetString<span class="op">(</span>PyExc_TypeError<span class="op">,</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"object.__new__() takes exactly one argument (the type to instantiate)"</span><span class="op">);</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>type<span class="op">-&gt;</span>tp_init <span class="op">==</span> object_init<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>            PyErr_Format<span class="op">(</span>PyExc_TypeError<span class="op">,</span> <span class="st">"</span><span class="sc">%.200s</span><span class="st">() takes no arguments"</span><span class="op">,</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>                         type<span class="op">-&gt;</span>tp_name<span class="op">);</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>type<span class="op">-&gt;</span>tp_flags <span class="op">&amp;</span> Py_TPFLAGS_IS_ABSTRACT<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>        PyObject <span class="op">*</span>abstract_methods<span class="op">;</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>        PyObject <span class="op">*</span>sorted_methods<span class="op">;</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>        PyObject <span class="op">*</span>joined<span class="op">;</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>        PyObject<span class="op">*</span> comma_w_quotes_sep<span class="op">;</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>        Py_ssize_t method_count<span class="op">;</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">/* Compute "', '".join(sorted(type.__abstractmethods__))</span></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a><span class="co">           into joined. */</span></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>        abstract_methods <span class="op">=</span> type_abstractmethods<span class="op">((</span>PyObject <span class="op">*)</span>type<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>abstract_methods <span class="op">==</span> NULL<span class="op">)</span></span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>        sorted_methods <span class="op">=</span> PySequence_List<span class="op">(</span>abstract_methods<span class="op">);</span></span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>        Py_DECREF<span class="op">(</span>abstract_methods<span class="op">);</span></span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>sorted_methods <span class="op">==</span> NULL<span class="op">)</span></span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>PyList_Sort<span class="op">(</span>sorted_methods<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>            Py_DECREF<span class="op">(</span>sorted_methods<span class="op">);</span></span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>        comma_w_quotes_sep <span class="op">=</span> PyUnicode_FromString<span class="op">(</span><span class="st">"', '"</span><span class="op">);</span></span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(!</span>comma_w_quotes_sep<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>            Py_DECREF<span class="op">(</span>sorted_methods<span class="op">);</span></span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a>        joined <span class="op">=</span> PyUnicode_Join<span class="op">(</span>comma_w_quotes_sep<span class="op">,</span> sorted_methods<span class="op">);</span></span>
+<span id="cb35-43"><a href="#cb35-43" aria-hidden="true" tabindex="-1"></a>        Py_DECREF<span class="op">(</span>comma_w_quotes_sep<span class="op">);</span></span>
+<span id="cb35-44"><a href="#cb35-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>joined <span class="op">==</span> NULL<span class="op">)</span>  <span class="op">{</span></span>
+<span id="cb35-45"><a href="#cb35-45" aria-hidden="true" tabindex="-1"></a>            Py_DECREF<span class="op">(</span>sorted_methods<span class="op">);</span></span>
+<span id="cb35-46"><a href="#cb35-46" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-47"><a href="#cb35-47" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb35-48"><a href="#cb35-48" aria-hidden="true" tabindex="-1"></a>        method_count <span class="op">=</span> PyObject_Length<span class="op">(</span>sorted_methods<span class="op">);</span></span>
+<span id="cb35-49"><a href="#cb35-49" aria-hidden="true" tabindex="-1"></a>        Py_DECREF<span class="op">(</span>sorted_methods<span class="op">);</span></span>
+<span id="cb35-50"><a href="#cb35-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>method_count <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb35-51"><a href="#cb35-51" aria-hidden="true" tabindex="-1"></a>            Py_DECREF<span class="op">(</span>joined<span class="op">);</span></span>
+<span id="cb35-52"><a href="#cb35-52" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-53"><a href="#cb35-53" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb35-54"><a href="#cb35-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-55"><a href="#cb35-55" aria-hidden="true" tabindex="-1"></a>        PyErr_Format<span class="op">(</span>PyExc_TypeError<span class="op">,</span></span>
+<span id="cb35-56"><a href="#cb35-56" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Can't instantiate abstract class </span><span class="sc">%s</span><span class="st"> "</span></span>
+<span id="cb35-57"><a href="#cb35-57" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"without an implementation for abstract method</span><span class="sc">%s</span><span class="st"> '%U'"</span><span class="op">,</span></span>
+<span id="cb35-58"><a href="#cb35-58" aria-hidden="true" tabindex="-1"></a>                     type<span class="op">-&gt;</span>tp_name<span class="op">,</span></span>
+<span id="cb35-59"><a href="#cb35-59" aria-hidden="true" tabindex="-1"></a>                     method_count <span class="op">&gt;</span> <span class="dv">1</span> <span class="op">?</span> <span class="st">"s"</span> <span class="op">:</span> <span class="st">""</span><span class="op">,</span></span>
+<span id="cb35-60"><a href="#cb35-60" aria-hidden="true" tabindex="-1"></a>                     joined<span class="op">);</span></span>
+<span id="cb35-61"><a href="#cb35-61" aria-hidden="true" tabindex="-1"></a>        Py_DECREF<span class="op">(</span>joined<span class="op">);</span></span>
+<span id="cb35-62"><a href="#cb35-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-63"><a href="#cb35-63" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb35-64"><a href="#cb35-64" aria-hidden="true" tabindex="-1"></a>    PyObject <span class="op">*</span>obj <span class="op">=</span> type<span class="op">-&gt;</span>tp_alloc<span class="op">(</span>type<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb35-65"><a href="#cb35-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>obj <span class="op">==</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb35-66"><a href="#cb35-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb35-67"><a href="#cb35-67" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb35-68"><a href="#cb35-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> obj<span class="op">;</span></span>
+<span id="cb35-69"><a href="#cb35-69" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="interfacce" class="level2" data-number="8.13">
+<h2 data-number="8.13" class="anchored" data-anchor-id="interfacce"><span class="header-section-number">8.13</span> Interfacce</h2>
+<p>Un’<strong>interfaccia</strong> funge da modello per la progettazione delle classi e contiene <strong>tutti metodi astratti</strong> rispetto ad una classe astratta.</p>
+<p>L’approccio di Python alla definizione di interfacce è un pò diverso rispetto a linguaggi come <code>Java</code> e <code>C++</code></p>
+<ul>
+<li>hanno una parola chiave per le interfacce, mentre Python non ce l’ha.</li>
+</ul>
+<p>Python fornisce due approcci per la specifica di interfacce:</p>
+<ul>
+<li>Interfacce informali</li>
+<li>Inferfacce formali (uso di <code>ABC</code>)</li>
+</ul>
+<section id="interfacce-informali" class="level3" data-number="8.13.1">
+<h3 data-number="8.13.1" class="anchored" data-anchor-id="interfacce-informali"><span class="header-section-number">8.13.1</span> Interfacce <em>informali</em></h3>
+<p>Il modo più semplice per definire un’interfaccia in Python è utilizzare il concetto di <strong>interfaccia informale</strong>.</p>
+<p>La natura dinamica di Python consente di implementare un’interfaccia informale, ovvero una classe che definisce dei metodi che possono essere <strong>overridden</strong>, ma senza un’applicazione rigorosa.</p>
+<p>Sono praticamente delle normali classi, e si sfrutta il <em>Duck typing</em> per informare gli utilizzatori della classe che si tratta di un’interfaccia e che deve essere usata di conseguenza.</p>
+<div id="7075050d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> InformalInterface:</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> metodo1(<span class="va">self</span>, arg1, arg2):</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">''' override metodo1 and implement it'''</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> metodo2(<span class="va">self</span>, arg1, arg2):</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">''' override metodo2 and implement it'''</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="interfacce-formali" class="level3" data-number="8.13.2">
+<h3 data-number="8.13.2" class="anchored" data-anchor-id="interfacce-formali"><span class="header-section-number">8.13.2</span> Interfacce <em>formali</em></h3>
+<p>Per definire interfacce formali in Python si usa il modulo <code>abc</code> e si specificano <strong>tutti i metodi come astratti</strong>.</p>
+<p>Normalmente, si prevede sollevare un’eccezione di non implementazione (<code>NotImplementedError</code>) nel caso in cui la classe che implementa l’interfaccia non definisce un metodo astratto.</p>
+<div id="d70b8e61" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> abc <span class="im">import</span> ABC, abstractmethod</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyInterface(ABC):</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">@abstractmethod</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> metodo1(<span class="va">self</span>, a , b):</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@abstractmethod</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> metodo2(<span class="va">self</span>, a, b):</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">NotImplementedError</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Oggetto_a_caso(MyInterface):</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Oggetto_a_caso1(MyInterface):</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> metodo1(<span class="va">self</span>, a, b):</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Oggetto_a_caso2(MyInterface):</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> metodo2(<span class="va">self</span>, a, b):</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> Oggetto_a_caso()</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> Oggetto_a_caso1()</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Oggetto_a_caso2()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[45]</span><span class="ansi-green-fg">, line 23</span>
+<span class="ansi-green-fg">     19</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>
+<span class="ansi-green-fg">     21</span> <span style="font-style:italic;color:rgb(95,135,135)"># a = Oggetto_a_caso()</span>
+<span class="ansi-green-fg">     22</span> <span style="font-style:italic;color:rgb(95,135,135)"># b = Oggetto_a_caso1()</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">23</span> c = <span class="ansi-yellow-bg">Oggetto_a_caso2</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-red-fg">TypeError</span>: Can't instantiate abstract class Oggetto_a_caso2 without an implementation for abstract method 'metodo1'</pre>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 </section>
 
