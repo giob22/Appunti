@@ -681,7 +681,13 @@ m of B called</code></pre>
 <h2 data-number="8.3" class="anchored" data-anchor-id="variabili-statiche-di-una-classe"><span class="header-section-number">8.3</span> Variabili statiche di una classe</h2>
 <p>Le variabili statiche in Python sono dette anche variabili di classe, e i loro valori sono condivisi tra tutte le istanze (oggetti) di una classe.</p>
 <p>Possono essere <strong>modificate dalla classe stessa</strong> invece che attraverso un’istanza di tale classe.</p>
-<p><strong>Caratteristiche</strong>: - Allocate in memoria una volta sola - Create al di fuori dei metodi, ma all’interno di una classe - Si può accedere alle variabili statiche attraverso una classe, ma non direttamente con un’istanza (pericoloso per la scrittura) - Il comportamento delle variabili statiche non cambia al variare dell’oggetto</p>
+<p><strong>Caratteristiche</strong>:</p>
+<ul>
+<li>Allocate in memoria una volta sola</li>
+<li>Create al di fuori dei metodi, ma all’interno di una classe</li>
+<li>Si può accedere alle variabili statiche attraverso una classe, ma non direttamente con un’istanza (pericoloso per la scrittura)</li>
+<li>Il comportamento delle variabili statiche non cambia al variare dell’oggetto</li>
+</ul>
 <div id="230589d7" class="cell" data-execution_count="58">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> oggetto:</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    variabile_statica <span class="op">=</span> <span class="dv">23</span></span>
