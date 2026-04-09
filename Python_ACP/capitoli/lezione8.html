@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.34">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>8&nbsp; Programmazione concorrente in python – ACP</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../capitoli/lezione7.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-73db7b5a953198da8f17fc5313e632aa.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-44ee0976171e9be92e6ebe9be850cd66.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitoli/lezione8.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">ACP</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appunti ACP</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione a Python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Funzioni</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Funzioni: continuo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tuple, Liste, Dizionari</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Passaggio parametri, <code>*args</code>, <code>**kwargs</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Eccezioni</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OOP</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione8.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#il-modulo-threading" id="toc-il-modulo-threading" class="nav-link active" data-scroll-target="#il-modulo-threading"><span class="header-section-number">8.1</span> Il modulo <code>threading</code></a>
+  <ul class="collapse">
+  <li><a href="#thread-class" id="toc-thread-class" class="nav-link" data-scroll-target="#thread-class"><span class="header-section-number">8.1.1</span> <code>Thread</code> class</a></li>
+  <li><a href="#thread-local-data-the-local-class" id="toc-thread-local-data-the-local-class" class="nav-link" data-scroll-target="#thread-local-data-the-local-class"><span class="header-section-number">8.1.2</span> <code>Thread-local</code> Data: the local class</a></li>
+  </ul></li>
+  <li><a href="#lock-class" id="toc-lock-class" class="nav-link" data-scroll-target="#lock-class"><span class="header-section-number">8.2</span> <code>Lock</code> class</a>
+  <ul class="collapse">
+  <li><a href="#acquire" id="toc-acquire" class="nav-link" data-scroll-target="#acquire"><span class="header-section-number">8.2.1</span> <code>acquire()</code></a></li>
+  <li><a href="#with-e-primitive-di-sincronizzazione" id="toc-with-e-primitive-di-sincronizzazione" class="nav-link" data-scroll-target="#with-e-primitive-di-sincronizzazione"><span class="header-section-number">8.2.2</span> <code>with</code> e primitive di sincronizzazione</a></li>
+  </ul></li>
+  <li><a href="#rlock-class" id="toc-rlock-class" class="nav-link" data-scroll-target="#rlock-class"><span class="header-section-number">8.3</span> <code>RLock</code> class</a></li>
+  <li><a href="#condition-class" id="toc-condition-class" class="nav-link" data-scroll-target="#condition-class"><span class="header-section-number">8.4</span> <code>Condition</code> class</a>
+  <ul class="collapse">
+  <li><a href="#esempio" id="toc-esempio" class="nav-link" data-scroll-target="#esempio"><span class="header-section-number">8.4.1</span> Esempio</a></li>
+  </ul></li>
+  <li><a href="#semaphore-class" id="toc-semaphore-class" class="nav-link" data-scroll-target="#semaphore-class"><span class="header-section-number">8.5</span> <code>Semaphore</code> class</a></li>
+  <li><a href="#event-class" id="toc-event-class" class="nav-link" data-scroll-target="#event-class"><span class="header-section-number">8.6</span> <code>Event</code> class</a>
+  <ul class="collapse">
+  <li><a href="#esempio-1" id="toc-esempio-1" class="nav-link" data-scroll-target="#esempio-1"><span class="header-section-number">8.6.1</span> Esempio</a></li>
+  </ul></li>
+  <li><a href="#multi-threading-global-interpreter-lock-gil" id="toc-multi-threading-global-interpreter-lock-gil" class="nav-link" data-scroll-target="#multi-threading-global-interpreter-lock-gil"><span class="header-section-number">9</span> Multi-threading: Global Interpreter Lock (GIL)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Principalmente python mette a disposizione <strong>due moduli</strong> per la <strong>programmazione concorrente</strong>:</p>
+<ul>
+<li><span style="color: #DE6449;">threading</span>: permette la creazione di software multi-thread.</li>
+<li><span style="color: #DE6449;">multiprocessing</span>: permette la creazione di software multi-process.</li>
+</ul>
+<p>Entrambi i moduli mettono a disposizione i meccanismi necessari a supportare l’esecuzione di <strong>codice concorrente</strong>.</p>
+<section id="il-modulo-threading" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="il-modulo-threading"><span class="header-section-number">8.1</span> Il modulo <code>threading</code></h2>
+<p>Il modulo <code>threading</code> mette a disposizione un’<strong>interfaccia di alto livello</strong> per il multi-threading, costruita a partire dal modulo <code>_thread</code>.</p>
+<ul>
+<li><code>_thread</code> mette a disposizione <strong>primitive di basso livello</strong> per l’avvio e la sincronizzazione di thread, ma il suo utilizzo è <span style="color: #DE6449">deprecato</span></li>
+</ul>
+<p>Il modulo <code>threading</code> mette di disposizione un insieme di classi, come:</p>
+<ul>
+<li><code>Thread</code></li>
+<li><code>Thread-local Data</code></li>
+<li><code>Lock/RLock</code></li>
+<li><code>Condition</code></li>
+<li><code>Semaphore</code></li>
+<li><code>Event</code></li>
+</ul>
+<section id="thread-class" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="thread-class"><span class="header-section-number">8.1.1</span> <code>Thread</code> class</h3>
+<p>La classe <code>Thread</code> rappresenta un’attività che esegue in un flusso di controllo separato (un thread).</p>
+<p>Esiste un oggetto “<strong>main thread</strong>” (istanza della classe <code>_MainThread</code>) che corrisponde al flusso di controllo associato all’intero programma in Python.</p>
+<div id="35c4a39d" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Configurazione per vedere il nome del thread tra parentesi</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>logging.basicConfig(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    level<span class="op">=</span>logging.DEBUG,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">'(</span><span class="sc">%(threadName)-10s</span><span class="st">) </span><span class="sc">%(message)s</span><span class="st">'</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compito_secondario():</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    logging.debug(<span class="st">'Avvio del compito nel thread secondario...'</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># altro modo per vedere il nome del thread</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Thread attuale: </span><span class="sc">{</span>threading<span class="sc">.</span>current_thread()<span class="sc">.</span>name<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">2</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    logging.debug(<span class="st">'Compito terminato.'</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    logging.debug(<span class="st">'Siamo nel thread principale!'</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Creazione di un thread secondario</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    t1 <span class="op">=</span> threading.Thread(target<span class="op">=</span>compito_secondario, name<span class="op">=</span><span class="st">'MioThread-1'</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    t1.start()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># altro modo per vedere il nome del thread</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Thread attuale: </span><span class="sc">{</span>threading<span class="sc">.</span>current_thread()<span class="sc">.</span>name<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Lista di tutti i thread vivi: </span><span class="sc">{</span>threading<span class="sc">.</span><span class="bu">enumerate</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    t1.join()</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    logging.debug(<span class="st">'Fine del programma.'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>(MainThread) Siamo nel thread principale!
+(MioThread-1) Avvio del compito nel thread secondario...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Thread attuale: MainThread
+
+Lista di tutti i thread vivi: [&lt;_MainThread(MainThread, started 139772551838656)&gt;, &lt;Thread(IOPub, started daemon 139772236961472)&gt;, &lt;Heartbeat(Heartbeat, started daemon 139772228568768)&gt;, &lt;Thread(Thread-1 (_watch_pipe_fd), started daemon 139772203390656)&gt;, &lt;Thread(Thread-2 (_watch_pipe_fd), started daemon 139771858908864)&gt;, &lt;ControlThread(Control, started daemon 139771850516160)&gt;, &lt;ShellChannelThread(Shell channel, started daemon 139771842123456)&gt;, &lt;HistorySavingThread(IPythonHistorySavingThread, started 139771828868800)&gt;, &lt;Thread(MioThread-1, started 139771456255680)&gt;]
+Thread attuale: MioThread-1
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>(MioThread-1) Compito terminato.
+(MainThread) Fine del programma.</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Tutti i thread in python <strong>condividono lo spazio di memoria del loro processo padre</strong></p>
+<p>→ meno overhead per la comunicazione e quindi cooperazione e competizione.</p></li>
+</ul>
+<p>Esistono vari modi per creare un thread in python, due dei quali sono:</p>
+<ol type="1">
+<li>Inizializzare un oggetto <code>Thread</code>, passando un “callable object” al costruttore della classe</li>
+</ol>
+<div id="e821a838" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun():</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>threading<span class="sc">.</span>current_thread()<span class="sc">.</span>name<span class="sc">}</span><span class="ss">] thread running"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># creating thread</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    t1 <span class="op">=</span> threading.Thread(target<span class="op">=</span>fun, name<span class="op">=</span><span class="st">"ThreadFun"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># starting thread</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    t1.start()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># wait until the thread finishes</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># t1.join()</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># potrei anche dare un limite di tempo massimo</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># timeout oltre il quale il mainThread non attende più la terminazione</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    t1.join(timeout<span class="op">=</span><span class="dv">5</span>) <span class="co">#5s</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ThreadFun] thread running</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Creare una classe che estende quella <code>Thread</code>, ridefinendo il metodo <code>run()</code></li>
+</ol>
+<div id="fee4b68a" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyThread(threading.Thread):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> run(<span class="va">self</span>):</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>threading<span class="sc">.</span>current_thread()<span class="sc">.</span>name<span class="sc">}</span><span class="ss">] thread running"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># creating thread</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    t1 <span class="op">=</span> MyThread()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># starting thread</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    t1.start()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># wait until the thread finishes</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    t1.join()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[Thread-116] thread running</code></pre>
+</div>
+</div>
+<p><img src="img/creazione_thread.png" class="img-fluid"></p>
+<p>Alcuni metodi messi a disposizione della classe <code>Thread</code> sono:</p>
+<ul>
+<li><code>Thread(group=None, target=None, args=(), kwargs={}, *, daemon=None)</code>:
+<ul>
+<li>Costruttore della classe <code>Thread</code>:
+<ul>
+<li><code>group</code>: riservato per future implementazioni di <code>ThreadGroup</code>. Deve essere <strong>None</strong>.</li>
+<li><code>target</code>: rappresenta il <code>callable object</code> che sarà invocato dal metodo <code>run</code>.</li>
+<li><code>name</code>: nome del thread.</li>
+<li><code>args</code>: tupla contenente gli argomenti da passare all’invocazione del target.</li>
+<li><code>kwargs</code>: dizionario di <em>keywords</em> da passare all’invocazione del target.</li>
+<li><code>daemon</code>: booleano che specifica se il thread deve essere un demone o meno.</li>
+</ul></li>
+</ul></li>
+<li><code>start()</code>
+<ul>
+<li>Avvia il thread, portando all’esecuzione del metodo <code>run</code> non appena il thread sarà schedulato.</li>
+</ul></li>
+<li><code>run()</code>
+<ul>
+<li>Metodo che contiene il corpo del thread, e che ne rappresenta il comportamento.</li>
+</ul></li>
+<li><code>join(timeout=None)</code>
+<ul>
+<li>Metodo bloccante, che attende fino alla terminazione (naturale o con eccezioni) del thread.
+<ul>
+<li><em>timeout</em>, numero <em>floating point</em> utilizzato per definire il tempo massimo di attesa (in secondi).</li>
+</ul></li>
+</ul></li>
+<li><code>is_alive()</code>
+<ul>
+<li>Metodo che ritorna se il thread è <em>alive</em> o meno.</li>
+<li>Dovrebbe essere utilizzato in combinazione con il metodo <code>join</code> quando viene specificato un <em>timeout</em>; in questo caso infatti <em>join</em> ritorna sempre <code>None</code>, anche nel caso di <em>timeout</em> scaduto.</li>
+</ul></li>
+</ul>
+<section id="ciclo-di-vita-delloggetto-thread" class="level4" data-number="8.1.1.1">
+<h4 data-number="8.1.1.1" class="anchored" data-anchor-id="ciclo-di-vita-delloggetto-thread"><span class="header-section-number">8.1.1.1</span> Ciclo di vita dell’oggetto thread</h4>
+<p>Un thread è ancora una volta <strong>trattato come oggetto Python</strong>.<br>
+È possibile invocare qualsiasi metodo o accedere a qualsiasi attributo dell’oggetto thread in qualsiasi momento, finché l’oggetto esiste.</p>
+<p>La chiamata <code>join()</code> permette di attendere che il thread finisca l’esecuzione, <strong>ma non distrugge l’oggetto thread</strong>.</p>
+<div id="5aa59147" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> threading <span class="im">import</span> Thread</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyThread(Thread):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> run(<span class="va">self</span>):</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Running MyThread...</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"is_alive?: "</span>, <span class="va">self</span>.is_alive())</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> method1(<span class="va">self</span>):</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"method1 invocato...</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> MyThread()</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>m.start()</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>m.join()</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>m.method1()</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"is_alive?: "</span>, m.is_alive())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MyThread...
+
+is_alive?:  True
+method1 invocato...
+
+is_alive?:  False</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Attenzione: Non posso far eseguire un thread più volte con il metodo <code>start()</code>.</p>
+</blockquote>
+<div id="2683088b" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> threading <span class="im">import</span> Thread</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyThread(Thread):</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> run(<span class="va">self</span>):</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Running MyThread...</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"is_alive?: "</span>, <span class="va">self</span>.is_alive())</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> method1(<span class="va">self</span>):</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"method1 invocato...</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> MyThread()</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>m.start()</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>m.join()</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>m.start()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MyThread...
+
+is_alive?:  True</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[15]</span><span class="ansi-green-fg">, line 12</span>
+<span class="ansi-green-fg">     10</span> m.start()
+<span class="ansi-green-fg">     11</span> m.join()
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">12</span> <span class="ansi-yellow-bg">m</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">start</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/usr/lib64/python3.14/threading.py:989</span>, in <span class="ansi-cyan-fg">Thread.start</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-fg">    986</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">RuntimeError</span>(<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">thread.__init__() not called</span><span class="ansi-yellow-fg">"</span>)
+<span class="ansi-green-fg">    988</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">self</span>._started.is_set():
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">989</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">RuntimeError</span>(<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">threads can only be started once</span><span class="ansi-yellow-fg">"</span>)
+<span class="ansi-green-fg">    991</span> <span style="font-weight:bold;color:rgb(0,135,0)">with</span> _active_limbo_lock:
+<span class="ansi-green-fg">    992</span>     _limbo[<span style="color:rgb(0,135,0)">self</span>] = <span style="color:rgb(0,135,0)">self</span>
+
+<span class="ansi-red-fg">RuntimeError</span>: threads can only be started once</pre>
+</div>
+</div>
+</div>
+</section>
+<section id="daemon-thread-vs-non-daemon-thread" class="level4" data-number="8.1.1.2">
+<h4 data-number="8.1.1.2" class="anchored" data-anchor-id="daemon-thread-vs-non-daemon-thread"><span class="header-section-number">8.1.1.2</span> <code>daemon</code> thread vs non-<code>daemon</code> thread</h4>
+<blockquote class="blockquote">
+<p>NOTA: Jupiter ignora totalmente questo flag, se provassimo a settarlo a Treu lo considera comunque False</p>
+</blockquote>
+<p>Un thread può esser contrassegnato come “thread demone”.</p>
+<p>Il significato di questo flag è che l’intero processo Python <strong>termina quando rimangono solo thread di tipo <code>daemon</code></strong></p>
+<ul>
+<li>In altre parole, <strong>il programma non può terminare se c’è almeno un <em>thread non-daemon</em> ancora vivo</strong>.</li>
+</ul>
+<p>Il valore iniziale, per la proprietà <em>daemon</em>, è ereditato dal thread da cui è stato creato.</p>
+<p>Tale flag può esser impostato tramite il costruttore oppure tramite la proprietà <em>deamon</em>.</p>
+<div id="88f28cff" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> func():</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Funzione del thread"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> threading.Thread(target<span class="op">=</span>func)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>t1.daemon <span class="op">=</span> <span class="va">True</span> <span class="co"># /False</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Quello che ci andiamo a riferire attraverso <code>t1.daemon</code> è la proprietà definita nel modulo <code>threading</code>:</p>
+<div id="76e937a6" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="at">@daemon.setter</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> daemon(<span class="va">self</span>, daemonic):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>._initialized:</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">"Thread.__init__() not called"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> daemonic <span class="kw">and</span> <span class="kw">not</span> _daemon_threads_allowed():</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">'daemon threads are disabled in this interpreter'</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="va">self</span>._started.is_set():</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">"cannot set daemon status of active thread"</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>._daemonic <span class="op">=</span> daemonic</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Nel linguaggio Linux-like <strong><em>daemon</em></strong> è processo in background.</p>
+<p>In Python invece <strong>sia daemon che non-daemon girano in background</strong>, la differenza è solo nella gestione della terminazione.</p>
+<ul>
+<li>I thread <em>daemon</em> vengono <strong>interrotti</strong> alla terminazione del processo.
+<ul>
+<li>Le loro risorse (come file aperti, transizioni di database, ecc) potrebbero <strong>non essere rilasciate correttamente</strong>.</li>
+</ul></li>
+<li>Se si vuole che i propri thread si arrestino in maniera graduale, bisogna renderli <em>non-daemon</em> e utilizzare meccanismi di segnalazione adeguati (es, un evento).</li>
+</ul>
+<p>La differenza principale nell’utilizzare un thread <em>non-daemon</em> e quella di utilizzare il metodo <code>join()</code> a fine programma, è il <strong>meccanismo sottostante</strong> e il modo in cui l’interprete Python gestisce la chiusura.</p>
+<ol type="1">
+<li><p>Il thread <em>non-daemon</em>: attesa “implicita”</p>
+<p>In python, un thread non-daemon agisce come un salvavita per l’intero processo.</p>
+<p>L’intero processo non può terminare finché c’è almeno un thread non-daemon ancora vivo.</p>
+<p>Quando il main Thread arriva all’ultima riga di codice ed esce, l’interprete non chiude il programma immediatamente. Prima controlla se ci sono thread non-daemon attivi. Se ne trova, resta in uno stato di attesa finché questi non terminano naturalmente.</p>
+<p>La gestione è automatica dell’interprete.</p></li>
+<li><p>Il metodo <code>join()</code></p>
+<p>Il <code>join()</code> non è una proprietà del thread ma un comando bloccante che il programmatore impone.</p>
+<p>Permette di avere una granularità maggiore sulla terminazione dei vari thread all’interno dell’applicazione software.</p>
+<p>Quando esegui <code>t1.join()</code>, dal main thread, questo si blocca a quella riga fintantoché il thread <code>t1</code> non termini la propria esecuzione.</p></li>
+</ol>
+<p><strong>Utilizzo dei <span style="color: #DE6449">non-daemon thread&gt;</span></strong>:</p>
+<ul>
+<li>Elaborazione di file: per evitare trasmissioni di dati incomplete o corrotte.</li>
+<li>Richieste di rete.</li>
+<li>Elaborazione di dati in background.</li>
+</ul>
+<p><strong>Utilizzo dei <span style="color: #DE6449">daemon thread&gt;</span></strong>:</p>
+<ul>
+<li>Logging</li>
+<li>Attività di manutenzione</li>
+<li>Monitoraggio dei servizi in background</li>
+</ul>
+</section>
+</section>
+<section id="thread-local-data-the-local-class" class="level3" data-number="8.1.2">
+<h3 data-number="8.1.2" class="anchored" data-anchor-id="thread-local-data-the-local-class"><span class="header-section-number">8.1.2</span> <code>Thread-local</code> Data: the local class</h3>
+<p>Poiché i thread <strong>condividono lo spazio di memoria del loro processo padre</strong>, potrebbe essere necessario definire variabili locali ai thread, per evitare effetti collaterali indesiderati.</p>
+<p>Python fornisce un oggetto di tipo <code>local</code> se è necessario memorizzare <strong>dati unici per ogni thread</strong>.</p>
+<p><code>local</code> permette di:</p>
+<ul>
+<li>creare un’istanza della classe <code>local</code> attraverso threading</li>
+<li>salvare gli attributi che si vuole rendere locali al thread su tale istanza.</li>
+</ul>
+<blockquote class="blockquote">
+<p>Tutti i dati storicizzati nell’istanza <code>local</code> saranno differenti per ogni thread</p>
+</blockquote>
+<div id="126041b9" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>logging.basicConfig(level<span class="op">=</span>logging.DEBUG,<span class="bu">format</span><span class="op">=</span><span class="st">'(%(threadName)-0s)</span><span class="sc">%(message)s</span><span class="st">'</span>,)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show(d):</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        val <span class="op">=</span> d.val</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">AttributeError</span>:</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        logging.debug(<span class="st">'No value yet'</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        logging.debug(<span class="st">'value=</span><span class="sc">%s</span><span class="st">'</span>, val)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(d):</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    show(d)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    d.val <span class="op">=</span> random.randint(<span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    show(d)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> threading.local()</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    show(d)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    d.val <span class="op">=</span> <span class="dv">999</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    show(d)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> threading.Thread(target<span class="op">=</span>f, args<span class="op">=</span>(d,))</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>        t.start()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>(MainThread) No value yet
+(MainThread) value=999
+(Thread-154 (f)) No value yet
+(Thread-154 (f)) value=57
+(Thread-155 (f)) No value yet
+(Thread-155 (f)) value=82</code></pre>
+</div>
+</div>
+<p>ESEMPIO SENZA <code>threading.local</code></p>
+<div id="9b9522d8" class="cell" data-execution_count="42">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {} <span class="co">## data è globale ad ogni thread</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> worker(name, value):</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> data</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">'user'</span>] <span class="op">=</span> value <span class="co">## data viene sovrascritto dipendentemente dalla velocità relativa dei thread -&gt; race condition</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> vede user ="</span>, data[<span class="st">'user'</span>])</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>threads <span class="op">=</span> [</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>threading.Thread(target<span class="op">=</span>worker, args<span class="op">=</span>(<span class="st">"T1"</span>, <span class="st">"Alice"</span>)),</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>threading.Thread(target<span class="op">=</span>worker, args<span class="op">=</span>(<span class="st">"T2"</span>, <span class="st">"Bob"</span>)),</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> threads:</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    t.start()</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> threads:</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    t.join()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>T1 vede user = Bob
+T2 vede user = Bob</code></pre>
+</div>
+</div>
+<div id="674206f8" class="cell" data-execution_count="53">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> threading.local() <span class="co"># data è locale ad ogni thread</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> worker(name, value):</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    data.user <span class="op">=</span> value</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> vede user = </span><span class="sc">{</span>data<span class="sc">.</span>user<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>threads <span class="op">=</span> [</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>threading.Thread(target<span class="op">=</span>worker, args<span class="op">=</span>(<span class="st">"T1"</span>, <span class="st">"Alice"</span>)),</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>threading.Thread(target<span class="op">=</span>worker, args<span class="op">=</span>(<span class="st">"T2"</span>, <span class="st">"Bob"</span>)),</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> threads:</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    t.start()</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> threads:</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    t.join()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>T1 vede user = Alice
+T2 vede user = Bob</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="lock-class" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="lock-class"><span class="header-section-number">8.2</span> <code>Lock</code> class</h2>
+<p>La classe <code>Lock</code> implementa la rispettiva primitiva di sincronizzazione di basso livello fornita dal modulo <code>_thread</code>.<br>
+Un lock può trovarsi in due stati: <strong>locked</strong> o <strong>unlocked</strong>.</p>
+<p>I lock sono creati nello stato <em>unlocked</em>.</p>
+<p>Quando un thread acquisisce un lock, il lock passa allo stato <strong>locked</strong>.</p>
+<ul>
+<li>Successive acquisizioni dello stesso lock da altri thread, porteranno i thread ad essere posti in attesa.</li>
+</ul>
+<p>Quando un thread rilascia un lock precedentemente acquisito, il lock passa in stato <strong>unlocked</strong>.</p>
+<ul>
+<li>Uno degli eventuali thread in attesa sul lock sarà risvegliato: la scelta del thread varia a seconda delle implementazioni Python.</li>
+</ul>
+<p>La classe lock prevede due metodi per <strong>l’acquisizione e rilascio di lock</strong>.</p>
+<ul>
+<li><code>acquire()</code>:
+<ul>
+<li>Quando lo stato del lock è <em>unlocked</em>, il metodo cambia lo stato in <em>locked</em> e ritorna immediatamente.</li>
+<li>Quando lo stato è <em>locked</em>, il metodo blocca il thread chiamante fino a quando un altro thread non invoca <code>release()</code> per cambiare lo stato in <em>unlocked</em>.</li>
+</ul></li>
+<li><code>release()</code>:
+<ul>
+<li>Può essere invocata solo quando lo stato del lock è <em>locked</em>, e porta al passaggio del lock nello stato <em>unlocked</em>.</li>
+</ul></li>
+</ul>
+<div id="f0b02e6c" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>lock <span class="op">=</span> threading.Lock()</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>lock.acquire()</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Dopo acquire() </span><span class="sc">{</span>lock<span class="sc">.</span>locked()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>lock.release()</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Dopo release() </span><span class="sc">{</span>lock<span class="sc">.</span>locked()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Dopo acquire() True
+Dopo release() False</code></pre>
+</div>
+</div>
+<section id="acquire" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="acquire"><span class="header-section-number">8.2.1</span> <code>acquire()</code></h3>
+<p><code>acquire(blocking=True, timeout=-1)</code>: acquisisce un lock</p>
+<ul>
+<li>ritorna <code>True</code> se il lock è acquisito, <code>False</code> in caso contrario.</li>
+<li><strong>blocking</strong>: definisce se la chiamate è bloccante
+<ul>
+<li><code>True</code> (default), la chiamata è bloccante se il lock è già stato precedentemente acquisito.</li>
+<li><code>False</code>, la chiamata ritorna immediatamente restituendo False in caso in cui il lock è locked.</li>
+</ul></li>
+<li><code>timeout</code>: imposta un tempo massimo di attesa
+<ul>
+<li>se il <em>timeout</em> (valore floating point) è positivo (default <code>-1</code>), il chiamante resterà bloccato per un massimo <em>timeout</em> secondi</li>
+<li>Allo scadere del <em>timeout</em>, il metodo restituirà <code>False</code></li>
+</ul></li>
+<li><code>release()</code>: rilascia un lock e ritorna (non prevede un valore di ritorno)</li>
+<li><code>locked()</code> verifica lo stato di un lock.
+<ul>
+<li>Se lo stato è locked, ritorna <code>True</code></li>
+</ul></li>
+</ul>
+<div id="28ab38ea" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> threading <span class="im">import</span> Thread, Lock</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>counter <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> increase(by, lock):</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> counter</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    lock.acquire()</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sezione critica</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    local_counter <span class="op">=</span> counter</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    local_counter <span class="op">+=</span> by</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    counter <span class="op">=</span> local_counter</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"coutner=</span><span class="sc">{</span>counter<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    lock.release()</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    lock <span class="op">=</span> Lock()</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create threads</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    t1 <span class="op">=</span> Thread(target<span class="op">=</span>increase, args<span class="op">=</span>(<span class="dv">10</span>,lock))</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    t2 <span class="op">=</span> Thread(target<span class="op">=</span>increase,args<span class="op">=</span>(<span class="dv">20</span>,lock))</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># start thread</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    t1.start()</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    t2.start()</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># wait for the threads to complete</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    t1.join()</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    t2.join()</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"the final counter is </span><span class="sc">{</span>counter<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>coutner=10
+coutner=30
+the final counter is 30</code></pre>
+</div>
+</div>
+</section>
+<section id="with-e-primitive-di-sincronizzazione" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="with-e-primitive-di-sincronizzazione"><span class="header-section-number">8.2.2</span> <code>with</code> e primitive di sincronizzazione</h3>
+<p>Lo statement <code>with</code> è utilizzato per semplificare l’accesso ad una risorsa acquisendola e rilasciandola al termine del blocco istruzioni specificato.</p>
+<p>Per la primitiva di locking, è possibile <strong>acquisire il lock con <code>with</code> e rilasciarlo automaticamente</strong> al termine dell’ultima istruzione nel blocco istruzioni.</p>
+<div id="3b2aae5e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lock <span class="op">=</span> Lock()</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> lock:</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># critical section</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Questo codice equivale a:</p>
+<div id="0f7e4499" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>lock <span class="op">=</span> Lock()</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>lock.acquire()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># critical section</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>lock.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="rlock-class" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="rlock-class"><span class="header-section-number">8.3</span> <code>RLock</code> class</h2>
+<p><code>RLock</code> implementa i <strong>reentrant lock</strong>: lock che possono essere <strong>acquisiti più volte dallo stesso thread</strong>.</p>
+<p><code>RLock</code> è utile negli scenari in cui lo stesso thread potrebbe avere bisogno di acquisire un blocco già in suo possesso.</p>
+<p>(Es: <strong>funzioni ricorsive, metodi che chiamano altri metodi bloccanti</strong> o <strong>sezioni critiche innestate</strong>)</p>
+<p>Oltre al concetto di stato <em>locked</em>/<em>unlocked</em>, i reentrant lock prevedono due ulteriori concetti:</p>
+<ul>
+<li><strong>owning thread</strong>: quale thread che ha acquisito il lock.</li>
+<li><strong>recursion level</strong>: per tenere traccia del numero di acquisizioni fatte dallo stesso thread.</li>
+</ul>
+<p>Come la classe <code>Lock</code>, sono previsti i meotodi <code>acquire</code> e <code>release</code> per modificare lo stato.</p>
+<p>Due principale differenze sono:</p>
+<ul>
+<li>se la <code>acquire()</code> è invocata da un thread che già ha acquisito il lock (<em>owing thread</em>), la chiamata non è bloccante e viene incrementato il <em>recusion level</em>.</li>
+<li>la <code>release()</code> rilascia il <strong>lock e decrementa il <em>recusione level</em></strong>
+<ul>
+<li>solo quando il recursion level diventa pari a zero, il lock passa allo stato <em>unlocked</em>, e potrà essere effettivamente acquisito da un altro thread.</li>
+</ul></li>
+</ul>
+<div id="06f4b708" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SharedResource:</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lock <span class="op">=</span> threading.RLock()</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># se provassimo a mettere un lock normale andremo in deadlock</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">#self.lock = threading.Lock()</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.value <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> increment(<span class="va">self</span>):</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="va">self</span>.lock:</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.value <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.log() <span class="co"># chiamata ad un metodo che utilizza il lock</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> log(<span class="va">self</span>):</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="va">self</span>.lock:</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Value is now: </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>value<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>resource <span class="op">=</span> SharedResource()</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> worker():</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>        resource.increment()</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>threads <span class="op">=</span> [threading.Thread(target<span class="op">=</span>worker) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>)]</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> threads:</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    t.start()</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> threads:</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>    t.join()</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Value is now: 1
+Value is now: 2
+Value is now: 3
+Value is now: 4
+Value is now: 5
+Value is now: 6
+Value is now: 7
+Value is now: 8
+Value is now: 9
+Value is now: 10</code></pre>
+</div>
+</div>
+</section>
+<section id="condition-class" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="condition-class"><span class="header-section-number">8.4</span> <code>Condition</code> class</h2>
+<p><code>Condition(lock=None)</code>: costruttore della classe.</p>
+<ul>
+<li><p><strong>lock</strong>: rappresenta il lock da associare alla condition variable. Se impostiamo a <code>None</code> (default), un <code>RLock</code> sarà creato automaticamente.</p></li>
+<li><p><code>acquire()</code>: chiama il metodo <code>acquire()</code> del lock associato alla condition variable.</p></li>
+<li><p><code>release()</code>: chiama il metodo <code>release()</code> del lock associato alla condition variable.</p></li>
+<li><p><code>wait(timeout=None)</code>: attende fino alla notifica, o fino alla scadenza di un timeout.</p>
+<ul>
+<li>timeout: imposta un tempo massimo di attese in secondi</li>
+<li>il metodo rilascia il lock e resta bloccato dino alla chiamata della <code>notify()</code> o <code>notify_all()</code> da parte di un altro thread sulla stessa CV, o fino alla scadenza del timeout.</li>
+<li>il lock viene riacquisito non appena il thread è risvegliato, ed il metodo restituisce un booleano
+<ul>
+<li>False: nel caso di timeout scaduto</li>
+<li>True: in tutti gli altri casi</li>
+</ul></li>
+</ul></li>
+<li><p><code>wait_for(predicate, timeout=None)</code>: attende fino a quando una condizione diventa True</p>
+<ul>
+<li><strong>predicate</strong>: deve essere una condizione o un <code>callable object</code> che ritorni un booleano</li>
+<li><strong>timeout</strong>: massimo tempo di attesa in secondi</li>
+</ul></li>
+<li><p><code>notify(n=1)</code>: risveglia il numero di thread indicati dal parametro <code>n</code> in attesa sulla CV; di defaul è pari a <code>1</code>.</p></li>
+<li><p><code>notify_all()</code>: risveglia tutti i thread in attesa sunna CV</p></li>
+</ul>
+<hr>
+<section id="esempio" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="esempio"><span class="header-section-number">8.4.1</span> Esempio</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>cv_lock <span class="op">=</span> threading.Lock()</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> threading.Condition(lock<span class="op">=</span>cv_lock)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Consume on item</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> cv:</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="kw">not</span> an_item_available(queue):</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>        cv.wait()</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    get_an_available_item(queue)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Produce one item</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> cv:</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    make_an_item_available(queue)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    cv.notify()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Oppure avrei potuto scrivere, nel consumatore:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Consume one item</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> cv:</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    cv.wait_for(an_item_is_available)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    get_an_available_item()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>NOTA: il ciclo <code>while</code> che verifica la condizione è <strong>necessario</strong>.</p>
+<ul>
+<li>L’utilizzo di <code>with cv</code>, evita la necessità di dover richiamare:
+<ul>
+<li><code>cv.acquire()</code> all’inizio della sezione critica</li>
+<li><code>cv.release()</code> alla fine della sezione critica</li>
+</ul></li>
+<li>Quando un thread viene risvegliato dalla <code>notify</code>, la condizione su cui era in attesa potrebbe non essere più verificata
+<ul>
+<li><p>L’alternativa proposta sarebbe quella di utilizzare <code>wait_for()</code></p>
+<p>Vediamo la sua implementazione:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wait_for(<span class="va">self</span>, predicate, timeout<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>      <span class="co">"""Wait until a condition evaluates to True.</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">      predicate should be a callable which result will be interpreted as a</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">      boolean value.  A timeout may be provided giving the maximum time to</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">      wait.</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">      """</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>      endtime <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>      waittime <span class="op">=</span> timeout</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>      result <span class="op">=</span> predicate()</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>      <span class="cf">while</span> <span class="kw">not</span> result:</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span> waittime <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>              <span class="cf">if</span> endtime <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>                  endtime <span class="op">=</span> _time() <span class="op">+</span> waittime</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>              <span class="cf">else</span>:</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>                  waittime <span class="op">=</span> endtime <span class="op">-</span> _time()</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">if</span> waittime <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">break</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>          <span class="va">self</span>.wait(waittime)</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>          result <span class="op">=</span> predicate()</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="semaphore-class" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="semaphore-class"><span class="header-section-number">8.5</span> <code>Semaphore</code> class</h2>
+<p>la classe <code>semaphore</code> permette di istanziare un oggetto semaforo, il quale gestisce un contatore interno:</p>
+<ul>
+<li>inizializzato alla creazione del semaforo</li>
+<li>decrementato ad ogni operazione di <code>acquire()</code></li>
+<li>incrementato ad ogni operazione di <code>release()</code></li>
+</ul>
+<p><strong>Quando il contatore arriva al valore zero</strong>, come conseguenza di operazione di <code>acquire()</code>, <strong>il thread chiamante viene bloccato</strong> fino a quando non viene effettuata una operazione di <code>release()</code> da un altro thread sullo stesso oggetto <code>Semaphore</code>.</p>
+<p>Le <strong>primitive</strong> fornite dalla classe <code>Semaphore</code> sono le seguenti:</p>
+<ul>
+<li><code>class threading.Semaphore(value=1)</code>: costruttore della classe.
+<ul>
+<li><code>value</code>: rappresenta il valore a cui è inizializzato il semaforo (default <code>1</code>)</li>
+</ul></li>
+<li><code>acquire(blocking=True, timeout=None)</code>: acquisisce un semaforo
+<ul>
+<li>se invocato senza parametri:
+<ul>
+<li>se il valore del contatore <strong>è</strong> <strong>maggiore di zero</strong>, decrementa il valore di <code>1</code> e ritorna <code>True</code></li>
+<li>se il valore del contatore <strong>è zero</strong>, la chiamata è bloccante per il thread che l’ha invocata.<br>
+Il thread sarà risvegliato in seguito ad una <code>release()</code>; al risveglio, il contatore (se maggiore di zero) sarà decrementato, e sarà ritornato <code>True</code></li>
+</ul></li>
+<li><code>blocking</code>: se settato a <code>False</code>, la chiamata <strong>non è bloccante</strong>. Pertanto, ritorna <code>False</code> immediatamente invece di bloccare il chiamante.</li>
+<li><code>timeout</code>: rappresenta il massimo tempo (in secondi) per cui il chiamante resta bloccato sull’<code>acquire()</code>. Se il timeout scade, il metodo ritorna <code>False</code>.</li>
+</ul></li>
+<li><code>release(n=1)</code>: rilascia un semaforo, incrementando di un valore pari a <code>n</code> il contatore. Un numero di thread pari a <code>n</code> viene ad essere risvegliato.</li>
+</ul>
+<div id="21f444c7" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> threading <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> time <span class="im">import</span> sleep</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> random <span class="im">import</span> random</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># creating thread instance where count = 3</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>obj <span class="op">=</span> Semaphore(value<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> display(name):</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    obj.acquire()</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> random()</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    sleep(value)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Thread </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> got </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    obj.release()</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># creating and starting multiple threads</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    threads <span class="op">=</span> [Thread(target<span class="op">=</span>display, args<span class="op">=</span>(<span class="ss">f"Thread-</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>,)) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>)]</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>        threads[i].start()</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># wait for the threads to complete </span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>        threads[i].join() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Thread Thread-1 got 0.19731436004491054
+Thread Thread-0 got 0.39861407050849407
+Thread Thread-2 got 0.6727667866917991
+Thread Thread-3 got 0.6959211142510887
+Thread Thread-5 got 0.28415480819233585
+Thread Thread-4 got 0.6555666295726351
+Thread Thread-6 got 0.20325385125156836
+Thread Thread-8 got 0.08926905289217069
+Thread Thread-7 got 0.2220925033457556
+Thread Thread-9 got 0.1981205351123605</code></pre>
+</div>
+</div>
+</section>
+<section id="event-class" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="event-class"><span class="header-section-number">8.6</span> <code>Event</code> class</h2>
+<p>La classe <code>Event</code> fornisce un semplice <strong>meccanismo di comunicazione tra thread</strong>:</p>
+<ul>
+<li>attraverso un <code>Event</code>, un thread può segnalare un evento per il quale altri thread sono in attesa</li>
+<li>ogni <code>Event</code> è caratterizzato da un flag interno (booleano) che può essere settato a <code>True</code> con il metodo <code>set()</code>, e resettato a <code>False</code> con il metodo <code>clear()</code></li>
+</ul>
+<p>Un thread che è in attesa di un determinato evento, può utilizzare il metodo <code>wait()</code> sull’evento.</p>
+<ul>
+<li>Il thread resterà bloccato fino a quando il flag dell’evento sarà settato a <code>True</code></li>
+</ul>
+<p>I <strong>metodi</strong> della classe <code>Event</code> sono i seguenti:</p>
+<ul>
+<li><code>is_set()</code>: ritorna <code>True</code> se il flag interno è settato a tale valore; <code>False</code> in caso contrario.</li>
+<li><code>set()</code>: setta il flag interno al valore <code>True</code>; tutti i thread in attesa dell’evento, vengono risvegliati.</li>
+<li><code>clear()</code>: setta il flag interno al valore <code>False</code>; tutti i thread che invocheranno una <code>wait()</code> sull’evento saranno bloccati.</li>
+<li><code>wait(timeout=None)</code>: pone il thread in attesa che il flag interno venga settato a <code>True</code>
+<ul>
+<li>se il flag è già <code>True</code>, ritorna immediatamente <code>True</code></li>
+<li>in caso contrario, pone il thread in attesa fino al timeout (se settato)</li>
+<li><code>timeout</code>: valore floating point che rappresenta l’attesa massima in secondi sul metodo <code>wait()</code>. Alla scadenza del timeout, il metodo ritorna <code>False</code></li>
+</ul></li>
+</ul>
+<hr>
+<section id="esempio-1" class="level3" data-number="8.6.1">
+<h3 data-number="8.6.1" class="anchored"><span class="header-section-number">8.6.1</span> Esempio</h3>
+<div id="d001a298" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading <span class="im">as</span> thd</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> task(event, timeout):</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Started thread but waiting for event..."</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># make the thread wait for event with timeout set</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    event_set <span class="op">=</span> event.wait(timeout)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> event_set:</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Event received, releasing thread..."</span>)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Time out, moving ahead without event..."</span>)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initializing the event obj</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> thd.Event()</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># starting the thread</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    thread <span class="op">=</span> thd.Thread(target<span class="op">=</span>task, name<span class="op">=</span><span class="st">"Event-Thread"</span>, args<span class="op">=</span>(e,<span class="dv">4</span>))</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>    thread.start()</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sleeping the main thread for 3 seconds</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">3</span>)</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># generating the event</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    e.<span class="bu">set</span>()</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Event is set"</span>)</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># wait for the thread to complete</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>    thread.join()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Started thread but waiting for event...
+Event is setEvent received, releasing thread...
+</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h2 id="da-ricordare" data-number="8.7" class="anchored" data-anchor-id="esempio-1"><span class="header-section-number">8.7</span> DA RICORDARE</h2>
+<p>Il lock non serve a proteggere “l’accesso alla risorsa” in senso letterale — serve a proteggere lo stato che descrive chi sta usando la risorsa.</p>
+</blockquote>
+</section>
+</section>
+<section id="multi-threading-global-interpreter-lock-gil" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Multi-threading: Global Interpreter Lock (GIL)</h1>
+<p>Meccanismo utilizzato in Python per assicurare che <strong>un solo thread alla volta possa eseguire bytecode</strong></p>
+<ul>
+<li>semplifica l’implementazione dell’interprete</li>
+<li>rende l’object model Python implicitamente “safe” da accessi concorrenti</li>
+<li>nato per relizzare thread-safe memory management, richiesto dalle librerie C utilizzate da Python</li>
+</ul>
+<p><img src="img/gil.png" class="img-fluid"></p>
+<p><strong>VANTAGGI</strong>:</p>
+<ul>
+<li>Permette di rendere facilmente multi-threaded l’interprete Python, a discapito del parallelismo</li>
+<li>Dovendo gestire un solo lock, migliora le performance degli applicativi single-thread</li>
+<li>Le librerie C non thread-safe possono essere facilmente integrate</li>
+</ul>
+<p><strong>SVANTAGGI</strong>:</p>
+<ul>
+<li>Riduce il livello di parallelismo ottenibile su macchine multi-processore</li>
+<li>Impatta principalmente i task CPU-bound, in quanto è rilasciato per task I/O bound</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../capitoli/lezione7.html" class="pagination-link" aria-label="OOP">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OOP</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

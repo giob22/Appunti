@@ -68,6 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../capitoli/lezione8.html" rel="next">
 <link href="../capitoli/lezione6.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -192,6 +193,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OOP</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -300,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="implementazione-di-una-classe" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="implementazione-di-una-classe"><span class="header-section-number">7.2</span> Implementazione di una classe</h2>
-<div id="e8d0b019" class="cell" data-execution_count="46">
+<div id="e8d0b019" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># define attributes here</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -334,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>È un metodo <strong>statico</strong> che prende come primo argomento la classe di cui è stata richiesta un’istanza.</li>
 <li>Il valore di ritorno di <code>__new__()</code> è l’istanza del <strong>nuovo oggetto</strong>.</li>
 </ul>
-<div id="845bd5f5" class="cell" data-execution_count="47">
+<div id="845bd5f5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>,x):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
@@ -369,7 +376,7 @@ x: 3</code></pre>
 <hr>
 <section id="attributi-statici" class="level3" data-number="7.4.1">
 <h3 data-number="7.4.1" class="anchored" data-anchor-id="attributi-statici"><span class="header-section-number">7.4.1</span> Attributi statici:</h3>
-<div id="340989d7" class="cell" data-execution_count="48">
+<div id="340989d7" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Robot:</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    popolazione <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -382,7 +389,7 @@ x: 3</code></pre>
 <p>È possibile omettere le classi da cui eredita la classe che stiamo creando, essa implicitamente eredita dalla classe <code>object</code>.</p>
 <hr>
 <p>Invece di utilizzare esplicitamente il metodo <code>__init__</code> possiamo utilizzare il nome stesso della classe per inizializzare un oggetto: essa richiama direttamente il metodo <code>__init__</code> il quale a sua volta richiama il metodo <code>__new__</code>.</p>
-<div id="ddc19f23" class="cell" data-execution_count="49">
+<div id="ddc19f23" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> Coordinate(<span class="dv">3</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r.x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -419,9 +426,9 @@ x: 3</code></pre>
 </ul></li>
 </ul>
 <p>Eccetto per <code>self</code> e la notazione <code>.</code>, i metodi di una classe si comportano semplicemente come funzioni.</p>
-<div id="e2ab71ff" class="cell" data-execution_count="50">
+<div id="e2ab71ff" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, x, y):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.y <span class="op">=</span> y</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> distance(<span class="va">self</span>, other):</span>
@@ -432,7 +439,7 @@ x: 3</code></pre>
 <section id="come-utilizzare-un-metodo" class="level3" data-number="7.6.1">
 <h3 data-number="7.6.1" class="anchored" data-anchor-id="come-utilizzare-un-metodo"><span class="header-section-number">7.6.1</span> Come utilizzare un metodo:</h3>
 <p>Esistono principalmente due modi per utilizzare un metodo, uno <strong>convenzionale</strong> e un <strong>equivalente</strong> (sconsigliato)</p>
-<div id="cec9d546" class="cell" data-execution_count="51">
+<div id="cec9d546" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
@@ -462,7 +469,7 @@ x: 3</code></pre>
 <p>Di Default la <code>print</code> di un oggetto restituisce una rappresentazione <strong>non informative</strong></p>
 <p>Dobbiamo ridefinire il <strong>metodo</strong> <code>__str__</code> per una classe se vogliamo fornire info diverse</p>
 <p>Python chiama <code>__str__</code> quando invochiamo la <code>print</code> su un oggetto istanza di una classe</p>
-<div id="312a3c8d" class="cell" data-execution_count="52">
+<div id="312a3c8d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Coordinate(<span class="bu">object</span>):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span> (<span class="va">self</span>, x, y):</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.x <span class="op">=</span> x</span>
@@ -488,7 +495,7 @@ x: 3</code></pre>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> Coordinate(<span class="dv">1</span>,<span class="dv">2</span>)</span>
 <span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;__main__.Coordinate object at 0x7f75b4d42900&gt;
+<pre><code>&lt;__main__.Coordinate object at 0x7fe2e85ee7b0&gt;
 &lt;1,2&gt;</code></pre>
 </div>
 </div>
@@ -496,7 +503,7 @@ x: 3</code></pre>
 <section id="tipi-e-classi" class="level2" data-number="7.8">
 <h2 data-number="7.8" class="anchored" data-anchor-id="tipi-e-classi"><span class="header-section-number">7.8</span> Tipi e Classi</h2>
 <p>Possiamo verificare il tipo di un oggetto utilizzando il metodo <code>isinstance()</code> mentre possiamo ottenere il tipo di un oggetto utilizzando la funzione <code>type()</code></p>
-<div id="8333ada5" class="cell" data-execution_count="53">
+<div id="8333ada5" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(x))</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -574,9 +581,9 @@ x: 3</code></pre>
 <li>Python <strong>supporta anche l’ereditarietà multipla</strong></li>
 </ul>
 <p><img src="img/ereditarieta.png" class="img-fluid"></p>
-<div id="34ac7bc4" class="cell" data-execution_count="54">
+<div id="34ac7bc4" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Animal(<span class="bu">object</span>):</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, age):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, age):</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.age <span class="op">=</span> age</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.name <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_age(<span class="va">self</span>):</span>
@@ -595,7 +602,7 @@ x: 3</code></pre>
 <li>La classe <code>object</code> implementa tutte le operazioni di base in Python, come il binding di variabili, etc</li>
 </ul>
 <p>Una classe che eredita da un’altra classe ha la possibilità di modificare alcuni comportamenti o aggiungere nuove funzionalità:</p>
-<div id="6de94da7" class="cell" data-execution_count="55">
+<div id="6de94da7" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Cat(Animal):</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> speak(<span class="va">self</span>): <span class="co"># nuova funzionalità</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"meow"</span>)</span>
@@ -614,7 +621,7 @@ x: 3</code></pre>
 </section>
 <section id="ereditarietà-multipla" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="ereditarietà-multipla"><span class="header-section-number">8.1</span> Ereditarietà multipla</h2>
-<div id="cfb2f742" class="cell" data-execution_count="56">
+<div id="cfb2f742" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A:</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of A called"</span>)</span>
@@ -639,7 +646,7 @@ x: 3</code></pre>
 <li>Un’altra classe <code>D</code> eredita sia da <code>B</code> che da <code>C</code></li>
 <li>Se c’è un metodo <code>m</code> in <code>A</code> per il quale <code>B</code> o <code>C</code> (o addirittura entrambi) hanno fatto un <em>override</em>, e se <code>D</code> non fa l’<em>override</em> di questo metodo, allora quale versione del metodo eredita <code>D</code>?</li>
 </ul>
-<div id="ce705f9b" class="cell" data-execution_count="57">
+<div id="ce705f9b" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> A:</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> m(<span class="va">self</span>):</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"m of A called"</span>)</span>
@@ -688,11 +695,11 @@ m of B called</code></pre>
 <li>Si può accedere alle variabili statiche attraverso una classe, ma non direttamente con un’istanza (pericoloso per la scrittura)</li>
 <li>Il comportamento delle variabili statiche non cambia al variare dell’oggetto</li>
 </ul>
-<div id="230589d7" class="cell" data-execution_count="58">
+<div id="230589d7" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> oggetto:</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    variabile_statica <span class="op">=</span> <span class="dv">23</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__int__</span>(<span class="va">self</span>):</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>o <span class="op">=</span> oggetto()</span>
@@ -728,7 +735,7 @@ m of B called</code></pre>
 <p>I <strong>decoratori</strong> sono uno strumento molto potente e utile in Python, poiché consentono ai programmatori di <strong>modificare il comportamento di una funzione o di una classe</strong>.</p>
 <p>I decoratori permettono di fare il <strong><em>wrap</em></strong> di un’altra funzione per estendere il comportamento della funzione <em>wrapped</em>, senza modificarla in modo permanente.</p>
 <p>Nei decoratori, le funzioni vengono prese come argomento in un’altra funzione e poi richiamate all’interno della funzione <em>wrapper</em>.</p>
-<div id="9301fc39" class="cell" data-execution_count="59">
+<div id="9301fc39" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> functools</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># definiamo il decoratore</span></span>
@@ -791,7 +798,7 @@ Esecuzione della funzione, ha avuto come risultato: 3
 <li>possono essere invocati direttamente sulla classe o su un oggetto della classe;</li>
 <li>solitamente utilizzati per gestire aspetti non legati alle singole istanze di una classe.</li>
 </ul>
-<div id="0e9222dc" class="cell" data-execution_count="60">
+<div id="0e9222dc" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rabbit:</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    tag <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
@@ -817,7 +824,7 @@ Esecuzione della funzione, ha avuto come risultato: 3
 </section>
 <section id="overloading-degli-operatori" class="level2" data-number="8.6">
 <h2 data-number="8.6" class="anchored" data-anchor-id="overloading-degli-operatori"><span class="header-section-number">8.6</span> Overloading degli operatori</h2>
-<div id="6fe09e5a" class="cell" data-execution_count="61">
+<div id="6fe09e5a" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> numero:</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x):</span>
@@ -845,7 +852,7 @@ Verifico se 1 e 2 sono 'numero' uguali
  1 == 2 → True</code></pre>
 </div>
 </div>
-<div id="ce9dcab3" class="cell" data-execution_count="62">
+<div id="ce9dcab3" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rabbit(Animal):</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    tag <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init (<span class="va">self</span>, age, parent1<span class="op">=</span><span class="va">None</span>, parent2<span class="op">=</span><span class="va">None</span>):</span>
@@ -883,7 +890,7 @@ Verifico se 1 e 2 sono 'numero' uguali
 <li><p><code>GeneratorExit</code> si verifica quando un generatore viene chiuso.</p></li>
 <li><p><code>Exception</code> è la classe base per le eccezioni più comuni.</p></li>
 </ol>
-<div id="42633884" class="cell" data-execution_count="63">
+<div id="42633884" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ValidationError(<span class="pp">Exception</span>):</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, message, errors):</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(message)</span>
@@ -1608,6 +1615,9 @@ I can roar</code></pre>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../capitoli/lezione8.html" class="pagination-link" aria-label="Programmazione concorrente in python">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
