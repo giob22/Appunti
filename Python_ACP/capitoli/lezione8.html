@@ -68,6 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../capitoli/lezione9.html" rel="next">
 <link href="../capitoli/lezione7.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -196,6 +197,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../capitoli/lezione8.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../capitoli/lezione9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python (2)</span></span></a>
   </div>
 </li>
     </ul>
@@ -1076,9 +1083,14 @@ Event is setEvent received, releasing thread...
 <h1 data-number="9"><span class="header-section-number">9</span> Multi-threading: Global Interpreter Lock (GIL)</h1>
 <p>Meccanismo utilizzato in Python per assicurare che <strong>un solo thread alla volta possa eseguire bytecode</strong></p>
 <ul>
-<li>semplifica l’implementazione dell’interprete</li>
-<li>rende l’object model Python implicitamente “safe” da accessi concorrenti</li>
-<li>nato per relizzare thread-safe memory management, richiesto dalle librerie C utilizzate da Python</li>
+<li><p>semplifica l’implementazione dell’interprete</p></li>
+<li><p>rende l’object model Python implicitamente “safe” da accessi concorrenti</p></li>
+<li><p>nato per relizzare thread-safe memory management, richiesto dalle librerie C utilizzate da Python.</p>
+<p>Il colpevole è il <strong>Reference Counting</strong>. Python utilizza un contatore di riferimenti per ogni oggetto per sapere quando de-allocarlo. Senza GIL, due thread potrebbero incrementare lo stesso contatore simultaneamente, causando:</p>
+<ul>
+<li>Memory leak</li>
+<li>Crash</li>
+</ul></li>
 </ul>
 <p><img src="img/gil.png" class="img-fluid"></p>
 <p><strong>VANTAGGI</strong>:</p>
@@ -1092,6 +1104,19 @@ Event is setEvent received, releasing thread...
 <li>Riduce il livello di parallelismo ottenibile su macchine multi-processore</li>
 <li>Impatta principalmente i task CPU-bound, in quanto è rilasciato per task I/O bound</li>
 </ul>
+<p>Alcuni moduli (sia standard che di terze parti) sono progettati per <strong>rilasciare il GIL quando eseguiti task che includono operazioni di I/O bloccanti</strong> (es. <code>time.sleep()</code>).</p>
+<p>Quindi questo previene il che un thread possa bloccare l’intera applicazione se esegue una chiamata bloccante.</p>
+<p>Alcune librerie ce sfruttano <code>C</code>, come <code>Numpy</code>, rilasciano volontariamente il GIL poiché non hanno bisogno dell’interprete.</p>
+<p>Tentativi passati di rimuovere il GIL non hanno avuto successo:</p>
+<ul>
+<li>riduzione delle performance degli applicativi single-thread</li>
+<li>aumento della complessità dell’interprete</li>
+<li>necessità di modificare tutte le estensioni delle librerie C che sfruttano il GIL</li>
+</ul>
+<hr>
+<p><strong>GIL oggi</strong>:</p>
+<p>In CPython normale, non è possibile disabilitare il GIL a run-time ma da Python 3.13 esiste una <strong>build free-threaded</strong> in cui il GIL è disabilitato.</p>
+<p>In Python 3.14 questa build è supportata ufficialmente, <strong>ma resta opzionale</strong>, non è quella predefinita; è possibile fare il build dell’interprete con l’opzione <code>--disable-gil</code>.</p>
 
 
 </section>
@@ -1504,6 +1529,9 @@ Event is setEvent received, releasing thread...
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../capitoli/lezione9.html" class="pagination-link" aria-label="Programmazione concorrente in python (2)">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python (2)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
