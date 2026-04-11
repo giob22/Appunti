@@ -217,6 +217,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#modulo-multiprocessing" id="toc-modulo-multiprocessing" class="nav-link active" data-scroll-target="#modulo-multiprocessing"><span class="header-section-number">9.1</span> Modulo <code>multiprocessing</code></a></li>
   <li><a href="#spawn" id="toc-spawn" class="nav-link" data-scroll-target="#spawn"><span class="header-section-number">9.2</span> <code>spawn</code></a></li>
   <li><a href="#fork" id="toc-fork" class="nav-link" data-scroll-target="#fork"><span class="header-section-number">9.3</span> <code>fork</code></a></li>
+  <li><a href="#forkserver" id="toc-forkserver" class="nav-link" data-scroll-target="#forkserver"><span class="header-section-number">9.4</span> <code>forkserver</code></a></li>
+  <li><a href="#modulo-multiprocess" id="toc-modulo-multiprocess" class="nav-link" data-scroll-target="#modulo-multiprocess"><span class="header-section-number">9.5</span> Modulo <code>multiprocess</code></a>
+  <ul class="collapse">
+  <li><a href="#process-class" id="toc-process-class" class="nav-link" data-scroll-target="#process-class"><span class="header-section-number">9.5.1</span> <code>Process</code> class</a></li>
+  <li><a href="#sincronizzazione-tra-processi" id="toc-sincronizzazione-tra-processi" class="nav-link" data-scroll-target="#sincronizzazione-tra-processi"><span class="header-section-number">9.5.2</span> Sincronizzazione tra processi</a></li>
+  <li><a href="#scambio-di-oggetti-tra-processi" id="toc-scambio-di-oggetti-tra-processi" class="nav-link" data-scroll-target="#scambio-di-oggetti-tra-processi"><span class="header-section-number">9.5.3</span> Scambio di oggetti tra processi</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -395,8 +402,161 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     p.join()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">process</span> id: 2934 <span class="kw">|</span> <span class="ex">__name__:</span> __main__</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">x</span> = 10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="forkserver" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="forkserver"><span class="header-section-number">9.4</span> <code>forkserver</code></h2>
+<p><code>forkserver</code> (disponibile sui sistemi Unix che supportano il passaggio di file descriptor attraverso Unix pipe. Default da Python 3.14 in poi). È un cambiamento fondamentale per rendere il <code>multiprocessing</code> più <strong>robusto</strong>, <strong>sicuro</strong> e <strong>prevedibile</strong>.</p>
+<ul>
+<li><p><strong>viene creato un <em>server process</em></strong>;</p>
+<p>Invece di far generare i figli direttamente dal processo principale, Python avvia un processo speciale chiamato <strong>Fork Server</strong>.</p>
+<ul>
+<li>Viene istanziato la prima volta che invochi una funzionalità di <code>multiprocessing</code></li>
+</ul></li>
+<li><p>quando un nuovo processo è necessario, il <strong>processo padre si connette al server</strong> richiede ad esso la <em>fork</em> di un nuovo processo;</p>
+<ul>
+<li>La richiesta avviene tramite un mesasggio attraverso una pipe Unix.</li>
+<li>Il <strong>Fork Server</strong> riceve la richiesta e lui, internamente, esegue la <code>fork()</code> per creare il niovo processo figlio.</li>
+<li>Una volta creato, il figlio “eredita” dal server, non dal padre, e poi riceve dal padre i file descriptor (tramite pipe) necessari per la comunicazione.</li>
+</ul></li>
+<li><p><strong>le risorse non necessarie non sono ereditate</strong>;</p>
+<p>Questo è un vantaggio principale in termini di efficienza e pulizia.</p>
+<ul>
+<li>Il problema della <code>fork</code> classica: il figlio eredita <em>tutto lo stazio di memoria del padre</em>. Se il tuo programma ha caricato <code>2GB</code> di dati in RAM, anche il figlio inizierà con <code>2GB</code> occupati (anche se si utilizzano meccanismi di <em>copy-and-write</em>).</li>
+<li>La soluzione implementata da <code>forkserver</code> sta nel fatto che il processo figlio non possiede tutte le variabili, le connessioni ai database o i gradi dataset caricati dal processo principale dopo l’avvio.</li>
+<li>i risultati sono che i figli sono più snelli e isolati.</li>
+</ul></li>
+<li><p><strong>il server process è single threaded</strong>, pertanto l’utilizzo della fork è safe;</p>
+<p>Quando un processo chiama la <code>fork()</code>, il sistema operativo crea una copia esatta di quel processo. Tuttavia, c’è un’eccezione fondamentale: <strong>solo il thread che ha chiamato la <code>fork</code> viene clonato nel nuovo processo</strong>. Tutti gli altri thread non esistono nel processo figlio.</p>
+<p>Perché questo rompe tutto? (Il caso dei Lock)</p>
+<p>Immagina questa situazione nel processo principale (Multi-threaded):</p>
+<ul>
+<li><p>Thread A acquisisce un Lock (un lucchetto) su una risorsa (es. il modulo logging o una connessione a un database).</p></li>
+<li><p>Thread B chiama fork().</p></li>
+</ul>
+<p>Nel processo Figlio appena nato:</p>
+<ul>
+<li><p>Il Thread B esiste ancora.</p></li>
+<li><p>Il Thread A è scomparso, perché non è stato lui a chiamare la fork.</p></li>
+<li><p>Il Lock è ancora lì ed è “CHIUSO”, perché è parte della memoria copiata.</p></li>
+</ul>
+<p>A questo punto, il processo figlio è in un Deadlock (vicolo cieco): ha bisogno del lucchetto per scrivere un log, ma il lucchetto è bloccato da un thread che non esiste più e che non potrà mai liberarlo. Il programma si congela.</p>
+<p>La <strong>soluzione</strong> proposta con il <code>forkserver</code>.</p>
+<p>Con <code>forkserver</code> viene creato un nuovo processo tramite la modalità di <code>spawn</code> → il server inizia la sua vita con una memoria completamente pulita e, soprattutto, con un solo thread.</p>
+<p>Il Fork Server funge da template (stampino) pulito: esso rimane attivo in background per tutta la durata dell’esecuzione del programma, in attesa di istruzioni dal processo padre.</p>
+<p>Quando viene richiesta la creazione di un nuovo processo, il Fork Server non esegue una copia del “padre” nel suo stato attuale, bensì crea una copia di se stesso tramite la funzione fork().</p>
+<p>Essendo il Fork Server la versione “congelata” (ovvero lo stato iniziale del programma subito dopo il caricamento dei moduli), esso rappresenta un ambiente di esecuzione puro e, soprattutto, single-threaded. Poiché nel server non sono ancora stati istanziati i thread secondari o i meccanismi di sincronizzazione complessi del processo principale, i nuovi processi figli nascono in uno stato deterministico e sicuro. Questo approccio elimina alla radice il rischio di Deadlock, impedendo ai figli di ereditare “lock fantasma” bloccati da thread che non esistono più.</p>
+<p>Viene garantita l’assenza di Deadlock che poteva presentarsi con l’utilizzo di una <code>fork</code> dal processo padre.</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/forkserver.png" class="img-fluid figure-img"></p>
+<figcaption>forkserver</figcaption>
+</figure>
+</div>
+</section>
+<section id="modulo-multiprocess" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="modulo-multiprocess"><span class="header-section-number">9.5</span> Modulo <code>multiprocess</code></h2>
+<p><code>multiprocess</code> è un fork del modulo <code>multiprocessing</code>.</p>
+<p>Estende <code>multiprocessing</code> per fornire un meccanismo di serializzazione migliorata, utilizzando <strong>dll</strong>.</p>
+<p><code>multiprocess</code> sfrutta il modulo <code>multiprocessing</code> per <strong>supportare lo spawning dei processi utilizzando API del modulo threading</strong> della libreria standard di Python.</p>
+<ul>
+<li>Quindi <code>multiprocess</code> consente di gestire processi come se fossero thread.</li>
+<li>Tale modulo assottigli ancora di più le differenze che vi sono tra il modulo <code>threading</code> e <code>multiprocessing</code>, uniformando l’interfaccia di <code>threading</code></li>
+</ul>
+<p><strong>Permette il trasferimento di oggetti</strong> tra processi tramite pipe o code multi-produttore/multi_consumatore.</p>
+<p><strong>Permette la condivisione di oggetti</strong> tra processi utilizzando un processo <em>server</em> (ambiente locale) o <em>shared memory</em> (ambiente globale).</p>
+<section id="process-class" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="process-class"><span class="header-section-number">9.5.1</span> <code>Process</code> class</h3>
+<p>Un oggetto della classe <code>Process</code> rappresenta una attività da eseguire in un processo separato.</p>
+<p>La classe <code>Process</code> possiede metodi equivalenti a quelli della classe <code>threading.Thread</code></p>
+<ul>
+<li><code>Porcess(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None)</code></li>
+<li><code>start()</code>: avvia il processo, portando all’esecuzione del metodo <code>run</code> non appena il processo sarà schedulato</li>
+<li><code>run()</code>: metodo che contiene il corpo del processo, e che ne rappresenta il comportamento</li>
+<li><code>join(timeout=None)</code>: metodo bloccante, che attende fino alla terminazione (naturale o con eccezioni) del processo</li>
+<li><code>is_alive()</code> metodo che ritorna se il processo è <em>alive</em> o meno</li>
+</ul>
+<p>Come per la classe <code>Thread</code>, anche la classe <code>Process</code> permette la creazione di un processo in vai modi, usando <strong>callable object</strong> o <strong>estendendo la classe Process</strong> stessa e eseguendo l’override del metodo <code>run()</code>.</p>
+</section>
+<section id="sincronizzazione-tra-processi" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2" class="anchored" data-anchor-id="sincronizzazione-tra-processi"><span class="header-section-number">9.5.2</span> Sincronizzazione tra processi</h3>
+<p>I moduli <strong><code>multiprocess</code></strong> e <strong><code>multiprocessing</code></strong> contengono primitive di sincronizzazione <strong>equivalenti a quelle fornite nel modulo <code>threading</code></strong>.</p>
+<p>Pertanto anche con i processi è possibile utilizzare <code>Lock</code>, <code>RLock</code>, <code>Semaphore</code>, <code>Condition</code> ed <code>Event</code>.</p>
+</section>
+<section id="scambio-di-oggetti-tra-processi" class="level3" data-number="9.5.3">
+<h3 data-number="9.5.3" class="anchored" data-anchor-id="scambio-di-oggetti-tra-processi"><span class="header-section-number">9.5.3</span> Scambio di oggetti tra processi</h3>
+<p>Quando sono utilizzati processi multipli, è spesso necessario <strong>prevedere dei canali di comunicazione</strong> tra gli stessi che permettano di evitare l’uso di primitive di sincronizzazione.</p>
+<p>Passiamo da un modello di <strong>memoria condivisa</strong> a un modello di <strong>scambio di messaggi</strong>.</p>
+<p>I moduli <strong><code>multiprocess</code></strong> e <strong><code>multiprocessing</code></strong> supportano <strong>due canali di comunicazione tra processi</strong>:</p>
+<ul>
+<li><strong><em>Pipe</em></strong>, che consente la connessione fra più processi</li>
+<li><strong><em>Queue</em></strong>, che supporta (di fatto implementa) il problema produttori-consumatori multipli</li>
+</ul>
+<p>Una <code>Pipe</code> è caratterizzata da una coppia di <strong>Connection objcets</strong> che rappresentano gli endpoint della <code>pipe</code>.</p>
+<p>Una <code>Queue</code> è un <em>process shared queue</em>, implementata attraverso una <em>pipe</em> e <em>lock/semaphores</em>.</p>
+<p>Sia Pipe che Queue sono <strong>thread/process-safe</strong></p>
+<section id="pipe" class="level4" data-number="9.5.3.1">
+<h4 data-number="9.5.3.1" class="anchored" data-anchor-id="pipe"><span class="header-section-number">9.5.3.1</span> <code>Pipe</code></h4>
+<p>La funzione <code>Pipe(duplex=True)</code> messa a disposizione da <code>multiprocessing</code> e <code>multiprocess</code> ritorna una coppia di oggetti <code>Connection</code> <code>(conn1, conn2)</code>, interconnessi attraverso una pipe.</p>
+<ul>
+<li><code>duplex</code>:
+<ul>
+<li>Se pari a <code>True</code> (default) la <em>pipe</em> creata è bidirezionale (duplex)</li>
+<li>se pari a <code>False</code>, la <em>pipe</em> sarà unidirezionale:
+<ul>
+<li><code>conn1</code> può solo ricevere messaggi</li>
+<li><code>conn2</code> può solo inviare messaggi</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>I due oggetti <code>Connection</code> rappresentano i due endpoint della pipe, sui quali è possibile utilizzare i seguenti metodi:</p>
+<ul>
+<li><code>send(obj)</code>: per inviare un oggetto verso l’altro endpoint della connessione, dove sarà utulizzata una <code>recv()</code></li>
+<li><code>recv()</code>: ritorna un oggetto inviato dall’altro endpoint della connessione. Se non vi sono ancora oggetti da ricevere, il metodo è bloccante.</li>
+</ul>
+<blockquote class="blockquote">
+<p>NOTA: - È importante notare che i dati nella pipe possono essere corretti se due processi utilizzano lo stesso endpoint per leggere o scrivere dati - Nessun rischio invece nel caso di processi che utilizzano endpoint diversi di una pipe.</p>
+</blockquote>
+<section id="esempio" class="level5" data-number="9.5.3.1.1">
+<h5 data-number="9.5.3.1.1" class="anchored" data-anchor-id="esempio"><span class="header-section-number">9.5.3.1.1</span> ESEMPIO</h5>
+<div id="4e97928f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> multiprocess <span class="im">import</span> Process, Pipe</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> parentData(parent):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Il processo p1 invia un dato attraverso il lato 'parent' della pipe</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    parent.send([<span class="st">'Hello'</span>])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    parent.close()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> childData(child):</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Il processo p2 invia un dato attraverso il lato 'child' della pipe</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    child.send([<span class="st">'Bye'</span>])</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    child.close()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pipe() restituisce due estremità di una connessione bidirezionale</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    parent_conn, child_conn <span class="op">=</span> Pipe()</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Creiamo il primo processo passandogli la prima estremità</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    p1 <span class="op">=</span> Process(target<span class="op">=</span>parentData, args<span class="op">=</span>(parent_conn,))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    p1.start()</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Creiamo il secondo processo passandogli la seconda estremità</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    p2 <span class="op">=</span> Process(target<span class="op">=</span>childData, args<span class="op">=</span>(child_conn,))</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    p2.start()</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Il processo principale riceve i dati inviati dai figli</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Nota: parent_conn riceverà quello che viene inviato su child_conn e viceversa</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(parent_conn.recv())  <span class="co"># Riceve quello che ha inviato p2 (childData)</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(child_conn.recv())   <span class="co"># Riceve quello che ha inviato p1 (parentData)</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    p1.join()</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    p2.join()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 
 
+</section>
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
