@@ -77,10 +77,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-73db7b5a953198da8f17fc5313e632aa.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-56a1e3db71204dfbc8a885484c5b40f0.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-73db7b5a953198da8f17fc5313e632aa.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-44ee0976171e9be92e6ebe9be850cd66.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-553af08a658bbaf7848ab84c12977b10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-44ee0976171e9be92e6ebe9be850cd66.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -112,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar floating quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -254,8 +256,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         changeGiscusTheme();
       }
     };
-    const authorPrefersDark = true;
+    const authorPrefersDark = false;
     const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
     let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
     // Dark / light mode switch
     window.quartoToggleColorScheme = () => {
@@ -537,13 +541,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="9.3" class="anchored" data-anchor-id="fork"><span class="header-section-number">9.3</span> <code>fork</code></h2>
 <p><code>fork</code> (disponibile solo su Unix, dove è il metodo di default fino a Python 3.13)</p>
 <p>Il processo padre utilizza la <strong>system call</strong> <code>fork()</code> (tramite <code>os.fork()</code>) per avviare un nuovo <em>Python Interpreter process</em> <strong>senza re-importare il modulo principale</strong>.</p>
-<p>Il processo figlio all’avvio eredita tutte le risorse del processo padre (file descriptors, locks, risorse (socket), threads, etc).</p>
+<p>Il processo figlio eredita le <strong>risorse</strong> del padre (file descriptor, socket, lock, etc.), ma <strong>NON i thread</strong> → viene creato con un solo thread, quello che ha chiamato la <code>fork()</code>.</p>
 <ul>
-<li>Lo stato del processo padre viene duplicato, come l’immagine del processo padre che è soggetta al <em>copy-and-write</em>.</li>
+<li>La memoria è soggetta a <strong><em>copy-on-write</em></strong>: padre e figlio condividono le stesse pagine fisiche finché <strong>uno dei due</strong> non le modifica, solo a quel momento avviene la copia.</li>
 </ul>
 <p>In questo caso la <strong><code>fork()</code> è considerata unsafe</strong> perché i thread e le risorse nel processo padre potrebbero non funzionare bene nel processo figlio.</p>
 <ul>
-<li>Potrebbe presentarsi un <strong>deadlock</strong> perché lo stato dei vari lock è lo stesso del padre, quindi se un lock era acquisito nel padre resterà acquisito anche nel figlio.</li>
+<li><p>Potrebbe presentarsi un <strong>deadlock</strong> perché lo stato dei vari lock è lo stesso del padre, quindi se un lock era acquisito nel padre resterà acquisito anche nel figlio.</p>
+<p>Il problema nasce dal fatto che la primitiva <code>fork</code>, come dice il manuale:</p>
+<blockquote class="blockquote">
+<p>The child process is created with a single thread—the one that called <code>fork()</code>.</p>
+</blockquote>
+<p>Significa che nel momento in cui vado a creare un nuovo processo, che possiede diversi thread, il nuovo processo (figlio) avrà un unico thread che consiste nel thread che ha chiamato la <code>fork</code>.</p>
+<p>Adesso il problema di presenta quando i thread presenti nel processo si sincronizzano tramite lock, semafori, variabili condition, etc definite all’interno del modulo <code>threading</code>. Infatti le chiamate fatte su tali costrutti nel padre non si rifletteranno più nel figlio dopo la creazione; inoltre lo stato di questi costrutti sarà pari allo stato di questi ultimi al momento della <code>fork</code>, quindi potremmo avere comportamenti indesiderati tra cui <strong>DEADLOCK</strong></p></li>
 </ul>
 <p>Dal momento che il processo figlio <strong>NON</strong> re-importa di nuovo il modulo principale <strong>NON è strettamente necessario</strong> che il processo padre invochi il costruttore di <code>Process</code> all’interno di un blocco <code>if __name__ == "__main__":</code></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> multiprocessing</span>
@@ -587,7 +597,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><strong>le risorse non necessarie non sono ereditate</strong>;</p>
 <p>Questo è un vantaggio principale in termini di efficienza e pulizia.</p>
 <ul>
-<li>Il problema della <code>fork</code> classica: il figlio eredita <em>tutto lo stazio di memoria del padre</em>. Se il tuo programma ha caricato <code>2GB</code> di dati in RAM, anche il figlio inizierà con <code>2GB</code> occupati (anche se si utilizzano meccanismi di <em>copy-and-write</em>).</li>
+<li>Il problema della <code>fork</code> classica: il figlio eredita <em>tutto lo stazio di memoria del padre</em>. Se il tuo programma ha caricato <code>2GB</code> di dati in RAM, anche il figlio inizierà con <code>2GB</code> occupati (anche se si utilizzano meccanismi di <em>copy-on-write</em>).</li>
 <li>La soluzione implementata da <code>forkserver</code> sta nel fatto che il processo figlio non possiede tutte le variabili, le connessioni ai database o i gradi dataset caricati dal processo principale dopo l’avvio.</li>
 <li>i risultati sono che i figli sono più snelli e isolati.</li>
 </ul></li>
@@ -648,6 +658,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="9.5.2" class="anchored" data-anchor-id="sincronizzazione-tra-processi"><span class="header-section-number">9.5.2</span> Sincronizzazione tra processi</h3>
 <p>I moduli <strong><code>multiprocess</code></strong> e <strong><code>multiprocessing</code></strong> contengono primitive di sincronizzazione <strong>equivalenti a quelle fornite nel modulo <code>threading</code></strong>.</p>
 <p>Pertanto anche con i processi è possibile utilizzare <code>Lock</code>, <code>RLock</code>, <code>Semaphore</code>, <code>Condition</code> ed <code>Event</code>.</p>
+<blockquote class="blockquote">
+<p>Ovviamente devono essere utilizzati i <code>Lock</code>, <code>RLock</code>, etc, che sono definiti nel modulo <code>multiprocessing</code> o <code>multiprocess</code> poiché sono implementati in modo da esser allocati in una memoria condivisa tra i processi.</p>
+<p>Questo significa che non posso utilizzare per un’applicazione multi processo i costrutti di sincronizzazione offerti dal modulo <code>threading</code> poiché questi sono pensati per esser utilizzati da thread che lavorano sullo stesso spazio di indirizzamento.</p>
+<p>In definitiva, i costrutti di <code>multiprocessing</code>/<code>multiprocess</code> e quelli di <code>threading</code>, sono gli stessi oggetti visti dall’esterno, attraverso le API e il loro comportamento, ma sotto sono implementati in modo differente.</p>
+</blockquote>
 </section>
 <section id="scambio-di-oggetti-tra-processi" class="level3" data-number="9.5.3">
 <h3 data-number="9.5.3" class="anchored" data-anchor-id="scambio-di-oggetti-tra-processi"><span class="header-section-number">9.5.3</span> Scambio di oggetti tra processi</h3>
