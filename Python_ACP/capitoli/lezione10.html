@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Funzioni: continuo – ACP</title>
+<title>10&nbsp; Programmazione su Rete – ACP</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../capitoli/lezione4.html" rel="next">
-<link href="../capitoli/lezione2.html" rel="prev">
+<link href="../capitoli/lezione9.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -286,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitoli/lezione3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Funzioni: continuo</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitoli/lezione10.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programmazione su Rete</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -334,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../capitoli/lezione3.html" class="sidebar-item-text sidebar-link active">
+  <a href="../capitoli/lezione3.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Funzioni: continuo</span></span></a>
   </div>
 </li>
@@ -376,7 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../capitoli/lezione10.html" class="sidebar-item-text sidebar-link">
+  <a href="../capitoli/lezione10.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programmazione su Rete</span></span></a>
   </div>
 </li>
@@ -390,23 +389,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#scope" id="toc-scope" class="nav-link active" data-scroll-target="#scope"><span class="header-section-number">3.1</span> Scope</a></li>
-  <li><a href="#passaggio-dei-parametri-in-python" id="toc-passaggio-dei-parametri-in-python" class="nav-link" data-scroll-target="#passaggio-dei-parametri-in-python"><span class="header-section-number">3.2</span> Passaggio dei parametri in Python</a></li>
-  <li><a href="#gil" id="toc-gil" class="nav-link" data-scroll-target="#gil"><span class="header-section-number">3.3</span> GIL</a></li>
-  <li><a href="#moduli-e-package" id="toc-moduli-e-package" class="nav-link" data-scroll-target="#moduli-e-package"><span class="header-section-number">4</span> Moduli e Package</a>
+  <li><a href="#internet" id="toc-internet" class="nav-link active" data-scroll-target="#internet"><span class="header-section-number">10.1</span> Internet</a>
   <ul class="collapse">
-  <li><a href="#modalità-di-esecuzione" id="toc-modalità-di-esecuzione" class="nav-link" data-scroll-target="#modalità-di-esecuzione"><span class="header-section-number">4.1</span> Modalità di esecuzione</a></li>
-  <li><a href="#installare-un-modulo-di-terze-parti-pip" id="toc-installare-un-modulo-di-terze-parti-pip" class="nav-link" data-scroll-target="#installare-un-modulo-di-terze-parti-pip"><span class="header-section-number">4.2</span> Installare un modulo di terze parti: pip</a></li>
-  <li><a href="#funzione-main-e-i-moduli" id="toc-funzione-main-e-i-moduli" class="nav-link" data-scroll-target="#funzione-main-e-i-moduli"><span class="header-section-number">4.3</span> Funzione main e i moduli</a></li>
-  <li><a href="#ricerca-dei-moduli" id="toc-ricerca-dei-moduli" class="nav-link" data-scroll-target="#ricerca-dei-moduli"><span class="header-section-number">4.4</span> Ricerca dei moduli</a></li>
-  <li><a href="#moduli-standard" id="toc-moduli-standard" class="nav-link" data-scroll-target="#moduli-standard"><span class="header-section-number">4.5</span> Moduli standard</a>
+  <li><a href="#garr" id="toc-garr" class="nav-link" data-scroll-target="#garr"><span class="header-section-number">10.1.1</span> GARR</a></li>
+  <li><a href="#stack-isoosi" id="toc-stack-isoosi" class="nav-link" data-scroll-target="#stack-isoosi"><span class="header-section-number">10.1.2</span> Stack ISO/OSI</a></li>
+  </ul></li>
+  <li><a href="#tcp-e-udp" id="toc-tcp-e-udp" class="nav-link" data-scroll-target="#tcp-e-udp"><span class="header-section-number">10.2</span> TCP e UDP</a></li>
+  <li><a href="#socket" id="toc-socket" class="nav-link" data-scroll-target="#socket"><span class="header-section-number">10.3</span> Socket</a></li>
+  <li><a href="#socket-in-python" id="toc-socket-in-python" class="nav-link" data-scroll-target="#socket-in-python"><span class="header-section-number">10.4</span> Socket in Python</a>
   <ul class="collapse">
-  <li><a href="#dir" id="toc-dir" class="nav-link" data-scroll-target="#dir"><span class="header-section-number">4.5.1</span> <code>dir()</code></a></li>
+  <li><a href="#principali-funzioni-socket" id="toc-principali-funzioni-socket" class="nav-link" data-scroll-target="#principali-funzioni-socket"><span class="header-section-number">10.4.1</span> Principali funzioni <code>socket</code></a></li>
   </ul></li>
-  <li><a href="#package" id="toc-package" class="nav-link" data-scroll-target="#package"><span class="header-section-number">4.6</span> Package</a></li>
-  <li><a href="#import-di-un-package" id="toc-import-di-un-package" class="nav-link" data-scroll-target="#import-di-un-package"><span class="header-section-number">4.7</span> Import di un package</a></li>
-  <li><a href="#riferimenti-intra-package" id="toc-riferimenti-intra-package" class="nav-link" data-scroll-target="#riferimenti-intra-package"><span class="header-section-number">4.8</span> Riferimenti Intra-package</a></li>
-  </ul></li>
+  <li><a href="#ip-con-funzioni-particolari" id="toc-ip-con-funzioni-particolari" class="nav-link" data-scroll-target="#ip-con-funzioni-particolari"><span class="header-section-number">10.5</span> IP con funzioni particolari</a></li>
+  <li><a href="#utility-di-rete-in-linux" id="toc-utility-di-rete-in-linux" class="nav-link" data-scroll-target="#utility-di-rete-in-linux"><span class="header-section-number">10.6</span> Utility di rete in Linux</a></li>
+  <li><a href="#scambio-di-dati-su-socket" id="toc-scambio-di-dati-su-socket" class="nav-link" data-scroll-target="#scambio-di-dati-su-socket"><span class="header-section-number">10.7</span> Scambio di dati su socket</a></li>
   </ul>
 </nav>
     </div>
@@ -416,7 +412,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Funzioni: continuo</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Programmazione su Rete</span></h1>
 </div>
 
 
@@ -433,260 +429,279 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Le funzioni permettono di scrivere codice riusabile. Non vengono eseguite nel programma finché non vengono <strong>chiamate</strong> o <strong>invocate</strong>.</p>
-<p>Caratteristiche di una funzione:</p>
+<section id="internet" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="internet"><span class="header-section-number">10.1</span> Internet</h2>
+<p>Rete di estensione mondiale basata sul protocollo TCP/IP</p>
 <ul>
-<li>nome</li>
-<li>parametri</li>
-<li>docstring</li>
-<li>corpo</li>
-<li>valore di ritorno</li>
+<li>Progenitrice: ARPANET, 1969 finanziata dall’ARPA (Advanced Research Project Agency), agenzia del Dipartimento della Difesa USA.</li>
+<li>In origine create per esigenze militari e per connettere università e centri di ricerca.</li>
 </ul>
-<section id="scope" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="scope"><span class="header-section-number">3.1</span> Scope</h2>
-<p>Dentro una funzione possiamo accedere ad una variabile definita al di fouri della funzione stessa, nello scope esterno.</p>
-<p>Dentro una funzione non possiamo modificare una variabile definita al di fouri della funzione, a meno che non definiamo tale variabile <code>global</code> all’interno della funzione. (NON è buona pratica)</p>
-<div id="981fc8ba" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(y):</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(y)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(x)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(x<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>f(x)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>5
-5
-6
-5</code></pre>
-</div>
-</div>
-</section>
-<section id="passaggio-dei-parametri-in-python" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="passaggio-dei-parametri-in-python"><span class="header-section-number">3.2</span> Passaggio dei parametri in Python</h2>
-<p>In Python non esiste un passaggio né per valore né per riferimento, tutti gli argomenti sono <strong>passati</strong> <strong>perassegnazione</strong> (<strong>riferimento all’oggetto</strong>).</p>
+<p>Oggi costituisce uno strumento per:</p>
 <ul>
-<li>Se l’oggetto è <strong>mutabile</strong> (come una lista o un dizionario), è possibile modificarlo all’interno di una funzione e la modifica sarà visibile a livello globale</li>
-<li>Se l’oggetto è <strong>immutabile</strong> (come int, str, tuple), è necessario utilizzare <code>global</code> o racchiuderlo in un contenitore mutabile.</li>
+<li>scambiare e cercare informazioni</li>
+<li>sviluppare sistemi distribuiti</li>
+<li>connettere centinaia di milioni di dispositivi</li>
+</ul>
+<p><strong>Internet è una rete di reti</strong>:</p>
+<p>Componenti principali sono:</p>
+<ul>
+<li>dispositivi connessi detti <strong>nodi</strong> o <strong>host</strong>:
+<ul>
+<li>PC, server, smartphone, tablet.</li>
+</ul></li>
+<li>link di comunicazione:
+<ul>
+<li>cavi, fibra ottica, radio, satellitari</li>
+</ul></li>
+<li><strong>router</strong>:
+<ul>
+<li>dipsositivi che instradano i messaggi attraverso la rete</li>
+</ul></li>
+</ul>
+<p><img src="img/Reti_di_reti.png" class="img-fluid"></p>
+<section id="garr" class="level3" data-number="10.1.1">
+<h3 data-number="10.1.1" class="anchored" data-anchor-id="garr"><span class="header-section-number">10.1.1</span> GARR</h3>
+<p><strong>GARR</strong> (Gruppo per l’Armonizzazione delle Reti della Ricerca): rete in fibra ottica dedicata alla comunità italiana dell’università e della ricerca.</p>
+<p><img src="img/GARR.png" class="img-fluid"></p>
+</section>
+<section id="stack-isoosi" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="stack-isoosi"><span class="header-section-number">10.1.2</span> Stack ISO/OSI</h3>
+<ol type="1">
+<li>Application Layer</li>
+<li>Presentation Layer</li>
+<li>Session Layer</li>
+<li>Network Layer</li>
+<li>Transport Layer</li>
+<li>Data Link Layer</li>
+<li>Physical Layer</li>
+</ol>
+<p>Ad ogni nodo è assegnato un indirizzo IP:</p>
+<ul>
+<li>IPv4: formato da 32bit</li>
+<li>IPv6: formato da 128bit</li>
+</ul>
+<p>Grazie agli indirizzi IP è possibile <strong>identificare</strong> un computer sulla rete ed inviargli dati</p>
+<ul>
+<li>tipicamente ci si riferisce agli host remoti con nomi simbolici, es www.unina.it</li>
+<li>la traduzione nome/indirizzo è realizzata dal DNS (Domain Name Service)</li>
+</ul>
+<p>I dati end-to-end trasmessi in pacchetti (IP datagram)</p>
+<ul>
+<li>la cui dimensione massima è di <code>64KB</code></li>
+</ul>
+<p><strong>IP è un servizio best-effort</strong>: i pacchetti potrebbero giungere a destinazione <em>corrotti</em>, <em>duplicati</em>, <em>non-in-ordine</em> o anche essere <strong>persi</strong>.</p>
+</section>
+</section>
+<section id="tcp-e-udp" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="tcp-e-udp"><span class="header-section-number">10.2</span> TCP e UDP</h2>
+<p><strong>TCP</strong> (Transmission Control Protocol) implementa un trasporto affidabile da sorgente a destinazione su IP.</p>
+<ul>
+<li>Fornisce un flusso di byte, full-duplex</li>
+<li><strong>Orientato</strong> <strong>alla</strong> <strong>connessione</strong>:
+<ul>
+<li>instaurazione, utilizzo e chiusura di una connessione sono gestiti dal protocollo</li>
+</ul></li>
+<li>Preserva l’ordine, eliminando duplicati</li>
+<li>Implementa la ri-trasmissione dei pacchetti</li>
 </ul>
 <blockquote class="blockquote">
-<p>N.B:</p>
-<ul>
-<li>Se si ri-assegna (<strong>re-bind</strong>) la variabile all’interno dello scope locale la modifica rimane locale.</li>
-<li>Bisogna usare la direttava <code>global</code> all’interno dello scope locale per far riflettere la modifica nel chiamante</li>
-</ul>
+<p><strong>NOTA:</strong> il livello IP è <strong>Best-effort</strong>.</p>
 </blockquote>
-<p><strong>ATTENZIONE</strong>: anche se l’oggetto potrebbe essere mutabile fare il re-bind comporta comunque la creazione di una variabile locale. Quindi la modifica non si rifletterà affatto nel chiamante.</p>
-<p>Vediamo come esempio un array, che è un oggetto mutabile ma potremmo avere degli errori:</p>
-<div id="9ae2aafa" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> met1():</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    array <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"[dentro met1] </span><span class="sc">{</span>array<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> met2():</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    array[:] <span class="op">=</span> [<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> met3():</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    array.append(<span class="dv">3</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>array <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(array)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>met1()</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"[met1] </span><span class="sc">{</span>array<span class="sc">}</span><span class="ss">"</span>) <span class="co"># non c'è modifica</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>met2()</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"[met2] </span><span class="sc">{</span>array<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>met3()</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"[met3] </span><span class="sc">{</span>array<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0, 0, 0]
-[dentro met1] [1, 1, 1]
-[met1] [0, 0, 0]
-[met2] [2, 2, 2]
-[met3] [2, 2, 2, 3]</code></pre>
-</div>
-</div>
-<p>Quando faccio il <em>re-bind</em> sto effettivamente creando un nuovo puntatore ad oggetto nello <em>stack</em> e il nuovo oggetto nello <em>heap</em>.</p>
-<div id="c5e0ae35" class="cell" data-execution_count="16">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metodo():</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    array <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"[local scope] </span><span class="sc">{</span>array<span class="sc">}</span><span class="ss"> </span><span class="ch">\t</span><span class="ss">id: </span><span class="sc">{</span><span class="bu">hex</span>(<span class="bu">id</span>(array))<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>array <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"[global scope] </span><span class="sc">{</span>array<span class="sc">}</span><span class="ss"> </span><span class="ch">\t</span><span class="ss">id: </span><span class="sc">{</span><span class="bu">hex</span>(<span class="bu">id</span>(array))<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>metodo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[global scope] [0, 0, 0]    id: 0x7fa279bb0a80
-[local scope] [1, 1, 1]     id: 0x7fa279bb2900</code></pre>
-</div>
-</div>
-<p>Se utilizzo <code>global</code> la funzione lavoro nel proprio scope locale con la stessa variabile dello scope globale. Infatti anche se facessimo il <em>re-bind</em> non avremo problemi, cambia il riferimento anche della variabile globale.</p>
-<div id="195c3dc5" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun():</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> x</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">+</span> <span class="dv">1</span> <span class="co"># re-bind</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"[fun scope] x: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss"> </span><span class="ch">\t</span><span class="ss">id: </span><span class="sc">{</span><span class="bu">hex</span>(<span class="bu">id</span>(x))<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"[global scope] x: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss"> </span><span class="ch">\t</span><span class="ss">id: </span><span class="sc">{</span><span class="bu">hex</span>(<span class="bu">id</span>(x))<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">5</span><span class="op">*</span><span class="st">"-"</span><span class="op">+</span><span class="st">"DOPO LA CHIAMATA"</span><span class="op">+</span><span class="dv">5</span><span class="op">*</span><span class="st">"-"</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>fun()</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"[global scope] x: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss"> </span><span class="ch">\t</span><span class="ss">id: </span><span class="sc">{</span><span class="bu">hex</span>(<span class="bu">id</span>(x))<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[global scope] x: 0     id: 0x7fa29cb78b90
------DOPO LA CHIAMATA-----
-[fun scope] x: 1    id: 0x7fa29cb78bb0
-[global scope] x: 1     id: 0x7fa29cb78bb0</code></pre>
-</div>
-</div>
-</section>
-<section id="gil" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="gil"><span class="header-section-number">3.3</span> GIL</h2>
-<p>Il <strong>GIL</strong> (<em>Global Interpreter Lock</em>) è un mutex che impedisce a più thread di eseguire il bytecode di Python contemporaneamente.</p>
-<p>Quindi questo significa che nonostante a livello utente avremmo più thread, questi non vengono eseguiti in parallelo ma vengono eseguiti esclusivamente in concorrenza; nonostante possano esser eseguiti su un architettura multiprocessore.</p>
-</section>
-<section id="moduli-e-package" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Moduli e Package</h1>
-<p>Le definizioni di funzioni e variabili <strong>non vengono salvate</strong> quando usciamo dall’interprete Python.</p>
-<p>I <strong>moduli</strong> consentono di salvare le definizioni per accedervi in un secondo momento.\ I moduli consentono, inoltre, di eseguire le istruzioni come script eseguibili.</p>
-<p>Ogni file con estensione <code>.py</code> corrisponde ad un modulo.</p>
-<section id="modalità-di-esecuzione" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="modalità-di-esecuzione"><span class="header-section-number">4.1</span> Modalità di esecuzione</h2>
-<p>Possiamo eseguire i moduli principalmente in due modalità:</p>
+<p><strong>UDP</strong> (User Datagram Protocol):</p>
 <ul>
-<li>Modulo</li>
-<li>Script</li>
-</ul>
-<p>Nella modalità script, il modulo viene lanciato dato direttamente all’interprete Python da command line, mentre nella modalità modulo questo è caricato tramite il comando <code>import [modulo]</code> oppure <code>from [modulo] import [fn]</code>.</p>
-<p>Quando un modulo viene importato, <strong>tutte le dichiarazioni e le definizioni saranno eseguite</strong>.</p>
-<p>Per richiamare una funzione di un modulo è necessario digitare il nome del modulo seguito dal punto.</p>
-<div id="2ecedafb" class="cell" data-execution_count="18">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(math.e)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>2.718281828459045</code></pre>
-</div>
-</div>
-<p>Se la funzione del modulo è stata importata individualmente con <code>from</code>, il nome del modulo e il punto possono essere omessi:</p>
-<div id="13e57d40" class="cell" data-execution_count="19">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> e</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(e)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>2.718281828459045</code></pre>
-</div>
-</div>
-<p>È molto utilizzato il meccanismo di <code>alias</code> per rinominare il nome di un modulo, rendendolo il codice molto più leggibile.</p>
-<div id="bb9389a5" class="cell" data-execution_count="20">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math <span class="im">as</span> m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Durante l’esecuzione di un’applicazione Python è possibile distinguere i moduli che vengono importati e quelli che vengono eseguiti come script attraverso la variabile globale, builtin, <code>__name__</code>.</p>
-<p>Tale variabile assumerà:</p>
-<ul>
-<li><code>"__main__"</code> se è stata utilizzata dal modulo che è stato eseguito in modalità script.</li>
-<li><code>"[nome_del_modulo]"</code> se è stata utilizzata dal modulo che è stato importato in un altro.</li>
-</ul>
-<div id="5b244187" class="cell" data-execution_count="21">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="va">__name__</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>__main__</code></pre>
-</div>
-</div>
-</section>
-<section id="installare-un-modulo-di-terze-parti-pip" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="installare-un-modulo-di-terze-parti-pip"><span class="header-section-number">4.2</span> Installare un modulo di terze parti: pip</h2>
-<p><strong>pip</strong> è il package manager di default che viene utilizzato per installare moduli in Python. Dalla versione Python 3.4, pip è incluso di default nell’installer.</p>
-<p>È possibile invocare l’installazione di un package tramite pip che installerà il package e <strong>tutte le dipendenze</strong> dal <em>Python Package Index</em></p>
-</section>
-<section id="funzione-main-e-i-moduli" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="funzione-main-e-i-moduli"><span class="header-section-number">4.3</span> Funzione main e i moduli</h2>
-<p>Generalmente la funzione <code>main()</code> è il punto di ingresso principale di un programma. Tuttavia, essendo Python un linguaggio interpretato, l’interprete <strong>esegue il codice fin dalla prima riga di un codice sorgente</strong>, a prescindere dal fatto che ci sia o meno la definizione di una funzione <code>main()</code>.</p>
-<p>Per implementare un main possiamo quindi sfruttare la variabile <em>built-in</em> <code>__name__</code> che valuta il nome del modulo corrente.</p>
-<ul>
-<li>modulo importato = <code>nome_del_modulo</code></li>
-<li>modulo eseguito come programma principale = <code>__main__</code></li>
+<li>Protocollo di trasporto <strong>non affidabile</strong></li>
+<li>Molto simile al protocollo IP, ma offre la capacità di <strong>distinguere tra porte differenti</strong> nello stesso host → multiplexing</li>
+<li>Basato sul concetto di <strong>datagramma</strong></li>
 </ul>
 </section>
-<section id="ricerca-dei-moduli" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="ricerca-dei-moduli"><span class="header-section-number">4.4</span> Ricerca dei moduli</h2>
-<p>Quando importiamo un modulo, l’interprete cerca tutti i moduli in determinati percorsi finché non trova il modulo non viene trovato.</p>
-<p>L’ordine seguito per la ricerca è il seguente:</p>
+<section id="socket" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="socket"><span class="header-section-number">10.3</span> Socket</h2>
+<p>È il primo approccio ai middleware.</p>
+<p>Meccanismo di comunicazione tra processi</p>
 <ul>
-<li>directory corrente</li>
-<li>l’elenco delle directory nella variabile di ambiente <code>PYTHONPATH</code></li>
-<li>percorso predefinito dipendente dall’istallazione</li>
+<li>eventualmente distribuiti su macchine differenti</li>
+<li>basato sulla <strong>rete</strong></li>
 </ul>
-<p>La variabile di ambiente <code>PYTHONPATH</code> è un elenco di directory.</p>
-<p>La direcotory corrente, la variabile di ambiente <code>PYTHONPATH</code> e il <em>default path</em> sono tutte informazioni memorizzate nella variabile <code>sys.path</code>:</p>
-<div id="c4fa1f69" class="cell" data-execution_count="22">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.path)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>['/usr/lib64/python314.zip', '/usr/lib64/python3.14', '/usr/lib64/python3.14/lib-dynload', '', '/home/giobpc/.local/lib/python3.14/site-packages', '/usr/lib64/python3.14/site-packages', '/usr/lib/python3.14/site-packages']</code></pre>
-</div>
-</div>
-</section>
-<section id="moduli-standard" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="moduli-standard"><span class="header-section-number">4.5</span> Moduli standard</h2>
-<p>In Python esiste una <strong>libreria standard di moduli</strong>: la <strong>Python Library Reference</strong>.</p>
-<p>Questi moduli contengono operazioni che non fanno parte del nucleo principale del linguaggio Python;\ sono però comunque integrati, sia per motivi di efficienza che per fornire accesso alle primitive del sistema operativo, come <em>system call</em></p>
-<p>Alcuni moduli vengono importati solo se si utilizza un determinato sistema operativo.</p>
-<p>Un modulo di libreria importate è <code>sys</code>.</p>
-<section id="dir" class="level3" data-number="4.5.1">
-<h3 data-number="4.5.1" class="anchored" data-anchor-id="dir"><span class="header-section-number">4.5.1</span> <code>dir()</code></h3>
-<p>La funzione <code>dir()</code> restituisce un elenco di nomi (variabili e funzioni) definiti dal modulo passato come argomento. Se non specifichiamo alcun modulo viene considerato il modulo corrente.</p>
-<div id="57656c3d" class="cell" data-execution_count="23">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">dir</span>(math))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>['__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'cbrt', 'ceil', 'comb', 'copysign', 'cos', 'cosh', 'degrees', 'dist', 'e', 'erf', 'erfc', 'exp', 'exp2', 'expm1', 'fabs', 'factorial', 'floor', 'fma', 'fmod', 'frexp', 'fsum', 'gamma', 'gcd', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'isqrt', 'lcm', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'modf', 'nan', 'nextafter', 'perm', 'pi', 'pow', 'prod', 'radians', 'remainder', 'sin', 'sinh', 'sqrt', 'sumprod', 'tan', 'tanh', 'tau', 'trunc', 'ulp']</code></pre>
-</div>
-</div>
-<div id="18ca6af8" class="cell" data-execution_count="24">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">dir</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>['In', 'Out', '_', '__', '___', '__builtin__', '__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__', '__vsc_ipynb_file__', '_dh', '_i', '_i1', '_i10', '_i11', '_i12', '_i13', '_i14', '_i15', '_i16', '_i17', '_i18', '_i19', '_i2', '_i20', '_i21', '_i22', '_i23', '_i24', '_i3', '_i4', '_i5', '_i6', '_i7', '_i8', '_i9', '_ih', '_ii', '_iii', '_oh', 'acos', 'acosh', 'array', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'cbrt', 'ceil', 'comb', 'copysign', 'cos', 'cosh', 'degrees', 'dist', 'e', 'erf', 'erfc', 'exit', 'exp', 'exp2', 'expm1', 'f', 'fabs', 'factorial', 'floor', 'fma', 'fmod', 'frexp', 'fsum', 'fun', 'gamma', 'gcd', 'get_ipython', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'isqrt', 'lcm', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'm', 'math', 'met1', 'met2', 'met3', 'metodo', 'modf', 'nan', 'nextafter', 'open', 'perm', 'pi', 'pow', 'prod', 'quit', 'radians', 'remainder', 'sin', 'sinh', 'sqrt', 'sumprod', 'sys', 'tan', 'tanh', 'tau', 'trunc', 'ulp', 'x']</code></pre>
-</div>
-</div>
-</section>
-</section>
-<section id="package" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="package"><span class="header-section-number">4.6</span> Package</h2>
-<p>I <strong>Package</strong> sono raccolte organizzate di moduli, moduli all’interno di moduli.</p>
-<p>Tali moduli sono memorizzati in directory, con ogni directory che contiene un file <code>__init__.py</code></p>
+<p>Una <code>socket</code> fornisce ai processi un meccanismo per l’accesso alla rete.</p>
+<p><img src="img/socket.png" class="img-fluid"></p>
 <ul>
-<li>il file <code>__init__.py</code> istruisce l’interprete Python di trattare la directory come se fosse un package</li>
-<li>tale file può essere semplicemente un <strong>file vuoto</strong> ma può anche eseguire codice di inizializzazione per il <em>package</em> o impostare la variabile <code>__all__</code></li>
+<li>È nata con il sistema operativo <strong>Unix 4.2 BSD</strong>(Berkeley Software Distribution), rilasciato nel <strong>1983</strong>.</li>
+<li>Una socket è caratterizzata da <strong>indirizzo IP</strong> e <strong>numero di Porto</strong> del nodo.</li>
+<li>Possono essere di tipo <strong>TCP</strong> e <strong>UDP</strong>.</li>
 </ul>
-<p>Ogni sottodirectory della directory principale del pacchetto è considerata un sottopacchetto.</p>
-<p>Una package e un qualsiasi suo sottopacchetto può essere importato.</p>
+<p><img src="img/socket2.png" class="img-fluid"></p>
+<p>Esistono porte standard (Well-Known Ports) associate a servizi specifici. Quando utilizziamo un servizio standard, non è necessario specificare manualmente la porta perché il software client utilizza quella di default (ad esempio, il browser usa la 443 per l’HTTPS), richiedendo all’utente solo l’indirizzo IP o il nome host.</p>
+<p>Tuttavia, l’uso delle porte standard non è obbligatorio: è possibile configurare un servizio su una porta personalizzata, ma in quel caso il client dovrà conoscere e specificare esplicitamente tale porta per stabilire la connessione.</p>
 </section>
-<section id="import-di-un-package" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="import-di-un-package"><span class="header-section-number">4.7</span> Import di un package</h2>
-<p>A volte si vuole importare tutto ciò che si trova all’interno di un package o di un sottopackage. In questo caso si può usare questo comando:</p>
-<div id="52847c1c" class="cell" data-execution_count="25">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> <span class="op">*</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Questo carica tutti i nomi dei moduli contenuti nella variabile <code>__all__</code>, a sua volta contenuta nel dile <code>__init__.py</code> della cartella del pacchetto.</p>
-<p>Se la variabile <code>__all__</code> <strong>non è definita</strong>, l’import tramite l’operatore <code>*</code> da un package di default agirà come seguito:</p>
+<section id="socket-in-python" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="socket-in-python"><span class="header-section-number">10.4</span> Socket in Python</h2>
+<p>Per creare una <code>socket</code> si utilizza la funzione <code>socket.socket()</code> inclusa nel modulo <code>socket</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> socket.socket(socket_family, socket_type)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
-<li><strong>Nessuna importazione automatica dei sottomoduli</strong>: Python non importerà tutti i sottomoduli presenti nel package. Questa scelta è fatta appositamente per evitare problemi legati alle performance.</li>
-<li><strong>Importazione del solo package base</strong>: si assicurerà di importare tutto il package principale e importerà solamente i nomi definiti a quel livello. Ovvero unicamente i nomi definiti nel file <code>__init__.py</code></li>
-<li><strong>Sottomoduli esclusi</strong>: Eventuali sottomoduli non saranno importati, a meno che non siano esplicitamente importati da <code>__init__.py</code>. Questo significa che l’unico modo in cui un altro file <code>.py</code> presente nella cartella diventi accessibile usando l’operatore <code>*</code> è aver scritto un comando di importazione manuale direttamente dentro il file di inizializzazione</li>
+<li><code>socket_family</code>: è la tipologia di indirizzo con cui si intende lavorare:
+<ul>
+<li><code>socket.AF_INET</code>: IPv4</li>
+</ul></li>
+<li><code>socket_type</code>: è la tipologia di socket che vogliamo creare
+<ul>
+<li><code>SOCK_STREAM</code>: TCP</li>
+<li><code>SOCK_DGRAM</code>: UDP</li>
+</ul></li>
+</ul>
+<section id="principali-funzioni-socket" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="principali-funzioni-socket"><span class="header-section-number">10.4.1</span> Principali funzioni <code>socket</code></h3>
+<ul>
+<li><code>socket()</code>: crea una nuova socket
+<ul>
+<li>questa in Linux viene astratta come un file, le cui operazioni di scrittura e lettura sono gestite dal driver della scheda di rete.</li>
+</ul></li>
+<li><code>bind(address)</code>: binding della socket con <em>address</em>
+<ul>
+<li><code>address</code> è la tupla <code>(IP, Porto)</code>.</li>
+<li><blockquote class="blockquote">
+<p>Nota che se porto è pari a zero il SO fornisce il primo porto libero</p>
+</blockquote></li>
+<li><blockquote class="blockquote">
+
+</blockquote></li>
+<li><blockquote class="blockquote">
+<p>Inoltre se si utilizza <code>0.0.0.0</code> come indirizzo IP stiamo dicendo che tale socket può ricevere dei messaggi, quindi è legata a qualsiasi interfaccia di rete disponibile sul PC.</p>
+</blockquote></li>
+</ul></li>
+<li><code>listen(backlog)</code>: si mette in ascolto di connessioni verso la socket (Utilizzata per TCP)
+<ul>
+<li><p><code>backlog</code> specifica il numero massimo di connessioni ammesse in coda-</p>
+<p>Di default tale valore è pari a <code>socket.SOMAXCONN</code>, si tratta di una costante del sistema operativo che rappresenta il numero massimo di connessioni pendenti che il kernel può accodare.</p>
+<blockquote class="blockquote">
+<p>Se inseriamo un valore maggiore di <code>socket.SOMAXCONN</code>, il sistema operativo, dopo il controllo, imposterà il valore a <code>socket.SOMAXCONN</code>.</p>
+</blockquote>
+<p>In Linux è possibile verificare tale valore attraverso una ricerca nel filesystem:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> cat /proc/sys/net/core/somaxconn</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">4096</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul></li>
+<li><code>accept()</code>: accetta una connessione
+<ul>
+<li>Da invocare dopo <code>bind()</code> e <code>listen()</code></li>
+<li>Restituisce la coppia <code>(conn, addr)</code>
+<ul>
+<li><code>conn</code> è una nuova socket utilizzabile per inviare/ricevere dati</li>
+<li><code>addr</code> è l’indirizzo associato alla socket dall’altro capo della connessione</li>
+</ul></li>
+</ul></li>
+<li><code>connect(address)</code>: apre una connessione verso l’indirizzo <code>address</code>
+<ul>
+<li><code>address</code> è una tupla <code>(IP, Porto)</code></li>
+</ul></li>
+<li><code>close()</code>: chiude la socket</li>
+</ul>
+<p>Tutte queste funzioni sono quelle utilizzate nella macchina a stati finiti TCP per passare da uno stato all’altro. Infatti per arrivare ad ottenere una socket pronta all’utilizzo devono essere chiamate una serie di queste funzioni in modo preliminare con un certo ordine.</p>
+</section>
+</section>
+<section id="ip-con-funzioni-particolari" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="ip-con-funzioni-particolari"><span class="header-section-number">10.5</span> IP con funzioni particolari</h2>
+<ul>
+<li><strong>localhost</strong>
+<ul>
+<li>un nome che si risolve in <code>127.0.0.1</code> (IPv4) o <code>::1</code> (IPv6)</li>
+<li>utilizzato per riferirsi alla macchina locale</li>
+<li>quando si effettua il binding, il server accetta solo connessioni dalla stessa macchina</li>
+<li>rappresenta un’interfaccia virtuale</li>
+</ul></li>
+<li><code>127.0.0.1</code>
+<ul>
+<li>un indirizzo IP specifico nell’intervallo di <code>loopback</code></li>
+<li>equivale a <code>localhost</code>, ma utilizza esplicitamente IPv4</li>
+<li>assicura che la comunicazione rimanga all’interno della stessa macchina</li>
+<li>nodi esterni non possono collegarsi a questo indirizzo</li>
+</ul></li>
+<li><code>0.0.0.0</code>
+<ul>
+<li>un indirizzo <em>wildcard</em> che significa “tutte le interfacce di rete disponibili”</li>
+<li>se usato in <code>socket.bind()</code>, il server si mette in ascolto su tutte le interfacce (sia locali che esterne)</li>
+<li>accetta connessioni da altri computer della rete</li>
+<li>non funziona con <code>socket.connect()</code></li>
+</ul></li>
 </ul>
 </section>
-<section id="riferimenti-intra-package" class="level2" data-number="4.8">
-<h2 data-number="4.8" class="anchored" data-anchor-id="riferimenti-intra-package"><span class="header-section-number">4.8</span> Riferimenti Intra-package</h2>
-<p>Quando i package sono strutturati in sottopackage, si possono usare le <strong>importazioni assolute</strong> per fare riferimento ai sottomoduli dei package “fratelli”.</p>
-<p>È anche possibile scrivere <strong>importazioni relative</strong>, con la forma di dichiarazione <code>from module import name</code>.</p>
+<section id="utility-di-rete-in-linux" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="utility-di-rete-in-linux"><span class="header-section-number">10.6</span> Utility di rete in Linux</h2>
+<p>Elenco delle interfacce di rete disponibili sul sistema <code>ip a</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> ip a</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">1:</span> lo: <span class="op">&lt;</span>LOOPBACK,UP,LOWER_UP<span class="op">&gt;</span> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">link/loopback</span> 00:00:00:00:00:00 brd 00:00:00:00:00:00</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">inet</span> 127.0.0.1/8 scope host lo</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>       <span class="ex">valid_lft</span> forever preferred_lft forever</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">inet6</span> ::1/128 scope host noprefixroute </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>       <span class="ex">valid_lft</span> forever preferred_lft forever</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">2:</span> wlp89s0: <span class="op">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="op">&gt;</span> mtu 1500 qdisc noqueue state UP group default qlen 1000</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">link/ether</span> a1:b2:c3:d4:e5:f6 brd ff:ff:ff:ff:ff:ff permaddr x1:y2:z3:j4:k5:l6</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">altname</span> wlx60e32bd2d421</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">inet</span> 192.168.1.150/24 brd 192.168.1.255 scope global dynamic noprefixroute wlp89s0</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>       <span class="ex">valid_lft</span> 20300sec preferred_lft 20300sec</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="ex">inet6</span> fe80::a00:27ff:fe4e:66a1/64 scope link noprefixroute </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>       <span class="ex">valid_lft</span> forever preferred_lft forever</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Per conoscere lo stato attuale IP:PORTO utilizzati nel sistema, <code>netstat -tulpn</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> netstat <span class="at">-tulpn</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">Not</span> all processes could be identified, non-owned process info</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">will</span> not be shown, you would have to be root to see it all.<span class="kw">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Active</span> Internet connections <span class="er">(</span><span class="ex">only</span> servers<span class="kw">)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Proto</span> Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 10.11.12.13:36448       0.0.0.0:<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 127.0.0.53:53           0.0.0.0:<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 127.0.0.54:53           0.0.0.0:<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 127.0.0.1:23625         0.0.0.0:<span class="pp">*</span> LISTEN      7573/exe            </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 0.0.0.0:22              0.0.0.0:<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 127.0.0.1:44167         0.0.0.0:<span class="pp">*</span> LISTEN      8401/code           </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 127.0.0.1:631           0.0.0.0:<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp</span>        0      0 0.0.0.0:5355            0.0.0.0:<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp6</span>       0      0 :::22                   :::<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp6</span>       0      0 fd00:cafe:face::1:99999 :::<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp6</span>       0      0 ::1:631                 :::<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ex">tcp6</span>       0      0 :::5355                 :::<span class="pp">*</span> LISTEN      <span class="at">-</span>                   </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ex">udp</span>        0      0 0.0.0.0:53737           0.0.0.0:<span class="pp">*</span> 8554/python3        </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="ex">udp</span>        0      0 0.0.0.0:5353            0.0.0.0:<span class="pp">*</span> <span class="at">-</span>                   </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="ex">udp</span>        0      0 0.0.0.0:5355            0.0.0.0:<span class="pp">*</span> <span class="at">-</span>                   </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="ex">udp</span>        0      0 127.0.0.54:53           0.0.0.0:<span class="pp">*</span> <span class="at">-</span>                   </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="ex">udp</span>        0      0 127.0.0.53:53           0.0.0.0:<span class="pp">*</span> <span class="at">-</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p>Nota: del comando <code>ip a</code> e <code>netstat -tulpn</code> alcune informazioni sono censurate/vero-simili. Il motivo è che sono dati sensibili e non conviene pubblicarli in rete.</p>
+</blockquote>
+<p>Per inviare uno i più pacchetti <code>ICMP</code> per raggiungere un dispositivo di rete, <code>ping</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> ping <span class="at">-i</span> 0.1 google.com <span class="at">-c</span> 10</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">PING</span> google.com <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span> <span class="ex">56</span><span class="er">(</span><span class="ex">84</span><span class="kw">)</span> <span class="ex">bytes</span> of data.</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=1 ttl=114 time=41.7 ms</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=2 ttl=114 time=20.1 ms</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=3 ttl=114 time=20.2 ms</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=4 ttl=114 time=20.1 ms</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=5 ttl=114 time=20.8 ms</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=6 ttl=114 time=21.4 ms</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=7 ttl=114 time=20.3 ms</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=8 ttl=114 time=20.6 ms</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=9 ttl=114 time=20.4 ms</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="ex">64</span> bytes from tzmila-af-in-f14.1e100.net <span class="er">(</span><span class="ex">172.217.168.142</span><span class="kw">)</span><span class="bu">:</span> icmp_seq=10 ttl=114 time=22.2 ms</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span> google.com ping statistics <span class="at">---</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="ex">10</span> packets transmitted, 10 received, 0% packet loss, time 907ms</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="ex">rtt</span> min/avg/max/mdev = 20.053/22.769/41.694/6.339 ms</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="scambio-di-dati-su-socket" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="scambio-di-dati-su-socket"><span class="header-section-number">10.7</span> Scambio di dati su socket</h2>
+<p><strong>TCP</strong>:</p>
+<ul>
+<li><code>send(string)</code>: invia dati tramite una socket
+<ul>
+<li>la socket deve essere connessa ad una socket remota</li>
+</ul></li>
+<li><code>recv(bufsize)</code>: riceve i dati dalla socket
+<ul>
+<li>il valore di ritorno è una stringa</li>
+<li><em>bufsize</em> è la massima quantità di dati che può essere ricevuta</li>
+</ul></li>
+</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1105,14 +1120,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../capitoli/lezione2.html" class="pagination-link" aria-label="Funzioni">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Funzioni</span></span>
+      <a href="../capitoli/lezione9.html" class="pagination-link" aria-label="Programmazione concorrente in python (2)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione concorrente in python (2)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../capitoli/lezione4.html" class="pagination-link" aria-label="Tuple, Liste, Dizionari">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tuple, Liste, Dizionari</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
