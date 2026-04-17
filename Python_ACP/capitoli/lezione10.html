@@ -402,7 +402,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#ip-con-funzioni-particolari" id="toc-ip-con-funzioni-particolari" class="nav-link" data-scroll-target="#ip-con-funzioni-particolari"><span class="header-section-number">10.5</span> IP con funzioni particolari</a></li>
   <li><a href="#utility-di-rete-in-linux" id="toc-utility-di-rete-in-linux" class="nav-link" data-scroll-target="#utility-di-rete-in-linux"><span class="header-section-number">10.6</span> Utility di rete in Linux</a></li>
-  <li><a href="#scambio-di-dati-su-socket" id="toc-scambio-di-dati-su-socket" class="nav-link" data-scroll-target="#scambio-di-dati-su-socket"><span class="header-section-number">10.7</span> Scambio di dati su socket</a></li>
+  <li><a href="#scambio-di-dati-su-socket-tcp" id="toc-scambio-di-dati-su-socket-tcp" class="nav-link" data-scroll-target="#scambio-di-dati-su-socket-tcp"><span class="header-section-number">10.7</span> Scambio di dati su socket (TCP)</a></li>
+  <li><a href="#scambio-dati-su-socket-udp" id="toc-scambio-dati-su-socket-udp" class="nav-link" data-scroll-target="#scambio-dati-su-socket-udp"><span class="header-section-number">10.8</span> Scambio dati su socket (UDP)</a>
+  <ul class="collapse">
+  <li><a href="#numero-di-socket-utilizzate-in-tcp-e-udp" id="toc-numero-di-socket-utilizzate-in-tcp-e-udp" class="nav-link" data-scroll-target="#numero-di-socket-utilizzate-in-tcp-e-udp"><span class="header-section-number">10.8.1</span> Numero di socket utilizzate in TCP e UDP</a></li>
+  </ul></li>
+  <li><a href="#server-multithreadmultiprocess" id="toc-server-multithreadmultiprocess" class="nav-link" data-scroll-target="#server-multithreadmultiprocess"><span class="header-section-number">10.9</span> Server Multithread/Multiprocess</a>
+  <ul class="collapse">
+  <li><a href="#thread-safety-delle-socket" id="toc-thread-safety-delle-socket" class="nav-link" data-scroll-target="#thread-safety-delle-socket"><span class="header-section-number">10.9.1</span> thread safety delle socket</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -516,7 +524,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="socket" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="socket"><span class="header-section-number">10.3</span> Socket</h2>
-<p>È il primo approccio ai middleware.</p>
+<p>È il primo approccio ai middleware, tramite queste possiamo realizzare un middleware.</p>
 <p>Meccanismo di comunicazione tra processi</p>
 <ul>
 <li>eventualmente distribuiti su macchine differenti</li>
@@ -539,24 +547,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> socket.socket(socket_family, socket_type)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
-<li><code>socket_family</code>: è la tipologia di indirizzo con cui si intende lavorare:
+<li><code>socket_family</code>: è la <strong>tipologia di indirizzo</strong> con cui si intende lavorare:
 <ul>
-<li><code>socket.AF_INET</code>: IPv4</li>
+<li><code>socket.AF_INET</code>: IPv4 (default)</li>
+<li>sono supportate altre famiglie di socket:
+<ul>
+<li><code>AF_INET6</code> (IPv6)</li>
+<li><code>AF_UNIX</code>, utilizza Unix Domain Sockets (UDS) ed è utilizzata per la comunicazione locale tra processi sulla stessa macchina utilizzando percorsi del filesystem anzichè IP.</li>
+<li><code>AF_CAN</code>, per i connettori CAN (controller Area Network). Il protocollo CAN è comunemente utilizzato nei settori automobilistico, industriale e nei sistemi embedded.</li>
+<li><code>AF_PACKET</code>, un’interfaccia di pacchetti, specifica per Linux, di basso livello. Consente di lavorare direttamente con pacchetti grezzi a link layer, al di sotto delle normali socket IP → sicuramente utilizzata per costruire WireShark.</li>
+<li><code>AF_RDS</code>, utilizzato per socket datagram affidabili. Un protocollo orientato ai messaggi progettato per la comunicazione ad alte prestazioni, in particolare in alcuni ambienti Linux in cluster e correlati a Oracle.</li>
+</ul></li>
 </ul></li>
 <li><code>socket_type</code>: è la tipologia di socket che vogliamo creare
 <ul>
-<li><code>SOCK_STREAM</code>: TCP</li>
-<li><code>SOCK_DGRAM</code>: UDP</li>
+<li><p><code>SOCK_STREAM</code>: TCP</p></li>
+<li><p><code>SOCK_DGRAM</code>: UDP</p></li>
+<li><p><code>SOCK_RAW</code>: permette di saltare la gestione automatica del sistema operativo. Permette di gestire direttamente le intestazioni dei pacchetti. Mentre TCP e UDP consegnano solo il “carico utile”, una socket RAW permette di vedere l’intero pacchetto che viaggia sul cavo.</p>
+<p><code>ping</code> è un utility che si basa sull’utilizzo di socket RAW poiché utilizza un protocollo di trasporto ICMP.</p></li>
 </ul></li>
 </ul>
 <section id="principali-funzioni-socket" class="level3" data-number="10.4.1">
 <h3 data-number="10.4.1" class="anchored" data-anchor-id="principali-funzioni-socket"><span class="header-section-number">10.4.1</span> Principali funzioni <code>socket</code></h3>
+<p>Tutte le funzioni definite nel modulo socket sono dei <strong>wrapper alle syscall associate alla particolare implementazione del SO</strong> in uso.</p>
 <ul>
-<li><code>socket()</code>: crea una nuova socket
+<li><p>Ad esempio, in Linux sono implementate le socket Berkely, quindi ad ogni Python API corrisponde la syscall associata.</p></li>
+<li><p><code>socket()</code>: crea una nuova socket</p>
 <ul>
 <li>questa in Linux viene astratta come un file, le cui operazioni di scrittura e lettura sono gestite dal driver della scheda di rete.</li>
 </ul></li>
-<li><code>bind(address)</code>: binding della socket con <em>address</em>
+<li><p><code>bind(address)</code>: binding della socket con <em>address</em></p>
 <ul>
 <li><code>address</code> è la tupla <code>(IP, Porto)</code>.</li>
 <li><blockquote class="blockquote">
@@ -569,7 +589,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Inoltre se si utilizza <code>0.0.0.0</code> come indirizzo IP stiamo dicendo che tale socket può ricevere dei messaggi, quindi è legata a qualsiasi interfaccia di rete disponibile sul PC.</p>
 </blockquote></li>
 </ul></li>
-<li><code>listen(backlog)</code>: si mette in ascolto di connessioni verso la socket (Utilizzata per TCP)
+<li><p><code>listen(backlog)</code>: si mette in ascolto di connessioni verso la socket (Utilizzata per TCP)</p>
 <ul>
 <li><p><code>backlog</code> specifica il numero massimo di connessioni ammesse in coda-</p>
 <p>Di default tale valore è pari a <code>socket.SOMAXCONN</code>, si tratta di una costante del sistema operativo che rappresenta il numero massimo di connessioni pendenti che il kernel può accodare.</p>
@@ -580,7 +600,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> cat /proc/sys/net/core/somaxconn</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">4096</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ul></li>
-<li><code>accept()</code>: accetta una connessione
+<li><p><code>accept()</code>: accetta una connessione</p>
 <ul>
 <li>Da invocare dopo <code>bind()</code> e <code>listen()</code></li>
 <li>Restituisce la coppia <code>(conn, addr)</code>
@@ -589,11 +609,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>addr</code> è l’indirizzo associato alla socket dall’altro capo della connessione</li>
 </ul></li>
 </ul></li>
-<li><code>connect(address)</code>: apre una connessione verso l’indirizzo <code>address</code>
+<li><p><code>connect(address)</code>: apre una connessione verso l’indirizzo <code>address</code></p>
 <ul>
 <li><code>address</code> è una tupla <code>(IP, Porto)</code></li>
 </ul></li>
-<li><code>close()</code>: chiude la socket</li>
+<li><p><code>close()</code>: chiude la socket</p></li>
 </ul>
 <p>Tutte queste funzioni sono quelle utilizzate nella macchina a stati finiti TCP per passare da uno stato all’altro. Infatti per arrivare ad ottenere una socket pronta all’utilizzo devono essere chiamate una serie di queste funzioni in modo preliminare con un certo ordine.</p>
 </section>
@@ -686,8 +706,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="ex">10</span> packets transmitted, 10 received, 0% packet loss, time 907ms</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="ex">rtt</span> min/avg/max/mdev = 20.053/22.769/41.694/6.339 ms</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="scambio-di-dati-su-socket" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="scambio-di-dati-su-socket"><span class="header-section-number">10.7</span> Scambio di dati su socket</h2>
+<section id="scambio-di-dati-su-socket-tcp" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="scambio-di-dati-su-socket-tcp"><span class="header-section-number">10.7</span> Scambio di dati su socket (TCP)</h2>
 <p><strong>TCP</strong>:</p>
 <ul>
 <li><code>send(string)</code>: invia dati tramite una socket
@@ -700,8 +720,362 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><em>bufsize</em> è la massima quantità di dati che può essere ricevuta</li>
 </ul></li>
 </ul>
+<p><img src="img/client_server_TCP.png" class="img-fluid"></p>
+<p>Implementazione Server TCP:</p>
+<div id="49a0bed4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>IP <span class="op">=</span> <span class="st">'0.0.0.0'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>PORT <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>BUFFER_SIZE <span class="op">=</span> <span class="dv">1024</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>s.bind((IP,PORT))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>s.listen(<span class="dv">1</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>cur_port <span class="op">=</span> s.getsockname()[<span class="dv">1</span>]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"server on: </span><span class="sc">{</span>IP<span class="sc">}</span><span class="ss">:</span><span class="sc">{</span>cur_port<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        conn, addr <span class="op">=</span> s.accept()</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"client addr: </span><span class="sc">{</span><span class="bu">str</span>(addr)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Connection address: </span><span class="sc">{</span><span class="bu">format</span>(addr)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        to_client <span class="op">=</span> <span class="st">"SALVE!"</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> conn.recv(BUFFER_SIZE)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"received data: </span><span class="sc">{</span>data<span class="sc">.</span>decode(<span class="st">"utf-8"</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        conn.send(to_client.encode(<span class="st">"uft-8"</span>))</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        conn.close()</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span>:    </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    s.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Implementazione client TCP</p>
+<div id="74e9b609" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket, sys</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> client(PORT):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    IP <span class="op">=</span> <span class="st">'localhost'</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    BUFFER_SIZE <span class="op">=</span> <span class="dv">1024</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    MESSAGE <span class="op">=</span> <span class="st">"Hello, World!</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    s.<span class="ex">connect</span>((IP, PORT))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    s.send(MESSAGE.encode(<span class="st">"utf-8"</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> s.recv(BUFFER_SIZE)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span> (<span class="st">"received data: "</span> <span class="op">+</span> data.decode(<span class="st">"utf-8"</span>))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    s.close()</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        PORT <span class="op">=</span> sys.argv[<span class="dv">1</span>]</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">IndexError</span>:</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Please, specify PORT arg..."</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> PORT <span class="op">!=</span> <span class="st">""</span>, <span class="st">'specify port'</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    client(<span class="bu">int</span>(PORT))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Usando <code>strace</code> conoscere le syscall reali che il kernel esegue nel momento in cui eseguiamo il codice python.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">socket</span><span class="er">(</span><span class="ex">AF_INET,</span> SOCK_STREAM<span class="kw">|</span><span class="ex">SOCK_CLOEXEC,</span> IPPROTO_IP<span class="kw">)</span> <span class="ex">=</span> 3</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">bind</span><span class="er">(</span><span class="ex">3,</span> {sa_family=AF_INET, sin_port=htons<span class="er">(</span><span class="ex">0</span><span class="kw">)</span><span class="ex">,</span> sin_addr=inet_addr<span class="er">(</span><span class="st">"0.0.0.0"</span><span class="kw">)</span><span class="er">}</span><span class="ex">,</span> 16<span class="kw">)</span> <span class="ex">=</span> 0</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">listen</span><span class="er">(</span><span class="ex">3,</span> 128<span class="kw">)</span>                          <span class="ex">=</span> 0</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">getsockname</span><span class="er">(</span><span class="ex">3,</span> {sa_family=AF_INET, sin_port=htons<span class="er">(</span><span class="ex">51197</span><span class="kw">)</span><span class="ex">,</span> sin_addr=inet_addr<span class="er">(</span><span class="st">"0.0.0.0"</span><span class="kw">)</span><span class="er">}</span><span class="ex">,</span> <span class="pp">[</span><span class="ss">16</span><span class="pp">]</span><span class="kw">)</span> <span class="ex">=</span> 0</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span><span class="er">(</span><span class="ex">1,</span> <span class="st">"Server is listening on 0.0.0.0:5"</span>..., 37Server is listening on 0.0.0.0:51197</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span> <span class="ex">=</span> 37</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">accept4</span><span class="er">(</span><span class="ex">3,</span> 0x7ffede60a5e0, <span class="pp">[</span><span class="ss">16</span><span class="pp">]</span>, SOCK_CLOEXEC<span class="kw">)</span> <span class="ex">=</span> <span class="pp">?</span> ERESTARTSYS <span class="er">(</span><span class="ex">To</span> be restarted if SA_RESTART is set<span class="kw">)</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span> SIGWINCH {si_signo=SIGWINCH, si_code=SI_KERNEL} <span class="at">---</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">accept4</span><span class="er">(</span><span class="ex">3,</span> {sa_family=AF_INET, sin_port=htons<span class="er">(</span><span class="ex">34086</span><span class="kw">)</span><span class="ex">,</span> sin_addr=inet_addr<span class="er">(</span><span class="st">"127.0.0.1"</span><span class="kw">)</span><span class="er">}</span><span class="ex">,</span> <span class="pp">[</span><span class="ss">16</span><span class="pp">]</span>, SOCK_CLOEXEC<span class="kw">)</span> <span class="ex">=</span> 4</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">getsockname</span><span class="er">(</span><span class="ex">4,</span> {sa_family=AF_INET, sin_port=htons<span class="er">(</span><span class="ex">51197</span><span class="kw">)</span><span class="ex">,</span> sin_addr=inet_addr<span class="er">(</span><span class="st">"127.0.0.1"</span><span class="kw">)</span><span class="er">}</span><span class="ex">,</span> [128 =<span class="op">&gt;</span> 16]<span class="kw">)</span> <span class="ex">=</span> 0</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span><span class="er">(</span><span class="ex">1,</span> <span class="st">"Client address ('127.0.0.1', 340"</span>..., 36Client address <span class="er">(</span><span class="st">'127.0.0.1'</span><span class="ex">,</span> 34086<span class="kw">)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span> <span class="ex">=</span> 36</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="ex">recvfrom</span><span class="er">(</span><span class="ex">4,</span> <span class="st">"Ciao sono il client..."</span>, 1024, 0, NULL, NULL<span class="kw">)</span> <span class="ex">=</span> 22</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span><span class="er">(</span><span class="ex">1,</span> <span class="st">"received data from client: Ciao "</span>..., 50received data from client: Ciao sono il client...</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span> <span class="ex">=</span> 50</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="ex">sendto</span><span class="er">(</span><span class="ex">4,</span> <span class="st">"ciao sono il server..."</span>, 22, 0, NULL, 0<span class="kw">)</span> <span class="ex">=</span> 22</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="ex">close</span><span class="er">(</span><span class="ex">4</span><span class="kw">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>socket(...) = 3</code> → il kernel crea la socket e restituisce il file descriptor <code>3</code> (<code>0</code>, <code>1</code> e <code>2</code> sono già occupati da <code>stdin</code>, <code>stdout</code> e <code>stderr</code>)</li>
+<li><code>bind(3, ...port 0...) = 0</code> → lega la socket a una porta (inizialmente <code>0</code>, poi il kernel assegna la <code>51197</code>)</li>
+<li><code>listen(3, 128) = 0</code> → mette la socket in ascolto con <code>backlog = 128</code> (valore di default su Linux)</li>
+<li><code>accept4(3, ...port 34086...) = 4</code> → arriva un client, <code>accept</code> restituisce una <strong>nuova socket</strong> con <code>fd = 4</code> dedicata a quel client (si è stabilizzata una connessione)</li>
+<li><code>recvfrom(4, ...)</code> <code>sendto(4, ....)</code> → la comunicazione avviene sulla socket <code>4</code>, non sulla <code>3</code>.</li>
+<li><code>close(4)</code> → chiude solo la connessione con quel client, la socket <code>3</code> rimane in ascolto</li>
+</ul>
+<p>Sfruttando lo pseudo filesytem possiamo vedere quali siano tutti i file descriptor aperti dal processo server, avente PID: 28293.</p>
+<p>Proprio come una qualsiasi altra risorsa, in Linux, viene astratta come un file, quindi ci troveremo all’interno della cartella <code>proc</code> in corrispondenza del pid del nostro processo server un file che corrisponde ad un link alla socket che il server sta utilizzando.</p>
+<p><code>fd</code> è la cartella contenente tutti i file descriptor di un processo.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> ls <span class="at">-l</span> /proc/28293/fd</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span> 0</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">lrwx------.</span> 1 giobpc giobpc 64 Apr 17 21:50 0 <span class="at">-</span><span class="op">&gt;</span> /dev/pts/0</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">lrwx------.</span> 1 giobpc giobpc 64 Apr 17 21:50 1 <span class="at">-</span><span class="op">&gt;</span> /dev/pts/0</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">lrwx------.</span> 1 giobpc giobpc 64 Apr 17 21:50 2 <span class="at">-</span><span class="op">&gt;</span> /dev/pts/0</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">lrwx------.</span> 1 giobpc giobpc 64 Apr 17 21:50 3 <span class="at">-</span><span class="op">&gt;</span> <span class="st">'socket:[173838]'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Il fatto che il file descriptor punti a <code>socket:[173838]</code> ci informa che questo <code>fd</code> <strong>non è un file su disco</strong>, ma una socket. È il modo in cui Linux rappresenta le socket nello pseudo filesystem <code>/proc</code></p>
+<p>Il numero <code>173838</code> è l’<strong>inode</strong> della socket. Ogni risorsa nel kernel ha un inode identificativo. Questo numero permette di <strong>collegare</strong> il file descriptor alla riga corrispondente in <code>/proc/net/tcp</code>, dove si trovano tutti i dettagli di quella socket: indirizzo, porta, stato (<code>LISTEN</code>), ecc.</p>
+<p>Infatti andiamo a vedere tutte queste informazioni sulla socket del nostro server:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> grep <span class="st">"173838"</span> /proc/net/tcp</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>   <span class="ex">3:</span> 00000000:977B 00000000:0000 0A 00000000:00000000 00:00000000 00000000  1000        0 173838 1 000000000780448f 100 0 0 10 0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><p><code>00000000:977B</code> → indirizzo e porto in ascolto;</p>
+<p>È in ascolto su tutte le interfacce di rete disponibili alla porta <code>38779</code>.</p></li>
+<li><p><code>00000000:0000</code> → peer remoto: al momento non è presente nessuna connessione con un client.</p></li>
+<li><p><code>0A</code> → stato: <code>LISTEN</code></p></li>
+<li><p><code>173838</code> → Inode</p></li>
+</ul>
+</section>
+<section id="scambio-dati-su-socket-udp" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="scambio-dati-su-socket-udp"><span class="header-section-number">10.8</span> Scambio dati su socket (UDP)</h2>
+<p><strong>UDP</strong>: - <code>sendto(string, address)</code>: invia dati alla socket - la socket non deve essere connessa ad una socket remota, dato che la destinazione è specificata da address - <code>recvfrom(bufsize)</code>: riceve i dati dalla socket - il valore di ritorno è una coppia <code>(string, address)</code> - <code>string</code> è una stringa contenente i dati ricevuti - <code>address</code> è l’indirizzo della socket che invia i dati - <code>bufsize</code> è la massima quantità di dati che possono esser ricevuti.</p>
+<p><img src="img/client_server_UDP.png" class="img-fluid"></p>
+<p>Implementazione server UDP:</p>
+<div id="c3aa0554" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>msgServer <span class="op">=</span> <span class="st">"Ciao client!"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>serverAddressPort <span class="op">=</span> (<span class="st">"localhost"</span>.encode(<span class="st">"utf-8"</span>), <span class="dv">7000</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>bufferSize <span class="op">=</span> <span class="dv">1024</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> socket.socket(family<span class="op">=</span>socket.AF_INET, <span class="bu">type</span><span class="op">=</span>socket.SOCK_DGRAM)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>s.bind(serverAddressPort)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>msgClient, addr <span class="op">=</span> s.recvfrom(bufferSize)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"[Server]: Messaggio ricevuto: "</span> <span class="op">+</span> </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>msgClient.decode(<span class="st">"utf-8"</span>))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"[Server]: Indirizzo client: </span><span class="sc">{}</span><span class="st">"</span> .<span class="bu">format</span>(addr))</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">"[Server]: Invio dati al client"</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>s.sendto(msgServer.encode(<span class="st">"utf-8"</span>), addr)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>s.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Implementazione client UDP:</p>
+<div id="0ecbbd6c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket, sys</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> client(port):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    msgClient <span class="op">=</span> <span class="st">"Ciao server!"</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    serverAddressPort <span class="op">=</span> (<span class="st">"localhost"</span>.encode(<span class="st">"utf-8"</span>), port)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    bufferSize <span class="op">=</span> <span class="dv">1024</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> socket.socket(family<span class="op">=</span>socket.AF_INET, <span class="bu">type</span><span class="op">=</span>socket.SOCK_DGRAM)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span> (<span class="st">"[Client]: Invio dati al server. msg: "</span>, msgClient)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    s.sendto(msgClient.encode(<span class="st">"utf-8"</span>), serverAddressPort)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    msgServer, addr <span class="op">=</span> s.recvfrom(bufferSize)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"[Client]: Risposta server: "</span> <span class="op">+</span> msgServer.decode(<span class="st">"utf-8"</span>))</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    s.close()</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        port <span class="op">=</span> sys.argv[<span class="dv">1</span>]</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">IndexError</span>:</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Please, specify PORT arg..."</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> port <span class="op">!=</span> <span class="st">""</span>, <span class="st">'specify port'</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    client(<span class="bu">int</span>(port))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="numero-di-socket-utilizzate-in-tcp-e-udp" class="level3" data-number="10.8.1">
+<h3 data-number="10.8.1" class="anchored" data-anchor-id="numero-di-socket-utilizzate-in-tcp-e-udp"><span class="header-section-number">10.8.1</span> Numero di socket utilizzate in TCP e UDP</h3>
+<ul>
+<li>Per una comunicazione TCP
+<ul>
+<li>socket server-side per il listening</li>
+<li>socket server-side per la comunicazione effettiva (ottenuto da <code>accept()</code>)</li>
+<li>socket client-side (quella ottenuta dalla <code>connect()</code>)</li>
+</ul></li>
+<li>Per la comunicazione UDP
+<ul>
+<li>socket server-side per la comunicazione server verso client</li>
+<li>socket client-side per la comunicazione client verso il server</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="server-multithreadmultiprocess" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="server-multithreadmultiprocess"><span class="header-section-number">10.9</span> Server Multithread/Multiprocess</h2>
+<p>Migliorano l’efficienza di un server (TCP/UDP) creando più thread/process per gestire le richieste.</p>
+<p>Socket come oggetto non è thread/process-safety, quindi è necessario adottare dei modelli di utilizzo delle socket oppure gestire esplicitamente la concorrenza.</p>
+<p>I modelli di programmazione più utilizzati sono:</p>
+<ul>
+<li><strong>TCP</strong>
+<ul>
+<li>il thread principale gestisce la socket di <em>ascolto</em> (su cui fa <code>listen()</code>)</li>
+<li><code>accept()</code> crea un nuovo oggetto socket (la socket di connessione) che viene passata ad un solo nuovo thread/processo. Questa socket non deve essere condivisa dunque da più thread o processi, a meno che non si voglia gestire la concorrenza</li>
+<li>il thread/process esegue <code>recv()</code>, <code>send()</code>, quindi <code>close()</code> sulla socket di connessione</li>
+</ul></li>
+<li><strong>UDP</strong>
+<ul>
+<li>di solito c’è una sola socket server e ogni richiesta arriva sotto forma di <strong>datagramma</strong> con un <strong>indirizzo mittente</strong></li>
+<li>questa socket è unica e viene condivisa da tutti i thread/process nel server</li>
+<li>quando arriva un datagramma, si avvia un thread o processo a cui gli vengono passati i dati ricevuti, l’indirizzo del client e la socket condivisa a quel thread.</li>
+<li>il thread elabora <strong>SOLO</strong> <strong>i dati</strong> e risponde con una <code>sendto()</code></li>
+</ul></li>
+</ul>
+<section id="thread-safety-delle-socket" class="level3" data-number="10.9.1">
+<h3 data-number="10.9.1" class="anchored" data-anchor-id="thread-safety-delle-socket"><span class="header-section-number">10.9.1</span> thread safety delle socket</h3>
+<p><code>sendto()</code> su UDP è in realtà abbastanza sicura tra thread, il motivo della non <em>safety</em> consiste:</p>
+<p>UDP opera con datagrammi atomici. Una singola chiamata <code>sendto()</code> invia un pacchetto intero in un’unica operazione a livello kernel. Il sistema operativo gestisce questa operazione atomicamente, quindi due thread che chiamano <code>sendto()</code> contemporaneamente non “mischiano” i loro dati, al massimo i pacchetti vengono serializzati dal kernel.</p>
+<blockquote class="blockquote">
+<p>Se il datagramma UDP supera la dimensione massima consentita <code>64KB</code> il sistema operativo solleva un eccezione che porta alla terminazione del programma se non gestita.</p>
+<p>Quindi questo significa che l’operazione di <code>sendto()</code> è sempre atomica, se possibile, altrimenti genera un’eccezione del tipo <code>OSError: message too long</code>.</p>
+</blockquote>
+<p>Questa è la grande differenza rispetto TCP, dove <code>send()</code> può inviare dati in modo frammentato e quindi due thread in race condition potrebbero interlacciare i loro byte nel flusso.</p>
+<p>Il motivo per cui si dice che la socket <strong>non è <em>thread-safety</em></strong> non è il <code>sendto()</code>, ma l’<strong>oggetto</strong> <strong>socket</strong> in sé. L’oggetto <code>socket</code> ha stato interno (file descriptor, buffer, opzioni) e le operazioni che <em>modificiano</em> questo stato - come <code>setsockopt()</code>, <code>bind()</code>, <code>close()</code> - non sono protette. Se un thread chiude la socket mentre un altro sta facendo <code>sendto()</code> → RACE CONDITION.</p>
+<section id="tcp-server-multithreadmultiprocess-tcp" class="level4" data-number="10.9.1.1">
+<h4 data-number="10.9.1.1" class="anchored" data-anchor-id="tcp-server-multithreadmultiprocess-tcp"><span class="header-section-number">10.9.1.1</span> TCP server multithread/multiprocess TCP</h4>
+<p>Multithread:</p>
+<div id="3f569f2c" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>... <span class="co"># Thread function</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> thd_fun(c):</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data received from client</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> c.recv(<span class="dv">1024</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># reverse the given string from client</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># send back reversed string to client</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    c.send(data)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># connection closed</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    c.close()</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    host <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    port <span class="op">=</span> <span class="dv">12345</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create and bind a TCP socket</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    s.bind((host, port))</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Socket binded to port"</span>, port)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    s.listen(<span class="dv">5</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Socket is listening"</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>            <span class="co"># establish a connection with client</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>            c, addr <span class="op">=</span> s.accept()</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">'Connected to :'</span>, addr[<span class="dv">0</span>], <span class="st">':'</span>, addr[<span class="dv">1</span>])</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># start a new thread</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>            t <span class="op">=</span> threading.Thread(target<span class="op">=</span>thd_fun, args<span class="op">=</span>(c,))</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>            t.start()</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span>: </span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>        s.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Multiprocess:</p>
+<div id="1f1814f9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> multiprocess <span class="im">as</span> mp</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>... <span class="co"># Process function</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> proc_fun(c):</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data received from client</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> c.recv(<span class="dv">1024</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># reverse the given string from client</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># send back reversed string to client</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    c.send(data)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># connection closed</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    c.close()</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    host <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    port <span class="op">=</span> <span class="dv">12345</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create and bind a TCP socket</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    s.bind((host, port))</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Socket binded to port"</span>, port)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    s.listen(<span class="dv">5</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Socket is listening"</span>)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># establish a connection with client</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>            c, addr <span class="op">=</span> s.accept()</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">'Connected to :'</span>, addr[<span class="dv">0</span>], <span class="st">':'</span>, addr[<span class="dv">1</span>])</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>            <span class="co"># start a new process</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>            p <span class="op">=</span> mp.Process(target<span class="op">=</span>proc_fun, args<span class="op">=</span>(c,))</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>            p.start()</span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span>:    </span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>        s.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="udp-server-multithreadmultiprocess" class="level4" data-number="10.9.1.2">
+<h4 data-number="10.9.1.2" class="anchored" data-anchor-id="udp-server-multithreadmultiprocess"><span class="header-section-number">10.9.1.2</span> UDP Server multithread/multiprocess</h4>
+<p>Nel contesto di un server UDP multithread/multiprocess ricordarsi che <strong>UDP è connectionless</strong>.</p>
+<p>Questo significa che la ricezione di un datagramma è <strong>consigliata non farla nel contesto di un thread/processo figlio</strong>, proprio perché non c’è il concetto di connessione dedicata con il singolo client.</p>
+<div id="d1bcd496" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> thd_fun(s, data, addr):</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># reverse the received bytes</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> data[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># send reply to that client</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    s.sendto(data, addr)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    host <span class="op">=</span> <span class="st">"0.0.0.0"</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    cur_port <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    buffer_size <span class="op">=</span> <span class="dv">1024</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    s.bind((host, cur_port))</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    cur_port <span class="op">=</span> s.getsockname()[<span class="dv">1</span>]</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"UDP socket binded to port"</span>, cur_port)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:    </span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>            data, addr <span class="op">=</span> s.recvfrom(buffer_size)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"Received from:"</span>, addr, <span class="st">"data:"</span>, data.decode(<span class="st">"utf-8"</span>, errors<span class="op">=</span><span class="st">"ignore"</span>))</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>            t <span class="op">=</span> threading.Thread(target<span class="op">=</span>thd_fun, args<span class="op">=</span>(s, data, addr), daemon<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>            t.start()</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span>:</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>        s.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Serie di comandi utili per verificare le performance della comunicazione attraverso socket:</p>
+<ul>
+<li><p>emulazione network delay in un sistema Linux</p>
+<p><code>sudo apt update &amp;&amp; sudo apt install iproute2 -y || sudo dnf update &amp;&amp; sudo dnf install iproute2 -y</code></p></li>
+<li><p>add delay on loopback</p>
+<p><code>sudo tc qdisc add dev lo root netem delay 1000ms</code></p></li>
+<li><p>add corruption of 10% of traffic on loopback</p>
+<p><code>sudo tc qdisc add dev lo root netem corrupt 10%</code></p></li>
+<li><p>add drop of 20% of traffic on loopback</p>
+<p><code>sudo tc qdisc add dev lo root netem drop 10%</code></p></li>
+<li><p>remove delay on loopback</p>
+<p><code>sudo tc qdisc del dev lo root</code></p></li>
+<li><p>list tc rules</p>
+<p><code>sudo tc qdisc show</code></p></li>
+</ul>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
