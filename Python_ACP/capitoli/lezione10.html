@@ -403,13 +403,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ip-con-funzioni-particolari" id="toc-ip-con-funzioni-particolari" class="nav-link" data-scroll-target="#ip-con-funzioni-particolari"><span class="header-section-number">10.5</span> IP con funzioni particolari</a></li>
   <li><a href="#utility-di-rete-in-linux" id="toc-utility-di-rete-in-linux" class="nav-link" data-scroll-target="#utility-di-rete-in-linux"><span class="header-section-number">10.6</span> Utility di rete in Linux</a></li>
   <li><a href="#scambio-di-dati-su-socket-tcp" id="toc-scambio-di-dati-su-socket-tcp" class="nav-link" data-scroll-target="#scambio-di-dati-su-socket-tcp"><span class="header-section-number">10.7</span> Scambio di dati su socket (TCP)</a></li>
-  <li><a href="#scambio-dati-su-socket-udp" id="toc-scambio-dati-su-socket-udp" class="nav-link" data-scroll-target="#scambio-dati-su-socket-udp"><span class="header-section-number">10.8</span> Scambio dati su socket (UDP)</a>
+  <li><a href="#cosa-accade-nel-so" id="toc-cosa-accade-nel-so" class="nav-link" data-scroll-target="#cosa-accade-nel-so"><span class="header-section-number">10.8</span> Cosa accade nel SO:</a></li>
+  <li><a href="#scambio-dati-su-socket-udp" id="toc-scambio-dati-su-socket-udp" class="nav-link" data-scroll-target="#scambio-dati-su-socket-udp"><span class="header-section-number">10.9</span> Scambio dati su socket (UDP)</a>
   <ul class="collapse">
-  <li><a href="#numero-di-socket-utilizzate-in-tcp-e-udp" id="toc-numero-di-socket-utilizzate-in-tcp-e-udp" class="nav-link" data-scroll-target="#numero-di-socket-utilizzate-in-tcp-e-udp"><span class="header-section-number">10.8.1</span> Numero di socket utilizzate in TCP e UDP</a></li>
+  <li><a href="#numero-di-socket-utilizzate-in-tcp-e-udp" id="toc-numero-di-socket-utilizzate-in-tcp-e-udp" class="nav-link" data-scroll-target="#numero-di-socket-utilizzate-in-tcp-e-udp"><span class="header-section-number">10.9.1</span> Numero di socket utilizzate in TCP e UDP</a></li>
   </ul></li>
-  <li><a href="#server-multithreadmultiprocess" id="toc-server-multithreadmultiprocess" class="nav-link" data-scroll-target="#server-multithreadmultiprocess"><span class="header-section-number">10.9</span> Server Multithread/Multiprocess</a>
+  <li><a href="#server-multithreadmultiprocess" id="toc-server-multithreadmultiprocess" class="nav-link" data-scroll-target="#server-multithreadmultiprocess"><span class="header-section-number">10.10</span> Server Multithread/Multiprocess</a>
   <ul class="collapse">
-  <li><a href="#thread-safety-delle-socket" id="toc-thread-safety-delle-socket" class="nav-link" data-scroll-target="#thread-safety-delle-socket"><span class="header-section-number">10.9.1</span> thread safety delle socket</a></li>
+  <li><a href="#thread-safety-delle-socket" id="toc-thread-safety-delle-socket" class="nav-link" data-scroll-target="#thread-safety-delle-socket"><span class="header-section-number">10.10.1</span> thread safety delle socket</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -564,7 +565,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><code>SOCK_STREAM</code>: TCP</p></li>
 <li><p><code>SOCK_DGRAM</code>: UDP</p></li>
 <li><p><code>SOCK_RAW</code>: permette di saltare la gestione automatica del sistema operativo. Permette di gestire direttamente le intestazioni dei pacchetti. Mentre TCP e UDP consegnano solo il “carico utile”, una socket RAW permette di vedere l’intero pacchetto che viaggia sul cavo.</p>
-<p><code>ping</code> è un utility che si basa sull’utilizzo di socket RAW poiché utilizza un protocollo di trasporto ICMP.</p></li>
+<p><code>ping</code> è un’utility che si basa sull’utilizzo di socket RAW poiché utilizza un protocollo di trasporto ICMP.</p></li>
 </ul></li>
 </ul>
 <section id="principali-funzioni-socket" class="level3" data-number="10.4.1">
@@ -780,7 +781,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> PORT <span class="op">!=</span> <span class="st">""</span>, <span class="st">'specify port'</span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    client(<span class="bu">int</span>(PORT))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Usando <code>strace</code> conoscere le syscall reali che il kernel esegue nel momento in cui eseguiamo il codice python.</p>
+</section>
+<section id="cosa-accade-nel-so" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="cosa-accade-nel-so"><span class="header-section-number">10.8</span> Cosa accade nel SO:</h2>
+<p>Usando <code>strace</code> possiamo conoscere le syscall reali che il kernel esegue nel momento in cui eseguiamo il codice python.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">socket</span><span class="er">(</span><span class="ex">AF_INET,</span> SOCK_STREAM<span class="kw">|</span><span class="ex">SOCK_CLOEXEC,</span> IPPROTO_IP<span class="kw">)</span> <span class="ex">=</span> 3</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">bind</span><span class="er">(</span><span class="ex">3,</span> {sa_family=AF_INET, sin_port=htons<span class="er">(</span><span class="ex">0</span><span class="kw">)</span><span class="ex">,</span> sin_addr=inet_addr<span class="er">(</span><span class="st">"0.0.0.0"</span><span class="kw">)</span><span class="er">}</span><span class="ex">,</span> 16<span class="kw">)</span> <span class="ex">=</span> 0</span>
@@ -829,8 +833,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><code>173838</code> → Inode</p></li>
 </ul>
 </section>
-<section id="scambio-dati-su-socket-udp" class="level2" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="scambio-dati-su-socket-udp"><span class="header-section-number">10.8</span> Scambio dati su socket (UDP)</h2>
+<section id="scambio-dati-su-socket-udp" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="scambio-dati-su-socket-udp"><span class="header-section-number">10.9</span> Scambio dati su socket (UDP)</h2>
 <p><strong>UDP</strong>: - <code>sendto(string, address)</code>: invia dati alla socket - la socket non deve essere connessa ad una socket remota, dato che la destinazione è specificata da address - <code>recvfrom(bufsize)</code>: riceve i dati dalla socket - il valore di ritorno è una coppia <code>(string, address)</code> - <code>string</code> è una stringa contenente i dati ricevuti - <code>address</code> è l’indirizzo della socket che invia i dati - <code>bufsize</code> è la massima quantità di dati che possono esser ricevuti.</p>
 <p><img src="img/client_server_UDP.png" class="img-fluid"></p>
 <p>Implementazione server UDP:</p>
@@ -884,8 +888,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> port <span class="op">!=</span> <span class="st">""</span>, <span class="st">'specify port'</span></span>
 <span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    client(<span class="bu">int</span>(port))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="numero-di-socket-utilizzate-in-tcp-e-udp" class="level3" data-number="10.8.1">
-<h3 data-number="10.8.1" class="anchored" data-anchor-id="numero-di-socket-utilizzate-in-tcp-e-udp"><span class="header-section-number">10.8.1</span> Numero di socket utilizzate in TCP e UDP</h3>
+<section id="numero-di-socket-utilizzate-in-tcp-e-udp" class="level3" data-number="10.9.1">
+<h3 data-number="10.9.1" class="anchored" data-anchor-id="numero-di-socket-utilizzate-in-tcp-e-udp"><span class="header-section-number">10.9.1</span> Numero di socket utilizzate in TCP e UDP</h3>
 <ul>
 <li>Per una comunicazione TCP
 <ul>
@@ -901,8 +905,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="server-multithreadmultiprocess" class="level2" data-number="10.9">
-<h2 data-number="10.9" class="anchored" data-anchor-id="server-multithreadmultiprocess"><span class="header-section-number">10.9</span> Server Multithread/Multiprocess</h2>
+<section id="server-multithreadmultiprocess" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="server-multithreadmultiprocess"><span class="header-section-number">10.10</span> Server Multithread/Multiprocess</h2>
 <p>Migliorano l’efficienza di un server (TCP/UDP) creando più thread/process per gestire le richieste.</p>
 <p>Socket come oggetto non è thread/process-safety, quindi è necessario adottare dei modelli di utilizzo delle socket oppure gestire esplicitamente la concorrenza.</p>
 <p>I modelli di programmazione più utilizzati sono:</p>
@@ -921,8 +925,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>il thread elabora <strong>SOLO</strong> <strong>i dati</strong> e risponde con una <code>sendto()</code></li>
 </ul></li>
 </ul>
-<section id="thread-safety-delle-socket" class="level3" data-number="10.9.1">
-<h3 data-number="10.9.1" class="anchored" data-anchor-id="thread-safety-delle-socket"><span class="header-section-number">10.9.1</span> thread safety delle socket</h3>
+<section id="thread-safety-delle-socket" class="level3" data-number="10.10.1">
+<h3 data-number="10.10.1" class="anchored" data-anchor-id="thread-safety-delle-socket"><span class="header-section-number">10.10.1</span> thread safety delle socket</h3>
 <p><code>sendto()</code> su UDP è in realtà abbastanza sicura tra thread, il motivo della non <em>safety</em> consiste:</p>
 <p>UDP opera con datagrammi atomici. Una singola chiamata <code>sendto()</code> invia un pacchetto intero in un’unica operazione a livello kernel. Il sistema operativo gestisce questa operazione atomicamente, quindi due thread che chiamano <code>sendto()</code> contemporaneamente non “mischiano” i loro dati, al massimo i pacchetti vengono serializzati dal kernel.</p>
 <blockquote class="blockquote">
@@ -931,8 +935,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </blockquote>
 <p>Questa è la grande differenza rispetto TCP, dove <code>send()</code> può inviare dati in modo frammentato e quindi due thread in race condition potrebbero interlacciare i loro byte nel flusso.</p>
 <p>Il motivo per cui si dice che la socket <strong>non è <em>thread-safety</em></strong> non è il <code>sendto()</code>, ma l’<strong>oggetto</strong> <strong>socket</strong> in sé. L’oggetto <code>socket</code> ha stato interno (file descriptor, buffer, opzioni) e le operazioni che <em>modificiano</em> questo stato - come <code>setsockopt()</code>, <code>bind()</code>, <code>close()</code> - non sono protette. Se un thread chiude la socket mentre un altro sta facendo <code>sendto()</code> → RACE CONDITION.</p>
-<section id="tcp-server-multithreadmultiprocess-tcp" class="level4" data-number="10.9.1.1">
-<h4 data-number="10.9.1.1" class="anchored" data-anchor-id="tcp-server-multithreadmultiprocess-tcp"><span class="header-section-number">10.9.1.1</span> TCP server multithread/multiprocess TCP</h4>
+<section id="tcp-server-multithreadmultiprocess-tcp" class="level4" data-number="10.10.1.1">
+<h4 data-number="10.10.1.1" class="anchored" data-anchor-id="tcp-server-multithreadmultiprocess-tcp"><span class="header-section-number">10.10.1.1</span> TCP server multithread/multiprocess TCP</h4>
 <p>Multithread:</p>
 <div id="3f569f2c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> socket</span>
@@ -1023,8 +1027,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>        s.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="udp-server-multithreadmultiprocess" class="level4" data-number="10.9.1.2">
-<h4 data-number="10.9.1.2" class="anchored" data-anchor-id="udp-server-multithreadmultiprocess"><span class="header-section-number">10.9.1.2</span> UDP Server multithread/multiprocess</h4>
+<section id="udp-server-multithreadmultiprocess" class="level4" data-number="10.10.1.2">
+<h4 data-number="10.10.1.2" class="anchored" data-anchor-id="udp-server-multithreadmultiprocess"><span class="header-section-number">10.10.1.2</span> UDP Server multithread/multiprocess</h4>
 <p>Nel contesto di un server UDP multithread/multiprocess ricordarsi che <strong>UDP è connectionless</strong>.</p>
 <p>Questo significa che la ricezione di un datagramma è <strong>consigliata non farla nel contesto di un thread/processo figlio</strong>, proprio perché non c’è il concetto di connessione dedicata con il singolo client.</p>
 <div id="d1bcd496" class="cell">
