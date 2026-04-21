@@ -1186,7 +1186,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="10.14.2" class="anchored" data-anchor-id="skeleton-per-delega-has-a"><span class="header-section-number">10.14.2</span> Skeleton per delega (has a)</h3>
 <p>Qui lo Skeleton <strong>non viene esteso</strong>, ma contiene un <strong>riferimento</strong> (<code>delegate</code>) a chi implementa l’interfaccia. Entrambe le classi implementano <code>InterfacciaServer</code> in modo indipendente.</p>
 <p>I metodi dell’<code>InterfacciaServer</code> saranno implementati all’interno dello Skeleton in questo modo:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> servizio1():</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> servizio1(<span class="va">self</span>):</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.delegate.servizio1()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><img src="img/Skeleton_per_delega.png" class="img-fluid"></p>
 </section>
