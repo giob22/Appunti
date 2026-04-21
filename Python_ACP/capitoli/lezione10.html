@@ -412,6 +412,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#thread-safety-delle-socket" id="toc-thread-safety-delle-socket" class="nav-link" data-scroll-target="#thread-safety-delle-socket"><span class="header-section-number">10.10.1</span> thread safety delle socket</a></li>
   </ul></li>
+  <li><a href="#applicazioni-client-server-con-socket" id="toc-applicazioni-client-server-con-socket" class="nav-link" data-scroll-target="#applicazioni-client-server-con-socket"><span class="header-section-number">10.11</span> Applicazioni client-server con socket</a></li>
+  <li><a href="#patter-proxy-skeleton" id="toc-patter-proxy-skeleton" class="nav-link" data-scroll-target="#patter-proxy-skeleton"><span class="header-section-number">10.12</span> Patter <strong>Proxy-Skeleton</strong></a>
+  <ul class="collapse">
+  <li><a href="#utilizzo-del-pattern-proxy-skeleton" id="toc-utilizzo-del-pattern-proxy-skeleton" class="nav-link" data-scroll-target="#utilizzo-del-pattern-proxy-skeleton"><span class="header-section-number">10.12.1</span> Utilizzo del pattern Proxy-Skeleton</a></li>
+  <li><a href="#ruolo-dello-skeleton" id="toc-ruolo-dello-skeleton" class="nav-link" data-scroll-target="#ruolo-dello-skeleton"><span class="header-section-number">10.12.2</span> Ruolo dello skeleton</a></li>
+  </ul></li>
+  <li><a href="#schema-concettuale" id="toc-schema-concettuale" class="nav-link" data-scroll-target="#schema-concettuale"><span class="header-section-number">10.13</span> Schema concettuale</a></li>
+  <li><a href="#implementazione-della-proxy-skeleton" id="toc-implementazione-della-proxy-skeleton" class="nav-link" data-scroll-target="#implementazione-della-proxy-skeleton"><span class="header-section-number">10.14</span> Implementazione della Proxy-Skeleton</a>
+  <ul class="collapse">
+  <li><a href="#skeleton-per-ereditarietà-is-a" id="toc-skeleton-per-ereditarietà-is-a" class="nav-link" data-scroll-target="#skeleton-per-ereditarietà-is-a"><span class="header-section-number">10.14.1</span> Skeleton per ereditarietà (is-a)</a></li>
+  <li><a href="#skeleton-per-delega-has-a" id="toc-skeleton-per-delega-has-a" class="nav-link" data-scroll-target="#skeleton-per-delega-has-a"><span class="header-section-number">10.14.2</span> Skeleton per delega (has a)</a></li>
+  </ul></li>
+  <li><a href="#ereditarietà-vs-delega" id="toc-ereditarietà-vs-delega" class="nav-link" data-scroll-target="#ereditarietà-vs-delega"><span class="header-section-number">10.15</span> Ereditarietà vs Delega</a></li>
   </ul>
 </nav>
     </div>
@@ -1076,10 +1089,170 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>list tc rules</p>
 <p><code>sudo tc qdisc show</code></p></li>
 </ul>
-
-
 </section>
 </section>
+</section>
+<section id="applicazioni-client-server-con-socket" class="level2" data-number="10.11">
+<h2 data-number="10.11" class="anchored" data-anchor-id="applicazioni-client-server-con-socket"><span class="header-section-number">10.11</span> Applicazioni client-server con socket</h2>
+<p>In un’applicazione <strong>con comunicazione basata su socket</strong>, client e server prevedono meccanismi di:</p>
+<ul>
+<li><em>comunicazione</em></li>
+<li><em>esternalizzazione</em> dei dati</li>
+<li>invio-ricezione delle richieste</li>
+<li>ricostruzione dei valori ricevuti</li>
+</ul>
+<p><strong>Potenziali rischi</strong>:</p>
+<ul>
+<li>L’implementazione dei <em>meccanismi di comunicazione</em> “distrae” dalla realizzazione delle funzionalità effettive dell’applicazione</li>
+<li>Sovrapposizione della <strong>logica di comunicazione</strong> client-server con la <strong>logica applicativo (di business)</strong></li>
+</ul>
+<p>Il programmatore lato client dovrebbe concentrarsi sulla logica applicativa (invocando i servizi del server specificati da un’<em>interfaccia</em>), e <strong>separare la logica applicativa dai meccanismi di comunicazione/interazione con il server</strong>.</p>
+<p>Analogamente, il programmatore lato server dovrebbe concentrarsi sulla codifica dei servizi offerti, <strong>separandoli dai meccanismi di comunicazione/interazione con il client</strong>.</p>
+</section>
+<section id="patter-proxy-skeleton" class="level2" data-number="10.12">
+<h2 data-number="10.12" class="anchored" data-anchor-id="patter-proxy-skeleton"><span class="header-section-number">10.12</span> Patter <strong>Proxy-Skeleton</strong></h2>
+<p><strong><em>Pattern</em></strong>: è una soluzione riutilizzabile a un problema ricorrente nel design del software. Non è codice copiabile ma un <strong>modello concettuale</strong> - una ricetta che descrive come strutturare classi e oggetti per risolvere un problema specifico in modo elegante e collaudato.</p>
+<p>Il pattern Proxy-Skeleton è un pattern strutturale usato tipicamente nei sistemi <strong>distribuiti</strong>. È composto da due componenti complementari:</p>
+<ul>
+<li><p><strong>Proxy</strong> (lato client):</p>
+<p>È un oggetto locale che <strong>finge di essere</strong> l’oggetto remoto. Funge da intermediario con il server.</p>
+<ul>
+<li>Riceve la chiamata</li>
+<li><strong>Serializza</strong> i parametri (marshalling)</li>
+<li>Li invia via rete al server</li>
+<li>Aspetta la risposta e la restituisce al chiamante (client)</li>
+</ul></li>
+<li><p><strong>Skeleton</strong> (lato server)</p>
+<p>È il “gemello” del proxy sul lato server. Esso:</p>
+<ul>
+<li><strong>Riceve</strong> i dati dalla rete</li>
+<li><strong>Deserializza</strong> i parametri (unmarshalling)</li>
+<li>Chiama il metodo reale sull’oggetto server</li>
+<li>Rimanda il risultato alla proxy via rete</li>
+</ul></li>
+</ul>
+<p>L’obiettivo del pattern è nascondere completamente <strong>la complessità della comunicazione remota</strong> tra client e server.</p>
+<p>Il proxy si presenta come un’implementazione del servizio remoto, <em>locale al client</em>.</p>
+<p>I meccanismi di “basso livello” necessari per l’instaurazione della comunicazione, e per l’invio-ricezione dei parametri delle invocazioni tramite TCP e UDP, sono implementati e incapsulati all’interno del Proxy e dello Skeleton.</p>
+<p><img src="img/proxy.png" class="img-fluid"></p>
+<ul>
+<li>Il servizio fornito è specificato da <code>interfacciaServer</code>.</li>
+<li>È presente una duplice implementazione, <code>ServerProxy</code> e <code>ServerProxy</code>
+<ul>
+<li><code>ServerImpl</code> implementa effettivamente i servizi dichiarati nell’interfaccia;</li>
+<li><code>ServerProxy</code> si fa carico dell’inoltro delle richieste (effettuate dal client) verso il alto server.</li>
+</ul></li>
+<li>L’associazione direzionale tra <code>ServerProxy</code> e <code>ServerProxy</code> sintetizza tutti i meccanismi necessari al proxy per riferirsi al server.</li>
+</ul>
+<section id="utilizzo-del-pattern-proxy-skeleton" class="level3" data-number="10.12.1">
+<h3 data-number="10.12.1" class="anchored" data-anchor-id="utilizzo-del-pattern-proxy-skeleton"><span class="header-section-number">10.12.1</span> Utilizzo del pattern Proxy-Skeleton</h3>
+<p>Il client possiede un riferimento ad un oggetto di tipo <code>interfacciaServer</code> (ossia server proxy).</p>
+<p>Il client utilizza il proxy in sostituzione del servizio reale; il proxy si fa carico dell’interazione con il lato server.</p>
+<p>In maniera complementare lo Skeleton si fa carico di implementare la comunicazione lato server, quindi si finge il client per ricevere il servizio e inviare il risultato verso la proxy sempre via rete.</p>
+<p>Anche lo Skeleton si fa carico dell’interazione con il lato client.</p>
+<p><img src="img/sequence_diagram_esempio.png" class="img-fluid"></p>
+</section>
+<section id="ruolo-dello-skeleton" class="level3" data-number="10.12.2">
+<h3 data-number="10.12.2" class="anchored" data-anchor-id="ruolo-dello-skeleton"><span class="header-section-number">10.12.2</span> Ruolo dello skeleton</h3>
+<p>Con l’aggiunta del Proxy il client è sollevato dalle problematiche di comunicazione.</p>
+<p>In maniera analoga un proxy lato server, detto <strong>Skeleton</strong>, si fa carico della comunicazione con il Proxy lato client.</p>
+<p>Lo Skeleton:</p>
+<ul>
+<li>riceve le richieste di servizio</li>
+<li>struttura l’informazione fornita in ingresso tramite socket TCP o UDP</li>
+<li>effettua l’up-call al servizio reale</li>
+<li>riceve da questo eventuali risultati</li>
+<li>inva una risposta al proxy lato client</li>
+</ul>
+</section>
+</section>
+<section id="schema-concettuale" class="level2" data-number="10.13">
+<h2 data-number="10.13" class="anchored" data-anchor-id="schema-concettuale"><span class="header-section-number">10.13</span> Schema concettuale</h2>
+<p><img src="img/schema_concettuale_proxy_skeleton.png" class="img-fluid"></p>
+</section>
+<section id="implementazione-della-proxy-skeleton" class="level2" data-number="10.14">
+<h2 data-number="10.14" class="anchored" data-anchor-id="implementazione-della-proxy-skeleton"><span class="header-section-number">10.14</span> Implementazione della Proxy-Skeleton</h2>
+<p>L’approccio con cui andiamo ad implementare entrambe le proxy, lato cliente e lato server, sono gli stessi.</p>
+<p>In pratica però, <strong>lato client il Proxy è quasi sempre implementato per composizione/delega</strong>, perché il client non ha motivo di “essere un” proxy - semplicemente lo <em>usa</em> per chiamare il server come se fosse in locale.</p>
+<p>In particolar modo abbiamo due tipologie di approccio per l’implementazione.</p>
+<section id="skeleton-per-ereditarietà-is-a" class="level3" data-number="10.14.1">
+<h3 data-number="10.14.1" class="anchored" data-anchor-id="skeleton-per-ereditarietà-is-a"><span class="header-section-number">10.14.1</span> Skeleton per ereditarietà (is-a)</h3>
+<p>L’idea è che lo Skeleton è una <strong>classe astratta</strong> che estende <code>InterfacciaServer</code> e <strong>gestisce tutta la comunicazione</strong> di rete, ma lascia i metodi del servizio <strong>senza implementazione</strong> (astratti). Il <code>ServerImpl</code> estende lo Skeleton e fornisce la logica reale.</p>
+<p>Quindi lo skeleton implementa unicamente gli opportuni schemi di comunicazione, ma lascia senza implementazione i metodi dell’interfaccia <code>InterfacciaServer</code>.</p>
+<p><code>ServerImpl</code> è una sottoclasse (estende) di <code>Skeleton</code> e <strong>fornisce implementazione ai metodo astratti</strong>.</p>
+<p><img src="img/Skeleton_per_eredita.png" class="img-fluid"></p>
+</section>
+<section id="skeleton-per-delega-has-a" class="level3" data-number="10.14.2">
+<h3 data-number="10.14.2" class="anchored" data-anchor-id="skeleton-per-delega-has-a"><span class="header-section-number">10.14.2</span> Skeleton per delega (has a)</h3>
+<p>Qui lo Skeleton <strong>non viene esteso</strong>, ma contiene un <strong>riferimento</strong> (<code>delegate</code>) a chi implementa l’interfaccia. Entrambe le classi implementano <code>InterfacciaServer</code> in modo indipendente.</p>
+<p>I metodi dell’<code>InterfacciaServer</code> saranno implementati all’interno dello Skeleton in questo modo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> servizio1():</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.delegate.servizio1()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="ereditarietà-vs-delega" class="level2" data-number="10.15">
+<h2 data-number="10.15" class="anchored" data-anchor-id="ereditarietà-vs-delega"><span class="header-section-number">10.15</span> Ereditarietà vs Delega</h2>
+<p>È consigliato usare l’ereditarietà solo quando si è sicuri che la classe che stiamo creando (client/server) e quella da cui ereditiamo (Proxy/Skeleton) <strong>condividino tutti i tratti comuni</strong>.</p>
+<p>Se si pensa che la propria classe non abbia bisogno di alcun attributo o metodi della superclasse e la relazione “is-a” non è applicabile, è <strong>meglio usare la delega</strong>.</p>
+<p>Solitamente è meglio utilizzare l’approccio che consiste nella <strong>delega</strong> in virtù di un principio fondamentale della OOP:</p>
+<blockquote class="blockquote">
+<p><em>“Favorisci la composizione (delega) rispetto all’ereditarietà”</em> – GoF, Design Patters</p>
+</blockquote>
+<p>Ma non è una regola assoluta.</p>
+<p><strong>Ereditarietà</strong>: pro e contro:</p>
+<ul>
+<li><p><strong>PRO</strong></p>
+<ol type="1">
+<li><strong>Semplicità nell’implementazione</strong>: il programmatore del server deve solo estendere Skeleton e implementare i metodi astratti. Non deve occuparsi di creare istanze separate o passare riferimenti.</li>
+<li><strong>L’up-call è automatico e pulito</strong>: il polimorfismo (Duck typing) fa tutto: quando lo Skeleton chiama <code>self.request(data)</code>, Python esegue automaticamente la versione di <code>ServerImpl</code>. Non servono riferimenti espliciti.</li>
+<li><strong>Meno codice boilerplate</strong>: non devono essere implementati metodi “ponte” che semplicemente delegano la chiamata.</li>
+</ol></li>
+<li><p><strong>CONTRO</strong></p>
+<ol type="1">
+<li><strong>Accoppiamento forte</strong>: se domani vuoi cambiare il protocollo di rete, devi modificare o sostituire la superclasse, e <code>ServerImpl</code> ne risentirebbe.</li>
+<li><strong>Riuso limitato</strong>: <code>ServerImpl</code> non può essere usato <strong>senza lo Skeleton</strong>. Se vuoi testare la logica applicativa isolata (senza rete), non puoi farlo facilmente perché la logica e la comunicazione sono fuse insieme.</li>
+</ol>
+<p>L’obiettivo del pattern in questo caso è <strong>parzialmente o apparentemente ottenuto</strong>. Formalmente le responsabilità sembrano divise ma concretamente <code>ServerImpl</code> è <strong>strutturalmente</strong> <strong>dipendente</strong> dallo Skeleton.</p>
+<p>È come: “dividere la cucina dal salotto ma separarli da una porta che non si chiude”.</p>
+<ol start="3" type="1">
+<li><strong>Ereditarietà multipla rischiosa</strong>: in Python l’ereditarietà multipla è possibile ma delicata. Se <code>ServerImpl</code> deve estendere un’altra classe, aggiungere anche <code>Skeleton</code> crea gerarchie complesse e potenzialmente il problema del “diamante mortale della morte”.</li>
+<li><strong>Violazione del principio di singola responsabilità (SRP)</strong>: <code>ServerImpl</code> finisce per avere due responsabilità: la logica applicativa e la comunicazione di rete. Questo rende la classe più difficile da manutenere.</li>
+</ol></li>
+</ul>
+<p>Quindi usa <strong>l’ereditarietà</strong> quando:</p>
+<ul>
+<li>il progetto è piccolo e semplice, e la semplicità vale più della flessibilità</li>
+<li>il protocollo di rete non cambierà mai</li>
+<li><code>ServerImpl</code> non deve estendere nessun’altra classe</li>
+<li>minimo codice possibile per arrivare al risultato</li>
+</ul>
+<p><strong>Delega</strong>: pro e contro</p>
+<ul>
+<li><p><strong>PRO</strong></p>
+<ol type="1">
+<li><strong>Separazione netta delle responsabilità</strong>: <code>ServerImpl</code> conosce solo la logica applicativa. <code>Skeleton</code> conosce solo la rete. Ognuno fa una cosa sola.</li>
+<li><strong>Testabilità</strong>: posso testare <code>ServerImpl</code> completamente senza rete.</li>
+<li><strong>Flessibilità</strong>: <strong>posso cambiare il protocollo senza toccare la logica di business</strong>.</li>
+<li><strong>Riuso dell’implementazione</strong></li>
+<li><strong>Nessun problema con l’ereditarietà multipla</strong></li>
+</ol></li>
+<li><p><strong>CONTRO</strong></p>
+<ol type="1">
+<li><strong>Più codice</strong>.</li>
+<li><strong>Più classi da gestire</strong>.</li>
+<li><strong>Passaggio del riferimento</strong>: dobbiamo passare <code>delegate</code> allo <code>Skeleton</code> al momento della creazione, il che aggiunge un piccolo overhead di configurazione.</li>
+</ol></li>
+</ul>
+<p>Quindi usa <strong>la delega</strong> quando:</p>
+<ul>
+<li>il progetto è <strong>medio-grande</strong> e la manutenibilità conta</li>
+<li>vuoi poter testare la logica separatamente dalla rete</li>
+<li>il protocollo potrebbe cambiare in futuro</li>
+<li><code>ServerImpl</code> deve estendere altre classi</li>
+<li>si lavora in un team, dove chi scrive la logica di business e che la logica di comunicazione sono persone diverse</li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
