@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mappa Concettuale — Qualità del Software</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+/* ─── TOKENS ─── */
+:root {
+  --bg:#0d1117; --surface:#161b22; --surface2:#1c2128; --surface3:#21262d;
+  --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+  --blue:#58a6ff; --blue-dk:#1f6feb;
+  --green:#3fb950; --orange:#f0883e; --purple:#bc8cff; --red:#ff7b72; --yellow:#e3b341;
+  --sb:230px; --topbar:52px;
+  --r:9px;
+}
+
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
+
+/* ══════════════════════════════════════════
+   MOBILE-FIRST LAYOUT
+   Mobile  : topbar + drawer overlay + scrollable main
+   Tablet  : same but drawer is wider
+   Desktop : sidebar fixed left + scrollable main
+══════════════════════════════════════════ */
+
+/* ─── TOPBAR (mobile/tablet only) ─── */
+#topbar {
+  display:none;
+  position:fixed; top:0; left:0; right:0;
+  height:var(--topbar);
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  align-items:center;
+  padding:0 14px;
+  gap:10px;
+  z-index:200;
+}
+#topbar .tb-title { font-weight:700; font-size:0.9rem; color:var(--blue); flex:1; }
+#topbar input {
+  flex:1; background:var(--surface2); border:1px solid var(--border);
+  border-radius:6px; padding:6px 10px; color:var(--text);
+  font-size:0.8rem; font-family:inherit; outline:none;
+  transition:border-color .15s; max-width:200px;
+}
+#topbar input:focus{border-color:var(--blue);}
+#topbar input::placeholder{color:var(--muted);}
+#menu-btn {
+  background:none; border:1px solid var(--border); border-radius:6px;
+  color:var(--muted); width:34px; height:34px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; transition:background .15s; flex-shrink:0;
+}
+#menu-btn:hover{background:var(--surface2);color:var(--text);}
+
+/* ─── DRAWER OVERLAY (mobile/tablet) ─── */
+#drawer-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55);
+  z-index:300; opacity:0; transition:opacity .2s;
+}
+#drawer-overlay.open{display:block;}
+#drawer-overlay.visible{opacity:1;}
+
+/* ─── SIDEBAR / DRAWER shared styles ─── */
+#sidebar {
+  background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; overflow:hidden; z-index:400;
+}
+
+/* ─── DESKTOP sidebar ─── */
+#sidebar {
+  width:var(--sb); min-width:var(--sb);
+  height:100vh; position:fixed; top:0; left:0;
+  transition:width .25s, min-width .25s;
+}
+#sidebar.collapsed{width:46px;min-width:46px;}
+
+/* ─── MAIN ─── */
+#main {
+  margin-left:var(--sb);
+  height:100vh; overflow-y:auto;
+  padding:26px 22px 60px;
+  transition:margin-left .25s;
+}
+#sidebar.collapsed ~ #main{margin-left:46px;}
+
+/* ─── SIDEBAR INTERNALS ─── */
+.sb-top{padding:12px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sb-logo{font-weight:700;font-size:0.82rem;color:var(--blue);white-space:nowrap;overflow:hidden;transition:opacity .2s;}
+#sidebar.collapsed .sb-logo{opacity:0;pointer-events:none;}
+#toggle-sb{background:none;border:1px solid var(--border);border-radius:5px;color:var(--muted);width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;transition:background .15s;}
+#toggle-sb:hover{background:var(--surface2);color:var(--text);}
+.sb-search{padding:8px 10px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden;}
+.sb-search input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 9px;color:var(--text);font-size:0.76rem;font-family:inherit;outline:none;transition:border-color .15s;}
+.sb-search input:focus{border-color:var(--blue);}
+.sb-search input::placeholder{color:var(--muted);}
+#sidebar.collapsed .sb-search{visibility:hidden;}
+.sb-ctrl{padding:5px 10px;display:flex;gap:5px;border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden;}
+#sidebar.collapsed .sb-ctrl{visibility:hidden;}
+.ctrl-btn{background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--muted);font-size:0.66rem;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .14s;}
+.ctrl-btn:hover{border-color:var(--blue);color:var(--blue);}
+.sb-nav{overflow-y:auto;flex:1;padding:6px 0;}
+.sb-nav::-webkit-scrollbar{width:3px;}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.nav-sec{padding:6px 10px 2px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;}
+#sidebar.collapsed .nav-sec{opacity:0;}
+.nav-item{display:flex;align-items:center;gap:7px;padding:5px 10px;font-size:0.78rem;color:var(--muted);cursor:pointer;white-space:nowrap;overflow:hidden;border-left:2px solid transparent;transition:all .13s;text-decoration:none;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{border-left-color:var(--blue);color:var(--blue);background:rgba(88,166,255,.06);}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+#sidebar.collapsed .nav-item span{opacity:0;}
+
+/* ─── PAGE CONTENT ─── */
+.page-title{font-size:1.4rem;font-weight:700;color:var(--blue);margin-bottom:3px;letter-spacing:-.5px;}
+.page-sub{color:var(--muted);font-size:0.78rem;margin-bottom:16px;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;padding:9px 13px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:0.71rem;color:var(--muted);}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
+.section-heading{font-size:0.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border);scroll-margin-top:14px;}
+
+/* ─── GRID ─── */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.full{grid-column:1/-1;}
+
+/* ─── CARD ─── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s;scroll-margin-top:14px;}
+.card:hover{border-color:var(--blue-dk);}
+.card-hdr{padding:11px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;transition:background .14s;-webkit-tap-highlight-color:transparent;}
+.card-hdr:hover,.card-hdr:active{background:var(--surface2);}
+.card-title{display:flex;align-items:center;gap:8px;font-weight:600;font-size:0.84rem;line-height:1.3;}
+.card-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.chevron{color:var(--muted);font-size:0.7rem;transition:transform .2s;flex-shrink:0;margin-left:8px;}
+.card.open .chevron{transform:rotate(180deg);}
+.card-body{display:none;padding:0 13px 12px;border-top:1px solid var(--border);}
+.card.open .card-body{display:block;animation:fadeIn .14s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+.sub-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:9px 0 4px;}
+
+/* ─── TAG GRID ─── */
+.tag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:4px;margin-bottom:5px;}
+.tag{font-size:0.69rem;padding:4px 8px;border-radius:4px;border:1px solid;cursor:pointer;transition:all .13s;font-family:'IBM Plex Mono',monospace;overflow:hidden;line-height:1.3;-webkit-tap-highlight-color:transparent;}
+.tag:hover,.tag:active{opacity:.78;transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.3);}
+.tag.blue  {color:var(--blue);  border-color:rgba(88,166,255,.35); background:rgba(88,166,255,.07);}
+.tag.green {color:var(--green); border-color:rgba(63,185,80,.35);  background:rgba(63,185,80,.07);}
+.tag.orange{color:var(--orange);border-color:rgba(240,136,62,.35); background:rgba(240,136,62,.07);}
+.tag.purple{color:var(--purple);border-color:rgba(188,140,255,.35);background:rgba(188,140,255,.07);}
+.tag.red   {color:var(--red);   border-color:rgba(255,123,114,.35);background:rgba(255,123,114,.07);}
+
+/* ─── NOTE BOXES ─── */
+.note{background:var(--surface2);border-left:3px solid var(--blue);border-radius:0 5px 5px 0;padding:6px 10px;font-size:0.74rem;color:var(--muted);margin:6px 0;line-height:1.55;}
+.note.warn{border-color:var(--orange);}
+.note.ok  {border-color:var(--green);}
+.note.key {border-color:var(--purple);}
+
+/* ─── CHAIN ─── */
+.chain{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:7px 0;}
+.chain-step{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:4px 9px;font-size:0.7rem;text-align:center;line-height:1.3;}
+.chain-arrow{color:var(--blue);font-size:0.85rem;}
+
+/* ─── DIFF ─── */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:7px;}
+.diff-col h4{font-size:0.73rem;font-weight:600;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid var(--border);}
+.diff-col.old h4{color:var(--orange);}
+.diff-col.new h4{color:var(--green);}
+.diff-item{font-size:0.69rem;color:var(--muted);padding:2px 0;display:flex;align-items:flex-start;gap:5px;line-height:1.4;}
+.diff-item::before{content:"·";flex-shrink:0;margin-top:1px;}
+
+/* ─── TOOLTIP OVERLAY ─── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(2px);padding:16px;}
+.overlay.visible{display:flex;}
+.tip-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;max-width:480px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popIn .16s ease;max-height:90vh;overflow-y:auto;}
+@keyframes popIn{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
+.tip-box h3{font-size:.95rem;margin-bottom:9px;color:var(--blue);line-height:1.3;padding-right:28px;}
+.tip-box p{font-size:.79rem;color:var(--muted);line-height:1.65;margin-bottom:7px;}
+.tip-ex{font-family:'IBM Plex Mono',monospace;font-size:.71rem;background:var(--bg);padding:7px 11px;border-radius:5px;color:var(--green);margin-top:7px;line-height:1.5;border:1px solid var(--border);}
+.tip-close{position:absolute;top:12px;right:13px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--muted);width:26px;height:26px;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .14s;}
+.tip-close:hover,.tip-close:active{background:var(--surface3);color:var(--text);}
+
+/* ─── SEARCH STATE ─── */
+.card.hidden{display:none;}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+══════════════════════════════════════════ */
+
+/* ── TABLET ≤ 900px ── */
+@media(max-width:900px){
+  body{overflow:auto;}
+
+  /* hide desktop sidebar */
+  #sidebar{
+    position:fixed; top:0; left:0;
+    width:280px; min-width:280px;
+    height:100%; max-height:100vh;
+    transform:translateX(-100%);
+    transition:transform .25s;
+    box-shadow:4px 0 24px rgba(0,0,0,.4);
+    z-index:400;
+  }
+  #sidebar.open{transform:translateX(0);}
+  #sidebar.collapsed{width:280px;min-width:280px;} /* override desktop collapsed */
+  #sidebar.collapsed .sb-logo{opacity:1;}
+  #sidebar.collapsed .sb-search{visibility:visible;}
+  #sidebar.collapsed .sb-ctrl{visibility:visible;}
+  #sidebar.collapsed .nav-sec{opacity:1;}
+  #sidebar.collapsed .nav-item span{opacity:1;}
+  #toggle-sb{display:none;} /* hide desktop collapse btn in drawer */
+
+  /* show topbar */
+  #topbar{display:flex;}
+
+  /* main fills width, offset by topbar */
+  #main{margin-left:0;padding-top:calc(var(--topbar) + 16px);height:100vh;overflow-y:auto;}
+  #sidebar.collapsed ~ #main{margin-left:0;}
+
+  /* 2-col grid on tablet */
+  .grid{grid-template-columns:1fr 1fr;}
+  .diff-grid{grid-template-columns:1fr 1fr;}
+}
+
+/* ── MOBILE ≤ 600px ── */
+@media(max-width:600px){
+  /* single col grid */
+  .grid{grid-template-columns:1fr;}
+  .diff-grid{grid-template-columns:1fr;}
+
+  /* smaller tag grid */
+  .tag-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
+
+  /* tighter main padding */
+  #main{padding:calc(var(--topbar) + 12px) 12px 60px;}
+
+  /* topbar: hide title on very small screens */
+  #topbar .tb-title{display:none;}
+  #topbar input{max-width:none;}
+
+  /* card title smaller */
+  .card-title{font-size:0.8rem;}
+
+  /* bigger tap targets for tags */
+  .tag{padding:5px 9px;font-size:0.71rem;}
+
+  /* tip box full bottom sheet on mobile */
+  .overlay{align-items:flex-end;padding:0;}
+  .tip-box{border-radius:14px 14px 0 0;max-width:100%;width:100%;padding:22px 18px 32px;animation:slideUp .2s ease;}
+  @keyframes slideUp{from{transform:translateY(60px);opacity:0;}to{transform:none;opacity:1;}}
+
+  /* two-col qual in uso grid for mobile */
+  .uso-grid{grid-template-columns:1fr !important;}
+
+  /* chain wraps */
+  .chain{gap:4px;}
+  .chain-step{font-size:0.66rem;padding:3px 7px;}
+}
+
+/* ── LARGE DESKTOP ≥ 1280px ── */
+@media(min-width:1280px){
+  .grid{grid-template-columns:1fr 1fr;}
+  #main{padding:28px 32px 60px;}
+  .tag-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR (tablet/mobile only) -->
+<div id="topbar">
+  <button id="menu-btn" onclick="toggleDrawer()" aria-label="Menu">☰</button>
+  <span class="tb-title">Qualità SW</span>
+  <input type="text" placeholder="🔍 Cerca..." oninput="handleSearch(this.value)" id="topbar-search">
+</div>
+
+<!-- DRAWER OVERLAY -->
+<div id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- SIDEBAR / DRAWER -->
+<nav id="sidebar">
+  <div class="sb-top">
+    <span class="sb-logo">Qualità del Software</span>
+    <button id="toggle-sb" onclick="toggleDesktopSidebar()" title="Comprimi">◀</button>
+  </div>
+  <div class="sb-search">
+    <input type="text" placeholder="🔍 Cerca..." oninput="handleSearch(this.value)" id="sb-search">
+  </div>
+  <div class="sb-ctrl">
+    <button class="ctrl-btn" onclick="expandAll()">Espandi tutto</button>
+    <button class="ctrl-btn" onclick="collapseAll()">Chiudi tutto</button>
+  </div>
+  <div class="sb-nav">
+    <div class="nav-sec">Generale</div>
+    <a class="nav-item" href="#sec-base" onclick="navGo(this)"><div class="nav-dot" style="background:#bc8cff"></div><span>Concetti Base</span></a>
+    <a class="nav-item" href="#card-iso9000" onclick="navGo(this)"><div class="nav-dot" style="background:#bc8cff"></div><span>Famiglia ISO 9000</span></a>
+    <a class="nav-item" href="#sec-metriche" onclick="navGo(this)"><div class="nav-dot" style="background:#f0883e"></div><span>Metriche</span></a>
+    <div class="nav-sec">ISO 9126</div>
+    <a class="nav-item" href="#sec-9126p" onclick="navGo(this)"><div class="nav-dot" style="background:#58a6ff"></div><span>Qualità Prodotto</span></a>
+    <a class="nav-item" href="#card-funz" onclick="navGo(this)"><div class="nav-dot" style="background:#58a6ff"></div><span>↳ Funzionalità</span></a>
+    <a class="nav-item" href="#card-affid" onclick="navGo(this)"><div class="nav-dot" style="background:#58a6ff"></div><span>↳ Affidabilità</span></a>
+    <a class="nav-item" href="#card-usab" onclick="navGo(this)"><div class="nav-dot" style="background:#58a6ff"></div><span>↳ Usabilità</span></a>
+    <a class="nav-item" href="#card-effic" onclick="navGo(this)"><div class="nav-dot" style="background:#58a6ff"></div><span>↳ Efficienza</span></a>
+    <a class="nav-item" href="#card-manut" onclick="navGo(this)"><div class="nav-dot" style="background:#58a6ff"></div><span>↳ Manutenibilità</span></a>
+    <a class="nav-item" href="#card-port" onclick="navGo(this)"><div class="nav-dot" style="background:#58a6ff"></div><span>↳ Portabilità</span></a>
+    <a class="nav-item" href="#sec-9126u" onclick="navGo(this)"><div class="nav-dot" style="background:#ff7b72"></div><span>Qualità in Uso</span></a>
+    <div class="nav-sec">ISO 25010</div>
+    <a class="nav-item" href="#sec-diff" onclick="navGo(this)"><div class="nav-dot" style="background:#3fb950"></div><span>Differenze</span></a>
+    <a class="nav-item" href="#sec-25p" onclick="navGo(this)"><div class="nav-dot" style="background:#3fb950"></div><span>Qualità Prodotto</span></a>
+    <a class="nav-item" href="#card-25eff" onclick="navGo(this)"><div class="nav-dot" style="background:#ff7b72"></div><span>Effectiveness</span></a>
+    <a class="nav-item" href="#card-25effic" onclick="navGo(this)"><div class="nav-dot" style="background:#ff7b72"></div><span>Efficiency</span></a>
+    <a class="nav-item" href="#card-25sat" onclick="navGo(this)"><div class="nav-dot" style="background:#ff7b72"></div><span>Satisfaction</span></a>
+    <a class="nav-item" href="#card-25risk" onclick="navGo(this)"><div class="nav-dot" style="background:#ff7b72"></div><span>Freedom from Risk</span></a>
+    <a class="nav-item" href="#card-25ctx" onclick="navGo(this)"><div class="nav-dot" style="background:#ff7b72"></div><span>Context Coverage</span></a>
+  </div>
+</nav>
+
+<!-- ════════════════════ MAIN ════════════════════ -->
+<main id="main">
+
+  <div class="page-title">Mappa Concettuale — Qualità del Software</div>
+  <div class="page-sub">ISO 9126 · ISO 25010 &nbsp;|&nbsp; Espandi i blocchi · tocca i tag per i dettagli · cerca con la barra in alto</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#bc8cff"></div>Concetti Generali</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#58a6ff"></div>ISO 9126</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3fb950"></div>ISO 25010</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff7b72"></div>Qualità in Uso</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f0883e"></div>Metriche</div>
+  </div>
+
+  <!-- ═══ BASE ═══ -->
+  <div class="section-heading" id="sec-base">Concetti Fondamentali</div>
+  <div class="grid">
+
+    <div class="card open" id="card-base" data-s="modello qualità struttura livelli caratteristiche sottocaratteristiche metriche rating catena causale processo">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#bc8cff"></div>Perché serve un Modello di Qualità</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note key">Le caratteristiche di qualità (es. "affidabilità") sono astratte → non misurabili direttamente. Un modello standard le rende oggettive con un linguaggio comune.</div>
+        <div class="sub-label">Struttura a N Livelli</div>
+        <div class="chain">
+          <div class="chain-step" style="border-color:#bc8cff;color:#bc8cff">Caratteristiche<br><small>astratte</small></div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-step" style="border-color:#58a6ff;color:#58a6ff">Sottocaratt.<br><small>misurabili</small></div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-step" style="border-color:#3fb950;color:#3fb950">Metriche+Rating<br><small>oggettivi</small></div>
+        </div>
+        <div class="sub-label">Catena causale</div>
+        <div class="chain">
+          <div class="chain-step">Processo</div><div class="chain-arrow">→</div>
+          <div class="chain-step">Qualità Interna</div><div class="chain-arrow">→</div>
+          <div class="chain-step">Qualità Esterna</div><div class="chain-arrow">→</div>
+          <div class="chain-step">Qualità in Uso</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-iso9000" data-s="iso 9000 9001 qms quality management system certificazione cots 9126 9241 12119 14598 famiglia">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#bc8cff"></div>Famiglia ISO 9000</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="sub-label">Standard principali</div>
+        <div class="tag-grid">
+          <span class="tag purple" onclick="tip('iso9000')">ISO 9000 — principi</span>
+          <span class="tag purple" onclick="tip('iso9001')">ISO 9001 ✓ certificabile</span>
+          <span class="tag purple" onclick="tip('qms')">QMS</span>
+        </div>
+        <div class="sub-label">Standard per il software</div>
+        <div class="tag-grid">
+          <span class="tag blue" onclick="tip('n9126')">ISO/IEC 9126-1</span>
+          <span class="tag blue" onclick="tip('n9241')">ISO/IEC 9241</span>
+          <span class="tag blue" onclick="tip('n12119')">ISO 12119 COTS</span>
+          <span class="tag blue" onclick="tip('n14598')">ISO 14598</span>
+        </div>
+        <div class="note">Non è specifica per il software — vale per qualsiasi settore produttivo.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ METRICHE ═══ -->
+  <div class="section-heading" id="sec-metriche">Metriche del Software</div>
+  <div class="grid">
+
+    <div class="card" id="card-metr" data-s="metriche interne esterne uso loc function point fp errori linee codice ieee misura quantitativa">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#f0883e"></div>Tipi di Metriche</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">IEEE: <em>misura quantitativa del grado di possesso di uno specifico attributo da parte di un sistema, componente o processo.</em></div>
+        <div class="sub-label">Tipi (ISO 9126)</div>
+        <div class="tag-grid">
+          <span class="tag orange" onclick="tip('mint')">Interne</span>
+          <span class="tag orange" onclick="tip('mext')">Esterne</span>
+          <span class="tag orange" onclick="tip('muso')">In Uso</span>
+        </div>
+        <div class="sub-label">Esempi</div>
+        <div class="tag-grid">
+          <span class="tag orange" onclick="tip('loc')">LOC</span>
+          <span class="tag orange" onclick="tip('fp')">Function Point</span>
+          <span class="tag orange">N. Classi</span>
+          <span class="tag orange">Errori / LOC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-ciclo" data-s="ciclo vita qualità processo architettura modularità information hiding coesione disaccoppiamento microservizi livelli load balancer">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#f0883e"></div>Come si Ottiene la Qualità</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note key">La qualità si costruisce progressivamente durante tutto il ciclo di vita, non si aggiunge alla fine.</div>
+        <div class="sub-label">Principi di Progettazione</div>
+        <div class="tag-grid">
+          <span class="tag orange">Modularità</span>
+          <span class="tag orange">Information Hiding</span>
+          <span class="tag orange">Coesione</span>
+          <span class="tag orange">Disaccoppiamento</span>
+        </div>
+        <div class="sub-label">Stili Architetturali</div>
+        <div class="tag-grid">
+          <span class="tag orange">A Livelli → modificabilità</span>
+          <span class="tag orange">Microservizi → scalabilità</span>
+          <span class="tag orange">Load Balancer → scalabilità</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ ISO 9126 PRODOTTO ═══ -->
+  <div class="section-heading" id="sec-9126p">ISO/IEC 9126 — Qualità del Prodotto (6 caratteristiche · 27 sottocaratteristiche)</div>
+  <div class="grid">
+
+    <div class="card" id="card-funz" data-s="funzionalità functionality appropriatezza accuratezza interoperabilità sicurezza conformità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#58a6ff"></div>Funzionalità</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Fornisce funzioni che soddisfano esigenze <strong>stabilite</strong> ed <strong>implicite</strong> sotto condizioni specificate.</div>
+        <div class="tag-grid">
+          <span class="tag blue" onclick="tip('suitability')">Appropriatezza</span>
+          <span class="tag blue" onclick="tip('accuracy')">Accuratezza</span>
+          <span class="tag blue" onclick="tip('interop')">Interoperabilità</span>
+          <span class="tag blue" onclick="tip('sec9126')">Sicurezza ⚠️</span>
+          <span class="tag blue">Conformità</span>
+        </div>
+        <div class="note warn">⚠️ Security è sottocaratteristica in 9126. In 25010 viene promossa a caratteristica autonoma.</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-affid" data-s="affidabilità reliability maturità tolleranza fault tolerance recuperabilità recoverability">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#58a6ff"></div>Affidabilità</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Mantiene un livello di prestazioni per un periodo di tempo fissato sotto condizioni specificate.</div>
+        <div class="tag-grid">
+          <span class="tag blue" onclick="tip('maturity')">Maturità</span>
+          <span class="tag blue" onclick="tip('faulttol')">Tolleranza all'errore</span>
+          <span class="tag blue" onclick="tip('recover')">Recuperabilità</span>
+          <span class="tag blue">Conformità</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-usab" data-s="usabilità usability comprensibilità apprendibilità operabilità attrattività conformità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#58a6ff"></div>Usabilità</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Capito, appreso, usato e gradito dall'utente. Progressione naturale:</div>
+        <div class="chain" style="margin:5px 0 8px">
+          <div class="chain-step" style="font-size:.65rem">Capisce</div><div class="chain-arrow">→</div>
+          <div class="chain-step" style="font-size:.65rem">Impara</div><div class="chain-arrow">→</div>
+          <div class="chain-step" style="font-size:.65rem">Opera</div><div class="chain-arrow">→</div>
+          <div class="chain-step" style="font-size:.65rem">Gradisce</div>
+        </div>
+        <div class="tag-grid">
+          <span class="tag blue" onclick="tip('underst')">Comprensibilità</span>
+          <span class="tag blue" onclick="tip('learnab')">Apprendibilità</span>
+          <span class="tag blue" onclick="tip('operab')">Operabilità</span>
+          <span class="tag blue" onclick="tip('attract')">Attrattività</span>
+          <span class="tag blue">Conformità</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-effic" data-s="efficienza efficiency comportamento temporale utilizzo risorse cpu memoria banda sistema">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#58a6ff"></div>Efficienza</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Prestazioni appropriate in relazione alle risorse del <strong>SISTEMA</strong> (CPU, memoria, banda) — non dell'utente.</div>
+        <div class="tag-grid">
+          <span class="tag blue" onclick="tip('timebeh')">Comportamento temporale</span>
+          <span class="tag blue" onclick="tip('resutil')">Utilizzo di risorse</span>
+          <span class="tag blue">Conformità</span>
+        </div>
+        <div class="note warn">Efficienza (risorse SISTEMA) ≠ Produttività/Efficiency in qualità in uso (risorse UTENTE).</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-manut" data-s="manutenibilità maintainability analizzabilità modificabilità stabilità testabilità conformità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#58a6ff"></div>Manutenibilità</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Capacità di essere modificato — correzioni, miglioramenti o adattamenti.</div>
+        <div class="tag-grid">
+          <span class="tag blue" onclick="tip('analys')">Analizzabilità</span>
+          <span class="tag blue" onclick="tip('changeab')">Modificabilità</span>
+          <span class="tag blue" onclick="tip('stability')">Stabilità</span>
+          <span class="tag blue" onclick="tip('testab')">Testabilità</span>
+          <span class="tag blue">Conformità</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-port" data-s="portabilità portability adattabilità installabilità coesistenza sostituibilità java ambienti tecnici">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#58a6ff"></div>Portabilità</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Trasferito da un ambiente <strong>tecnico</strong> ad un altro. ≠ Context Coverage (contesti d'uso funzionali).</div>
+        <div class="tag-grid">
+          <span class="tag blue" onclick="tip('adapt')">Adattabilità</span>
+          <span class="tag blue" onclick="tip('install')">Installabilità</span>
+          <span class="tag blue" onclick="tip('coexist')">Coesistenza</span>
+          <span class="tag blue" onclick="tip('replace')">Sostituibilità</span>
+          <span class="tag blue">Conformità</span>
+        </div>
+        <div class="note">La Conformità appare in tutte e 6 le caratteristiche perché ogni ambito ha propri standard specifici.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ ISO 9126 IN USO ═══ -->
+  <div class="section-heading" id="sec-9126u">ISO/IEC 9126 — Qualità in Uso (4 caratteristiche)</div>
+  <div class="grid">
+    <div class="card full" id="card-9126uso" data-s="qualità uso efficacia produttività soddisfazione sicurezza safety accuratezza completezza utente contesto">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#ff7b72"></div>Qualità in Uso — ISO 9126 (punto di vista dell'utente reale)</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note key">Sempre valutata in un contesto d'uso specifico. Alta qualità interna non implica alta qualità in uso.</div>
+        <div class="uso-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:9px">
+          <div>
+            <div class="sub-label">Efficacia (Effectiveness)</div>
+            <div class="tag-grid">
+              <span class="tag red" onclick="tip('acc_eff')">Accuratezza</span>
+              <span class="tag red" onclick="tip('comp_eff')">Completezza</span>
+            </div>
+            <div class="note" style="margin-top:5px">Accuratezza = correttamente. Completezza = per intero. Entrambe necessarie.</div>
+          </div>
+          <div>
+            <div class="sub-label">Produttività (Productivity)</div>
+            <div class="tag-grid">
+              <span class="tag red" onclick="tip('prod_ris')">Risorse utente appropriate</span>
+            </div>
+            <div class="note" style="margin-top:5px">Risorse = tempo, fatica, click dell'UTENTE — non del sistema.</div>
+          </div>
+          <div>
+            <div class="sub-label">Soddisfazione (Satisfaction)</div>
+            <div class="tag-grid">
+              <span class="tag red" onclick="tip('soddis')">Percezione utente</span>
+            </div>
+            <div class="note" style="margin-top:5px">In ISO 25010 verrà scomposta in 4 dimensioni.</div>
+          </div>
+          <div>
+            <div class="sub-label">Sicurezza in Uso (Safety)</div>
+            <div class="tag-grid">
+              <span class="tag red" onclick="tip('safety')">Safety ≠ Security</span>
+            </div>
+            <div class="note warn" style="margin-top:5px">Safety = danni a persone/ambiente. Security = protezione dati.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DIFFERENZE ═══ -->
+  <div class="section-heading" id="sec-diff">ISO 25010 — Differenze rispetto a ISO 9126</div>
+  <div class="grid">
+    <div class="card open full" id="card-diff" data-s="differenze iso 25010 9126 security compatibility promossa conformità rimossa availability SQuaRE 25000">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>ISO 9126 vs ISO 25010 — Confronto</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="diff-grid">
+          <div class="diff-col old">
+            <h4>ISO 9126</h4>
+            <div class="diff-item">6 caratteristiche prodotto</div>
+            <div class="diff-item">4 caratteristiche qualità in uso</div>
+            <div class="diff-item">Security = sottocar. funzionalità</div>
+            <div class="diff-item">Interoperabilità in funzionalità</div>
+            <div class="diff-item">Conformità in ogni caratteristica</div>
+            <div class="diff-item">Distinzione interna/esterna</div>
+            <div class="diff-item">No Availability esplicita</div>
+            <div class="diff-item">Satisfaction = concetto monolitico</div>
+            <div class="diff-item">Safety = 1 sola caratteristica</div>
+          </div>
+          <div class="diff-col new">
+            <h4>ISO 25010</h4>
+            <div class="diff-item">8 caratteristiche prodotto</div>
+            <div class="diff-item">5 caratteristiche qualità in uso</div>
+            <div class="diff-item">Security = caratteristica autonoma</div>
+            <div class="diff-item">Compatibility = caratteristica autonoma</div>
+            <div class="diff-item">Conformità rimossa</div>
+            <div class="diff-item">Unico modello di qualità prodotto</div>
+            <div class="diff-item">Availability aggiunta a Reliability</div>
+            <div class="diff-item">Satisfaction scomposta in 4 dimensioni</div>
+            <div class="diff-item">Freedom from Risk + Context Coverage</div>
+          </div>
+        </div>
+        <div class="note ok" style="margin-top:9px">Famiglia <strong>SQuaRE</strong> (ISO/IEC 25000): Quality Model · Measurement · Requirements · Evaluation · Management.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ISO 25010 PRODOTTO ═══ -->
+  <div class="section-heading" id="sec-25p">ISO 25010 — Qualità del Prodotto (8 caratteristiche)</div>
+  <div class="grid">
+
+    <div class="card" id="card-25funz" data-s="functional suitability completeness correctness appropriateness biblioteca funzionalità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Functional Suitability</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('fc')">Functional Completeness</span>
+          <span class="tag green" onclick="tip('fcorr')">Functional Correctness</span>
+          <span class="tag green" onclick="tip('fapp')">Functional Appropriateness</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25perf" data-s="performance efficiency time behaviour resource utilisation capacity throughput sistema risorse">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Performance Efficiency</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Risorse del SISTEMA. ≠ Efficiency in qualità in uso (risorse UTENTE).</div>
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('timebeh2')">Time behaviour</span>
+          <span class="tag green" onclick="tip('resutil2')">Resource utilisation</span>
+          <span class="tag green" onclick="tip('capacity')">Capacity 🆕</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25compat" data-s="compatibility co-existence interoperability coesistenza interoperabilità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Compatibility 🆕 promossa</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('coex2')">Co-existence</span>
+          <span class="tag green" onclick="tip('interop2')">Interoperability</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25usab" data-s="usability appropriateness recognisability learnability operability error protection aesthetics accessibility wcag">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Usability</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('apprec')">Appropriateness recognisability</span>
+          <span class="tag green" onclick="tip('learnab')">Learnability</span>
+          <span class="tag green" onclick="tip('operab')">Operability</span>
+          <span class="tag green" onclick="tip('errprot')">User error protection 🆕</span>
+          <span class="tag green" onclick="tip('uiaest')">UI aesthetics 🆕</span>
+          <span class="tag green" onclick="tip('access')">Accessibility 🆕</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25rel" data-s="reliability maturity availability fault tolerance recoverability uptime disponibilità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Reliability</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('maturity')">Maturity</span>
+          <span class="tag green" onclick="tip('avail')">Availability 🆕</span>
+          <span class="tag green" onclick="tip('faulttol')">Fault tolerance</span>
+          <span class="tag green" onclick="tip('recover')">Recoverability</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25sec" data-s="security confidentiality integrity non-repudiation accountability authenticity sicurezza autenticità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Security 🆕 promossa</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('conf')">Confidentiality</span>
+          <span class="tag green" onclick="tip('integr')">Integrity</span>
+          <span class="tag green" onclick="tip('nonrep')">Non-repudiation</span>
+          <span class="tag green" onclick="tip('account')">Accountability</span>
+          <span class="tag green" onclick="tip('authen')">Authenticity</span>
+        </div>
+        <div class="note key">Authenticity = presupposto di tutte le altre. Accountability = meccanismo tecnico che rende possibile il Non-repudiation.</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25maint" data-s="maintainability modularity reusability analysability modifiability testability asset manutenibilità">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Maintainability</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('modul')">Modularity 🆕</span>
+          <span class="tag green" onclick="tip('reusab')">Reusability 🆕</span>
+          <span class="tag green" onclick="tip('analys')">Analysability</span>
+          <span class="tag green" onclick="tip('changeab')">Modifiability</span>
+          <span class="tag green" onclick="tip('testab')">Testability</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25port" data-s="portability adaptability installability replaceability ambienti tecnici java">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#3fb950"></div>Portability</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Ambienti TECNICI ≠ Context Coverage (contesti d'uso funzionali).</div>
+        <div class="tag-grid">
+          <span class="tag green" onclick="tip('adapt')">Adaptability</span>
+          <span class="tag green" onclick="tip('install')">Installability</span>
+          <span class="tag green" onclick="tip('replace')">Replaceability</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ ISO 25010 IN USO ═══ -->
+  <div class="section-heading" id="sec-25u">ISO 25010 — Qualità in Uso (5 caratteristiche)</div>
+  <div class="grid">
+
+    <div class="card" id="card-25eff" data-s="effectiveness efficacia accuratezza completezza obiettivi utente">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#ff7b72"></div>Effectiveness (Efficacia)</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Accuratezza e completezza con cui gli utenti raggiungono gli obiettivi in un dato contesto.</div>
+        <div class="sub-label">Sottocaratteristiche</div>
+        <div class="tag-grid">
+          <span class="tag red" onclick="tip('acc_eff')">Accuratezza del risultato</span>
+          <span class="tag red" onclick="tip('comp_eff')">Completezza del task</span>
+        </div>
+        <div class="note">Le due sono indipendenti: si può essere accurati ma non completi, o completi ma non accurati.</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25effic" data-s="efficiency efficienza uso risorse utente tempo fatica click produttività">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#ff7b72"></div>Efficiency (Efficienza in Uso)</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Risorse spese dall'<strong>UTENTE</strong> in relazione ai risultati. ≠ Performance Efficiency (risorse del sistema).</div>
+        <div class="sub-label">Sottocaratteristiche</div>
+        <div class="tag-grid">
+          <span class="tag red" onclick="tip('eff_time')">Efficienza temporale</span>
+          <span class="tag red" onclick="tip('eff_res')">Efficienza risorse utente</span>
+          <span class="tag red" onclick="tip('eff_eco')">Efficienza economica</span>
+        </div>
+        <div class="note warn">Performance Efficiency (prodotto) = risorse SISTEMA. Efficiency (in uso) = risorse UTENTE.</div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25sat" data-s="satisfaction soddisfazione usefulness trust pleasure comfort fiducia piacere">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#ff7b72"></div>Satisfaction (Soddisfazione)</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Scomposta in 4 dimensioni in ISO 25010 (in 9126 era un concetto monolitico).</div>
+        <div class="tag-grid">
+          <span class="tag red" onclick="tip('useful')">Usefulness</span>
+          <span class="tag red" onclick="tip('trust')">Trust</span>
+          <span class="tag red" onclick="tip('pleasure')">Pleasure</span>
+          <span class="tag red" onclick="tip('comfort')">Comfort</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25risk" data-s="freedom from risk economic health safety environmental rischio economico sanitario ambientale">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#ff7b72"></div>Freedom from Risk 🆕</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Mitiga rischi potenziali. Completamente nuova rispetto a ISO 9126.</div>
+        <div class="tag-grid">
+          <span class="tag red" onclick="tip('econrisk')">Economic risk mitigation</span>
+          <span class="tag red" onclick="tip('healthrisk')">Health &amp; safety risk mitigation</span>
+          <span class="tag red" onclick="tip('envrisk')">Environmental risk mitigation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-25ctx" data-s="context coverage completeness flexibility flessibilità contesti uso funzionali portabilità differenza">
+      <div class="card-hdr" onclick="toggle(this)">
+        <div class="card-title"><div class="card-dot" style="background:#ff7b72"></div>Context Coverage 🆕</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="note">Funziona bene in contesti d'uso <strong>funzionali</strong> diversi — inclusi quelli non specificati. ≠ Portabilità (ambienti tecnici).</div>
+        <div class="tag-grid">
+          <span class="tag red" onclick="tip('ctxcomp')">Context completeness</span>
+          <span class="tag red" onclick="tip('flex')">Flexibility</span>
+        </div>
+        <div class="note warn">Portabilità = ambienti TECNICI. Context Coverage = contesti d'uso FUNZIONALI.</div>
+      </div>
+    </div>
+
+  </div>
+  <div style="height:50px"></div>
+</main>
+
+<!-- TOOLTIP OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeOverlay()">
+  <div class="tip-box" onclick="event.stopPropagation()">
+    <button class="tip-close" onclick="closeOverlay()">✕</button>
+    <h3 id="tip-title"></h3>
+    <p id="tip-def"></p>
+    <div class="tip-ex" id="tip-ex" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+/* ── DRAWER (mobile/tablet) ── */
+const overlay = document.getElementById('drawer-overlay');
+const sidebar = document.getElementById('sidebar');
+
+function toggleDrawer() {
+  const isOpen = sidebar.classList.contains('open');
+  if (isOpen) closeDrawer();
+  else openDrawer();
+}
+function openDrawer() {
+  overlay.classList.add('open');
+  requestAnimationFrame(() => overlay.classList.add('visible'));
+  sidebar.classList.add('open');
+}
+function closeDrawer() {
+  overlay.classList.remove('visible');
+  sidebar.classList.remove('open');
+  setTimeout(() => overlay.classList.remove('open'), 200);
+}
+
+/* ── DESKTOP SIDEBAR COLLAPSE ── */
+function toggleDesktopSidebar() {
+  sidebar.classList.toggle('collapsed');
+  document.getElementById('toggle-sb').textContent =
+    sidebar.classList.contains('collapsed') ? '▶' : '◀';
+}
+
+/* ── NAV CLICK ── */
+function navGo(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  // close drawer on mobile after tap
+  if (window.innerWidth <= 900) setTimeout(closeDrawer, 150);
+}
+
+/* ── CARD TOGGLE ── */
+function toggle(hdr) {
+  if (event.target.closest('.tag')) return;
+  hdr.parentElement.classList.toggle('open');
+}
+
+/* ── EXPAND / COLLAPSE ALL ── */
+function expandAll()  { document.querySelectorAll('.card:not(.hidden)').forEach(c => c.classList.add('open')); }
+function collapseAll(){ document.querySelectorAll('.card').forEach(c => c.classList.remove('open')); }
+
+/* ── SEARCH (synced between topbar and sidebar inputs) ── */
+function handleSearch(val) {
+  const q = val.trim().toLowerCase();
+  // sync both inputs
+  document.getElementById('sb-search').value = val;
+  document.getElementById('topbar-search').value = val;
+  document.querySelectorAll('.card').forEach(card => {
+    const txt = (card.dataset.s || '') + ' ' + card.innerText.toLowerCase();
+    if (!q || txt.includes(q)) { card.classList.remove('hidden'); if (q) card.classList.add('open'); }
+    else card.classList.add('hidden');
+  });
+}
+
+/* ── TIPS ── */
+const tips = {
+  iso9000:{ t:"ISO 9000", d:"Spiega i principi e i concetti fondamentali di qualità. Non è certificabile — serve come base concettuale per tutta la famiglia. Non è specifica per il software." },
+  iso9001:{ t:"ISO 9001", d:"La norma certificabile della famiglia. Definisce come organizzare i processi aziendali per garantire qualità dei prodotti, soddisfazione dei clienti e miglioramento continuo. Un ente esterno verifica e certifica il QMS." },
+  qms:    { t:"Quality Management System (QMS)", d:"Sistema organizzativo interno che definisce regole, procedure e responsabilità per garantire qualità in modo strutturato e ripetibile — non affidata al caso o al singolo individuo." },
+  n9126:  { t:"ISO/IEC 9126-1", d:"Definisce 6 caratteristiche di qualità e 27 sottocaratteristiche. Metriche nei technical reports: 9126-2 (esterne), 9126-3 (interne), 9126-4 (in uso)." },
+  n9241:  { t:"ISO/IEC 9241", d:"Standard dedicato specificatamente alla qualità di software 'usabile'. Si focalizza sulle caratteristiche di usabilità." },
+  n12119: { t:"ISO 12119", d:"Definisce le caratteristiche di qualità per software COTS — Commercial Off-The-Shelf, software commerciale già pronto (es. Microsoft Office)." },
+  n14598: { t:"ISO 14598", d:"Non definisce un modello di qualità, ma guida il processo di valutazione. È il 'come si fa' la valutazione, mentre 9126 definisce 'cosa si valuta'." },
+  suitability:{ t:"Appropriatezza (Suitability)", d:"Il software fornisce le funzioni giuste per i compiti e gli obiettivi dell'utente?", e:"Un software con mille funzioni inutili ma che manca di quelle necessarie ha bassa appropriatezza." },
+  accuracy:   { t:"Accuratezza (Accuracy)", d:"Il software produce risultati corretti con il grado di precisione necessario?", e:"Un software di calcolo che restituisce risultati sbagliati ha bassa accuratezza anche se non crasha." },
+  interop:    { t:"Interoperabilità", d:"Il software riesce a interagire con altri sistemi specificati?", e:"Un gestionale aziendale che non comunica con il sistema contabile ha bassa interoperabilità." },
+  sec9126:    { t:"Sicurezza — ISO 9126 ⚠️", d:"In ISO 9126 è sottocaratteristica della Funzionalità. In ISO 25010 viene PROMOSSA a caratteristica autonoma con 5 sottocaratteristiche proprie." },
+  maturity:   { t:"Maturità (Maturity)", d:"Capacità del software di non dare malfunzionamenti come risultato di fault nel codice. Più è maturo, meno errori si manifestano in condizioni normali." },
+  faulttol:   { t:"Tolleranza all'Errore (Fault Tolerance)", d:"Mantiene le prestazioni anche in presenza di guasti hardware/software o uso scorretto delle interfacce.", e:"Amazon: se il sistema di raccomandazioni crasha, il resto del sito continua a funzionare." },
+  recover:    { t:"Recuperabilità (Recoverability)", d:"Ripristina dati e prestazioni dopo un malfunzionamento.", e:"Word: dopo un crash, al riavvio recupera automaticamente il documento con le ultime modifiche." },
+  underst:    { t:"Comprensibilità (Understandability)", d:"L'utente capisce se il software è adatto ai suoi scopi e come usarlo?", e:"Aprendo un'app di home banking, capisci subito dove trovare saldo e bonifici?" },
+  learnab:    { t:"Apprendibilità (Learnability)", d:"Il software facilita l'apprendimento progressivo con tutorial, tooltip, messaggi contestuali?", e:"Excel: un buon software guida gradualmente verso l'uso autonomo." },
+  operab:     { t:"Operabilità (Operability)", d:"L'utente riesce facilmente ad operare con il software e controllarne le operazioni?", e:"In un editor video: tagliare clip, spostare elementi, annullare operazioni sono facili?" },
+  attract:    { t:"Attrattività (Attractiveness)", d:"Il software è piacevole e gradevole da usare? La sottocaratteristica più estetica.", e:"App moderna con UI curata vs gestionale grigio anni '90: stessa funzionalità, attrattività molto diversa." },
+  timebeh:    { t:"Comportamento Temporale (ISO 9126)", d:"I tempi di risposta, elaborazione e smaltimento delle richieste sono adeguati? Riguarda risorse del SISTEMA.", e:"Google Maps deve calcolare percorsi in pochi secondi." },
+  resutil:    { t:"Utilizzo Risorse (ISO 9126)", d:"Il software usa quantità appropriate di CPU, memoria, banda? Riguarda risorse del SISTEMA, non dell'utente.", e:"Un'app meteo che consuma il 40% della batteria per una previsione: pessimo utilizzo di risorse." },
+  analys:     { t:"Analizzabilità (Analysability)", d:"Si può diagnosticare la causa di un malfunzionamento e identificare le parti da modificare?", e:"Un sistema con logging dettagliato e codice ben strutturato ha alta analizzabilità." },
+  changeab:   { t:"Modificabilità (Modifiability)", d:"Si può implementare una modifica specificata senza introdurre nuovi difetti?", e:"calculate_price con dizionario: molto più modificabile della versione con if/elif ripetuti." },
+  stability:  { t:"Stabilità (Stability)", d:"Le modifiche non producono effetti inaspettati su altre parti del sistema?", e:"Se cambio la formula di sconto in un punto e si rompono altri moduli, la stabilità è bassa." },
+  testab:     { t:"Testabilità (Testability)", d:"Il software può essere validato facilmente?", e:"Una funzione che usa return è molto più testabile di una che usa print." },
+  adapt:      { t:"Adattabilità (Adaptability)", d:"Il software si adatta a nuovi ambienti senza azioni o mezzi aggiuntivi?", e:"Java: gira su Windows, Mac e Linux senza modifiche grazie alla JVM." },
+  install:    { t:"Installabilità (Installability)", d:"Il software può essere installato con successo in un ambiente specificato?", e:"I wizard di installazione guidano passo passo anche utenti non esperti." },
+  coexist:    { t:"Coesistenza (Co-existence)", d:"Il software coesiste con altri software condividendo risorse senza causare problemi?", e:"Due antivirus sullo stesso PC che entrano in conflitto: bassa coesistenza." },
+  replace:    { t:"Sostituibilità (Replaceability)", d:"Il software può sostituire un altro software per gli stessi scopi nello stesso ambiente?", e:"LibreOffice che apre correttamente tutti i documenti Word: alta sostituibilità." },
+  acc_eff:    { t:"Accuratezza del Risultato", d:"L'utente raggiunge l'obiettivo nel modo CORRETTO, senza errori. Non basta che finisca il task — deve farlo bene.", e:"Dichiarazione dei redditi: non solo inviata, ma compilata correttamente." },
+  comp_eff:   { t:"Completezza del Task", d:"L'utente raggiunge l'obiettivo PER INTERO, senza fermarsi a metà. Tutte le parti del compito devono essere portate a termine.", e:"Dichiarazione dei redditi: non solo alcune sezioni, ma tutto il processo fino all'invio finale." },
+  prod_ris:   { t:"Risorse Utente Appropriate", d:"L'utente spende tempo, fatica e numero di operazioni in modo appropriato rispetto all'obiettivo. Risorse dell'UTENTE, non del sistema.", e:"Due software: uno con 10 click, uno con 2 click per la stessa funzione. Il secondo ha alta produttività." },
+  soddis:     { t:"Soddisfazione (ISO 9126)", d:"L'utente è soddisfatto nell'uso? La caratteristica più soggettiva. In ISO 25010 viene scomposta in 4 dimensioni: Usefulness, Trust, Pleasure, Comfort.", e:"Due app con stesso catalogo: una bella e fluida, una brutta. Stessa efficacia, diversa soddisfazione." },
+  safety:     { t:"Sicurezza in Uso (Safety) ≠ Security", d:"Il rischio di danni a persone, software, apparecchiature o ambiente è entro livelli accettabili. NON è sicurezza informatica.", e:"Software medico con valori errati → rischio per la vita del paziente → bassa safety." },
+  eff_time:   { t:"Efficienza Temporale (in Uso)", d:"Le risorse di TEMPO spese dall'utente per raggiungere i propri obiettivi sono appropriate rispetto ai risultati.", e:"Un utente impiega 5 minuti per un task che dovrebbe richiederne 2: bassa efficienza temporale." },
+  eff_res:    { t:"Efficienza delle Risorse Utente", d:"Lo sforzo fisico e cognitivo speso dall'utente è appropriato rispetto ai risultati raggiunti.", e:"Un'interfaccia con molti click o navigazione complessa per azioni semplici ha bassa efficienza delle risorse utente." },
+  eff_eco:    { t:"Efficienza Economica (in Uso)", d:"Il costo economico per l'utente per raggiungere i propri obiettivi è appropriato rispetto ai benefici ottenuti." },
+  mint:  { t:"Metriche Interne", d:"Applicabili al prodotto NON eseguibile: codice sorgente, specifiche, documentazione.", e:"LOC, numero di classi, complessità ciclomatica." },
+  mext:  { t:"Metriche Esterne", d:"Misurano aspetti del software DURANTE L'ESECUZIONE, osservabili testando il sistema in funzione.", e:"Numero di failure per 1000 LOC, tempo di risposta medio." },
+  muso:  { t:"Metriche di Qualità in Uso", d:"Misurano fino a che punto il prodotto soddisfa i bisogni utente in un determinato contesto d'uso.", e:"Percentuale di task completati con successo, tempo medio per completare un task." },
+  loc:   { t:"LOC — Lines of Code", d:"Misura la dimensione del software. Usata per valutare la produttività di un programmatore (LOC/giorno)." },
+  fp:    { t:"Function Point (FP)", d:"Calcolano il numero di funzionalità a partire dalle specifiche. Usati per stimare costi e produttività." },
+  fc:    { t:"Functional Completeness", d:"L'insieme delle funzioni copre tutti i task e obiettivi specificati?", e:"Biblioteca: ho apertura prestito ma non restituzione → funzionalità NON completa." },
+  fcorr: { t:"Functional Correctness", d:"Il sistema fornisce risultati corretti con il grado di precisione necessario?" },
+  fapp:  { t:"Functional Appropriateness", d:"Le funzioni facilitano il raggiungimento dei task e obiettivi specificati?", e:"Apertura prestito che non verifica prestiti in ritardo → funzionalità NON appropriata." },
+  timebeh2: { t:"Time Behaviour (ISO 25010)", d:"I tempi di risposta, elaborazione e throughput soddisfano i requisiti quando il sistema esegue le sue funzioni." },
+  resutil2: { t:"Resource Utilisation (ISO 25010)", d:"Le quantità e i tipi di risorse usate dal sistema soddisfano i requisiti." },
+  capacity: { t:"Capacity 🆕", d:"I limiti massimi dei parametri del sistema soddisfano i requisiti.", e:"Sito e-commerce durante Black Friday: riesce a gestire il numero massimo di utenti simultanei previsti?" },
+  coex2:    { t:"Co-existence (ISO 25010)", d:"Il prodotto esegue le sue funzioni condividendo ambiente e risorse con altri prodotti senza impatto negativo." },
+  interop2: { t:"Interoperability (ISO 25010)", d:"Due o più sistemi possono scambiare informazioni e usarle correttamente." },
+  apprec:   { t:"Appropriateness Recognisability", d:"Gli utenti riconoscono se il prodotto è appropriato per i loro bisogni." },
+  errprot:  { t:"User Error Protection 🆕", d:"Il sistema protegge gli utenti dal commettere errori.", e:"Un form che valida l'input prima di inviarlo e mostra messaggi chiari su cosa correggere." },
+  uiaest:   { t:"User Interface Aesthetics 🆕", d:"L'interfaccia utente permette un'interazione piacevole e soddisfacente per l'utente." },
+  access:   { t:"Accessibility 🆕", d:"Il prodotto può essere usato da persone con la più ampia gamma di caratteristiche e capacità.", e:"Siti PA: devono rispettare linee guida WCAG per utenti con disabilità." },
+  avail:    { t:"Availability 🆕", d:"Il sistema è operativo e accessibile quando richiesto per l'uso.", e:"Un servizio cloud con 99.9% di uptime ha alta availability." },
+  conf:     { t:"Confidentiality", d:"I dati sono accessibili SOLO a chi è autorizzato ad avervi accesso." },
+  integr:   { t:"Integrity", d:"Il sistema previene accessi o modifiche non autorizzate a programmi o dati." },
+  nonrep:   { t:"Non-repudiation", d:"Le azioni o gli eventi possono essere provati essersi verificati, così che non possano essere negati in seguito.", e:"La firma digitale di un contratto: il firmatario non può negare di averlo firmato." },
+  account:  { t:"Accountability", d:"Le azioni di un'entità possono essere tracciate univocamente a quell'entità. Chi ha fatto cosa e quando?", e:"Log bancario: ogni operazione è associata all'impiegato con timestamp preciso." },
+  authen:   { t:"Authenticity", d:"L'identità di un soggetto o risorsa può essere provata essere quella dichiarata. Presupposto fondamentale di tutte le altre sottocaratteristiche di security.", e:"Login con autenticazione a due fattori: username+password + OTP sul telefono." },
+  modul:    { t:"Modularity 🆕", d:"Il sistema è composto da componenti discreti tali che una modifica a uno ha impatto minimo sugli altri.", e:"calculate_price con dizionario: aggiungere un tipo utente non cambia la logica di calcolo." },
+  reusab:   { t:"Reusability 🆕", d:"Un asset può essere usato in più di un sistema o nella costruzione di altri asset. Asset = qualsiasi artefatto software riutilizzabile (libreria, componente, modulo, framework)." },
+  useful:   { t:"Usefulness", d:"Grado in cui l'utente è soddisfatto del raggiungimento dei suoi obiettivi pragmatici, inclusi risultati e conseguenze dell'uso." },
+  trust:    { t:"Trust", d:"Grado in cui l'utente o altri stakeholder hanno fiducia che il sistema si comporterà come previsto." },
+  pleasure: { t:"Pleasure", d:"Grado in cui l'utente ottiene piacere dal soddisfacimento dei suoi bisogni personali usando il sistema." },
+  comfort:  { t:"Comfort", d:"Grado in cui l'utente è soddisfatto del comfort fisico durante l'uso (ergonomia, leggibilità, fatica visiva)." },
+  econrisk:  { t:"Economic Risk Mitigation", d:"Il sistema riduce il rischio potenziale di danni allo status finanziario, alle operazioni efficienti o alla reputazione." },
+  healthrisk:{ t:"Health & Safety Risk Mitigation", d:"Il sistema riduce il rischio potenziale di danni a persone.", e:"Software medicale che evita errori di dosaggio farmaci." },
+  envrisk:   { t:"Environmental Risk Mitigation", d:"Il sistema riduce il rischio potenziale di danni a proprietà o all'ambiente." },
+  ctxcomp:   { t:"Context Completeness", d:"Il sistema funziona bene in TUTTI i contesti d'uso specificati nei requisiti." },
+  flex:      { t:"Flexibility", d:"Il sistema funziona bene anche in contesti NON originalmente specificati nei requisiti.", e:"Un software progettato per utenti italiani che funziona bene anche con utenti stranieri." }
+};
+
+function tip(key) {
+  event.stopPropagation();
+  const t = tips[key]; if (!t) return;
+  document.getElementById('tip-title').textContent = t.t;
+  document.getElementById('tip-def').textContent = t.d;
+  const ex = document.getElementById('tip-ex');
+  if (t.e) { ex.textContent = '💡 ' + t.e; ex.style.display = 'block'; }
+  else ex.style.display = 'none';
+  document.getElementById('overlay').classList.add('visible');
+}
+function closeOverlay() { document.getElementById('overlay').classList.remove('visible'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+
+/* ── SCROLLSPY ── */
+const mainEl = document.getElementById('main');
+const navLinks = document.querySelectorAll('.nav-item');
+const anchors = [];
+navLinks.forEach(l => {
+  const id = (l.getAttribute('href') || '').slice(1);
+  const el = document.getElementById(id);
+  if (el) anchors.push({ el, l });
+});
+mainEl.addEventListener('scroll', () => {
+  let cur = null;
+  anchors.forEach(({ el }) => { if (el.getBoundingClientRect().top - 80 <= 0) cur = el; });
+  navLinks.forEach(l => l.classList.remove('active'));
+  if (cur) { const m = anchors.find(a => a.el === cur); if (m) m.l.classList.add('active'); }
+}, { passive: true });
+</script>
+</body>
+</html>

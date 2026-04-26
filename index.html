@@ -901,6 +901,22 @@ const books = [
     path: "Python_ACP"
   },
   {
+    title: "modello_di_qualità",
+    displayPath: "IdS",
+    file: "modelli_di_qualità_del_software",
+    subject: "Ingegneria del software",
+    subjectKey: "ids",
+    description: "Modelli di qualità del software: ISO 9126 e ISO 25010",
+    topics: [
+      "ISO/EIC 9126, ISO/EIC 25010, caratteristiche, sottocaratteristiche",
+      "qualità interne, esterne e in uso",
+      "qualità del prodotto e qualità in uso"
+    ],
+    preview: "I modelli di qualità del software definiscono caratteristiche misurabili del prodotto. ISO/IEC 9126 struttura la qualità in 6 caratteristiche (funzionalità, affidabilità, usabilità, efficienza, manutenibilità, portabilità), ciascuna suddivisa in sottocaratteristiche. ISO/IEC 25010 (SQuaRE) aggiorna il modello distinguendo qualità del prodotto e qualità in uso...",
+    link: "Ingegneria_del_software/index.html",
+    path: "Ingegneria_del_software"
+  },
+  {
     title: "reti_di_calcolatori",
     displayPath: "reti",
     file: "teoria",
@@ -918,9 +934,9 @@ const books = [
 ];
 
 // subject → CSS var color
-const SUB_VAR = { os:'--m-os', net:'--m-net', acp:'--m-acp', mis:'--m-mis', teo:'--m-teo' };
+const SUB_VAR = { os:'--m-os', net:'--m-net', acp:'--m-acp', mis:'--m-mis', teo:'--m-teo', ids:'--m-ids' };
 const subColor = k => `var(${SUB_VAR[k] || '--accent'})`;
-const SUB_SHORT = { os:'SO', net:'NET', acp:'ACP', mis:'MIS', teo:'TEO' };
+const SUB_SHORT = { os:'SO', net:'NET', acp:'ACP', mis:'MIS', teo:'TEO', ids:'IdS'};
 
 // ============================================================
 // THEME
