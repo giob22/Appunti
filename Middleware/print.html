@@ -1,0 +1,431 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>middleware</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-aff9bcb9.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-75fb4ff2.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">middleware</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <script src="../javascript.js"></script>
+<h1 id="sistemi-middleware"><a class="header" href="#sistemi-middleware">Sistemi Middleware</a></h1>
+<h2 id="cosè-un-middleware"><a class="header" href="#cosè-un-middleware">Cos’è un middleware</a></h2>
+<p>Il middleware è uno strato software interposto tra il sistema operativo e le applicazioni capace di fornire astrazioni e servizi utili per lo sviluppo di applicazioni distribuite. In altre parole, si posiziona “nel mezzo” tra l’hardware/OS e il software applicativo, e il suo scopo principale è mascherare la complessità e l’eterogeneità dei sistemi distribuiti.</p>
+<p>Per questo motivo viene chiamato anche “glue technology” (tecnologia collante), perché permette a componenti sviluppati in momenti diversi, con linguaggi diversi e su piattaforme diverse, di comunicare tra loro.</p>
+<h2 id="sistema-distribuito"><a class="header" href="#sistema-distribuito">Sistema distribuito</a></h2>
+<p>Alcune definizioni da i pionieri dei sistemi distribuiti sono:</p>
+<ul>
+<li>
+<blockquote>
+<p>“Un sistema distribuito è un sistema i cui componenti, localizzati in computer connessi in rete, comunicano e coordinano le loro azioni solo attraverso <strong>scambio di messaggi</strong>” - <em>G. Coulouris et al.</em></p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>“Il mio programma gira su un sistema distribuito quando non funziona per colpa di una macchina di cui non ho mai sentito parlare” - <em>L. Lamport</em></p>
+</blockquote>
+</li>
+</ul>
+<p>Sono presenti delle implicazioni (conseguenze dirette) da tenere in considerazione che rendono i sistemi distribuiti intrinsecamente complessi rispetto a quelli centralizzati:</p>
+<ul>
+<li>
+<p><strong>Elaborazione concorrente</strong>:</p>
+<p>Nei sistemi distribuiti più componenti su macchine diverse eseguono operazioni contemporaneamente. Questo significa che non c’è un unico flusso di esecuzione sequenziale, ma tanti flussi paralleli che devono coordinarsi.</p>
+<p>I problemi che ne derivano sono molteplici:</p>
+<ul>
+<li>
+<p>gestione della concorrenza nell’accesso alle risorse condivise (come i database)</p>
+</li>
+<li>
+<p>necessità di meccanismi di sincronizzazione tra processi remoti</p>
+</li>
+<li>
+<p>rischio di situazioni di stallo (deadlock) distribuite, molto più difficili da rilevare e risolvere rispetto al caso locale</p>
+<p>In middleware cerca di alleviare questo problema fornendo primitive di coordinamento ad alto livello, come le transazioni distribuite.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Assenza di clock globale</strong>:</p>
+<p>In un sistema centralizzato esiste un unico orologio di sistema che permette di stabilire con precisione l’ordine temporale degli eventi. In un sistema distribuito, ogni macchina ha il proprio orologio locale, e questi orologi non sono mai perfettamente sincronizzati tra loro, per via dei ritardi di rete e della deriva degli orologi fisici.</p>
+<p>Questo crea un problema fondamentale: è impossibile dire con certezza assoluta quale evento tra due eventi avvenuti su macchine diverse si è verificato per primo.</p>
+</li>
+<li>
+<p><strong>Malfunzionamenti indipendenti</strong>:</p>
+<p>In un sistema centralizzato il guasto è generalmente totale: il sistema funziona o non funziona. In un sistema distribuito invece i guasti sono parziali e indipendenti. Un singolo nodo può crashare, un link di rete può interrompersi, un messaggio può andare perso, tutto questo mentre il resto del sistema continua a funzionare.</p>
+<p>Questo crea scenari molto insidiosi: messaggio potrebbe essere stato ricevuto o meno prima del chash del destinatario, e un’operazione potrebbe essere stata eseguita parzialmente.</p>
+</li>
+</ul>
+<p>I middleware nascono proprio per nascondere queste complessità, permettendo di ragionare sul sistema distribuito in modo simile a come ragioneremmo su un sistema centralizzato.</p>
+<h2 id="heterogeneous-distributed-computing"><a class="header" href="#heterogeneous-distributed-computing">Heterogeneous distributed computing</a></h2>
+<p>I sistemi distribuiti <strong>sono in generale eterogenei</strong>.</p>
+<p>L’<strong>eterogeneità</strong> dei computer e delle tecnologie - hardware e software - è da considerarsi la <strong>norma</strong>, non l’eccezione, anche all’interno di una stessa grande azienda od organizzazione, pubblica o privata.</p>
+<p>Per eterogeneità intendiamo la natura dei sistemi che riguarda tutto lo stack hardware-software.</p>
+<p>Il paradigma di elaborazione più generale prevede componenti interoperanti in ambiente distribuito eterogeneo. Questo paradigma (modello di riferimento) e chiamato <strong>Heterogeneous distributed computing</strong>.</p>
+<h2 id="eterogeneità"><a class="header" href="#eterogeneità">Eterogeneità</a></h2>
+<p>In ambiente distribuito vari fattori aumentano la complessità dello sviluppo di <strong>software di qualità</strong>:</p>
+<ul>
+<li>
+<p>le applicazioni sono distribuite su una rete di calcolatori, di caratteristiche differenti (<em>mainframes</em>, <em>servers</em>, <em>workstations</em>, <em>personal computers</em>) e dotati di <strong>hardware e di sistemi operativi diversi e spesso incompatibili</strong>.</p>
+</li>
+<li>
+<p>occorre adoperare <strong>linguaggi</strong> <strong>di</strong> <strong>programmazione</strong> <strong>diversi</strong>:</p>
+<ul>
+<li>linguaggio di alto livello, come <code>C#</code> o <code>Java</code>, per lo sviluppo rapido della parte di presentazione di un’applicazione (la cosidetta <em>presentation logic</em>) e per le funzionalità di un’applicazione (<em>business logic</em>).</li>
+<li>linguaggi tradizionali come <code>COBOL</code>, <code>C</code>, <code>C++</code> per funzionalità <em>legacy</em> o di basso livello (che richiedono maggior interazione con il OS).</li>
+<li>linguaggi di scripting, come <code>python</code>, <code>php</code>, <code>jsp</code>, <code>asp.net</code>, per lo sviluppo di funzionalità server-side.</li>
+</ul>
+</li>
+<li>
+<p>i <strong>dati sono distribuiti su più nodi di elaborazione</strong>, memorizzati in archivi o con sistemi di gestione di basi di dati (DBMS) diversi, e in generale condivisi da applicazioni locali e remote.</p>
+</li>
+<li>
+<p>nello sviluppo di sfotware su rete - anche in ambiente omogeneo - occorre fronteggiare problematiche di:</p>
+<ul>
+<li>sicurezza,</li>
+<li>guasti,</li>
+<li>contesa e condivisione di risorse,</li>
+</ul>
+<p>che si presentano ben più complessi che per i sistemi centralizzati; l’eterogeneità aggiunge ulteriore complessità a questi stessi problemi.</p>
+</li>
+</ul>
+<h2 id="enterprise-application-integration-eai"><a class="header" href="#enterprise-application-integration-eai">Enterprise Application Integration (EAI)</a></h2>
+<p>Sistemi complessi funzionanti raramente vengono sviluppati integralmente <em>ex novo</em>.</p>
+<ul>
+<li>Tipicamente essi evolvono a partire da <strong>sistemi</strong> <strong>esistenti</strong> <strong>già</strong> <strong>funzionanti</strong>.</li>
+</ul>
+<p>L’<strong>integrazione</strong> di sistemi informativi sviluppati in momenti, con linguaggi e con tecniche diversi, ed operanti su piattaforme eterogenee, è un problema centrale delle tecnologie software.</p>
+<p>L’integrazione consiste nel far comunicare e collaborare sistemi informativi che sono stati sviluppati in momenti diversi, con linguaggi diversi, con tecniche diverse, e che operano su piattaforme eterogenee.</p>
+<p>In pratica si richiede sempre più di fare due cose. La <strong>prima</strong> è <strong>utilizzare applicazioni di terze</strong> parti, chiamate sistemi <strong>COTS</strong> che stanno per <em>Commercial Off-The-Shelf</em>, ovvero software commerciale già pronto che si comporta e si integra nel proprio sistema, come ad esempio un sistema ERP o un software di gestione delle risorse umane.</p>
+<p>La <strong>seconda</strong> è <strong>riutilizzare applicazioni esistenti</strong> chiamate sistemi <em>legacy</em>, ovvero quei vecchi sistemi ereditati dal passato che continuano a funzionare e che nessuno vuole o può riscrivere da zero.</p>
+<p>L’integrazione di applicazioni, siano esse sistemi di nuovo sviluppo, sistemi ereditati o sistemi COTS, è da considerarsi lo <strong>scenario tipico di sviluppo software su larga scala</strong>.</p>
+<p align="center"><img src="images/EAI.png" width="450"></p>
+
+<p>Per far comunicare quindi tutti questi sistemi eterogenei di una applicazione distribuita è indispensabile l’utilizzo di un middleware.</p>
+<p>L’<strong>integrazione</strong> di applicazioni (EAI) è un processo sovente più complesso dello sviluppo <em>ex novo</em></p>
+<p align="center"><img src="images/sviluppo_vs_EAI.png" width="550"></p>
+
+<p>È un risultato controintuitivo: integrare è spesso più difficile che sviluppare da zero.</p>
+<p>Quando si sviluppa da zero si ha la libertà di scegliere le tecnologie e i prodotti più adatti, si richiede competenze classiche di analisi, progettazione e programmazione, e il lavoro può essere svolto anche da giovani sviluppatori.</p>
+<p>Quando invece si integra, si hanno vincoli pesanti su sistemi operativi, protocolli, linguaggi e ambienti di sviluppo, perché bisogna fare i conti con quello che già esiste. Si richiedono competenze molto più specializzate come la conoscenza delle architetture software, la capacità di reingegnerizzare sistemi esistenti, la progettazione attenta delle interfacce tra componenti e la predisposizione all’evoluzione futura. Infine richiede familiarità con i sistemi esistenti e viene svolto da specialisti con anni di esperienza, non da sviluppatori junior.</p>
+<hr>
+<p>In questa prospettiva dello sviluppo software, la programmazione (intesa come codifica di moduli software in un linguaggio di programmazione) è <strong>sempre meno</strong> <strong>una fase critica del ciclo di vita del software</strong>, in termini sia di risorse sia di competenze tecnologiche richieste.</p>
+<p>Poiché nell’EAI il problema principale non è scrivere codice nuovo, ma far comunicare sistemi che già esistono. Questo sposta il peso del lavoro dalla fase di programmazione ad altre fasi.</p>
+<p>Quindi assume maggiore importanza la capacità di <strong>adattare componenti esistenti e non originariamente pensati per interoperare</strong>, mediante l’attenta progettazione delle interfacce.</p>
+<blockquote>
+<p><strong>Le tecnologie middleware sono nate con il preciso obiettivo di fornire una risposta al problema dell’EAI</strong>.</p>
+</blockquote>
+<h2 id="middleware"><a class="header" href="#middleware">Middleware</a></h2>
+<p>Con il termine <em>middleware</em> si intende uno strato software interposto tra il sistema operativo e le applicazioni, in grado di <strong>fornire le astrazioni ed i servizi</strong> per lo sviluppo di applicazioni distribuite.</p>
+<p align="center"><img src="images/middleware_strato.png" width="450"></p>
+
+<ul>
+<li>Quando due componenti di un sistema distribuito devono comunicare tra loro, ci sono tre cose su cui devono necessariamente accordarsi in anticipo, altrimenti la comunicazione non può funzionare:
+<ul>
+<li>
+<p><strong>Servizio e interfacce</strong>:</p>
+<p>Prima che i due componenti possano comunicare, devono sapere cosa offre l’uno all’altro e come chiederlo. È come un contratto: il componente che offre un servizio deve dichiarare cosa sa fare e come lo si può invocare.</p>
+<p>Si parla di <strong>IDL (Inteface Definition Language)</strong>.</p>
+</li>
+<li>
+<p><strong>Posizione</strong>:</p>
+<p>Un componente deve sapere dove si trova fisicamente il componente con cui vuole comunicare nella rete.</p>
+</li>
+<li>
+<p><strong>Rappresentazione dei dati</strong>:</p>
+<p>Quando due macchine diverse si scambiano dati, devono parlare lo stesso “linguaggio” per i dati.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Lo strato <em>middleware</em> offre ai programmatori di applicazioni distribuite librerie di funzioni, o <em>middleware API</em> (Application Programming Interface), in grado di <strong>mascherare l’eterogeneità</strong> dei sistemi su rete.</p>
+<p>Le piattaforme <em>middleware</em> vengono anche definite <strong>software di connettività tra applicazioni, o anche “glue technologies”</strong>, evidenziando la loro caratteristica di tecnologie di integrazione di applicazioni.</p>
+<h3 id="proprietà-del-livello-middleware"><a class="header" href="#proprietà-del-livello-middleware">Proprietà del livello middleware</a></h3>
+<p>Un <em>middleware</em> può mascherare le eterogeneità mediante meccanismi di:</p>
+<ul>
+<li>
+<p><strong>Trasparenza del sistema operativo</strong>:</p>
+<p>Operando al di sopra del sistema operativo, i servizi forniti dalle API <em>middleware</em> possono essere definiti in maniera indipendente da esso, consentendo la portabilità delle applicazioni tra diversi OS.</p>
+</li>
+<li>
+<p><strong>Trasparenza del linguaggio di programmazione</strong>:</p>
+<p>La comunicazione tra componenti sviluppati in linguaggi fa sorgere immediatamente due categorie di problematiche:</p>
+<ul>
+<li>Il primo problema riguarda le <strong>differenze tra i tipi di dato</strong>. Ogni linguaggio di programmazione ha il proprio sistema di tipi. Un intero in <code>C</code> non è necessariamente uguale a un intero in <code>Java</code>;</li>
+<li>il secondo problema riguarda la <strong>diversità nei meccanismi di scambio dei parametri</strong>. Quando un programma chiama una funzione o una procedura, i parametri vengono passati in modi diversi a seconda del linguaggio. Alcuni linguaggi passano i parametri per valore, altri per riferimento, altri ancora hanno convenzioni ibride.</li>
+</ul>
+<p>Il livello <em>middleware</em> può consentire l’interoperabilità in due modi strettamente collegati:</p>
+<ul>
+<li>il primo modo è definire un <strong>sistema di tipi intermedio</strong>. Il middleware introduce un insieme di tipi di dato neutrali, indipendentemente da qualsiasi linguaggio specifico. Ogni linguaggio partecipante ha poi delle regole precise per tradurre i propri tipi nativi in questi tipi intermedi e viceversa;</li>
+<li>il secondo modo è definire <strong>regole non ambigue di corrispondenza</strong> con i tipi dei linguaggi più diffusi. Queste regole specificano esattamente come ogni tipo del sistema intermedio corrisponde ai tipi dei vari linguaggi supportati, eliminando qualsiasi ambiguità nella traduzione.</li>
+</ul>
+</li>
+<li>
+<p><strong>Trasparenza alla locazione</strong>:</p>
+<p>Le risorse (dati e servizi) dovrebbero essere accessibili a livello logico, senza conoscerne la effettiva locazione fisica. È <strong>lo strato middleware che deve farsi carico della localizzazione</strong> su rete del processo partner in una comunicazione, e del trasporto dei dati (<em>location transparency</em>)</p>
+</li>
+<li>
+<p><strong>Trasparenza della migrazione</strong>:</p>
+<p>Dati e servizi possono venir rilocati durante il loro ciclo di vita. Se un componente migra, il <em>middleware</em> deve consentire l’accesso a componenti mobili sulla rete, in maniera trasparente ai moduli client (<em>migration transparency</em>)</p>
+<p>Quindi il middleware deve poter gestire fallimenti nel mondo fisico e le eventuali migrazioni verso altri server.</p>
+</li>
+<li>
+<p><strong>Trasparenza ai guasti</strong>:</p>
+<p>Una elaborazione distribuita <strong>può fallire</strong> anche solo in maniera <strong>parziale</strong> per guasti che si verificano nei singoli nodi o nel sottosistema di comunicazione.</p>
+<p>Occorrono tecniche complesse per poter gestire uno <strong>stato</strong> <strong>globale</strong> <strong>consistente</strong> <strong>della computazione</strong>.</p>
+<p><strong>Lo stato globale consistente della computazione</strong> è l’insieme di tutte le informazioni che descrivono in un dato momento la situazione di tutti i componenti del sistema distribuito, quindi i dati presenti su ogni nodo, le operazioni in corso, i messaggi in transito nella rete. Si dice <strong>consistente</strong> quando questo stato è coerente e non contraddittorio, cioè quando tutti i componenti del sistema si trovano in una situazione che ha senso dal punto di vista logico.</p>
+<p>Il problema è che non avendo un <strong>clock globale</strong> e i componenti sono indipendenti tra loro, quando si verifica il fallimento è molto difficile capire in quale stato si trovava ciascun componente in quell’istante.</p>
+<p>Lo strato middleware può offrire al programmatore <strong>meccanismi ad alto livello</strong> per mascherare i guasti. Questo significa che il middleware si occupa di rilevare i guasti e di tentare il recupero quando possibile, in modo trasparente al programmatore, che non deve scrivere codice complesso per gestire ogni possibile scenario di guasto.</p>
+</li>
+<li>
+<p><strong>Trasparenza della resplicazione</strong>:</p>
+<p>La replicazione di componenti è una delle tecniche più comuni per realizzare politiche di <strong>tolleranza ai guasti</strong>, ma può essere utilizzata <strong>anche per migliorare le prestazioni</strong>, attraverso un miglior bilanciamento del carico di elaborazione.</p>
+<p>L’esistenza di più copie di un componente dovrebbe però essere trasparente ai suoi client (<em>replication transparency</em>).</p>
+</li>
+<li>
+<p><strong>Trasparenza delle implementazioni commerciali</strong>:</p>
+<p>Alcune tecnologie di <em>middleware</em> non nascono come prodotti commerciali, ma come <strong>specifiche di riferimento</strong>, cioè documenti tecnici che descrivono come un certo tipo di middleware deve funzionare, quali servizi deve offrire e come deve comportarsi. Queste specifiche vengono promosse da organizzazioni di produttori, cioè gruppi di aziende che si mettono d’accordo su uno standard comune, e spesso vengono poi recepite dagli enti di standardizzazione ufficiali.</p>
+<p>Una volta che esiste una specifica standard, le varie aziende possono sviluppare le proprie implementazioni commerciali di quel middleware, ognuna a modo suo, ma tutte rispettando lo stesso standard. Queste implementazioni quindi sono conformi allo standard ma possono differenziarsi tra loro per due motivi.</p>
+<ul>
+<li>il primo sono gli <strong>aspetti secondari</strong>, cioè dettagli implementativi che lo standard lascia liberi;</li>
+<li>il secondo sono i <strong>servizi aggiuntivi fuori standard</strong>, cioè funzionalità extra che una specifica implementazione offre oltre a quelle previste dallo standard.</li>
+</ul>
+<p>In questo modo è resa possibile l’<strong>interoperabilità</strong> tra applicazioni basate su realizzazioni commerciali diverse dello stesso tipo di middleware, ovvero che seguono lo stesso standard di riferimento.</p>
+</li>
+</ul>
+<h2 id="modelli-di-tecnlogie-middleware"><a class="header" href="#modelli-di-tecnlogie-middleware">Modelli di tecnlogie middleware</a></h2>
+<p>Nell’ultimo decennio sono state realizzate numerose tipologie di piattaforme middleware, sia in forma commerciale sia in forma prototipale in ambito di ricerca.</p>
+<p>Esistono diversi <strong>modelli di programmazione</strong> basati sui middleware, cioè diversi approcci con cui il middleware organizza e gestisce la comunicazione tra componenti in un sistema distribuito.</p>
+<p>I principali modelli di programmazione sono:</p>
+<ul>
+<li>Chiamata di procedura remota (<em>Remote Procedure Call, RCP</em>)</li>
+<li>Scambio di messaggi (<em>Message-Oriented Middleware, MOM</em>)</li>
+<li>Transazionali (<em>Transaction Processing, TP</em>)</li>
+<li>Spazio delle tuple (<em>Tuple Space, TS</em>)</li>
+<li>Accesso remoto ai dati (<em>Remote Data Access, RDA</em>)</li>
+<li>Oggetti distribuiti (<em>Distributed Object Middleware, DOM</em>)</li>
+<li>Componenti (<em>Component Model, CM</em>)</li>
+<li>Servizi Web (<em>Web Service, WS</em>)</li>
+</ul>
+<p><strong>TASSONOMIA DEI SISTEMI MIDDLEWARE</strong>:</p>
+<p align="center"><img src="images/tassonomia_dei_sistemi_middleware.png" width="670"></p>
+
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
