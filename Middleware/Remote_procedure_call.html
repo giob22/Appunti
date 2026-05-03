@@ -3,8 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>middleware</title>
-        <meta name="robots" content="noindex">
+        <title>gRPC - middleware</title>
 
 
         <!-- Custom HTML head -->
@@ -175,211 +174,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <script src="../javascript.js"></script>
-<h1 id="sistemi-middleware"><a class="header" href="#sistemi-middleware">Sistemi Middleware</a></h1>
-<h2 id="cosè-un-middleware"><a class="header" href="#cosè-un-middleware">Cos’è un middleware</a></h2>
-<p>Il middleware è uno strato software interposto tra il sistema operativo e le applicazioni capace di fornire astrazioni e servizi utili per lo sviluppo di applicazioni distribuite. In altre parole, si posiziona “nel mezzo” tra l’hardware/OS e il software applicativo, e il suo scopo principale è mascherare la complessità e l’eterogeneità dei sistemi distribuiti.</p>
-<p>Per questo motivo viene chiamato anche “glue technology” (tecnologia collante), perché permette a componenti sviluppati in momenti diversi, con linguaggi diversi e su piattaforme diverse, di comunicare tra loro.</p>
-<h2 id="sistema-distribuito"><a class="header" href="#sistema-distribuito">Sistema distribuito</a></h2>
-<p>Alcune definizioni da i pionieri dei sistemi distribuiti sono:</p>
-<ul>
-<li>
-<blockquote>
-<p>“Un sistema distribuito è un sistema i cui componenti, localizzati in computer connessi in rete, comunicano e coordinano le loro azioni solo attraverso <strong>scambio di messaggi</strong>” - <em>G. Coulouris et al.</em></p>
-</blockquote>
-</li>
-<li>
-<blockquote>
-<p>“Il mio programma gira su un sistema distribuito quando non funziona per colpa di una macchina di cui non ho mai sentito parlare” - <em>L. Lamport</em></p>
-</blockquote>
-</li>
-</ul>
-<p>Sono presenti delle implicazioni (conseguenze dirette) da tenere in considerazione che rendono i sistemi distribuiti intrinsecamente complessi rispetto a quelli centralizzati:</p>
-<ul>
-<li>
-<p><strong>Elaborazione concorrente</strong>:</p>
-<p>Nei sistemi distribuiti più componenti su macchine diverse eseguono operazioni contemporaneamente. Questo significa che non c’è un unico flusso di esecuzione sequenziale, ma tanti flussi paralleli che devono coordinarsi.</p>
-<p>I problemi che ne derivano sono molteplici:</p>
-<ul>
-<li>
-<p>gestione della concorrenza nell’accesso alle risorse condivise (come i database)</p>
-</li>
-<li>
-<p>necessità di meccanismi di sincronizzazione tra processi remoti</p>
-</li>
-<li>
-<p>rischio di situazioni di stallo (deadlock) distribuite, molto più difficili da rilevare e risolvere rispetto al caso locale</p>
-<p>In middleware cerca di alleviare questo problema fornendo primitive di coordinamento ad alto livello, come le transazioni distribuite.</p>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>Assenza di clock globale</strong>:</p>
-<p>In un sistema centralizzato esiste un unico orologio di sistema che permette di stabilire con precisione l’ordine temporale degli eventi. In un sistema distribuito, ogni macchina ha il proprio orologio locale, e questi orologi non sono mai perfettamente sincronizzati tra loro, per via dei ritardi di rete e della deriva degli orologi fisici.</p>
-<p>Questo crea un problema fondamentale: è impossibile dire con certezza assoluta quale evento tra due eventi avvenuti su macchine diverse si è verificato per primo.</p>
-</li>
-<li>
-<p><strong>Malfunzionamenti indipendenti</strong>:</p>
-<p>In un sistema centralizzato il guasto è generalmente totale: il sistema funziona o non funziona. In un sistema distribuito invece i guasti sono parziali e indipendenti. Un singolo nodo può crashare, un link di rete può interrompersi, un messaggio può andare perso, tutto questo mentre il resto del sistema continua a funzionare.</p>
-<p>Questo crea scenari molto insidiosi: messaggio potrebbe essere stato ricevuto o meno prima del chash del destinatario, e un’operazione potrebbe essere stata eseguita parzialmente.</p>
-</li>
-</ul>
-<p>I middleware nascono proprio per nascondere queste complessità, permettendo di ragionare sul sistema distribuito in modo simile a come ragioneremmo su un sistema centralizzato.</p>
-<h2 id="heterogeneous-distributed-computing"><a class="header" href="#heterogeneous-distributed-computing">Heterogeneous distributed computing</a></h2>
-<p>I sistemi distribuiti <strong>sono in generale eterogenei</strong>.</p>
-<p>L’<strong>eterogeneità</strong> dei computer e delle tecnologie - hardware e software - è da considerarsi la <strong>norma</strong>, non l’eccezione, anche all’interno di una stessa grande azienda od organizzazione, pubblica o privata.</p>
-<p>Per eterogeneità intendiamo la natura dei sistemi che riguarda tutto lo stack hardware-software.</p>
-<p>Il paradigma di elaborazione più generale prevede componenti interoperanti in ambiente distribuito eterogeneo. Questo paradigma (modello di riferimento) e chiamato <strong>Heterogeneous distributed computing</strong>.</p>
-<h2 id="eterogeneità"><a class="header" href="#eterogeneità">Eterogeneità</a></h2>
-<p>In ambiente distribuito vari fattori aumentano la complessità dello sviluppo di <strong>software di qualità</strong>:</p>
-<ul>
-<li>
-<p>le applicazioni sono distribuite su una rete di calcolatori, di caratteristiche differenti (<em>mainframes</em>, <em>servers</em>, <em>workstations</em>, <em>personal computers</em>) e dotati di <strong>hardware e di sistemi operativi diversi e spesso incompatibili</strong>.</p>
-</li>
-<li>
-<p>occorre adoperare <strong>linguaggi</strong> <strong>di</strong> <strong>programmazione</strong> <strong>diversi</strong>:</p>
-<ul>
-<li>linguaggio di alto livello, come <code>C#</code> o <code>Java</code>, per lo sviluppo rapido della parte di presentazione di un’applicazione (la cosidetta <em>presentation logic</em>) e per le funzionalità di un’applicazione (<em>business logic</em>).</li>
-<li>linguaggi tradizionali come <code>COBOL</code>, <code>C</code>, <code>C++</code> per funzionalità <em>legacy</em> o di basso livello (che richiedono maggior interazione con il OS).</li>
-<li>linguaggi di scripting, come <code>python</code>, <code>php</code>, <code>jsp</code>, <code>asp.net</code>, per lo sviluppo di funzionalità server-side.</li>
-</ul>
-</li>
-<li>
-<p>i <strong>dati sono distribuiti su più nodi di elaborazione</strong>, memorizzati in archivi o con sistemi di gestione di basi di dati (DBMS) diversi, e in generale condivisi da applicazioni locali e remote.</p>
-</li>
-<li>
-<p>nello sviluppo di sfotware su rete - anche in ambiente omogeneo - occorre fronteggiare problematiche di:</p>
-<ul>
-<li>sicurezza,</li>
-<li>guasti,</li>
-<li>contesa e condivisione di risorse,</li>
-</ul>
-<p>che si presentano ben più complessi che per i sistemi centralizzati; l’eterogeneità aggiunge ulteriore complessità a questi stessi problemi.</p>
-</li>
-</ul>
-<h2 id="enterprise-application-integration-eai"><a class="header" href="#enterprise-application-integration-eai">Enterprise Application Integration (EAI)</a></h2>
-<p>Sistemi complessi funzionanti raramente vengono sviluppati integralmente <em>ex novo</em>.</p>
-<ul>
-<li>Tipicamente essi evolvono a partire da <strong>sistemi</strong> <strong>esistenti</strong> <strong>già</strong> <strong>funzionanti</strong>.</li>
-</ul>
-<p>L’<strong>integrazione</strong> di sistemi informativi sviluppati in momenti, con linguaggi e con tecniche diversi, ed operanti su piattaforme eterogenee, è un problema centrale delle tecnologie software.</p>
-<p>L’integrazione consiste nel far comunicare e collaborare sistemi informativi che sono stati sviluppati in momenti diversi, con linguaggi diversi, con tecniche diverse, e che operano su piattaforme eterogenee.</p>
-<p>In pratica si richiede sempre più di fare due cose. La <strong>prima</strong> è <strong>utilizzare applicazioni di terze</strong> parti, chiamate sistemi <strong>COTS</strong> che stanno per <em>Commercial Off-The-Shelf</em>, ovvero software commerciale già pronto che si comporta e si integra nel proprio sistema, come ad esempio un sistema ERP o un software di gestione delle risorse umane.</p>
-<p>La <strong>seconda</strong> è <strong>riutilizzare applicazioni esistenti</strong> chiamate sistemi <em>legacy</em>, ovvero quei vecchi sistemi ereditati dal passato che continuano a funzionare e che nessuno vuole o può riscrivere da zero.</p>
-<p>L’integrazione di applicazioni, siano esse sistemi di nuovo sviluppo, sistemi ereditati o sistemi COTS, è da considerarsi lo <strong>scenario tipico di sviluppo software su larga scala</strong>.</p>
-<p align="center"><img src="images/EAI.png" width="450"></p>
-
-<p>Per far comunicare quindi tutti questi sistemi eterogenei di una applicazione distribuita è indispensabile l’utilizzo di un middleware.</p>
-<p>L’<strong>integrazione</strong> di applicazioni (EAI) è un processo sovente più complesso dello sviluppo <em>ex novo</em></p>
-<p align="center"><img src="images/sviluppo_vs_EAI.png" width="550"></p>
-
-<p>È un risultato controintuitivo: integrare è spesso più difficile che sviluppare da zero.</p>
-<p>Quando si sviluppa da zero si ha la libertà di scegliere le tecnologie e i prodotti più adatti, si richiede competenze classiche di analisi, progettazione e programmazione, e il lavoro può essere svolto anche da giovani sviluppatori.</p>
-<p>Quando invece si integra, si hanno vincoli pesanti su sistemi operativi, protocolli, linguaggi e ambienti di sviluppo, perché bisogna fare i conti con quello che già esiste. Si richiedono competenze molto più specializzate come la conoscenza delle architetture software, la capacità di reingegnerizzare sistemi esistenti, la progettazione attenta delle interfacce tra componenti e la predisposizione all’evoluzione futura. Infine richiede familiarità con i sistemi esistenti e viene svolto da specialisti con anni di esperienza, non da sviluppatori junior.</p>
-<hr>
-<p>In questa prospettiva dello sviluppo software, la programmazione (intesa come codifica di moduli software in un linguaggio di programmazione) è <strong>sempre meno</strong> <strong>una fase critica del ciclo di vita del software</strong>, in termini sia di risorse sia di competenze tecnologiche richieste.</p>
-<p>Poiché nell’EAI il problema principale non è scrivere codice nuovo, ma far comunicare sistemi che già esistono. Questo sposta il peso del lavoro dalla fase di programmazione ad altre fasi.</p>
-<p>Quindi assume maggiore importanza la capacità di <strong>adattare componenti esistenti e non originariamente pensati per interoperare</strong>, mediante l’attenta progettazione delle interfacce.</p>
-<blockquote>
-<p><strong>Le tecnologie middleware sono nate con il preciso obiettivo di fornire una risposta al problema dell’EAI</strong>.</p>
-</blockquote>
-<h2 id="middleware"><a class="header" href="#middleware">Middleware</a></h2>
-<p>Con il termine <em>middleware</em> si intende uno strato software interposto tra il sistema operativo e le applicazioni, in grado di <strong>fornire le astrazioni ed i servizi</strong> per lo sviluppo di applicazioni distribuite.</p>
-<p align="center"><img src="images/middleware_strato.png" width="450"></p>
-
-<ul>
-<li>Quando due componenti di un sistema distribuito devono comunicare tra loro, ci sono tre cose su cui devono necessariamente accordarsi in anticipo, altrimenti la comunicazione non può funzionare:
-<ul>
-<li>
-<p><strong>Servizio e interfacce</strong>:</p>
-<p>Prima che i due componenti possano comunicare, devono sapere cosa offre l’uno all’altro e come chiederlo. È come un contratto: il componente che offre un servizio deve dichiarare cosa sa fare e come lo si può invocare.</p>
-<p>Si parla di <strong>IDL (Inteface Definition Language)</strong>.</p>
-</li>
-<li>
-<p><strong>Posizione</strong>:</p>
-<p>Un componente deve sapere dove si trova fisicamente il componente con cui vuole comunicare nella rete.</p>
-</li>
-<li>
-<p><strong>Rappresentazione dei dati</strong>:</p>
-<p>Quando due macchine diverse si scambiano dati, devono parlare lo stesso “linguaggio” per i dati.</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>Lo strato <em>middleware</em> offre ai programmatori di applicazioni distribuite librerie di funzioni, o <em>middleware API</em> (Application Programming Interface), in grado di <strong>mascherare l’eterogeneità</strong> dei sistemi su rete.</p>
-<p>Le piattaforme <em>middleware</em> vengono anche definite <strong>software di connettività tra applicazioni, o anche “glue technologies”</strong>, evidenziando la loro caratteristica di tecnologie di integrazione di applicazioni.</p>
-<h3 id="proprietà-del-livello-middleware"><a class="header" href="#proprietà-del-livello-middleware">Proprietà del livello middleware</a></h3>
-<p>Un <em>middleware</em> può mascherare le eterogeneità mediante meccanismi di:</p>
-<ul>
-<li>
-<p><strong>Trasparenza del sistema operativo</strong>:</p>
-<p>Operando al di sopra del sistema operativo, i servizi forniti dalle API <em>middleware</em> possono essere definiti in maniera indipendente da esso, consentendo la portabilità delle applicazioni tra diversi OS.</p>
-</li>
-<li>
-<p><strong>Trasparenza del linguaggio di programmazione</strong>:</p>
-<p>La comunicazione tra componenti sviluppati in linguaggi fa sorgere immediatamente due categorie di problematiche:</p>
-<ul>
-<li>Il primo problema riguarda le <strong>differenze tra i tipi di dato</strong>. Ogni linguaggio di programmazione ha il proprio sistema di tipi. Un intero in <code>C</code> non è necessariamente uguale a un intero in <code>Java</code>;</li>
-<li>il secondo problema riguarda la <strong>diversità nei meccanismi di scambio dei parametri</strong>. Quando un programma chiama una funzione o una procedura, i parametri vengono passati in modi diversi a seconda del linguaggio. Alcuni linguaggi passano i parametri per valore, altri per riferimento, altri ancora hanno convenzioni ibride.</li>
-</ul>
-<p>Il livello <em>middleware</em> può consentire l’interoperabilità in due modi strettamente collegati:</p>
-<ul>
-<li>il primo modo è definire un <strong>sistema di tipi intermedio</strong>. Il middleware introduce un insieme di tipi di dato neutrali, indipendentemente da qualsiasi linguaggio specifico. Ogni linguaggio partecipante ha poi delle regole precise per tradurre i propri tipi nativi in questi tipi intermedi e viceversa;</li>
-<li>il secondo modo è definire <strong>regole non ambigue di corrispondenza</strong> con i tipi dei linguaggi più diffusi. Queste regole specificano esattamente come ogni tipo del sistema intermedio corrisponde ai tipi dei vari linguaggi supportati, eliminando qualsiasi ambiguità nella traduzione.</li>
-</ul>
-</li>
-<li>
-<p><strong>Trasparenza alla locazione</strong>:</p>
-<p>Le risorse (dati e servizi) dovrebbero essere accessibili a livello logico, senza conoscerne la effettiva locazione fisica. È <strong>lo strato middleware che deve farsi carico della localizzazione</strong> su rete del processo partner in una comunicazione, e del trasporto dei dati (<em>location transparency</em>)</p>
-</li>
-<li>
-<p><strong>Trasparenza della migrazione</strong>:</p>
-<p>Dati e servizi possono venir rilocati durante il loro ciclo di vita. Se un componente migra, il <em>middleware</em> deve consentire l’accesso a componenti mobili sulla rete, in maniera trasparente ai moduli client (<em>migration transparency</em>)</p>
-<p>Quindi il middleware deve poter gestire fallimenti nel mondo fisico e le eventuali migrazioni verso altri server.</p>
-</li>
-<li>
-<p><strong>Trasparenza ai guasti</strong>:</p>
-<p>Una elaborazione distribuita <strong>può fallire</strong> anche solo in maniera <strong>parziale</strong> per guasti che si verificano nei singoli nodi o nel sottosistema di comunicazione.</p>
-<p>Occorrono tecniche complesse per poter gestire uno <strong>stato</strong> <strong>globale</strong> <strong>consistente</strong> <strong>della computazione</strong>.</p>
-<p><strong>Lo stato globale consistente della computazione</strong> è l’insieme di tutte le informazioni che descrivono in un dato momento la situazione di tutti i componenti del sistema distribuito, quindi i dati presenti su ogni nodo, le operazioni in corso, i messaggi in transito nella rete. Si dice <strong>consistente</strong> quando questo stato è coerente e non contraddittorio, cioè quando tutti i componenti del sistema si trovano in una situazione che ha senso dal punto di vista logico.</p>
-<p>Il problema è che non avendo un <strong>clock globale</strong> e i componenti sono indipendenti tra loro, quando si verifica il fallimento è molto difficile capire in quale stato si trovava ciascun componente in quell’istante.</p>
-<p>Lo strato middleware può offrire al programmatore <strong>meccanismi ad alto livello</strong> per mascherare i guasti. Questo significa che il middleware si occupa di rilevare i guasti e di tentare il recupero quando possibile, in modo trasparente al programmatore, che non deve scrivere codice complesso per gestire ogni possibile scenario di guasto.</p>
-</li>
-<li>
-<p><strong>Trasparenza della resplicazione</strong>:</p>
-<p>La replicazione di componenti è una delle tecniche più comuni per realizzare politiche di <strong>tolleranza ai guasti</strong>, ma può essere utilizzata <strong>anche per migliorare le prestazioni</strong>, attraverso un miglior bilanciamento del carico di elaborazione.</p>
-<p>L’esistenza di più copie di un componente dovrebbe però essere trasparente ai suoi client (<em>replication transparency</em>).</p>
-</li>
-<li>
-<p><strong>Trasparenza delle implementazioni commerciali</strong>:</p>
-<p>Alcune tecnologie di <em>middleware</em> non nascono come prodotti commerciali, ma come <strong>specifiche di riferimento</strong>, cioè documenti tecnici che descrivono come un certo tipo di middleware deve funzionare, quali servizi deve offrire e come deve comportarsi. Queste specifiche vengono promosse da organizzazioni di produttori, cioè gruppi di aziende che si mettono d’accordo su uno standard comune, e spesso vengono poi recepite dagli enti di standardizzazione ufficiali.</p>
-<p>Una volta che esiste una specifica standard, le varie aziende possono sviluppare le proprie implementazioni commerciali di quel middleware, ognuna a modo suo, ma tutte rispettando lo stesso standard. Queste implementazioni quindi sono conformi allo standard ma possono differenziarsi tra loro per due motivi.</p>
-<ul>
-<li>il primo sono gli <strong>aspetti secondari</strong>, cioè dettagli implementativi che lo standard lascia liberi;</li>
-<li>il secondo sono i <strong>servizi aggiuntivi fuori standard</strong>, cioè funzionalità extra che una specifica implementazione offre oltre a quelle previste dallo standard.</li>
-</ul>
-<p>In questo modo è resa possibile l’<strong>interoperabilità</strong> tra applicazioni basate su realizzazioni commerciali diverse dello stesso tipo di middleware, ovvero che seguono lo stesso standard di riferimento.</p>
-</li>
-</ul>
-<h2 id="modelli-di-tecnlogie-middleware"><a class="header" href="#modelli-di-tecnlogie-middleware">Modelli di tecnlogie middleware</a></h2>
-<p>Nell’ultimo decennio sono state realizzate numerose tipologie di piattaforme middleware, sia in forma commerciale sia in forma prototipale in ambito di ricerca.</p>
-<p>Esistono diversi <strong>modelli di programmazione</strong> basati sui middleware, cioè diversi approcci con cui il middleware organizza e gestisce la comunicazione tra componenti in un sistema distribuito.</p>
-<p>I principali modelli di programmazione sono:</p>
-<ul>
-<li>Chiamata di procedura remota (<em>Remote Procedure Call, RCP</em>)</li>
-<li>Scambio di messaggi (<em>Message-Oriented Middleware, MOM</em>)</li>
-<li>Transazionali (<em>Transaction Processing, TP</em>)</li>
-<li>Spazio delle tuple (<em>Tuple Space, TS</em>)</li>
-<li>Accesso remoto ai dati (<em>Remote Data Access, RDA</em>)</li>
-<li>Oggetti distribuiti (<em>Distributed Object Middleware, DOM</em>)</li>
-<li>Componenti (<em>Component Model, CM</em>)</li>
-<li>Servizi Web (<em>Web Service, WS</em>)</li>
-</ul>
-<p><strong>TASSONOMIA DEI SISTEMI MIDDLEWARE</strong>:</p>
-<p align="center"><img src="images/tassonomia_dei_sistemi_middleware.png" width="670"></p>
-
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="remote-procedure-call"><a class="header" href="#remote-procedure-call">Remote Procedure Call</a></h1>
+                        <h1 id="remote-procedure-call"><a class="header" href="#remote-procedure-call">Remote Procedure Call</a></h1>
 <p>Il <strong>Remote Procedure Call</strong> è un paradigma di comunicazione che permette a un programma di invocare una procedura (funzione, metodo) che risiede su una macchina remota come se fosse una chiamata locale. L’obiettivo è nascondere allo sviluppatore tutta la complessità della comunicazione di rete: serializzazione dei dati, gestione del protocollo di trasporto, gestione degli errori di rete, ecc.</p>
 <p>L’idea di fondo è che il client chiami una funzione “qualunque” senza preoccuparsi del fatto che il codice effettivo venga eseguito altrove. Per realizzare questa astrazione, RPC introduce due componenti fondamentali, generati automaticamente a tempo di compilazione:</p>
 <ul>
@@ -621,6 +416,9 @@ python -m pip install grpcio-tools
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Sistemi_middleware.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
 
 
                         <div style="clear: both"></div>
@@ -629,6 +427,9 @@ python -m pip install grpcio-tools
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Sistemi_middleware.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
 
             </nav>
 
@@ -657,11 +458,6 @@ python -m pip install grpcio-tools
 
         <!-- Custom JS scripts -->
 
-        <script>
-        window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
-        });
-        </script>
 
 
     </div>
