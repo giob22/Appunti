@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8e6462c0.js";
+            window.path_to_searchindex_js = "searchindex-fdb44c32.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-266281a5.js"></script>
@@ -174,7 +174,8 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="remote-procedure-call"><a class="header" href="#remote-procedure-call">Remote Procedure Call</a></h1>
+                        <script src="../javascript.js"></script>
+<h1 id="remote-procedure-call"><a class="header" href="#remote-procedure-call">Remote Procedure Call</a></h1>
 <p>Il <strong>Remote Procedure Call</strong> è un paradigma di comunicazione che permette a un programma di invocare una procedura (funzione, metodo) che risiede su una macchina remota come se fosse una chiamata locale. L’obiettivo è nascondere allo sviluppatore tutta la complessità della comunicazione di rete: serializzazione dei dati, gestione del protocollo di trasporto, gestione degli errori di rete, ecc.</p>
 <p>L’idea di fondo è che il client chiami una funzione “qualunque” senza preoccuparsi del fatto che il codice effettivo venga eseguito altrove. Per realizzare questa astrazione, RPC introduce due componenti fondamentali, generati automaticamente a tempo di compilazione:</p>
 <ul>
@@ -243,7 +244,7 @@
 <ul>
 <li><strong>Binary Framing Layer</strong>: le richieste/risposte di <code>HTTP/2</code> sono suddivise in <em>messaggi di piccole dimensioni</em> e con un frame in formato binario, rendendo la trasmissione dei messaggi <strong>efficiente</strong>.</li>
 </ul>
-<p align="center"><img src="images/HTTP2.png" width="300"></p>
+<p align="center"><img src="images/HTTP2.png" width="500"></p>
 
 <p>Tutto avviene all’interno di una singola connessione TCP stabilita tra client e server.</p>
 <p>Dentro questa connessione possono esistere più <strong>stream</strong> <strong>contemporaneamente</strong>, ciascuno trasporta uno o più <strong>messagge</strong>, e ogni message è composto da uno o più <strong>frame</strong>.</p>
@@ -314,7 +315,7 @@
 <p>Ovvero all’interno delle varie frame che vengono trasmesse, che non sono altro che pezzi di flusso di dati binari, sono presenti gli identificativi (tag) che permettono di capire quale sia il campo a cui si riferisce il valore binario ricevuto.</p>
 </li>
 </ul>
-<p align="center"><img src="images/proto_syntax.png" width="400"></p>
+<p align="center"><img src="images/proto_syntax.png" width="500"></p>
 
 <ul>
 <li>
@@ -328,7 +329,7 @@
 <h3 id="esempio"><a class="header" href="#esempio">ESEMPIO:</a></h3>
 <pre><code class="language-proto">
 syntax="proto3";
-package ecomerce;
+package ecommerce;
 
 service ProductInfo{
   rpc addProduct(Product) returns (ProductID);
@@ -389,7 +390,10 @@ python -m pip install grpcio-tools
 <p>Oppure</p>
 <pre><code class="language-bash">python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ProductInfo.proto
 </code></pre>
-<p><code>--pyi_out</code> è opzionale.</p>
+<p>Se il file <code>.proto</code> si trova all’interno di una directory allora bisogna specificarla con il flag <code>-Idirectory</code>:</p>
+<pre><code class="language-bash">python -m grpc_tools.protoc -Iprotos --python_out=. --grpc_python_out=. ProductInfo.proto
+</code></pre>
+<p><code>--pyi_out</code> è opzionale. Serve per facilitare l’implementazione perché permette all’IDE di riconoscere gli oggetti. Altrimenti gli IDE non possono suggerire, ad esempio, la classe del messaggio, l’esistenza di un attributo e il proprio tipo all’interno di queste classi: le classi di messaggi sono generate dinamicamente.</p>
 <p>I tre flag dicono al compilatore cosa generare:</p>
 <ul>
 <li><code>--python_out</code> produce le classi dei messaggi (<code>ProductInfo_pb2.py</code>)</li>
@@ -407,8 +411,573 @@ python -m pip install grpcio-tools
 <p><strong>Scrivere client e server</strong> usando le classi generate. Il programmatore istanzia lo stub lato client e lo usa come se invocasse funzioni locali; lato server estende la classe servicer per fornire l’implementazione concreta dei metodi.</p>
 <ul>
 <li><strong>Stub</strong> è la classe generata lato client (<code>ProductInfoStub</code>). Espone gli stessi metodi del servizio (<code>addProduct</code>, <code>getProduct</code>) ma sotto il cofano serializza i parametri, li invia al server via <code>HTTP/2</code> e attende la risposta. Per il programmatore client, chiamare <code>stub.addProduct(p)</code> sembra una chiamata locale.</li>
-<li><strong>Servicer (Skeleton)</strong> è la classe astratta generata lato server (<code>ProductInfoServicer</code>). Lo sviluppatore la estende scrivendo l’implementazione effettiva di <code>addProduct</code> e <code>getProduct</code>. Il framework gRPC riceve le richieste, deserializza i parametri e invoca il metodo dell’implementazione concreta..</li>
+<li><strong>Servicer (Skeleton)</strong> è la classe astratta generata lato server (<code>ProductInfoServicer</code>). Lo sviluppatore la estende scrivendo l’implementazione effettiva di <code>addProduct</code> e <code>getProduct</code>. Il framework gRPC riceve le richieste, deserializza i parametri e invoca il metodo dell’implementazione concreta.</li>
 </ul>
+</li>
+</ol>
+<h3 id="cosa-contengono-i-file-generati-da-protoc"><a class="header" href="#cosa-contengono-i-file-generati-da-protoc">Cosa contengono i file generati da <code>protoc</code></a></h3>
+<h4 id="il-file-_pb2py---le-classi-dei-messaggi"><a class="header" href="#il-file-_pb2py---le-classi-dei-messaggi">Il file <code>*_pb2.py</code> - le classi dei messaggi</a></h4>
+<p>Questo file contiene <strong>tutto ciò che riguarda i messaggi</strong> definiti nel <code>.proto</code>, ma non i servizi.</p>
+<p>Quando lo si apre, le cose che saltano all’occhio sono:</p>
+<ol>
+<li>
+<p><strong>Il descrittore del file <code>.proto</code></strong>. È presente una grossa stringa binaria che è la rappresentazione serializzata della struttura del <code>.proto</code>. È un meta-dato: descrive quali messaggi esistono, quali campi hanno, di che tipo sono, con quali tag.</p>
+<pre><code class="language-python">DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11ProductInfo.proto\x12\tecommerce\"8\n\x07Product\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04nome\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"\x17\n\tProductID\x12\n\n\x02id\x18\x01 \x01(\t2}\n\x0bProductInfo\x12\x36\n\naddProduct\x12\x12.ecommerce.Product\x1a\x14.ecommerce.ProductID\x12\x36\n\ngetProduct\x12\x14.ecommerce.ProductID\x1a\x12.ecommerce.Productb\x06proto3')
+</code></pre>
+</li>
+<li>
+<p><strong>Le classi Python dei messaggi</strong>. Per ogni <code>message</code> nel <code>.proto</code> viene generata una classe python. Queste classi hanno:</p>
+<ul>
+<li>attributi corrispondenti ai campi (<code>name</code>, <code>description</code>, …)</li>
+<li>metodi per serializzare e deserializzare l’oggetto da/a bytes (<code>SerializeToString()</code>, <code>FromString()</code>, <code>ParseFromString()</code>)</li>
+<li>validazione dei tipi al momento della costruzione.</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-python"> _runtime_version.ValidateProtobufRuntimeVersion(
+   _runtime_version.Domain.PUBLIC,
+   6,
+   31,
+   1,
+   '',
+   'ProductInfo.proto'
+ )
+</code></pre>
+<p>La generazione delle classi è dinamica:</p>
+<pre><code class="language-python"> _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
+ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ProductInfo_pb2', _globals)
+</code></pre>
+<p>Protobuf usa una codifica binaria efficiente per rendere la comunicazione leggera. La codifica si chiama <strong>varint</strong> (variable-lenght integer): i numeri piccoli vengono codificati con pochi byte, quelli grandi con più byte, evitando di sprecare spazio quando non serve. Ogni campo nel formato binario è una coppia <code>[tag + tipo wire][valore]</code>, dove:</p>
+<ul>
+<li><code>tag</code> è il numero identificativo che abbiamo assegnato al campo nel <code>.proto</code></li>
+<li><code>tipo wire</code> è una piccola informazione di 3 bit che dice al decodificatore come interpretare i byte successivi</li>
+</ul>
+<h4 id="il-file-_pb2_grpcpy---linfrastruttura-del-servizio"><a class="header" href="#il-file-_pb2_grpcpy---linfrastruttura-del-servizio">Il file <code>*_pb2_grpc.py</code> - l’infrastruttura del servizio</a></h4>
+<p>Questo è il file in cui sono definite le classi che si occupano della logica di comunicazione, contiene tutto ciò che riguarda il <strong>servizio e le RPC</strong>.</p>
+<ol>
+<li>
+<p><strong>Proxy: classe stub lato client</strong>. È il proxy che il client utilizza per invocare i metodi remoti.</p>
+<pre><code class="language-python"> class ProductInfoStub(object):
+   
+   def __init__(self, channel):
+     """Constructor.
+
+     Args:
+         channel: A grpc.Channel.
+     """
+     self.addProduct = channel.unary_unary(
+             '/ecommerce.ProductInfo/addProduct',
+             request_serializer=ProductInfo__pb2.Product.SerializeToString,
+             response_deserializer=ProductInfo__pb2.ProductID.FromString,
+             _registered_method=True)
+     self.getProduct = channel.unary_unary(
+             '/ecommerce.ProductInfo/getProduct',
+             request_serializer=ProductInfo__pb2.ProductID.SerializeToString,
+             response_deserializer=ProductInfo__pb2.Product.FromString,
+             _registered_method=True)
+</code></pre>
+<ul>
+<li>
+<p><code>channel.unary_unary(...)</code> dichiara la <strong>semantica della chiamata RPC</strong>, cioè di che tipo è. Le quattro possibili semantiche sono:</p>
+<ul>
+<li><code>unary_unary</code> → RPC semplice (1 richiesta, 1 risposta)</li>
+<li><code>unary_stream</code> → server-streaming (1 richiesta, N risposte)</li>
+<li><code>stream_unary</code> → client-streaming (N richieste, 1 risposta)</li>
+<li><code>stream_stream</code> → bidirezionale (N richieste, N risposte)</li>
+</ul>
+</li>
+<li>
+<p><code>'/ecommerce.ProductInfo/getProduct'</code> <strong>è il path HTTP/2 della RPC</strong>: identifica univocamente quale servizio (<code>ProductInfo</code>) e quale metodo (<code>getProduct</code>) il client vuole invocare.</p>
+<p>È esattamente il <code>:path</code> del frame HEADER HTTP/2.</p>
+</li>
+<li>
+<p><code>request_serializer</code> e <code>request_serializer</code> sono i riferimenti alle funzioni di <strong>marshalling/unmarshalling</strong> del payload.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Skeleton: classe servicer lato server</strong>. È lo <strong>skeleton</strong> che il server estende per fornire l’implementazione concreta dei metodi.</p>
+</li>
+</ol>
+<pre><code class="language-python"> class ProductInfoServicer(object):
+   """Definizione del servizio
+   """
+
+   def addProduct(self, request, context):
+       """Missing associated documentation comment in .proto file."""
+       context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+       context.set_details('Method not implemented!')
+       raise NotImplementedError('Method not implemented!')
+
+   def getProduct(self, request, context):
+       """Missing associated documentation comment in .proto file."""
+       context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+       context.set_details('Method not implemented!')
+       raise NotImplementedError('Method not implemented!')
+</code></pre>
+<p>Contiene il metodo <code>GetProduct</code> e <code>AddProduct</code> che il server dovrà implementare. Ma questi due metodi non sono completamente astratti, possiamo identificarli <em>simil-astratti</em> poiché contengono del codice eseguibile anche se non esiste nessun server.</p>
+<p>Quelle due istruzioni, <code>context.set_code</code> e <code>context.set_details</code> vengono eseguite prima del <code>raise</code> perché servono a impostare correttamente lo stato dell’RPC prima di interrompere l’esecuzione, in modo che il client riceva un messaggio di errore ben strutturato invece di un generico errore interno.</p>
+<ol start="3">
+<li>
+<p><strong>La funzione <code>add_..._to_server</code></strong>. È il collante tra il server gRPC vero e proprio e l’implementazione del servicer.</p>
+<pre><code class="language-python"> def add_ProductInfoServicer_to_server(servicer, server):
+  rpc_method_handlers = {
+          'addProduct': grpc.unary_unary_rpc_method_handler(
+                  servicer.addProduct,
+                  request_deserializer=ProductInfo__pb2.Product.FromString,
+                  response_serializer=ProductInfo__pb2.ProductID.SerializeToString,
+          ),
+          'getProduct': grpc.unary_unary_rpc_method_handler(
+                  servicer.getProduct,
+                  request_deserializer=ProductInfo__pb2.ProductID.FromString,
+                  response_serializer=ProductInfo__pb2.Product.SerializeToString,
+          ),
+  }
+  generic_handler = grpc.method_handlers_generic_handler(
+          'ecommerce.ProductInfo', rpc_method_handlers)
+  server.add_generic_rpc_handlers((generic_handler,))
+  server.add_registered_method_handlers('ecommerce.ProductInfo', rpc_method_handlers)
+</code></pre>
+<p>Cosa risolve: quando creo un server gRPC, ho due oggetti distinti:</p>
+<ul>
+<li>l’oggetto <code>server</code>, creato con <code>grpc.server(...)</code>, che è il motore della parte servente: gestisce le connessioni TCP, parla HTTP/2, riceve i frame, gestisce il <strong>thread pool</strong>, ecc. È generico: non sa nulla del tuo servizio specifico.</li>
+<li>l’oggetto <code>servicer</code>, istanza della tua classe <code>ProductInfo</code> (che estende <code>ProductInfoServicer</code>), che contiene <strong>l’implementazione concreta</strong> dei metodi <code>addProduct</code> e <code>getProduct</code>. Gestisce la logica di business.</li>
+</ul>
+<p>Questi due oggetti non si conoscono. Il server “motore” non ha idea che esista un servizio <code>ProductInfo</code>, né che ci siano i metodi <code>addProduct</code> e <code>getProduct</code>, né come deserializzare un <code>Product</code> in arrivo, né come serializzare un <code>Product</code> in uscita. Va <strong>collegato esplicitamente</strong> alla tua implementazione, e questo è esattamente il lavoro di <code>add_ProductInfoServicer_to_server</code>.</p>
+</li>
+</ol>
+<h3 id="limplementazione"><a class="header" href="#limplementazione">L’implementazione</a></h3>
+<h4 id="creazione-del-server"><a class="header" href="#creazione-del-server">Creazione del server</a></h4>
+<p>L’implementazione del server solitamente si divide in due parti: l’implementazione del servizio e l’inizializzazione di questo.</p>
+<p>Innanzitutto dobbiamo creare la classe server che implementa i metodi dichiarati nell’interfaccia nel <code>.proto</code>. Quindi implementiamo nel nostro caso <code>ProductInfo</code>, che consiste nel <em>server_impl</em> il quale erediterà dalla classe <code>ProductInfoServicer</code> contenuta nel modulo <code>ProductInfo_pb2_grpc</code>.</p>
+<pre><code class="language-python">class ProductInfo(ProductInfo_pb2_grpc.ProductInfoServicer):
+
+    def __init__(self):
+        self._products = {}
+
+    def addProduct(self, request, context):
+        new_id = str(uuid.uuid4())
+
+        product = ProductInfo_pb2.Product(id=new_id, nome=request.nome, description=request.description)
+
+        # salvataggio in memoria
+        self._products[new_id] = product
+        print(f"[server] addProduct: salvato {product.nome} con id={new_id}")
+
+        return ProductInfo_pb2.ProductID(id=new_id)
+    def getProduct(self, request, context):
+        product_id = request.id
+        print(f"[server] getProduct: richiesta id={product_id}")
+        if product_id not in self._products:
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            context.set_details(f"Prodotto con id '{product_id}' non trovato")
+            return ProductInfo_pb2.Product() # messaggio vuoto
+        return ProductInfo_pb2.ProductID(id=self._products[product_id])
+</code></pre>
+<ul>
+<li>
+<p>L’implementazione del modulo restituisce un messaggio del tipo <code>ProductID</code> o <code>Product</code></p>
+</li>
+<li>
+<p><code>context</code> è un’istanza della classe <code>grpc.ServiceContext</code> e contiene metadati e controlli legati alla comunicazione RPC.</p>
+<p>È un componente architetturale importante di gRPC.</p>
+<p>Come detto <code>context</code> contiene tutto ciò che riguarda la chiamata, non i dati in transito.</p>
+<p>Ci permette di:</p>
+<ol>
+<li><em>impostare lo stato di errore di una risposta</em></li>
+</ol>
+<pre><code class="language-python">context.set_code(grpc.StatusCode.NOT_FOUND)
+context.set_details("Prodotto non trovato")
+</code></pre>
+<p><code>set_code()</code> imposta uno dei codici di stato standardizzati di gRPC e <code>set_details()</code> aggiunge un messaggio testuale.
+2) <em>leggere i metadati della richiesta</em></p>
+<p>Il cliente può attaccare alla chiamata dei <strong>metadati</strong> (header <code>HTTP/2</code> personalizzati): token di autenticazione, ID di tracciamento, lingua preferita, ecc. Questi sono accessibili dal lato server con:</p>
+<pre><code class="language-python">metadata = dict(context.invocation_metadata())
+auth_token = metadata.get("authorization")
+trace_id = metadata.get("x-trace-id")
+</code></pre>
+<p>I metadati sono coppie di <em>dati-valore</em> che viaggiano negli header <code>HTTP/2</code>, separate dal payload protobuf.
+3) <em>aggiungere metadati alla risposta</em></p>
+<p>Specularmente al punto precedente: il server può attaccare metadati alla risposta usando <code>set_trailing_metadata()</code> oppure <code>send_initial_metadata()</code>.</p>
+<pre><code class="language-python">context.set_trailing_metadata([
+("x-server-version", "1.2.3"),
+("x-cache-status", "miss"),
+])
+</code></pre>
+<ol start="4">
+<li><em>controllare lo stato della connessione</em></li>
+</ol>
+<p>Una chiamata RPC può durare a lungo. Nel mentre, il client potrebbe disconnettersi, oppure potrebbe scattare un timeout impostato dal client stesso. Il server può controllare se ha ancora senso continuare il lavoro.</p>
+<pre><code class="language-python">if not context.is_active():
+print("[server] il client si è disconnesso, abbandono il calcolo")
+return
+
+if context.time_remaining() is not None and context.time_remaining() &lt; 1.0:
+  print("[server] meno di 1 secondo al timeout, abbandono")
+  return
+</code></pre>
+<p>Questo potrebbe essere utile per evitare lo spreco di risorse server su chiamate ormai inutili. È particolarmente importante nello streaming, dove un loop che produce risultati può controllare a ogni iterazione <code>context.is_active()</code> e fermarsi se il client non sta più ascoltando.
+5) <em>registrare callback al termine della chiamata</em></p>
+<p>Possiamo attaccare callback che verranno eseguite quando l’RPC termina (per qualunque motivo: completamento normale, errore, cancellazione).</p>
+<pre><code class="language-python">context.add_callback(lambda: print("[server] RPC terminata, pulisco le risorse"))
+</code></pre>
+<p>Utile per il clean-up delle risorse.</p>
+</li>
+</ul>
+<hr>
+<p>Una volta terminata l’implementazione del servizio bisogna creare ed eseguire un <strong>server</strong> <strong>gRPC</strong> per accogliere le richieste dei client ed inviarle all’implementazione del servizio.</p>
+<pre><code class="language-python">def serve():
+  # definisco il porto
+  port = '50051'
+  server = grpc.server(futures.ThreadPoolExecutor(max_workers=10)) # È un server multithreaded
+  # aggiungo al server l'oggetto istanza del mio servizio: ProductInfo
+  ProductInfo_pb2_grpc.add_ProductInfoServicer_to_server(ProductInfo(), server)
+  # faccio il bind al porto impostato
+  server.add_insecure_port(f"[::]:{port}")
+  # avvio il server
+  server.start()
+  print(f"[server] ProductInfo server avviato sulla porta {port}")
+  # attendo che il server termini
+  server.wait_for_termination()
+</code></pre>
+<ul>
+<li>
+<p>Se avessi eseguito <code>server.start()</code> prima del bind con IP e porto allora le richieste non sarebbero state servite dal <em>servicer</em> (<code>ProductInfo</code>).</p>
+</li>
+<li>
+<p>La chiamata <code>server.start()</code> <strong>non è bloccante</strong>: avvia il <strong>server in background</strong> (creando dei <strong>thread</strong> interni che gestiranno <code>HTTP/2</code>, accettando connessioni, dispatcheranno richieste al thread pool, etc…) e <strong>ritorna immediatamente</strong> al chiamante. Il server è ora attivo e funzionante, ma il mainThread del programma è libero di proseguire.</p>
+<p>I thread che vengono generati nel momento in cui viene eseguita la <code>server.start()</code> sono <code>daemon</code>, ovvero nel momento in cui il mainThread termina allora sono costretti anche essi a terminare.</p>
+<blockquote>
+<p>Il processo Python termina quando tutti i thread non-daemon hanno finito. I thread daemon vengono uccisi automaticamente nel momento in cui questo avviene.</p>
+</blockquote>
+<p>Se non inserissimo la chiamata <code>wait_for_termination()</code> allora il mainThread terminerebbe portandosi dietro anche il server che quindi rimarrà acceso per pochi millisecondi.</p>
+</li>
+<li>
+<p><code>wait_for_termination()</code> abbiamo detto che risolve esattamente il problema della terminazione anticipata del servizio: <strong>blocca il mainThread fino a quando il server non termina</strong>. È il meccanismo che impedisce al processo di uscire e tiene in vita il server.</p>
+</li>
+</ul>
+<h4 id="creazione-del-client"><a class="header" href="#creazione-del-client">Creazione del client</a></h4>
+<p>Per chiamare i metodi del servizio, occorre prima <strong>creare un canale gRPC</strong> per comunicare con il server di destinazione usando <code>insecure_channel</code>.</p>
+<p>Abbiamo bisogno di uno <strong>stub client per eseguire le RPC</strong>: lo otteniamo dal file <code>.pb2_grpc</code> generato alla compilazione del file <code>.proto</code>.</p>
+<p><strong>Chiamiamo i metodi di servizio sullo stub client</strong>: creiamo e popoliamo un oggetto <em>protobuf</em> di richiesta (<code>Product</code> o <code>ProductID</code>) passando il corpo del messaggio.</p>
+<pre><code class="language-python">with grpc.insecure_channel("localhost:50051") as channel:
+
+  ## creo uno stub per invocare tutti i metodi implementati nel servizio
+  stub = ProductInfo_pb2_grpc.ProductInfoStub(channel)  
+  print("[cliente] aggiungo alcuni prodotti") 
+  products = [("Penna BIC", "penna per scrivere"),
+              ("Mela", "oggetto da mangiare"),
+              ("Pera", "altro oggetto da mangiare")]
+
+  ids = []  
+  for nome, desc in products: 
+      request = ProductInfo_pb2.Product(nome=nome,
+                                        description=desc)
+      response = stub.addProduct(request)
+      print(f"[cliente] aggiunto {nome} → id={response.id}")
+      ids.append(response.id)
+
+  print("TABELLA:")
+  for _id in ids:
+      request = ProductInfo_pb2.ProductID(id=_id)
+      response = stub.getProduct(request)
+      print(f"{response.nome:&lt;10}: {response.description:&lt;30}")
+</code></pre>
+<h2 id="aggiornare-il-servizio-grpc"><a class="header" href="#aggiornare-il-servizio-grpc">Aggiornare il servizio gRPC</a></h2>
+<p>Per aggiungere un servizio bisogna:</p>
+<ul>
+<li>Aggiungere il nuovo metodo al file <code>.proto</code></li>
+<li>Rigenerare il codice gRPC usando <code>protoc</code></li>
+<li>Aggiornare il codice del server per implementare il nuovo metodo</li>
+<li>Aggiornare il codice del client per invocare il nuovo metodo</li>
+</ul>
+<h2 id="grpc-e-operazioni-thread-safe"><a class="header" href="#grpc-e-operazioni-thread-safe">gRPC e operazioni thread-safe</a></h2>
+<p>I <strong>channel</strong> creati con il modulo <code>grpc</code> sono <em><strong>thread-safe</strong></em>. Di conseguenza anche gli <strong>stub</strong> lato client generati, sono thread-safe</p>
+<p>La parte servente <strong>è soggetta alla problematica del GIL in ogni caso</strong>, nonostante gRPC usi il package <code>concurrent</code>.</p>
+<h2 id="tipi-di-rpc-call-in-grpc"><a class="header" href="#tipi-di-rpc-call-in-grpc">Tipi di RPC call in gRPC</a></h2>
+<p>gRPC supporta 4 tipi di RPC call che possono essere definiti nel file <code>.proto</code>.</p>
+<ol>
+<li>
+<p><strong>RPC</strong> <strong>semplice</strong> (<strong>unary</strong>): il client invia una richiesta al server e attende una singola risposta (cioè, unaria), come una normale chiamata di funzione.</p>
+<pre><code class="language-proto">rpc SayHello(HelloRequest) returns (HelloReply) {}
+</code></pre>
+</li>
+<li>
+<p><strong>Streaming RPC lato server</strong> (<em>response-steaming RPC</em>): il client invia una richiesta al server e ottiene un <strong>flusso</strong> (stream) per leggere una sequenza di messaggi.</p>
+<p>Il client <strong>legge dallo stream restituito finché non ci sono più messaggi</strong>.</p>
+<p>gRPC garantisce l’ordinamento dei messaggi all’interno di una singola chiamata RPC, poiché si appoggia a <code>HTTP/2</code> che si basa a sua volta sul protocollo di trasporto <code>TCP</code>.</p>
+<pre><code class="language-proto">rpc ListFeature (Rectangle) returns (stream Feature) {}
+</code></pre>
+</li>
+<li>
+<p><strong>Straeming RPC lato client</strong> (<em>request-streaming RPC</em>): il client scrive una sequenza di messaggi e li invia al server, sempre utilizzando uno stream fornito.</p>
+<p>Una volta terminata la scrittura dei messaggi, il client <strong>attende che il server li legga tutti e restituisca la risposta</strong> (unaria).</p>
+<p>gRPC garantisce sempre l’ordinamento dei messaggi all’interno di una singola chiamata RPC</p>
+<pre><code class="language-proto">rpc RecordRoute (stream Point) returns (RouteSummary) {}
+</code></pre>
+</li>
+<li>
+<p><strong>Bidirectional Streaming RPC</strong>: entrambe le parti inviano una sequenza di messaggi utilizzando un flusso di lettura e scrittura.</p>
+<p><strong>I due flussi operano in modo indipendente</strong>, per cui client e server possono leggere e scrivere nell’ordine che preferiscono.</p>
+<ul>
+<li>Ad esempio, il server potrebbe aspettare di ricevere tutti i messaggi del client prima di scrivere le sue risposte, oppure potrebbe alternativamente leggere un messaggio e poi scriverne uno, o qualche altra combinazione di lettura e scrittura.</li>
+</ul>
+<p><strong>L’ordine dei messaggi in ogni flusso viene mantenuto</strong>.</p>
+<pre><code class="language-proto">rpc RouteChat(stream RouteNote) returns (stream RouteNote) {}
+</code></pre>
+</li>
+</ol>
+<h3 id="generators-e-funzioni-yield"><a class="header" href="#generators-e-funzioni-yield">Generators e funzioni yield</a></h3>
+<p>Per creare le funzioni per lo streaming RPC è necessario l’utilizzo dei <code>Generators</code>:</p>
+<ul>
+<li>Funzioni che ritornano un <em>iteratore</em>.
+<ul>
+<li>Un iteratore è un oggetto che contiene un certo numero di elementi su cui è possibile iterare</li>
+</ul>
+</li>
+<li>Per creare un <code>generator</code> è necessario utilizzare il metodo <code>yield</code> al posto del metodo <code>return</code>
+<ul>
+<li>
+<p>È usato per produrre un valore, <strong>senza</strong> <strong>stoppare</strong> <strong>la</strong> <strong>funzione</strong>.</p>
+</li>
+<li>
+<p>Le funzioni che contengono la <code>yield</code> sono considerate automaticamente <code>generator</code>.</p>
+<pre><code class="language-python">yield &lt;expression&gt;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p>Esempio di generator:</p>
+<pre><code class="language-python">def range2iter(n):
+  '''
+  Generator for square of numbers 0 to n-1
+  Precon: n is an int &gt;= 0
+  '''
+  for x in range(n):
+    yield x*x
+</code></pre>
+<pre><code class="language-python">a = range2iter(3)
+print(next(a)) # 0
+print(next(a)) # 2
+print(next(a)) # 4
+print(next(a)) # Exception: StopIteration
+</code></pre>
+<blockquote>
+<p>NOTA: l’utilizzo della <code>return</code> al posto di <code>yield</code> porterebbe la funzione ad interrompersi al primo ciclo.</p>
+</blockquote>
+<h3 id="streaming-rpc-lato-server-esempio"><a class="header" href="#streaming-rpc-lato-server-esempio">Streaming RPC lato server: Esempio</a></h3>
+<p>Lo scenario tipico è: <strong>una singola domanda del client genera molti risultati</strong>, oppure <strong>risultati che maturano nel tempo</strong>.</p>
+<p>Esempi:</p>
+<ul>
+<li>Eicevere dal server “tutti gli ordini degli ultimi 5 anni” potrebbe esser implementato utilizzando una stream lato server invece che far in modo che il server invii tutto insieme con un’unica risposta che risulterebbe enorme a livello di dimensione.</li>
+<li>L’invio di notifiche o aggiornamenti in tempo reale (subscription)</li>
+<li>Ricevere risultati progressivi di un’elaborazione</li>
+</ul>
+<p><strong>Specifica del servizio</strong>: <code>helloworld.proto</code></p>
+<pre><code class="language-proto">syntax = "proto3";
+package helloworld;
+
+// La definizione del servizio chiamato Greeter
+service Greeter {
+  // Sends a greeting
+  rpc SayHello_v1 (HelloRequest) returns (stream HelloReply) {}
+}
+
+// Il messaggio di richiesta contiene una stringa che è il nome utente
+message HelloRequest {
+  string name = 1;
+}
+
+// Il messaggio di risposta che contiene una stringa di benvenuto
+message HelloReply {
+  string message = 1;
+}
+</code></pre>
+<p><strong>Server</strong>: Class Greeter in <code>helloworld_server.py</code></p>
+<pre><code class="language-python">class Greeter(helloworld_pb2_grpc.GreeterServicer):
+
+  # Streaming server
+  def SayHello(self, request, context):
+
+    for i in range(0,5):
+      print(f"[server] SayHello method invoked, returning response...")
+      yield helloworld_pb2.HelloReply(message=f"Hello, {request.name}! - {str(i)}")
+</code></pre>
+<p><strong>Client</strong>: run method in <code>helloworld_client.py</code></p>
+<pre><code class="language-python">def run()
+  print("Will try to greet world ...")
+  
+  with grpc.insecure_channel("localhost:50051") as channel:
+    
+    stub = helloworld_pb2_grpc.GreeterStub(channel)
+    
+    # Server streaming
+    for response in stub.SayHello_v1(helloworld_pb2.HelloRequest(name="you")):
+      print("[CLIENT] SayHello invoked Greeter client received: " + response.message)
+</code></pre>
+<h3 id="streaming-rpc-lato-client-esempio"><a class="header" href="#streaming-rpc-lato-client-esempio">Streaming RPC lato client: Esempio</a></h3>
+<p>Gli scenari tipici sono speculari a quelli del server-streaming: tutto ciò che giustificava molti messaggi dal server al client, qui giustifica molti messaggi dal client al server.</p>
+<p>Esempi:</p>
+<ul>
+<li>Upload di file di grandi dimensioni</li>
+<li>Invio di risultati non appena sono stati prodotti, uno alla volta</li>
+<li>Batching di operazioni con risposta comulativa: il client vuole eseguire molte operazioni dello stesso tipo e ricevere un solo risultato riassuntivo</li>
+</ul>
+<p><strong>Specifica del servizio</strong>: <code>helloworld.proto</code></p>
+<pre><code class="language-proto">syntax = "proto3";
+
+package helloworld;
+
+// La definizione del servizio chiamato Greeter
+service Greeter {
+// Sends a greeting
+  rpc SayHello_v2 (stream HelloRequest) returns (HelloReply) {}
+}
+
+// Il messaggio di richiesta contiene una stringa che è il nome utente
+message HelloRequest {
+  string name = 1;
+}
+
+// Il messaggio di risposta che contiene una stringa di benvenuto
+message HelloReply {
+  string message = 1;
+}
+</code></pre>
+<p><strong>Server</strong>: Class Greeter in <code>helloworld_server.py</code></p>
+<pre><code class="language-python">class Greeter(helloworld_pb2_grpc.GreeterServicer):
+    # Streaming client
+  def SayHello_v2(self, request_iterator, context):
+    names = []
+    for request in request_iterator:
+      print("[server] SayHello method invoked, with name " + request.name)
+      names.append(request.name)
+    return helloworld_pb2.HelloReply(message="Hello, " + ' '.join(names) + "!")
+</code></pre>
+<p><strong>Client</strong>: run method in <code>helloworld_client.py</code></p>
+<pre><code class="language-python">def generate_requests():
+  
+  names = ['Raf', 'Gigi', 'Pippo', 'Pippozzo']
+  
+  for name_to_send in names:
+    yield helloworld_pb2.HelloRequest(name=name_to_send)
+
+def run():
+  
+  print("Will try to greet world ...")
+  
+  with grpc.insecure_channel("localhost:50051") as channel:
+  
+    stub = helloworld_pb2_grpc.GreeterStub(channel)
+    
+    # Client streaming
+    response = stub.SayHello_v2(generate_requests())
+print("[CLIENT] SayHello invoked Greeter client received: " + response.message)
+</code></pre>
+<h3 id="bi-directional-streaming-rpc-esempio"><a class="header" href="#bi-directional-streaming-rpc-esempio">Bi-directional streaming RPC: Esempio</a></h3>
+<p>Entrambe le parti inviano sequenze di messaggi, <strong>in modo indipendente l’una dall’altra</strong>. Serve nel momento in cui entrambi, sia client che server, hanno bisogno di parlare attivamente nel tempo.</p>
+<p>Esempi:</p>
+<ul>
+<li>Chat messaggistica real-time</li>
+<li>Giochi multiplayer e simulazioni</li>
+<li>Stream di dati audio/video con feedback: si pensi ad una videochiamata dove ogni client invia lo stream del proprio video al server e contemporaneamente riceve stream degli altri partecipanti dal server stesso.</li>
+</ul>
+<p><strong>Specifica del servzio</strong>: <code>helloworld.proto</code></p>
+<pre><code class="language-proto">syntax = "proto3";
+
+package helloworld;
+
+// La definizione del servizio chiamato Greeter
+service Greeter {
+// Sends a greeting
+  rpc SayHello_v3 (stream HelloRequest) returns (stream HelloReply) {}
+}
+
+// Il messaggio di richiesta contiene una stringa che è il nome utente
+message HelloRequest {
+  string name = 1;
+}
+
+// Il messaggio di risposta che contiene una stringa di benvenuto
+message HelloReply {
+  string message = 1;
+}
+</code></pre>
+<p><strong>Server</strong>: Class Greeter in <code>helloworld_server.py</code></p>
+<pre><code class="language-python">class Greeter(helloworld_pb2_grpc.GreeterServicer):
+
+# Bi-directional streaming
+def SayHello_v3(self, request_iterator, context):
+  
+  for request in request_iterator:
+    print("[server] SayHello method invoked, returning response...")
+    yield helloworld_pb2.HelloReply(message="Hello, " + request.name + "!")
+</code></pre>
+<p><strong>Client</strong>: run method in <code>helloworld_client.py</code></p>
+<pre><code class="language-python">def generate_requests():
+  
+  names = ['Raf', 'Gigi', 'Pippo', 'Pippozzo']
+  
+  for name_to_send in names:
+    yield helloworld_pb2.HelloRequest(name=name_to_send)
+
+def run():
+  
+  print("Will try to greet world ...")
+  
+  with grpc.insecure_channel("localhost:50051") as channel:
+    
+    stub = helloworld_pb2_grpc.GreeterStub(channel)
+    
+    # Bi-directional streaming
+    for response in stub.SayHello_v3(generate_requests()):
+    print("[CLIENT] SayHello invoked Greeter client received: " + response.message)
+</code></pre>
+<h3 id="sintesi"><a class="header" href="#sintesi">Sintesi</a></h3>
+<p>Lo streaming s<strong>erver-side</strong> è utile quando una richiesta produce molti risultati (list di grandi dimensioni), aggiornamenti nel tempo (subscription a eventi o quotazioni), o output progressivi (token di un LLM, progress di job lunghi).</p>
+<p>Lo streaming <strong>client-side</strong> è speculare ed è utile per upload di grandi dimensioni in chunk, aggregazione di dati prodotti progressivamente nel tempo (telemetria, GPS), o batch di operazioni con risultato cumulativo.</p>
+<p>Lo streaming <strong>bidirezionale</strong> serve quando entrambe le parti devono comunicare in modo asincrono e indipendente: chat, giochi multiplayer, videochiamate, trascrizione vocale in tempo reale, sincronizzazione iterativa di stato. La scelta tra le quattro modalità dipende sostanzialmente da dove “vivono” le grandi quantità di dati o l’interattività: se sono solo in input → client-streaming, solo in output → server-streaming, in entrambi → bidirectional, in nessuno → unary (caso base e default).</p>
+<h2 id="errori-tipici-in-grpc"><a class="header" href="#errori-tipici-in-grpc">Errori tipici in gRPC</a></h2>
+<ul>
+<li>
+<p><strong>Errore sollevato lato client quando stiamo contattando un server non attivo oppure irragiungibile</strong></p>
+<pre><code class="language-bash">  grpc._channel._InactiveRpcError: &lt;_InactiveRpcError of RPC that terminated with:
+        status = StatusCode.UNAVAILABLE
+        details = "failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:50051: Failed to connect to remote host: Connection refused"
+        debug_error_string = "UNKNOWN:Error received from peer  {grpc_message:"failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:50051: Failed to connect to remote host: Connection refused", grpc_status:14}"
+  &gt;
+</code></pre>
+</li>
+<li>
+<p><strong>Errore sollevato lato client quando server-side stiamo utilizzando un campo inesistente per un messaggio rpc</strong></p>
+</li>
+<li>
+<p><strong>Errore client-side quando si utilizza un campo inesistente per un messaggio RPC</strong></p>
+</li>
+<li>
+<p><strong>Errore client-side quando non si utilizza un generator (yield) per una rpc stream lato server</strong></p>
+</li>
+</ul>
+<h2 id="limitazioni"><a class="header" href="#limitazioni">Limitazioni</a></h2>
+<ol>
+<li>
+<p><strong>Supporto limitato nei browser</strong></p>
+<p>È necessario utilizzare gRPC-Web per fornire il supporto gRPC a browser.</p>
+<p>gRPC-Web supporta solo un sottoinsieme delle funzionalità: <strong>RPC unary e server-streaming limitato</strong>, ma <strong>non supporta client-streaming né bidirectional streaming</strong>.</p>
+</li>
+<li>
+<p><strong>Formato non human-readble</strong></p>
+<p>I payload protobuf sono binari e compatti, ma <strong>non sono leggibili a occhio nudo</strong>.</p>
+<ul>
+<li>Debugging più difficile.</li>
+<li>Test manuali più complessi</li>
+<li>Dipendenza dal <code>.proto</code>: senza il file di specifiche, un payload protobuf è essenzialmente illeggibile. Questo significa che chi vuole interpretare i messaggi deve avere accesso al <code>.proto</code>, il che pone problemi di distribuzione del contratto in scenari dove client e server sono sviluppati da team od organizzazioni diverse.</li>
+</ul>
+</li>
+<li>
+<p><strong>Curva di apprendimento più ripida</strong></p>
+<p>Adottare gRPC richiede di imparare diverse cose contemporaneamente: la sintassi di Protocol Buffer, il workflow di compilazione con <code>protoc</code>, i quattro tipi di RPC, la gestione del context, gli errori <code>StatusCode</code>, eventualmente <code>HTTP/2</code>, eventualmente <code>TLS</code> e autenticazione gRPC-specifica.</p>
 </li>
 </ol>
 
