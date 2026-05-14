@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-dc5b1aec.js";
+            window.path_to_searchindex_js = "searchindex-2c03cf07.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-118a8a6d.js"></script>
@@ -282,6 +282,22 @@
 <p>ROS - Rose Operating System - è un esempio di <strong>event-based system</strong>, ovvero di middleware basato sull’approccio di <em>evento-notifica</em>.</p>
 <p>ROS non è un sistema operativo in senso stretto, ma un middleware per robotica che usa massicciamente il modello pub-sub; i sensori pubblicano dati su topic, i nodi di elaborazione si sottoscrivono ai topic di interesse e producono nuovi topic di output.</p>
 <p>L’intero stack di un robot autonomo si basa su questo paradigma.</p>
+<h2 id="ruolo-dellobserver"><a class="header" href="#ruolo-dellobserver">Ruolo dell’Observer</a></h2>
+<p>L’Observer <strong>riduce l’accoppiamento</strong> soggetto-osservatore (in parte perché vediamo che sono comunque presenti degli inconvenienti), e supporta la <strong>comunicazione uno-a-molti</strong>.</p>
+<p align="center"><img src="images/observer_pattern.png" width="300"></p>
+
+<p>Tale approccio presenta alcuni <strong>inconvenienti</strong>:</p>
+<ul>
+<li>il subject deve mantenere una **lista di ** <strong>observer e relative sottoscrizioni</strong></li>
+<li>il subjcet è <strong>responsabile di notificare gli observer</strong> all’occorrenza di un evento di interesse (<strong>scarsa scalabilità</strong>)</li>
+<li>gli observer <strong>devono conoscere il subject</strong></li>
+</ul>
+<p>Per risolvere tali inconvenienti, la responsabilità di gestire gli osservatori/sottoscrizioni e di notificarli non è localizzata nei soggetti, ma delegato ad una terza entità detta <strong>NotificationService (NS)</strong>.</p>
+<p align="center"><img src="images/broker_pub_sub.png" width="300"></p>
+
+<p>Ovvero il <strong>NS</strong> sarà il broker.</p>
+<p>Il <strong>publish-subscribe</strong> non è l’unico modo di costruire un sistema event-based.</p>
+<p>Anche le code di messaggi possono essere utilizzate come notification service: il sender deposita un messaggio in una coda, e i receiver sottoscritti alla cosa lo prelevano. La differenza sta nella semantica di consegna: 1-a-1, 1-a-molti.</p>
 <h2 id="domini-di-messaging-ptp-e-pub-sub"><a class="header" href="#domini-di-messaging-ptp-e-pub-sub">Domini di messaging: PTP e Pub-Sub</a></h2>
 <p>Nei MOM esistono due <strong>domini</strong> <strong>di</strong> <strong>messaging</strong> principali, che corrispondono ai due modelli di comunicazione indiretta che abbiamo introdotto.</p>
 <h3 id="point-to-point"><a class="header" href="#point-to-point">Point-to-Point</a></h3>
@@ -299,7 +315,7 @@
 <p>I <strong>topic</strong> <strong>conservano un messaggio</strong> finché esso non viene <strong>rilasciato ai subscriber correnti</strong>. Se un subscribe si connette dopo la pubblicazione, <strong>non riceve i messaggi precedenti</strong>. Questo comportamento può esser modificato, ma è di default.</p>
 <p>I messaggi possono essere processati da 0…N subscriber.</p>
 <p>Il fatto che ci sia 0 è un dettaglio da non trascurare: se nessuno è sottoscritto al topic nel momento della pubblicazione, il messaggio viene semplicemente perso.</p>
-<p>Il publisher non riceve alcun errore, la sua responsabilità è solo quella di pubblicare</p>
+<p>Il publisher non riceve alcun errore, la sua responsabilità è solo quella di pubblicare.</p>
 <h2 id="messaging-protocols"><a class="header" href="#messaging-protocols">Messaging Protocols</a></h2>
 <p>Esistono diversi <strong>protocolli</strong> che i broker MOM usano per scambiare i messaggi con i client. Quindi dal broker che si sceglie dipende l’<strong>interoperabilità</strong> di applicazioni distribuite aventi componenti implementate con diversi linguaggi di programmazione.</p>
 <ul>
