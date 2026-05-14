@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fdb44c32.js";
+            window.path_to_searchindex_js = "searchindex-dc5b1aec.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-266281a5.js"></script>
+        <script src="toc-118a8a6d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1184,6 +1184,155 @@ def run():
 <p>Adottare gRPC richiede di imparare diverse cose contemporaneamente: la sintassi di Protocol Buffer, il workflow di compilazione con <code>protoc</code>, i quattro tipi di RPC, la gestione del context, gli errori <code>StatusCode</code>, eventualmente <code>HTTP/2</code>, eventualmente <code>TLS</code> e autenticazione gRPC-specifica.</p>
 </li>
 </ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mom"><a class="header" href="#mom">MOM</a></h1>
+<p>Con i <em>Message-Oriented middleware</em> affrontiamo un cambio di paradigma rispetto ai <em>Remote-Call middleware</em>.</p>
+<p>Infatti queste tecnologie <strong>RPC</strong> condividono una caratteristica fondamentale: la comunicazione è <strong>diretta</strong> e tipicamente <strong>sincrona</strong> (Non sarebbe la norma utilizzarli per chiamate asincrone). Il client chiama il server, attende, riceve una risposta.</p>
+<p>Sender e Receiver devono essere entrambi attivi nello stesso istante, devono conoscersi, e il client si blocca finché il server non risponde.</p>
+<p>I <em>Message-Oriented middleware</em> (MOM) rappresentano l’approccio opposto: la comunicazione è <strong>indiretta</strong> (passa attraverso un intermediario chaimato <strong>broker</strong>), <strong>asincrona</strong> (il sender non aspetta che il receiver sia pronto) e <strong>disaccoppiata</strong> (sender e receiver non si conoscono direttamente e possono avere cicli di vita indipendenti).</p>
+<h2 id="motivazioni-dietro-i-message-oriented-middleware"><a class="header" href="#motivazioni-dietro-i-message-oriented-middleware">Motivazioni dietro i Message-Oriented middleware</a></h2>
+<p>Sono di solito utilizzati per <strong>rimpiazzare</strong> quelli basati sul paradigma RPC. Quindi la giustificazione è di natura <strong>architetturale</strong>.</p>
+<ul>
+<li>
+<p>Una chiamata RPC è per natura <strong>sincrona e bloccante</strong> → possiamo avere problemi di scalabilità</p>
+<p>Le richieste RPC arretrate rallentano l’intero sistema</p>
+</li>
+<li>
+<p>Inoltre se il server non è raggiungibile nell’esatto momento in cui si esegue una chiamata a procedura remota, la richiesta semplicemente fallisce.</p>
+</li>
+</ul>
+<p>Quindi la soluzione sarebbe quella di utilizzare un meccanismo <strong>asincrono</strong> per incrementare la scalabilità dell’architettura.</p>
+<p>Il client deposita il messaggio in un buffer e prosegue il suo lavoro, senza attendere che il destinatario lo riceva o lo elabori.</p>
+<p>Inoltre questo paradigma ci permette di sviluppare sistemi con <strong>high availability</strong> e <strong>scalability</strong>.</p>
+<blockquote>
+<p><strong>Availability</strong>: la proprietà di un sistema di essere operativo e in grado di rispondere alle richieste in un dato istante. Si misura tipicamente come percentuale di <em>uptime</em>. Un sistema <em>high-availability</em> è progettato per minimizzare il tempo di indisponibilità anche in presenza di guasti, tipicamente tramite ridondanza e failover automatico.</p>
+<p><strong>Scalability</strong>: la capacità di un sistema di gestire un carico crescente aumentando proporzionalmente le risorse, senza degradare le prestazioni.</p>
+</blockquote>
+<p>In un sistema di grandi dimensioni, prima o poi un server fallirà - è una certezza statistica, non una possibilità. Se l’architettura è basata su RPC diretti, il fallimento di un server porta al fallimento di tutte le comunicazioni che lo coinvolgono.</p>
+<p>Con un <em>broker</em> in mezzo, invece, è possibile <strong>migrare</strong> la gestione delle code da un server all’altro in modo trasparente per le applicazioni. Il broker stesso potrebbe essere replicato, ridondante.</p>
+<hr>
+<p>I MOM, inoltre, contribuiscono ad altre due proprietà di qualità del software: <em>resilienza</em> e <em>affidabilità</em>:</p>
+<ul>
+<li><em>resilienza</em>: è la proprietà di un sistema di continuare a funzionare in presenza di sovraccarichi, guasti parziali o condizioni avverse. Un sistema resiliente si degrada con grazia invece di crollare.</li>
+<li><em>affidabilità</em> (<em>reliability</em>): è la probabilità che il sistema funzioni correttamente per un determinato periodo di tempo senza fallimenti. È una proprietà più “statica” - riguarda la stabilità nel tempo.</li>
+</ul>
+<p>Quindi con i MOM abbiamo più <em>resilienza</em> grazie al <strong>disaccoppiamento</strong> (un componente che cade non trascina con sé gli altri), più affidabilità grazie alla persistenza dei messaggi (un messaggio rimane nella coda finché non viene consegnato al destinatario).</p>
+<h2 id="comunicazione-indiretta"><a class="header" href="#comunicazione-indiretta">Comunicazione indiretta</a></h2>
+<p>la <strong>comunicazione indiretta</strong> è la comunicazione tra entità di un sistema distribuito che avviene <strong>tramite</strong> <strong>un</strong> <strong>intermediario</strong>.</p>
+<ul>
+<li>Sender e Receiver non sono <strong>accoppiati direttamente</strong> - mando un messaggio e tecnicamente non so a chi, ovvero il client non ha la necessità di conoscere la locazione del destinatario.</li>
+</ul>
+<p>La <strong>“natura” dell’intermediario</strong> dipende dal <strong>modello di comunicazione indiretta adottato</strong>.</p>
+<ul>
+<li>
+<p><strong>group communication</strong>: introduce un’astrazione di gruppo. Quando un’applicazione invia un messaggio, lo invia al gruppo, e l’infrastruttura si occupa di recapitarlo a tutti i membri.</p>
+</li>
+<li>
+<p><strong>shared memory</strong>: la <strong>shared memory distribuita</strong> è un approccio più radicale, i processi comunicano leggendo e scrivendo su una memoria condivisa logica, anche se fisicamente distribuita su più macchine.</p>
+<p>Il <em>tuple-space</em> è una versione particolare: i processi inseriscono e prelevano tuple (record) da uno spazio condiviso.</p>
+</li>
+<li>
+<p><strong>code di messaggi</strong>: realizzano l’astrazione di coda e sono un meccanismo <strong>point-to-point</strong>. Il sender inserisce un messaggio in una coda, e un solo receiver lo preleva. Anche se più consumatori sono in ascolto sulla stessa coda, ciascun messaggio viene consegnato a uno solo di essi.</p>
+</li>
+<li>
+<p><strong>pubblisher-subscribe</strong>: realizza un meccanismo <strong>uno-a-molti</strong>. Il publisher genera messaggi associandoli a un argomento (<strong>topic</strong>), e tutti i subscribe che hanno espresso interesse per quel topic ricevono una copia del messaggio.</p>
+</li>
+</ul>
+<blockquote>
+<p>Gli utlimi due approcci sono quelli che vengono implementate dai MOM.</p>
+</blockquote>
+<h2 id="mom-1"><a class="header" href="#mom-1">MOM</a></h2>
+<p>Quando si parla di <strong>message-oriented middleware</strong>, ci si riferisce a soluzioni basate su code o publish-subscribe.</p>
+<blockquote>
+<p>I sistemi basati su publisher-subscribe sono anche noti come <strong>distributed event based system</strong>.</p>
+</blockquote>
+<p>Il MOM gioca il ruolo di <strong>intermediario</strong> - il <strong>message broker</strong> - nella comunicazione indiretta basata su messaggi.</p>
+<p>Le sue <strong>responsabilità chiave</strong> sono:</p>
+<ul>
+<li>garantire lo scambio di messaggi tra applicazioni con tecniche di <strong>store-and-forward</strong>, questo è il meccanismo tecnico che abilità l’asincronia.</li>
+<li>sollevare il programmatore dai dettagli di basso livello, esponendo <strong>API</strong> <strong>di alto livello</strong> basata su poche primitive <code>send</code>/<code>receive message</code>.</li>
+</ul>
+<p align="center"><img src="images/schema_concettuale_MOM.png" width="400"></p>
+
+<p>Le due applicazioni X e Y non si parlano direttamente. Entrambe parlano con il Message Broker, che si trova in mezzo. L’unica interfaccia che le applicazioni vedono è l’API esposta dal broker.</p>
+<h2 id="aspetti-chiave-mom"><a class="header" href="#aspetti-chiave-mom">Aspetti chiave MOM</a></h2>
+<ul>
+<li>
+<p>Il broker recapita messaggi tra macchine diverse: il sender e il receiver tipicamente non sono sullo stesso host. Il broker si occupa di tutto il trasporto di rete.</p>
+</li>
+<li>
+<p>Il broker <strong>gestisce le interruzioni di rete</strong>: se nel momento dell’invio la rete non è raggiungibile, il messaggio può essere conservato localmente e inoltrato successivamente quando la connettività torna disponibile.</p>
+</li>
+<li>
+<p>Il broker <strong>gestisce le interruzioni del receiver</strong>: se il destinatario non è in esecuzione quando il sender invia un messaggio, il broker lo conserva finché il receiver non torna online. Il sender non si blocca in attesa: inva e prosegue.</p>
+<p>È la definizione operativa di <strong>comunicazione asincrona</strong>.</p>
+</li>
+</ul>
+<h2 id="proprità-di-disaccoppiamento"><a class="header" href="#proprità-di-disaccoppiamento">Proprità di disaccoppiamento</a></h2>
+<p>I message-oriented middleware (MOM) forniscono un meccanismo per l’integrazione <strong>flessibile</strong> e <strong>disaccoppiata</strong> di applicazioni distribuite.</p>
+<ul>
+<li>
+<p><strong>Disaccoppiamento spaziale</strong>: il sender <strong>non conosce</strong> - o non ha bisogno di conoscere - <strong>l’identità</strong> del receiver e viceversa.</p>
+<p>I partecipanti possono essere sostituiti, migrati, aggiornati, etc.</p>
+</li>
+<li>
+<p><strong>Disaccoppiamento temporale</strong>: il sender e il receiver possono avere <strong>cicli di vita differenti</strong>:</p>
+<p>Il sender e il receiver non devono essere necessariamente in esecuzione allo stesso tempo per poter comunicare.</p>
+</li>
+</ul>
+<h2 id="evento-e-notifica"><a class="header" href="#evento-e-notifica">Evento e notifica</a></h2>
+<p>La <strong>comunicazione indiretta</strong> è fortemente utilizzata per la <strong>propagazione</strong> (<strong>dissemination</strong>) di <strong>evente</strong>nei sistemi distribuiti.</p>
+<ul>
+<li><strong>Evento</strong>: condizione rilevata da/in una applicazione e comunicata all’intermediario sotto forma di messaggio.</li>
+<li><strong>Notifica</strong>: l’atto di informare un insieme di applicazioni dell’occorrenza dell’evento.</li>
+</ul>
+<p>L’approccio <em>evento-notifica</em> richiama il pettern <strong>Observer</strong>:</p>
+<p align="center"><img src="images/evento_notifica.png" width="400"></p>
+
+<h3 id="ros"><a class="header" href="#ros">ROS</a></h3>
+<p>ROS - Rose Operating System - è un esempio di <strong>event-based system</strong>, ovvero di middleware basato sull’approccio di <em>evento-notifica</em>.</p>
+<p>ROS non è un sistema operativo in senso stretto, ma un middleware per robotica che usa massicciamente il modello pub-sub; i sensori pubblicano dati su topic, i nodi di elaborazione si sottoscrivono ai topic di interesse e producono nuovi topic di output.</p>
+<p>L’intero stack di un robot autonomo si basa su questo paradigma.</p>
+<h2 id="domini-di-messaging-ptp-e-pub-sub"><a class="header" href="#domini-di-messaging-ptp-e-pub-sub">Domini di messaging: PTP e Pub-Sub</a></h2>
+<p>Nei MOM esistono due <strong>domini</strong> <strong>di</strong> <strong>messaging</strong> principali, che corrispondono ai due modelli di comunicazione indiretta che abbiamo introdotto.</p>
+<h3 id="point-to-point"><a class="header" href="#point-to-point">Point-to-Point</a></h3>
+<p>Il dominio PTP ruota intorno al concetto di <strong>coda di messaggi</strong>.</p>
+<p>La regola fondamentale è semplice: <strong>ogni messaggio ha un solo consumer</strong>.</p>
+<p align="center"><img src="images/PTP.png" width="500"></p>
+
+<p>Una coda <strong>conserva</strong> il messaggio finché non si verifica una di due condizioni: il messaggio scade (se è stato configurato con un TTL) oppure viene consumato.</p>
+<p>Quando un client si connette alla coda, preleva il messaggio e successivamente invia un <strong>acknowledgement</strong> (<strong>ack</strong>) alla coda per confermare la corretta ricezine: è il segnale che dice al broker “puoi rimuovere definitivamente questo messaggio, è stato consegnato”.</p>
+<h3 id="publish-subscribe"><a class="header" href="#publish-subscribe">Publish-Subscribe</a></h3>
+<p>Nel dominio publish-subscribe, ogni messaggio è associato ad un <strong>topic</strong>.</p>
+<p>La regola fondamentale è opposta a quella del PTP: <strong>ogni messaggio può avere più consumer</strong>.</p>
+<p align="center"><img src="images/PUB_SUB.png" width="500"></p>
+
+<p>I <strong>topic</strong> <strong>conservano un messaggio</strong> finché esso non viene <strong>rilasciato ai subscriber correnti</strong>. Se un subscribe si connette dopo la pubblicazione, <strong>non riceve i messaggi precedenti</strong>. Questo comportamento può esser modificato, ma è di default.</p>
+<p>I messaggi possono essere processati da 0…N subscriber.</p>
+<p>Il fatto che ci sia 0 è un dettaglio da non trascurare: se nessuno è sottoscritto al topic nel momento della pubblicazione, il messaggio viene semplicemente perso.</p>
+<p>Il publisher non riceve alcun errore, la sua responsabilità è solo quella di pubblicare</p>
+<h2 id="messaging-protocols"><a class="header" href="#messaging-protocols">Messaging Protocols</a></h2>
+<p>Esistono diversi <strong>protocolli</strong> che i broker MOM usano per scambiare i messaggi con i client. Quindi dal broker che si sceglie dipende l’<strong>interoperabilità</strong> di applicazioni distribuite aventi componenti implementate con diversi linguaggi di programmazione.</p>
+<ul>
+<li>
+<p><strong>AMQP</strong> (Advanced Message Queuing Protocol)</p>
+<p>È nato con l’obiettivo di sostituire i middleware propritari di messaggistica esistenti, fornendo uno standard aperto.</p>
+<p>È un protocollo <strong>binario a livello wire</strong> - cioè definisce essattamente com i bit viaggiano sul filo - progettato per garantire interoperabilità tra fornitori diversi.</p>
+<p>Ancora molto popolare.</p>
+</li>
+<li>
+<p><strong>MQTT</strong> (Message Queuing Telemetry Transport)</p>
+<p>È un protocollo publish-subscribe <strong>leggero</strong>, standardizzato ISO (ISO/IEC PRF 20922), che usa TPC/IP come trasporto.</p>
+<p>È stato progettato specificatamente per scenari con risorse limitate: <strong>basso consumo energetico, banda ridotta</strong>.</p>
+<p>È quindi lo standard <em>de facto</em> per IoT, for/edge computing.</p>
+</li>
+<li>
+<p><strong>STOMP</strong> (Simple [Streaming] Text Oriented Message Protocol)</p>
+<p>È un protocollo <strong>basato su testo</strong> (a differenza dei due precedenti, che sono binari), progettato per lavorare con MOM.</p>
+<p>Fornisce un formato <em>wire-level</em> che permette ai client STOMP di parlare con qualsiasi broker compatibile, garantendo interoperabilità tra linguaggi, piattaforme e broker.</p>
+<p>Il fatto di essere testuale lo rende molto più semplice da debuggare ma meno efficiente in termini di banda.</p>
+</li>
+</ul>
 
                     </main>
 
